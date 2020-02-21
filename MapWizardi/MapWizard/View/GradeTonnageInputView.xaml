@@ -1,0 +1,130 @@
+﻿<UserControl xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             x:Class="MapWizard.GradeTonnageView"
+             xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
+             xmlns:service="clr-namespace:MapWizard.Service"
+             mc:Ignorable="d" Height="641" Width="796" DataContext="{Binding Source={StaticResource Locator}, Path=GradeTonnageViewModel}">
+    <UserControl.Resources>
+        <service:FilePathToFileNameConverter x:Key="FilePathToFileNameConverter" />
+        <Style x:Key="WrapPanel" TargetType="WrapPanel">
+            <Setter Property="HorizontalAlignment" Value="left" />
+            <Setter Property="VerticalAlignment" Value="center"></Setter>
+        </Style>
+        <Style x:Key="ValueColumn" TargetType="WrapPanel">
+            <Setter Property="Margin" Value="10,5,10,0"></Setter>
+        </Style>
+        <service:ModelTypeToBooleanConverter x:Key="ModelTypeToBooleanConverter" />
+        <service:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
+        <service:SelectedIndexToBooleanConverter x:Key="SelectedIndexToBooleanConverter"/>
+    </UserControl.Resources>
+    <StackPanel Margin="0 20 0 0" Width="600" HorizontalAlignment="Left" Grid.Row="0">
+        <UniformGrid Rows="1" Columns="2">
+            <WrapPanel>
+                <TextBlock Text="Select input data" Margin="10" HorizontalAlignment="left" VerticalAlignment="Center"/>
+            </WrapPanel>
+            <WrapPanel Style="{StaticResource ValueColumn}">
+                <ComboBox Name="SelectedInputType" HorizontalAlignment="Left" FontSize="16" Width="160" mah:TextBoxHelper.Watermark="{Binding Model.CSVPath, Converter={StaticResource FilePathToFileNameConverter}}" >
+                    <ComboBoxItem Padding="-1">
+                        <Button  FontSize="18" Content="Grade-Tonnage          " Width="185" BorderThickness="0" HorizontalAlignment="Center" Background="WhiteSmoke" VerticalAlignment="Center"  DataContext="{Binding Source={StaticResource Locator}, Path=GradeTonnageViewModel}" Command="{Binding SelectFileCommand}" IsDefault="True">
+                            <Button.ToolTip>
+                                <TextBlock Text="Select Grade-Tonnage input file"></TextBlock>
+                            </Button.ToolTip>
+                        </Button>
+                    </ComboBoxItem>
+
+                    <ComboBoxItem Padding="-1">
+                        <Button  FontSize="18" Content="Metal-Tonnage          " Width="185" BorderThickness="0" HorizontalAlignment="Center" Background="WhiteSmoke" VerticalAlignment="Center"  DataContext="{Binding Source={StaticResource Locator}, Path=GradeTonnageViewModel}" Command="{Binding SelectMetalFileCommand}" IsDefault="True">
+                            <Button.ToolTip>
+                                <TextBlock Text="Select Metal-Tonnage input file"></TextBlock>
+                            </Button.ToolTip>
+                        </Button>
+                    </ComboBoxItem>
+
+                    <ComboBoxItem Padding="-1">
+                        <Button FontSize="18" Content="Existing Model          " BorderThickness="0" Width="185" Background="WhiteSmoke" DataContext="{Binding Source={StaticResource Locator}, Path=GradeTonnageViewModel}" Command="{Binding SelectFolderCommand}">
+                            <Button.ToolTip>
+                                <TextBlock Text="Select Existing Model folder"></TextBlock>
+                            </Button.ToolTip>
+                        </Button>
+                    </ComboBoxItem>
+                    <ComboBox.ToolTip>
+                        <TextBlock Text="{Binding Model.CSVPath}"></TextBlock>
+                    </ComboBox.ToolTip>
+                </ComboBox>
+            </WrapPanel>
+        </UniformGrid>
+        <UniformGrid Rows="1" Columns="2" IsEnabled="{Binding SelectedIndex, Converter={StaticResource SelectedIndexToBooleanConverter}}">
+            <WrapPanel Style="{StaticResource WrapPanel}">
+                <TextBlock Text="Select tools to be executed" Margin="10" HorizontalAlignment="left" VerticalAlignment="Center"/>
+            </WrapPanel>
+            <WrapPanel Style="{StaticResource ValueColumn}" ToolTip="Estimate probability density functions for metal grades, ore tonnage or both.">
+                <CheckBox Name="gradecheckbox" IsChecked="{Binding Model.RunGrade}" Content="Grade" Margin="0,5,10,0" IsEnabled="{Binding Model.ModelType, Converter={StaticResource ModelTypeToBooleanConverter}}"/>
+                <CheckBox Name="tonnagecheckbox" IsChecked="{Binding Model.RunTonnage}" Content="Tonnage" Margin="0,5,0,0"/>
+            </WrapPanel>
+        </UniformGrid>
+        <UniformGrid  Rows="1" Columns="2" IsEnabled="{Binding SelectedIndex, Converter={StaticResource SelectedIndexToBooleanConverter}}">
+            <WrapPanel Style="{StaticResource WrapPanel}">
+                <TextBlock HorizontalAlignment="left" VerticalAlignment="Center" Text="Seed" Margin="10" />
+            </WrapPanel>
+            <WrapPanel Style="{StaticResource ValueColumn}">
+                <TextBox Text="{Binding Model.Seed}" FontSize="20" HorizontalAlignment="Left" VerticalAlignment="Center" Width="120" ToolTip="Seed for random number generator."/>
+            </WrapPanel>
+        </UniformGrid>
+        <UniformGrid  Rows="1" Columns="2" IsEnabled="{Binding SelectedIndex, Converter={StaticResource SelectedIndexToBooleanConverter}}">
+            <WrapPanel Style="{StaticResource WrapPanel}">
+                <TextBlock HorizontalAlignment="left" VerticalAlignment="Center" Text="Pdf type" Margin="10" />
+            </WrapPanel>
+            <WrapPanel Style="{StaticResource ValueColumn}">
+                <ComboBox ItemsSource="{Binding PdfTypes}" SelectedItem="{Binding Model.PdfType}"  SelectedIndex="0" HorizontalAlignment="left"  VerticalAlignment="Center" FontSize="18" Width="120" ToolTip="Type of the probability density function to be estimated (normal, kernel)."/>
+            </WrapPanel>
+        </UniformGrid>
+        <UniformGrid  Rows="1" Columns="2" IsEnabled="{Binding SelectedIndex, Converter={StaticResource SelectedIndexToBooleanConverter}}">
+            <WrapPanel Style="{StaticResource WrapPanel}">
+                <TextBlock HorizontalAlignment="left"  VerticalAlignment="Center" Text="Truncated" Margin="10" />
+            </WrapPanel>
+            <WrapPanel Style="{StaticResource ValueColumn}">
+                <ComboBox ItemsSource="{Binding Truncated}" SelectedItem="{Binding Model.IsTruncated}" SelectedIndex="0"  HorizontalAlignment="left"  VerticalAlignment="Center" FontSize="18" Width="120" ToolTip="Select whether the estimated probability density function is truncated at the lowest and highest values in the dataset."/>
+            </WrapPanel>
+        </UniformGrid>
+        <UniformGrid  Rows="1" Columns="2" IsEnabled="{Binding SelectedIndex, Converter={StaticResource SelectedIndexToBooleanConverter}}">
+            <WrapPanel Style="{StaticResource WrapPanel}">
+                <TextBlock HorizontalAlignment="left"  VerticalAlignment="Center" Text="Random samples" Margin="10" />
+            </WrapPanel>
+            <WrapPanel Style="{StaticResource ValueColumn}">
+                <TextBox Text="{Binding Model.RandomSampleCount}" FontSize="18" HorizontalAlignment="left"  VerticalAlignment="Center" Width="120"  ToolTip="Number of random samples used to estimate the probability density functions."/>
+            </WrapPanel>
+        </UniformGrid>
+        <UniformGrid Rows="1" Columns="2" IsEnabled="{Binding SelectedIndex, Converter={StaticResource SelectedIndexToBooleanConverter}}">
+            <WrapPanel Style="{StaticResource WrapPanel}">
+                <TextBlock Text="Save output in separate folder?" Margin="10"></TextBlock>
+            </WrapPanel>
+            <WrapPanel Style="{StaticResource ValueColumn}" ToolTip="Select whether to save the estimated probability density functions in a separate subfolder.">
+                <RadioButton Name="YesButton" Margin="0,10,10,10" Padding="0" IsChecked="{Binding UseModelName}">Yes</RadioButton>
+                <RadioButton Margin="10,0,0,0" Padding="0" IsChecked="True">No</RadioButton>
+            </WrapPanel>
+        </UniformGrid>
+        <UniformGrid Margin="0,5,0,20" Rows="1" Columns="2" IsEnabled="{Binding SelectedIndex, Converter={StaticResource SelectedIndexToBooleanConverter}}" Visibility="{Binding ElementName=YesButton, Path=IsChecked, Converter={StaticResource BoolToVisibilityConverter}}">
+            <WrapPanel></WrapPanel>
+            <WrapPanel Style="{StaticResource ValueColumn}">
+                <TextBox mah:TextBoxHelper.Watermark="Subfolder name" Text="{Binding Model.ExtensionFolder}" MinWidth="120" ToolTip="Name of the subfolder to save the estimated probability density functions."></TextBox>
+            </WrapPanel>
+        </UniformGrid>
+        <UniformGrid Rows="1" Columns="2" IsEnabled="{Binding SelectedIndex, Converter={StaticResource SelectedIndexToBooleanConverter}}">
+            <WrapPanel></WrapPanel>
+            <WrapPanel Margin="10">
+                <Button Padding="-10,0,0,0"  
+                        VerticalAlignment="Bottom" 
+                        Background="{DynamicResource AccentColorBrush}" 
+                        Foreground="White"
+                        BorderThickness="0" 
+                        Width="120" Height="50" 
+                        Command="{Binding RunToolCommand}" 
+                        DataContext="{Binding Source={StaticResource Locator}, Path=GradeTonnageViewModel}">
+                    <TextBlock FontSize="16" Text="Run Tool" ></TextBlock>
+                </Button>
+            </WrapPanel>
+        </UniformGrid>
+    </StackPanel>
+</UserControl>

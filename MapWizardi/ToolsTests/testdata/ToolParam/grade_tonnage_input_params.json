@@ -1,0 +1,8 @@
+{
+  "CSVPath": "'e:/data/ExampleGatm.csv'",
+  "IsTruncated": "TRUE",
+  "MinDepositCount": "3",
+  "PDFType": "'normal'",
+  "RandomSampleCount": "100",
+  "Seed": "3"
+}

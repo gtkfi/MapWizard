@@ -1,0 +1,136 @@
+﻿<UserControl
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             x:Class="MapWizard.EconomicFilterView"
+             xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
+             xmlns:service="clr-namespace:MapWizard.Service"
+             mc:Ignorable="d" Height="641" Width="796" DataContext="{Binding Source={StaticResource Locator}, Path=EconomicFilterViewModel}">
+    <UserControl.Resources>
+        <service:FilePathToFileNameConverter x:Key="FilePathToFileNameConverter" />
+        <service:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
+        <service:SelectedIndexToBooleanConverter x:Key="SelectedIndexToBooleanConverter"/>
+        <Style x:Key="WrapPanel" TargetType="WrapPanel">
+            <Setter Property="HorizontalAlignment" Value="left" />
+            <Setter Property="VerticalAlignment" Value="center"></Setter>
+        </Style>
+        <Style x:Key="ValueColumn" TargetType="WrapPanel">
+            <Setter Property="Margin" Value="10,05,10,05"></Setter>
+        </Style>
+    </UserControl.Resources>
+    <TabControl HorizontalAlignment="Stretch" Margin="0,0,0,0" SelectedIndex="{Binding TabIndex}">
+        <TabItem Header="RAEF">
+            <StackPanel >
+                <WrapPanel Margin="10,20,20, 20">
+                    <TextBlock MinWidth="250" FontSize="18" Text="Select RAEF preset file:" Margin="0,0,0,5" VerticalAlignment="Center" HorizontalAlignment="Left"></TextBlock>
+                    <Button Margin="50,0,0,0" FontSize="18" Content="{Binding Model.RaefPresetFile, Converter={StaticResource FilePathToFileNameConverter}}" MinWidth="150" MaxWidth="250" HorizontalAlignment="Center" Command="{Binding SelectRaefPresetFileCommand}" Style="{StaticResource AccentedSquareButtonStyle}" mah:ControlsHelper.ContentCharacterCasing="Normal">
+                        <Button.ToolTip>
+                            <TextBlock Text="{Binding Model.RaefPresetFile}"></TextBlock>
+                        </Button.ToolTip>
+                    </Button>
+                </WrapPanel>
+                <WrapPanel Margin="10,20,20, 20">
+                    <TextBlock MinWidth="250" FontSize="18" Text="Select economic filter file:" Margin="0,0,0,5" VerticalAlignment="Center" HorizontalAlignment="Left"></TextBlock>
+                    <Button Margin="50,0,0,0" FontSize="18" Content="{Binding Model.RaefEconFilterFile, Converter={StaticResource FilePathToFileNameConverter}}" MinWidth="150" MaxWidth="250" HorizontalAlignment="Center" Command="{Binding SelectRaefEconFilterFileCommand}" Style="{StaticResource AccentedSquareButtonStyle}" mah:ControlsHelper.ContentCharacterCasing="Normal">
+                        <Button.ToolTip>
+                            <TextBlock Text="{Binding Model.RaefEconFilterFile}"></TextBlock>
+                        </Button.ToolTip>
+                    </Button>
+                </WrapPanel>
+                <UniformGrid Rows="1" Columns="2" >
+                    <WrapPanel Style="{StaticResource WrapPanel}">
+                        <TextBlock Text="Save output in separate folder?" FontSize="18" Margin="10"></TextBlock>
+                    </WrapPanel>
+                    <WrapPanel Margin="-85,7,0,0" Style="{StaticResource ValueColumn}">
+                        <RadioButton Name="YesButton" Margin="0,10,10,10" Padding="0" IsChecked="{Binding RaefUseModelName}">Yes</RadioButton>
+                        <RadioButton Margin="10,10,10,10" Padding="0" IsChecked="True">No</RadioButton>
+                    </WrapPanel>
+                </UniformGrid>
+                <UniformGrid Margin="0,5,0,20" Rows="1" Columns="2" Visibility="{Binding ElementName=YesButton, Path=IsChecked, Converter={StaticResource BoolToVisibilityConverter}}">
+                    <WrapPanel />
+                    <WrapPanel Margin="-85,0,0,0" Style="{StaticResource ValueColumn}">
+                        <TextBox mah:TextBoxHelper.Watermark="Type model name" Text="{Binding Model.RaefExtensionFolder}" MinWidth="120"></TextBox>
+                    </WrapPanel>
+                </UniformGrid>
+                <WrapPanel Margin="10, 20, 20, 20">
+                    <TextBlock MinWidth="250"></TextBlock>
+                    <Button Margin="50,0,0,0" Content="Run  " FontSize="18"  MinWidth="150" Command="{Binding RunToolCommand}" Style="{StaticResource AccentedSquareButtonStyle}" mah:ControlsHelper.ContentCharacterCasing="Normal"></Button>
+                </WrapPanel>
+            </StackPanel>
+        </TabItem>
+        <TabItem Header="Screener">
+            <StackPanel HorizontalAlignment="Left" Margin="0 20 0 0" Width="600">
+                <UniformGrid Rows="1" Columns="2">
+                    <WrapPanel Style="{StaticResource WrapPanel}">
+                        <TextBlock  Text="Simulated deposits file:" Margin="10" HorizontalAlignment="left" VerticalAlignment="Center"/>
+                    </WrapPanel>
+                    <WrapPanel MaxHeight="50" HorizontalAlignment="left" VerticalAlignment="Center" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Auto">
+                        <Button  FontSize="18" Content="{Binding Model.MonteCarloResultTable, Converter={StaticResource FilePathToFileNameConverter}}" 
+                                 FontWeight="Normal" mah:ButtonHelper.PreserveTextCase="True" Background="LightGray" BorderBrush="Black" HorizontalAlignment="Left"
+                                 VerticalAlignment="Center" DataContext="{Binding EconomicFilterViewModel, Source={StaticResource Locator}}" Command="{Binding SelectMCSimResultCommand}" IsDefault="True" Click="Button_Click">
+                            <Button.ToolTip>
+                                <TextBlock Text="{Binding Model.MonteCarloResultTable}"></TextBlock>
+                            </Button.ToolTip>
+                        </Button>
+                    </WrapPanel>
+                </UniformGrid>
+                <UniformGrid Rows="1" Columns="2">
+                    <WrapPanel Style="{StaticResource ValueColumn}">
+                        <TextBlock  Text="Commodity:" Margin="10" HorizontalAlignment="left" VerticalAlignment="Center"/>
+                    </WrapPanel>
+                    <WrapPanel Style="{StaticResource ValueColumn}">
+                        <ComboBox ItemsSource="{Binding MetalIds}" SelectedItem="{Binding Model.SelectedMetal}" SelectedIndex="0" HorizontalAlignment="left"  VerticalAlignment="Center" FontSize="18" Width="150" ToolTip="Commodity on which the screening will be based."/>
+                    </WrapPanel>
+                </UniformGrid>
+                <UniformGrid Rows="1" Columns="2">
+                    <WrapPanel Style="{StaticResource ValueColumn}">
+                        <TextBlock  Text="Type of screening:" Margin="10" HorizontalAlignment="left" VerticalAlignment="Center"/>
+                    </WrapPanel>
+                    <WrapPanel Style="{StaticResource ValueColumn}">
+                        <ComboBox ItemsSource="{Binding PerTypes}" SelectedItem="{Binding Model.PerType}" SelectedIndex="0" HorizontalAlignment="left"  VerticalAlignment="Center" FontSize="18" Width="150" ToolTip="Screening based on largest x percent of deposits or largest x percent of their cumulative metal content."/>
+                    </WrapPanel>
+                </UniformGrid>
+                <UniformGrid Rows="1" Columns="2">
+                    <WrapPanel Style="{StaticResource ValueColumn}">
+                        <TextBlock  Text="Percentage %:" Margin="10" HorizontalAlignment="left" VerticalAlignment="Center"/>
+                    </WrapPanel>
+                    <WrapPanel Style="{StaticResource ValueColumn}">
+                        <TextBox Text="{Binding Model.PerCent}" HorizontalAlignment="left"  VerticalAlignment="Center" FontSize="18" Width="50" ToolTip="Percentage value. Give a number between 0 and 100."/>
+                    </WrapPanel>
+
+                </UniformGrid>
+                <UniformGrid Rows="1" Columns="2">
+                    <WrapPanel Style="{StaticResource ValueColumn}">
+                        <TextBlock Text="Save output in separate folder?" Margin="5,0,0,0"></TextBlock>
+                    </WrapPanel>
+                    <WrapPanel Margin="10,7,0,0" Style="{StaticResource ValueColumn}" ToolTip="Select whether to save the results of the Screener run in a separate subfolder.">
+                        <RadioButton Name="YesButton2" Margin="0,10,10,10" Padding="0" IsChecked="{Binding ScreenerUseModelName}">Yes</RadioButton>
+                        <RadioButton Margin="10,0,0,0" Padding="0" IsChecked="True">No</RadioButton>
+                    </WrapPanel>
+                </UniformGrid>
+                <UniformGrid Margin="0,5,0,20" Rows="1" Columns="2" Visibility="{Binding ElementName=YesButton2, Path=IsChecked, Converter={StaticResource BoolToVisibilityConverter}}">
+                    <WrapPanel />
+                    <WrapPanel Margin="0,0,0,0" Style="{StaticResource ValueColumn}">
+                        <TextBox mah:TextBoxHelper.Watermark="Name of subfolder" Text="{Binding Model.ScreenerExtensionFolder}" MinWidth="120" ToolTip="Name of the subfolder to save the results of the Screener run."></TextBox>
+                    </WrapPanel>
+                </UniformGrid>
+                <UniformGrid Rows="1" Columns="2">
+                    <WrapPanel></WrapPanel>
+                    <WrapPanel Margin="10">
+                        <Button Padding="-10,0,0,0"
+                        VerticalAlignment="Bottom" 
+                        Background="{DynamicResource AccentColorBrush}" 
+                        Foreground="White"
+                        BorderThickness="0" 
+                        Width="120" Height="50" 
+                        Command="{Binding RunToolCommand}" 
+                        DataContext="{Binding Source={StaticResource Locator}, Path=EconomicFilterViewModel}">
+                            <TextBlock FontSize="16" Text="Run Tool" ></TextBlock>
+                        </Button>
+                    </WrapPanel>
+                </UniformGrid>
+            </StackPanel>
+        </TabItem>
+    </TabControl>
+</UserControl>

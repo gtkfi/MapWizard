@@ -1,0 +1,258 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{89C5141C-2D8E-4B5D-A1E0-8C8C22BE8ED2}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Tests</RootNamespace>
+    <AssemblyName>Tests</AssemblyName>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <ProjectTypeGuids>{3AC096D0-A1C2-E12C-1390-A8335801FDAB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
+    <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
+    <ReferencePath>$(ProgramFiles)\Common Files\microsoft shared\VSTT\$(VisualStudioVersion)\UITestExtensionPackages</ReferencePath>
+    <IsCodedUITest>False</IsCodedUITest>
+    <TestProjectType>UnitTest</TestProjectType>
+    <TargetFrameworkProfile />
+    <SccProjectName>SAK</SccProjectName>
+    <SccLocalPath>SAK</SccLocalPath>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccProvider>SAK</SccProvider>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+  </ItemGroup>
+  <Choose>
+    <When Condition="('$(VisualStudioVersion)' == '10.0' or '$(VisualStudioVersion)' == '') and '$(TargetFrameworkVersion)' == 'v3.5'">
+      <ItemGroup>
+        <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework, Version=10.1.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
+      </ItemGroup>
+    </When>
+    <Otherwise>
+      <ItemGroup>
+        <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework">
+          <Private>False</Private>
+        </Reference>
+      </ItemGroup>
+    </Otherwise>
+  </Choose>
+  <ItemGroup>
+    <Compile Include="EconomicFilterToolTests.cs" />
+    <Compile Include="GradeTonnageInputParamsTest.cs" />
+    <Compile Include="PermissiveTractToolTests.cs" />
+    <Compile Include="DepositDensityToolTests.cs" />
+    <Compile Include="GradeTonnageToolTests.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="UndiscoveredDepositToolTests.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Tools\Tools.csproj">
+      <Project>{607A5143-E350-4F5A-B65B-06126DACF9A0}</Project>
+      <Name>Tools</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="testdata\AggregateResults\CorrelationTab.csv" />
+    <None Include="testdata\AggregateResults\CorresondingEstimates.csv" />
+    <None Include="testdata\AggregateResults\SampleFiles\Conduit1_03_PMF_Probs1.csv" />
+    <None Include="testdata\AggregateResults\SampleFiles\Conduit1_03_PMF_Probs2.csv" />
+    <None Include="testdata\AggregateResults\SampleFiles\Conduit1_03_PMF_Probs3.csv" />
+    <None Include="testdata\AggregateResults\SampleFiles\Conduit1_03_PMF_Probs4.csv" />
+    <None Include="testdata\AggregateResults\SampleFiles\Conduit1_03_PMF_Probs5.csv" />
+    <None Include="testdata\AggregateResults\SampleFiles\Conduit1_03_PMF_Probs6.csv" />
+    <None Include="testdata\AggregateResults\SampleFiles\Conduit1_03_PMF_Probs7.csv" />
+    <None Include="testdata\AggregateResults\SampleFiles\ListFiles - Original.csv" />
+    <None Include="testdata\AggregateResults\SampleFiles\ListFiles.csv" />
+    <None Include="testdata\AggregateResults\SampleFiles\MyData.csv" />
+    <None Include="testdata\DepositDensity\General_data.csv">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="testdata\DepositDensity\VMS_data.csv">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="testdata\DepositDensity\PodiformCr_data.csv">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="testdata\EconFilter\RAEF\Porphyry_05_SIM_EF.csv">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="testdata\EconFilter\RAEF\RaefPreSetFile.csv">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="testdata\MAP\Fuzzy\Environment\studyarea200_EUREF.img" />
+    <None Include="testdata\MAP\Fuzzy\Environment\studyarea200_EUREF.img.vat.cpg" />
+    <None Include="testdata\MAP\Fuzzy\Environment\studyarea200_EUREF.img.vat.dbf" />
+    <None Include="testdata\MAP\Fuzzy\Environment\studyarea200_EUREF.img.vat.dbf.KUOL4TMH5M2.13016.12444.sr.lock" />
+    <None Include="testdata\MAP\Fuzzy\Environment\studyarea200_EUREF.img.vat.dbf.KUOL4TMH5M2.13816.12444.sr.lock" />
+    <None Include="testdata\MAP\Fuzzy\Environment\studyarea200_EUREF.img.vat.dbf.KUOL4TMH5M2.22404.12444.sr.lock" />
+    <None Include="testdata\MAP\Fuzzy\Environment\studyarea200_EUREF.rrd" />
+    <None Include="testdata\MAP\Fuzzy\Input\AEM_Im_winsor_mask_MemSh.img">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="testdata\MAP\Fuzzy\Input\AEM_Im_winsor_mask_MemSh.rrd" />
+    <None Include="testdata\MAP\Fuzzy\Input\albiteOcc_mask_MemSh.img">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="testdata\MAP\Fuzzy\Input\albiteOcc_mask_MemSh.rrd" />
+    <None Include="testdata\MAP\Fuzzy\Input\APV_DstWrms_mask_MemSh.img">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="testdata\MAP\Fuzzy\Input\APV_DstWrms_mask_MemSh.rrd" />
+    <None Include="testdata\MAP\Fuzzy\Input\FuzzyOv_APV_Dst1.tfw" />
+    <None Include="testdata\MAP\Fuzzy\Input\FuzzyOv_APV_Dst2.tfw" />
+    <None Include="testdata\MAP\Fuzzy\Output\FuzzyOL.img" />
+    <None Include="testdata\MAP\Index\MPM\segments.gen" />
+    <None Include="testdata\MAP\Index\MPM\segments_24" />
+    <None Include="testdata\MAP\Index\MPM\_22.cfs" />
+    <None Include="testdata\MAP\Index\MPM_6596\segments.gen" />
+    <None Include="testdata\MAP\Index\MPM_6596\segments_1" />
+    <None Include="testdata\MAP\Index\MPM_6596\write.lock" />
+    <None Include="testdata\MAP\MPM.aprx" />
+    <None Include="testdata\MAP\MPM.itemindex" />
+    <None Include="testdata\MAP\WofE\Environment\studyarea200_EUREF.img" />
+    <None Include="testdata\MAP\WofE\Environment\studyarea200_EUREF.img.vat.cpg" />
+    <None Include="testdata\MAP\WofE\Environment\studyarea200_EUREF.img.vat.dbf" />
+    <None Include="testdata\MAP\WofE\Environment\studyarea200_EUREF.img.vat.dbf.KUOL4TMH5M2.13016.12444.sr.lock" />
+    <None Include="testdata\MAP\WofE\Environment\studyarea200_EUREF.img.vat.dbf.KUOL4TMH5M2.13816.12444.sr.lock" />
+    <None Include="testdata\MAP\WofE\Environment\studyarea200_EUREF.img.vat.dbf.KUOL4TMH5M2.22404.12444.sr.lock" />
+    <None Include="testdata\MAP\WofE\Environment\studyarea200_EUREF.rrd" />
+    <None Include="testdata\MAP\WofE\Input\FinGold.cpg" />
+    <None Include="testdata\MAP\WofE\Input\FinGold.dbf" />
+    <None Include="testdata\MAP\WofE\Input\FinGold.prj" />
+    <None Include="testdata\MAP\WofE\Input\FinGold.sbn" />
+    <None Include="testdata\MAP\WofE\Input\FinGold.sbx" />
+    <None Include="testdata\MAP\WofE\Input\FinGold.shp" />
+    <None Include="testdata\MAP\WofE\Input\FinGold.shx" />
+    <None Include="testdata\MAP\WofE\Input\Reclass_AEM_Im.img" />
+    <None Include="testdata\MAP\WofE\Input\Reclass_AEM_Im.img.vat.cpg" />
+    <None Include="testdata\MAP\WofE\Input\Reclass_AEM_Im.img.vat.dbf" />
+    <None Include="testdata\MAP\WofE\Input\Reclass_AEM_Im.img.vat.dbf.KUOL4TMH5M2.13016.12444.sr.lock" />
+    <None Include="testdata\MAP\WofE\Input\Reclass_AEM_Im.img.vat.dbf.KUOL4TMH5M2.13816.12444.sr.lock" />
+    <None Include="testdata\MAP\WofE\Input\Reclass_AEM_Im.img.vat.dbf.KUOL4TMH5M2.22404.12444.sr.lock" />
+    <None Include="testdata\MAP\WofE\Input\Reclass_AEM_Im.rrd" />
+    <None Include="testdata\MAP\WofE\Input\Reclass_albitite.img" />
+    <None Include="testdata\MAP\WofE\Input\Reclass_albitite.img.vat.cpg" />
+    <None Include="testdata\MAP\WofE\Input\Reclass_albitite.img.vat.dbf" />
+    <None Include="testdata\MAP\WofE\Input\Reclass_albitite.img.vat.dbf.KUOL4TMH5M2.13016.12444.sr.lock" />
+    <None Include="testdata\MAP\WofE\Input\Reclass_albitite.img.vat.dbf.KUOL4TMH5M2.13816.12444.sr.lock" />
+    <None Include="testdata\MAP\WofE\Input\Reclass_albitite.img.vat.dbf.KUOL4TMH5M2.22404.12444.sr.lock" />
+    <None Include="testdata\MAP\WofE\Input\Reclass_albitite.rrd" />
+    <None Include="testdata\MAP\WofE\Input\Reclass_APV_Dst.img" />
+    <None Include="testdata\MAP\WofE\Input\Reclass_APV_Dst.img.vat.cpg" />
+    <None Include="testdata\MAP\WofE\Input\Reclass_APV_Dst.img.vat.dbf" />
+    <None Include="testdata\MAP\WofE\Input\Reclass_APV_Dst.img.vat.dbf.KUOL4TMH5M2.13016.12444.sr.lock" />
+    <None Include="testdata\MAP\WofE\Input\Reclass_APV_Dst.img.vat.dbf.KUOL4TMH5M2.13816.12444.sr.lock" />
+    <None Include="testdata\MAP\WofE\Input\Reclass_APV_Dst.img.vat.dbf.KUOL4TMH5M2.22404.12444.sr.lock" />
+    <None Include="testdata\MAP\WofE\Input\Reclass_APV_Dst.rrd" />
+    <None Include="testdata\MonteCarloSimulation\oGradePdf.rds" />
+    <None Include="testdata\MonteCarloSimulation\oMeta.rds">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="testdata\MonteCarloSimulation\oPmf.rds" />
+    <None Include="testdata\MonteCarloSimulation\oTonPdf.rds" />
+    <None Include="testdata\TonnagePDF\ExampleGatm.csv" />
+    <None Include="testdata\ToolParam\deposit_density_input_params.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="testdata\ToolParam\grade_tonnage_input_params.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="testdata\DescriptiveModel\DescriptiveTestDocument.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="testdata\MAP\Fuzzy\Environment\fuzzyEnvi.png" />
+    <Content Include="testdata\MAP\Fuzzy\Environment\studyarea200_EUREF.img.aux.xml" />
+    <Content Include="testdata\MAP\Fuzzy\Input\AEM_Im_winsor_mask_MemSh.img.aux.xml" />
+    <Content Include="testdata\MAP\Fuzzy\Input\albiteOcc_mask_MemSh.img.aux.xml" />
+    <Content Include="testdata\MAP\Fuzzy\Input\APV_DstWrms_mask_MemSh.img.aux.xml" />
+    <Content Include="testdata\MAP\Fuzzy\Input\fuzzyInput.png" />
+    <Content Include="testdata\MAP\Fuzzy\Input\FuzzyOv_APV_Dst1.tif" />
+    <Content Include="testdata\MAP\Fuzzy\Input\FuzzyOv_APV_Dst1.tif.aux.xml" />
+    <Content Include="testdata\MAP\Fuzzy\Input\FuzzyOv_APV_Dst1.tif.xml" />
+    <Content Include="testdata\MAP\Fuzzy\Input\FuzzyOv_APV_Dst2.tif" />
+    <Content Include="testdata\MAP\Fuzzy\Input\FuzzyOv_APV_Dst2.tif.aux.xml" />
+    <Content Include="testdata\MAP\Fuzzy\Input\FuzzyOv_APV_Dst2.tif.xml" />
+    <Content Include="testdata\MAP\Fuzzy\Output\FuzzyOL.img.aux.xml" />
+    <Content Include="testdata\MAP\Index\MPM\log.txt" />
+    <Content Include="testdata\MAP\Index\MPM_6596\log.txt" />
+    <Content Include="testdata\MAP\Index\Thumbnail\map.jpg" />
+    <Content Include="testdata\MAP\Index\Thumbnail\map1.jpg" />
+    <Content Include="testdata\MAP\Index\Thumbnail\map13.jpg" />
+    <Content Include="testdata\MAP\Index\Thumbnail\map2.jpg" />
+    <Content Include="testdata\MAP\Index\Thumbnail\map3.jpg" />
+    <Content Include="testdata\MAP\Index\Thumbnail\map4.jpg" />
+    <Content Include="testdata\MAP\Index\Thumbnail\map5.jpg" />
+    <Content Include="testdata\MAP\Index\Thumbnail\map52.jpg" />
+    <Content Include="testdata\MAP\Index\Thumbnail\map53.jpg" />
+    <Content Include="testdata\MAP\Index\Thumbnail\map6.jpg" />
+    <Content Include="testdata\MAP\Index\Thumbnail\map7.jpg" />
+    <Content Include="testdata\MAP\Index\Thumbnail\map8.jpg" />
+    <Content Include="testdata\MAP\Index\Thumbnail\map9.jpg" />
+    <Content Include="testdata\MAP\WofE\Environment\studyarea200_EUREF.img.aux.xml" />
+    <Content Include="testdata\MAP\WofE\Environment\WofE_weights_Envi.png" />
+    <Content Include="testdata\MAP\WofE\Input\FinGold.shp.xml" />
+    <Content Include="testdata\MAP\WofE\Input\Reclass_AEM_Im.img.aux.xml" />
+    <Content Include="testdata\MAP\WofE\Input\Reclass_albitite.img.aux.xml" />
+    <Content Include="testdata\MAP\WofE\Input\Reclass_APV_Dst.img.aux.xml" />
+    <Content Include="testdata\MAP\WofE\Input\WofE_weights_AEM_Im_Input.png" />
+    <Content Include="testdata\MAP\WofE\Input\WofE_weights_albitite_Input.png" />
+    <Content Include="testdata\MAP\WofE\Input\WofE_weights_APV_Input.png" />
+    <Content Include="testdata\MAP\WofE\Input\WofE_weights_Inputs.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="scripts\" />
+    <Folder Include="testdata\MAP\Fuzzy\TestOutput\" />
+    <Folder Include="testdata\MAP\RasterFunctionTemplates\Project1\" />
+    <Folder Include="testdata\MAP\WofE\Output\" />
+  </ItemGroup>
+  <Choose>
+    <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
+      <ItemGroup>
+        <Reference Include="Microsoft.VisualStudio.QualityTools.CodedUITestFramework, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+          <Private>False</Private>
+        </Reference>
+        <Reference Include="Microsoft.VisualStudio.TestTools.UITest.Common, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+          <Private>False</Private>
+        </Reference>
+        <Reference Include="Microsoft.VisualStudio.TestTools.UITest.Extension, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+          <Private>False</Private>
+        </Reference>
+        <Reference Include="Microsoft.VisualStudio.TestTools.UITesting, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+          <Private>False</Private>
+        </Reference>
+      </ItemGroup>
+    </When>
+  </Choose>
+  <Import Project="$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets" Condition="Exists('$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets')" />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

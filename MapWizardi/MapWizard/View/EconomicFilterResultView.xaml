@@ -1,0 +1,48 @@
+﻿<UserControl HorizontalAlignment="Stretch"
+             x:Class="MapWizard.EconomicFilterResultView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800"
+             DataContext="{Binding Source={StaticResource Locator}, Path=EconomicFilterViewModel}">
+    <Grid Margin="40" HorizontalAlignment="Stretch">
+        <TabControl HorizontalAlignment="Stretch">
+            <TabItem HorizontalAlignment="Stretch" Header="Eco tonnages">
+                <StackPanel>
+                    <ScrollViewer Margin="0, 40, 0, 0" MaxHeight="700" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" HorizontalAlignment="Left" VerticalAlignment="Top">
+                        <TextBlock Name="EcoTonnages" Text="{Binding Result.EcoTonnages}"/>
+                    </ScrollViewer>
+                    <Button Margin="0,20,0,0" Width="240" Content="Simulated deposits CSV file" HorizontalAlignment="Left"  DataContext="{Binding EconomicFilterViewModel, Source={StaticResource Locator}}" Command="{Binding OpenEcoTonnagesResultFileCommand }" IsDefault="True" Height="30" ToolTip="Open the CSV file containing the filtered simulated deposits."/>
+                    <ScrollViewer Margin="0, 110, 0, 0" MaxHeight="700" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" HorizontalAlignment="Left" VerticalAlignment="Top">
+                        <TextBlock Name="EcoTonnageStats" Text="{Binding Result.EcoTonnageStats}"/>
+                    </ScrollViewer>
+                    <Button Margin="0,20,0,3" Width="240" Content="Summary statistics" HorizontalAlignment="Left"  DataContext="{Binding EconomicFilterViewModel, Source={StaticResource Locator}}" Command="{Binding OpenEcoTonnagesStatFileCommand }" IsDefault="True" Height="30" ToolTip="Open the summary statistics CSV file."/>
+                </StackPanel>
+            </TabItem>
+            <TabItem HorizontalAlignment="Stretch" Header="Histogram">
+                <Grid>
+                    <ScrollViewer Margin="0, 80, 0, 40" MaxHeight="700" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" HorizontalAlignment="Left" VerticalAlignment="Top">
+                        <Image Name="histogramImage" Stretch="Uniform" StretchDirection="Both" SnapsToDevicePixels="True" Source="{Binding Result.ScreenerHistogramBitMap}" Grid.ColumnSpan="1"/>
+                    </ScrollViewer>
+                </Grid>
+            </TabItem>
+            <TabItem HorizontalAlignment="Stretch" Header="Result plot">
+                <Grid>
+                    <ScrollViewer Margin="0, 80, 0, 40" MaxHeight="700" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" HorizontalAlignment="Left" VerticalAlignment="Top">
+                        <Image Name="rersultPlotImage" Stretch="Uniform" StretchDirection="Both" SnapsToDevicePixels="True" Source="{Binding Result.ScreenerPlotBitMap}" Grid.ColumnSpan="1"/>
+                    </ScrollViewer>
+                </Grid>
+            </TabItem>
+            <TabItem HorizontalAlignment="Stretch" Header="RAEF">
+                <UniformGrid>
+                    <WrapPanel>
+                        <Button FontWeight="Normal" mah:ButtonHelper.PreserveTextCase="True" Background="LightGray" BorderBrush="Black" FontSize="18" Content="Show results in file system" Command="{Binding ShowRaefResultsCommand}"></Button>
+                    </WrapPanel>
+                </UniformGrid>
+            </TabItem>
+        </TabControl>
+    </Grid>
+</UserControl>

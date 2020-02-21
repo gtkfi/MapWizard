@@ -1,0 +1,196 @@
+#Descriptive model tool kuvaus#
+
+Tämän työkalun tarkoitus on toimia muistikirjana, johon tallennetaan ja josta voidaan lukea ne kriteerit, 
+joiden perusteella kyseinen mineraalieniintymätyyppi voidaan tunnistaa ja erottaa muista tyypeistä. Toisin 
+sanoen ne kriteerit, joita käytetään tonnimäärä-pitoisuusdatan keräämisessä ja permissive tract-alueiden 
+rajaamisessa.
+
+Descriptive model toolin pitäisi pystyä
+*	Lukemaan kriteerit sisältävä tekstitiedosto
+*	Lukemaan interaktiivisesti syötetyt kriteerit (tekstiä)
+*	Tallettamaan kriteerit sisältävä tekstitiedosto
+*	Näyttämään ruudulla kriteerit
+
+Jotta kaikki tarpeellinen kuvausdata ja kriteerit saataisiin talteen, ne pitäisi syöttää omiin kenttiinsä. 
+Jos kriteerit ovat tiedostossa, tiedoston pitäisi olla järjestetty tietyllä tavalla. Olisi kuitenkin hyvä, jos 
+numerointia ei jouduttaisi käyttämään, silloin voisi tarvittaessa helposti lisätä kriteerejä/kriteeriluokkia.
+
+1.	Name of person creating this model/filling in information
+2.	Date of creating this model
+3.	Deposit type name
+4.	Approximate synonyms
+5.	Summary description (muutaman lauseen yhteenvetokuvaus)
+6.	General bibliographic references (tähän tulevat lyhyet viitteet, jotka viittaavat References-kentässä 
+oleviin auki kirjoitettuihin kirjallisuusviitteisiin)
+7.	Example deposits (yksi riviä kohden)
+8.	Geological environment (seuraavat kriteerit kukin omana tekstikenttänään)
+a.	Rock types
+b.	Structures and textures
+c.	Age range
+d.	Depositional environment
+e.	Tectonic settings
+f.	Associated deposit types
+9.	Deposit description (seuraavat kriteerit kukin omana tekstikenttänään)
+a.	Mineralogy
+b.	Texture/Structure
+c.	Alteration
+d.	Ore control
+e.	Weathering
+f.	Geophysical signature
+g.	Geochemical signature
+10.	References
+
+
+
+Seuraavalla sivulla esimerkkinä VMS-esiintymien simppeli deskriptiivinen malli.
+?
+#DESCRIPTIVE MODEL OF VOLCANOGENIC MASSIVE SULPHIDE (VMS)#
+
+Rasilainen, K.
+
+Geological Survey of Finland, P.O. Box 96, FI-21051 Espoo
+
+
+APPROXIMATE SYNONYMS  Exhalative massive sulphide, volcanic-exhalative massive sulphide, submarine-
+exhalative massive sulphide, seafloor massive sulphide, volcanic-hosted massive sulphide, volcanic-
+sediment-hosted massive sulphide, volcanic-associated massive sulphide
+
+DESCRIPTION  Stratabound concentrations of sulphide minerals precipitated from hydrothermal fluids in 
+extensional seafloor environments and mostly associated with volcanic lithologies. Based on the associated 
+lithology, the deposits can be classified into mafic-ultramafic, siliciclastic-mafic, bimodal-mafic, bimodal-
+felsic and siliciclastic felsic types.
+
+GENERAL REFERENCE  Barrie & Hannington (1999), Franklin et al. (2005), Galley et al. (2007), Shanks & 
+Thurston (2012).
+
+EXAMPLES
+
+Siliciclastic felsic:	Rio Tinto (Williams et al. 1975, Solomon et al. 1980, Tornos 2006)
+Bimodal-felsic:		Pyhäsalmi (Helovuori 1979, Mäki & Puustjärvi 2003)
+Bimodal-mafic:		Horne (Gibson et al. 2000)
+Siliciclastic-mafic:	Windy Craggy (Peter & Scott 1999)
+Mafic-ultramafic:	Skouriotissa (Constantinou & Govett 1973)
+
+GEOLOGICAL ENVIRONMENT
+
+Rock Types  The composition of volcanic host rocks range from mafic to felsic; bimodal mixtures are quite 
+common. The volcanic strata consist of massive and pillow lavas, sheet flows, hyaloclastites, lava breccias, 
+pyroclastic deposits and volcaniclastic sediment. Siliciclastic rocks dominate the stratigraphic assemblage in 
+some settings. Synvolcanic intrusions are common, especially in flow-dominated successions.
+
+Structures and textures  Submarine volcanic structures and textures are common; clastic sediments mixed 
+with dykes and sills, peperites, lava flows, autoclastic breccias, pillows, sheet flows, flow domes and 
+volcaniclastic rocks.
+
+Age Range  Early Archaean (3.55 Ga) to Holocene (presently forming in seafloor settings).
+
+Depositional Environment  Extensional seafloor and subseafloor environment.
+
+Tectonic Setting(s)  Mid-oceanic ridges, intraoceanic and continental margin volcanic arcs, back-arc basins, 
+rifted continental margins, pull-apart basins.
+
+Associated Deposit Types  Epithermal Au-Ag, Co-Cu-As in ophiolitic ultramafic rocks.
+
+DEPOSIT DESCRIPTION
+
+¤Mineralogy¤  Abundant Fe sulphides (pyrite or pyrrhotite) and variable but generally subordinate amounts 
+of chalcopyrite and sphalerite. Galena occurs as a major component in deposits associated with bimodal-
+felsic and siliciclastic-felsic lithologies. Minor minerals include marcasite, magnetite, cobaltite, arsenopyrite, 
+tennantite and tetrahedrite. For example, bornite, stibnite, realgar, stannite and cassiterite usually occur as 
+trace minerals, but are abundant in some deposits. Co- and Ni-bearing arsenides, sulpharsenides and 
+sulphides, although rare in most VMS deposits, can be relatively abundant in deposits associated with 
+serpentinised ultramafic rocks in ophiolitic terranes. 
+
+¤Texture/Structure¤  Undeformed deposit forms include sheets, layers, lenses, mounds, pipes, and 
+stockworks. Characteristic primary structures include fragmental and layered ores at the deposit scale, and 
+blocky, fragmental and sandy zones form characteristic internal features of well-preserved deposits. 
+Sulphide textures vary from massive (100 % sulphide minerals) through semimassive mixtures of sulphides, 
+gangue minerals and host rock to sulphide disseminated in wall rocks. Sulphides also form veins, usually 
+with quartz and other gangue minerals, cutting wall rock and earlier-formed massive sulphides. Many 
+deposits are underlain by discordant sulphide-bearing vein systems. Massive sulphides are often laterally 
+gradational to bedded or layered sulphide deposits. Many deposits display a zonation of metals within the 
+massive sulphide body from Fe+Cu at the base to Zn+Fe±Pb±Ba at the top and margins. 
+
+Alteration  Pervasive alteration zones characterized by secondary quartz and phyllosilicate minerals reflect 
+hydrothermal circulation through footwall volcanic rocks. The mineralogy of the alteration zones depends 
+on the composition of the ore-forming fluids and the footwall rocks, and on the grade of post-
+mineralization metamorphism. The most strongly altered rocks are generally in the stringer zone and 
+immediately below the massive sulphides, and the intensity of alteration decreases outward away from the 
+deposit. Alteration can extend to the hanging-wall rocks if hydrothermal activity continued after burial of 
+the deposit. Semi-conformable alteration zones clearly discordant to regional metamorphic isograds occur 
+in many VMS districts. These zones can be traced over several kilometres of strike length, and they are 
+probably related to premetamorphic horizontal hydrothermal circulation driven by the heat of underlying 
+intrusive bodies.
+
+Ore Control   Controlling features include calderas, craters, grabens, domes, (synvolcanic) faults and fault 
+intersections, seafloor depressions and local basins.
+
+Weathering  Submarine weathering (halmyrolysis) on the seafloor by circulation of oxygenated water is 
+associated with the formation of secondary copper sulphide minerals, but if continued long enough, it will 
+eventually result in the destruction of VMS deposits. Subaerial weathering by descending acidic meteoric 
+water causes mobilisation of metals from primary sulphide minerals and precipitation of 
+copper±gold±silver at depth, forming a supergene enrichment zone overlain by a leached iron oxide-rich 
+gossan. The resulting acid drainage production can cause severe environmental consequences.
+
+Geophysical signature  VMS deposits produce significant electric, electromagnetic, gravimetric and 
+magnetic responses. Potassium enrichment or depletion in wall rocks can produce radiometric anomalies.
+
+Geochemical Signature  High concentrations of one or more of Cu, Zn, Pb. Possibly elevated concentrations 
+of some of Ag, As, Au, Bi, Cd, Co, Ga, Ge, Hg, In, Mo, Ni, Sb, Se, Sn, Tl, W. Depleted Na, especially in footwall 
+rocks. Possibly elevated K. Possibly widespread Fe±Mn±Si±S±Ba±B in exhalites precipitated from VMS-
+related hydrothermal vents and plumes. Fluid upflow zones often have lower ?18O values than surrounding 
+areas.
+
+
+[FIGURE 1]
+
+
+REFERENCES 
+
+Barrie, C. T. & Hannington, M. D. 1999. Classification of volcanic-associated massive sulfide deposits based 
+on host-rock composition. In: Barrie, C. T. & Hannington, M. D. (eds) Volcanic-associated massive sulfide 
+deposits–Processes and examples in modern and ancient settings. Reviews in Economic Geology 8, 1–11.
+
+Constantinou, G. & Govett, G. J. S. 1973. Geology, geochemistry and genesis of Cyprus sulfide deposits. 
+Economic Geology 68, 843–858.
+
+Franklin, J. M., Gibson, H. L., Jonasson, I. R. & Galley, A. G. 2005. Volcanogenic massive sulfide deposits. In: 
+Hedenquist, J. W., Thompson, J. F. H., Goldfarb, R. J. & Richards, J. P. (eds) Economic Geology 100th 
+anniversary volume, 1905–2005. Littleton, Colorado: Society of Economic Geologists, 523–560.
+
+Galley, A. G., Hannington, M. & Jonasson, I. 2007. Volcanogenic massive sulphide deposits. In: Goodfellow, 
+W. D. (ed.) Mineral deposits of Canada–A synthesis of major deposit-types, district metallogeny, the 
+evolution of geological provinces, and exploration methods. Geological Association of Canada, Mineral 
+Deposits Division, Special Publication 5, 141–161.
+
+Gibson, H. L., Kerr, D. J. & Cattalani, S. 2000. The Horne Mine: Geology, history, influence on genetic 
+models, and a comparison to the Kidd Creek Mine. Exploration and Mining Geology 9, 91–111.
+
+Helovuori, O. 1979. Geology of the Pyhäsalmi ore deposit, Finland. Economic Geology 74, 1084–1101.
+
+Mäki, T. & Puustjärvi, H. 2003. The Pyhäsalmi massive Zn-Cu-pyrite deposit, middle Finland - a 
+Palaeoproterozoic VMS-class "giant". In: Kelly, J. G., Andrew, C. J., Ashton, J. H., Boland, M. B., Earls, G., 
+Fusciardi, L. & Stanley, G. (eds) Europe's major base metal deposits. Dublin: Irish Association for Economic 
+Geology, 87–100.
+
+Morgan, L. A. & Schulz, K. J. 2012. Physical Volcanology of Volcanogenic Massive Sulfide Deposits. In: 
+Shanks, W. C. P., III & Thurston, R. (eds) Volcanogenic massive sulphide occurrence model. U.S. Geological 
+Survey, Scientific Investigations Report 2010–5070–C, 61–100.
+
+Peter, J. M. & Scott, S. D. 1999. Windy Craggy, northwestern British Columbia – The world’s largest Besshi-
+type deposit. In: Barrie, C. T. & Hannington, M. D. (eds) Volcanic-associated massive sulfide deposits – 
+Processes and examples in modern and ancient settings. Reviews in Economic Geology 8, 261–295.
+
+Shanks, W. C. P., III & Thurston, R. (eds) 2012. Volcanogenic massive sulphide occurrence model. U.S. 
+Geological Survey, Scientific Investigations Report 2010–5070–C. 345 p.
+
+Solomon, M., Walshe, J. L. & Garcia Palomero, F. 1980. Formation of massive sulfide deposits at Rio Tinto, 
+Spain. Transactions - Institution of Mining and Metallurgy, Section B: Applied Earth Science 89, 16–24.
+
+Tornos, F. 2006. Environment of formation and styles of volcanogenic massive sulfides: The Iberian Pyrite 
+Belt. Ore Geology Reviews 28, 259–307.
+
+Williams, D., Stanton, R. L. & Rambaud, F. 1975. The Planes–San Antonio pyritic deposit of Rio Tinto, Spain: 
+its nature, environment and genesis. Transactions - Institution of Mining and Metallurgy, Section B: Applied 
+Earth Science 84, 73–82.
+

@@ -1,0 +1,93 @@
+﻿<UserControl x:Class="MapWizard.View.TractAggregationInputView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
+             xmlns:service="clr-namespace:MapWizard.Service"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <UserControl.Resources>
+        <service:FilePathToFileNameConverter x:Key="FilePathToFileNameConverter" />
+        <Style x:Key="WrapPanel" TargetType="WrapPanel">
+            <Setter Property="HorizontalAlignment" Value="left" />
+            <Setter Property="VerticalAlignment" Value="center"></Setter>
+        </Style>
+        <Style x:Key="ValueColumn" TargetType="WrapPanel">
+            <Setter Property="Margin" Value="10,05,0,05"></Setter>
+        </Style>
+        <service:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
+    </UserControl.Resources>
+    <Grid>
+        <StackPanel HorizontalAlignment="Left">
+            <UniformGrid Rows="1" Columns="2">
+                <WrapPanel Style="{StaticResource WrapPanel}">
+                    <TextBlock Text="Tract probability distribution file(s)"   Margin="10" HorizontalAlignment="left" VerticalAlignment="Center"/>
+                </WrapPanel>
+                <WrapPanel Style="{StaticResource ValueColumn}">
+                    <StackPanel>
+                        <WrapPanel>
+                            <RadioButton Name="SingleFileRadioButton" Margin="10" IsChecked="True" ToolTip="Use a single file containing the numbers of deposits and corresponding probabilities for each tract.">Singe Probability File</RadioButton>
+                            <RadioButton Name="MultipleFilesRadioButton" 
+                                         IsChecked="{Binding Model.CreateInputFile}" 
+                                         Margin="10"
+                                         DataContext="{Binding TractAggregationViewModel, Source={StaticResource Locator}}"
+                                         ToolTip="Use a separate input file for each tract">Create from separate files
+                            </RadioButton>
+                        </WrapPanel>
+                        <Grid>
+                            <Button IsEnabled="{Binding ElementName=SingleFileRadioButton, Path=IsChecked}" 
+                                Visibility="{Binding ElementName=SingleFileRadioButton, Path=IsChecked, Converter={StaticResource BoolToVisibilityConverter}}"  
+                                FontSize="18" 
+                                Content="{Binding Model.ProbDistFile, Converter={StaticResource FilePathToFileNameConverter}}" 
+                                Width="200" 
+                                FontWeight="Normal" mah:ButtonHelper.PreserveTextCase="True" Background="LightGray" BorderBrush="Black"
+                                Margin="0" HorizontalAlignment="Left" 
+                                VerticalAlignment="Center"  
+                                DataContext="{Binding TractAggregationViewModel, Source={StaticResource Locator}}" 
+                                Command="{Binding SelectProbDistFileCommand}" 
+                                IsDefault="True"
+                                >
+                                <Button.ToolTip>
+                                    <TextBlock Text="Select a single probability file for all tracts."></TextBlock>
+                                </Button.ToolTip>
+                            </Button>
+                            <Button IsEnabled="{Binding ElementName=MultipleFilesRadioButton, Path=IsChecked}" Visibility="{Binding ElementName=MultipleFilesRadioButton, Path=IsChecked, Converter={StaticResource BoolToVisibilityConverter}}"
+                                DataContext="{Binding TractAggregationViewModel, Source={StaticResource Locator}}" Width="200" FontWeight="Normal" mah:ButtonHelper.PreserveTextCase="True" Background="LightGray" BorderBrush="Black"
+                                FontSize="18" Margin="0" HorizontalAlignment="Left" VerticalAlignment="Center" Command="{Binding AddFilesToCombineListCommand}" ToolTip="Select a separate probability file for each tract."
+                                >Add Files</Button>
+                        </Grid>
+                    </StackPanel>
+                </WrapPanel>
+            </UniformGrid>
+            <UniformGrid Rows="1" Columns="2" Margin="0,20,0,20">
+                <WrapPanel Style="{StaticResource WrapPanel}">
+                    <TextBlock Text="Tract correlation matrix"   Margin="10" HorizontalAlignment="left" VerticalAlignment="Center"/>
+                </WrapPanel>
+                <WrapPanel Style="{StaticResource ValueColumn}">
+                    <Button  FontSize="18" Content="{Binding Model.CorrelationMatrix, Converter={StaticResource FilePathToFileNameConverter}}" Width="200" FontWeight="Normal" mah:ButtonHelper.PreserveTextCase="True" Background="LightGray" BorderBrush="Black"
+                             Margin="0" HorizontalAlignment="Left" VerticalAlignment="Center"  DataContext="{Binding TractAggregationViewModel, Source={StaticResource Locator}}" Command="{Binding SelectCorrelationMatrixCommand}" IsDefault="True">
+                        <Button.ToolTip>
+                            <TextBlock Text="Select the file containing a correlation matrix for the tract."></TextBlock>
+                        </Button.ToolTip>
+                    </Button>
+                </WrapPanel>
+            </UniformGrid>
+            <UniformGrid Rows="1" Columns="2">
+                <WrapPanel></WrapPanel>
+                <WrapPanel>
+                    <ListBox IsEnabled="{Binding ElementName=MultipleFilesRadioButton, Path=IsChecked}" Visibility="{Binding ElementName=MultipleFilesRadioButton, Path=IsChecked, Converter={StaticResource BoolToVisibilityConverter}}" DataContext="{Binding TractAggregationViewModel, Source={StaticResource Locator}}" ItemsSource="{Binding CombineFilesList}">
+                    </ListBox>
+                </WrapPanel>
+            </UniformGrid>
+            <UniformGrid>
+                <WrapPanel></WrapPanel>
+                <WrapPanel Style="{StaticResource ValueColumn}">
+                    <Button Content="Run Tool   " FontSize="18" DataContext="{Binding TractAggregationViewModel, Source={StaticResource Locator}}" Command="{Binding RunToolCommand}" 
+                            FontWeight="Normal" mah:ButtonHelper.PreserveTextCase="True" Background="{DynamicResource AccentColorBrush}"  Foreground="White"
+                            BorderThickness="0"  Margin="0" HorizontalAlignment="Left" VerticalAlignment="Center"></Button>
+                </WrapPanel>
+            </UniformGrid>
+        </StackPanel>
+    </Grid>
+</UserControl>

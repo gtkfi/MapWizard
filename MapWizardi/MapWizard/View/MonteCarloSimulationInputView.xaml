@@ -1,0 +1,94 @@
+﻿<UserControl
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             x:Class="MapWizard.MonteCarloSimulationView"
+             xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
+             xmlns:service="clr-namespace:MapWizard.Service"
+             mc:Ignorable="d" Height="641" Width="796" DataContext="{Binding Source={StaticResource Locator}, Path=MonteCarloSimulationViewModel}">
+    <UserControl.Resources>
+        <service:FilePathToFileNameConverter x:Key="FilePathToFileNameConverter" />
+        <Style x:Key="WrapPanel" TargetType="WrapPanel">
+            <Setter Property="HorizontalAlignment" Value="left" />
+            <Setter Property="VerticalAlignment" Value="center"></Setter>
+        </Style>
+        <Style x:Key="ValueColumn" TargetType="WrapPanel">
+            <Setter Property="Margin" Value="10,05,10,05"></Setter>
+        </Style>
+        <service:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
+        <service:SelectedIndexToBooleanConverter x:Key="SelectedIndexToBooleanConverter"/>
+    </UserControl.Resources>
+    <StackPanel HorizontalAlignment="Left" Margin="0 20 0 0" Width="600">
+        <UniformGrid Rows="1" Columns="2">
+            <WrapPanel Style="{StaticResource WrapPanel}">
+                <TextBlock  Text="Path to Grade Object:" Margin="10" HorizontalAlignment="left" VerticalAlignment="Center"/>
+            </WrapPanel>
+            <WrapPanel MaxHeight="50" HorizontalAlignment="left" VerticalAlignment="Center" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Auto">
+                <Button  FontSize="18" Content="{Binding Model.GradePdf, Converter={StaticResource FilePathToFileNameConverter}}" FontWeight="Normal" mah:ButtonHelper.PreserveTextCase="True"
+                         Background="LightGray" BorderBrush="Black" HorizontalAlignment="Left" VerticalAlignment="Center"  DataContext="{Binding MonteCarloSimulationViewModel, Source={StaticResource Locator}}"
+                         Command="{Binding SelectGradeObjectCommand}" IsDefault="True" Click="Button_Click">
+                    <Button.ToolTip>
+                        <TextBlock Text="{Binding Model.GradePdf}"></TextBlock>
+                    </Button.ToolTip>
+                </Button>
+            </WrapPanel>
+        </UniformGrid>
+        <UniformGrid Rows="1" Columns="2" Margin="0,4,0,2">
+            <WrapPanel Style="{StaticResource WrapPanel}">
+                <TextBlock Text="Path to Tonnage Object:" Margin="10" HorizontalAlignment="left" VerticalAlignment="Center"/>
+            </WrapPanel>
+            <WrapPanel MaxHeight="50" HorizontalAlignment="left" VerticalAlignment="Center" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Auto">
+                <Button  FontSize="18" Content="{Binding Model.TonnagePdf, Converter={StaticResource FilePathToFileNameConverter}}" FontWeight="Normal" mah:ButtonHelper.PreserveTextCase="True" Background="LightGray" BorderBrush="Black"
+                         HorizontalAlignment="Left" VerticalAlignment="Center"  DataContext="{Binding MonteCarloSimulationViewModel, Source={StaticResource Locator}}" Command="{Binding SelectTonnageObjectCommand}" IsDefault="True">
+                    <Button.ToolTip>
+                        <TextBlock Text="{Binding Model.TonnagePdf}"></TextBlock>
+                    </Button.ToolTip>
+                </Button>
+            </WrapPanel>
+        </UniformGrid>
+        <UniformGrid Rows="1" Columns="2" Margin="0,2,0,2">
+            <WrapPanel Style="{StaticResource WrapPanel}">
+                <TextBlock Text="Path to NDepositsPmf Object:" Margin="10" HorizontalAlignment="left" VerticalAlignment="Center"/>
+            </WrapPanel>
+            <WrapPanel MaxHeight="50" HorizontalAlignment="left" VerticalAlignment="Center" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Auto">
+                <Button  FontSize="18" Content="{Binding Model.NDepositsPmf, Converter={StaticResource FilePathToFileNameConverter}}" FontWeight="Normal" mah:ButtonHelper.PreserveTextCase="True" Background="LightGray" BorderBrush="Black"
+                         HorizontalAlignment="Left" VerticalAlignment="Center"  DataContext="{Binding MonteCarloSimulationViewModel, Source={StaticResource Locator}}" Command="{Binding SelectNDepositsPmfObjectCommand}" IsDefault="True">
+                    <Button.ToolTip>
+                        <TextBlock Text="{Binding Model.NDepositsPmf}"></TextBlock>
+                    </Button.ToolTip>
+                </Button>
+            </WrapPanel>
+        </UniformGrid>
+        <UniformGrid Rows="1" Columns="2" >
+            <WrapPanel Style="{StaticResource WrapPanel}">
+                <TextBlock Text="Save output in separate folder?" Margin="10"></TextBlock>
+            </WrapPanel>
+            <WrapPanel Style="{StaticResource ValueColumn}" ToolTip="Select whether to save the results of the simulation run in a separate subfolder.">
+                <RadioButton Name="YesButton" Margin="0,10,10,10" Padding="0" IsChecked="{Binding UseModelName}">Yes</RadioButton>
+                <RadioButton Margin="10,0,0,0" Padding="0" IsChecked="True">No</RadioButton>
+            </WrapPanel>
+        </UniformGrid>
+        <UniformGrid Margin="0,5,0,20" Rows="1" Columns="2" Visibility="{Binding ElementName=YesButton, Path=IsChecked, Converter={StaticResource BoolToVisibilityConverter}}">
+            <WrapPanel></WrapPanel>
+            <WrapPanel Style="{StaticResource ValueColumn}">
+                <TextBox mah:TextBoxHelper.Watermark="Name of subfolder" Text="{Binding Model.ExtensionFolder}" MinWidth="120" ToolTip="Name of the subfolder to save the results of the simulation run."></TextBox>
+            </WrapPanel>
+        </UniformGrid>
+        <UniformGrid Rows="1" Columns="2">
+            <WrapPanel></WrapPanel>
+            <WrapPanel Margin="10">
+                <Button Padding="-10,0,0,0"
+                        VerticalAlignment="Bottom" 
+                        Background="{DynamicResource AccentColorBrush}" 
+                        Foreground="White"
+                        BorderThickness="0" 
+                        Width="120" Height="50" 
+                        Command="{Binding RunToolCommand}" 
+                        DataContext="{Binding Source={StaticResource Locator}, Path=MonteCarloSimulationViewModel}">
+                    <TextBlock FontSize="16" Text="Run Tool" ></TextBlock>
+                </Button>
+            </WrapPanel>
+        </UniformGrid>
+    </StackPanel>
+</UserControl>

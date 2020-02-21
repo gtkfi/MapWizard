@@ -1,0 +1,50 @@
+,A,B
+1,Date,Tue Dec 13 2018
+2,Time,8:54:14 ap.
+3,Econ Filter File,C:/Users/shautala/Desktop/RAEF_2019_Feb_08/Package/TUTORIAL_Pkg/Inputs/T1/C/Porphyry_05_SIM_EF.csv
+4,Working Directory,C:/Temp/MapWizard/EconFilter/RAEF
+5,Run Name,CalaCucco
+6,Number of Depth Intervals,3
+7,Min1,0
+8,Max1,250
+9,Per1,0.2
+10,Min2,251
+11,Max2,500
+12,Per2,0.2
+13,Min3,501
+14,Max3,1000
+15,Per3,0.6
+16,Min4,0
+17,Max4,0
+18,Per4,0
+19,Deposit Type,Ore body massive / disseminated
+"20,Mine Method,""Mine Method is based on depth to the top of the deposit, if depth >= 61: Block Caving, if depth < 61: Open Pit""",,
+21,Mill Type 1 ,3 - Product Flotation
+22,Mill Type 2 ,NA
+23,Days of Operation,350
+24,Environment Choice 1 ,Tailings Pond and Dam
+25,Liner?,Liner
+26,MSC,1.26
+27,Investment Rate of Return,0.15
+28,Cap Cost Inflation Factor,1
+29,Operating Cost Inflation Factor,1
+30,Area,1000000
+31,User Define Mill Name (if applicable),NONE
+32,User Define: Mill Capital Cost Constant,0
+33,User Define: Mill Capital Cost Power log,0
+34,User Define: Mill Operating Cost Constant,0
+35,User Define: Mill Operating Cost Power log,0
+36,Custom_Mill_Option1,No set custom mill option for commodity #1
+37,Custom_Mill_Option2,No set custom mill option for commodity #2
+38,Custom_Mill_Option3,No set custom mill option for commodity #3
+39,Custom_Mill_Option4,No set custom mill option for commodity #4
+40,Custom_Mill_Option5,No set custom mill option for commodity #5
+41,Custom_Mill_Option6,No set custom mill option for commodity #6
+42,CV_Cu,3813.958
+43,MRR_Cu,0.91
+44,CV_Mo,23567.174
+45,MRR_Mo,0.63
+46,CV_Au,16557636.25
+47,MRR_Au,0.76
+48,CV_Ag,257849.015
+49,MRR_Ag,0.8

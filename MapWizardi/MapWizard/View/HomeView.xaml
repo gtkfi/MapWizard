@@ -1,0 +1,52 @@
+﻿<ui:ModernContent
+    xmlns:ui="clr-namespace:Hummingbird.UI;assembly=Hummingbird.UI"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:root="clr-namespace:MapWizard.ViewModel" x:Class="MapWizard.PermissiveTractView"
+             mc:Ignorable="d" Height="641" Width="796" DataContext="{Binding Source={StaticResource Locator}, Path=PermissiveTractViewModel}">
+
+  <StackPanel Margin="0" MaxWidth="800">
+    <UniformGrid Margin="0,20,0,20" Rows="1" Columns="2">
+      <WrapPanel HorizontalAlignment="left" VerticalAlignment="Center" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Auto">
+        <TextBlock Style="{DynamicResource TextBlockViewHeaderHighlighted}" Text="Environment path" Margin="10" HorizontalAlignment="left" VerticalAlignment="Center"/>
+      </WrapPanel>
+      <WrapPanel HorizontalAlignment="left" VerticalAlignment="Center" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Auto">
+        <Button FontSize="18" Content="{Binding Model.EnvPath}" Style="{DynamicResource DialogButton}" Margin="0" Width="auto"  HorizontalAlignment="left" VerticalAlignment="Center"  DataContext="{Binding Source={StaticResource Locator}, Path=PermissiveTractViewModel}" Command="{Binding SelectFolderCommand}" IsDefault="True"/>
+      </WrapPanel>
+    </UniformGrid>
+
+    <Separator/>
+
+    <UniformGrid  Margin="0,20,0,20" Rows="1" Columns="2">
+      <WrapPanel MaxHeight="50" HorizontalAlignment="left" VerticalAlignment="Center" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Auto">
+        <Button FontSize="18" Content="Select inputrasters" Margin="0" Width="auto"  HorizontalAlignment="left" VerticalAlignment="Center"  DataContext="{Binding Source={StaticResource Locator}, Path=PermissiveTractViewModel}" Command="{Binding SelectFilesCommand}" IsDefault="True"/>
+      </WrapPanel>
+
+      <WrapPanel Width="auto" Height="auto" HorizontalAlignment="left" VerticalAlignment="Center" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Auto">
+        <ListBox HorizontalAlignment="Center" Height="auto" x:Name="listBox" ItemsSource="{Binding Path=Model.InRasterList}"/>
+      </WrapPanel>
+    </UniformGrid>
+    
+    <Separator/>
+
+    <UniformGrid  Margin="0,20,0,20" Rows="1" Columns="2">
+      <TextBlock HorizontalAlignment="left" VerticalAlignment="Center" Style="{DynamicResource TextBlockViewHeaderHighlighted}" Text="Select out raster" Margin="10" />
+      <Button FontSize="18" Content="{Binding Model.OutRaster}" Style="{DynamicResource DialogButton}" Margin="0" Width="auto"  HorizontalAlignment="left" VerticalAlignment="Center"  DataContext="{Binding Source={StaticResource Locator}, Path=PermissiveTractViewModel}" Command="{Binding SaveFileCommand}" IsDefault="True"/>
+    </UniformGrid>
+
+    <Separator/>
+
+    <UniformGrid  Rows="1" Columns="1">
+      <ui:ModernProgressBar IsEnabled="True" Visibility="{Binding Path=IsBusy, Converter={StaticResource Bool2Visibility}}" Margin="0,0,51,0" Height="47"/>
+    </UniformGrid>
+  </StackPanel>
+  
+  <ui:ModernContent.StatusBar>
+    <StatusBar>
+      <ui:AppBarButton IconKey="appbar_new" Caption="Run Tool" Command="{Binding RunToolCommand}" DataContext="{Binding Source={StaticResource Locator}, Path=PermissiveTractViewModel}" />
+    </StatusBar>
+  </ui:ModernContent.StatusBar>
+  
+</ui:ModernContent>

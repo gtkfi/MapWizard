@@ -1,0 +1,97 @@
+﻿<UserControl HorizontalAlignment="Stretch"
+             x:Class="MapWizard.UndiscoveredDepositsResultView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800"
+             DataContext="{Binding Source={StaticResource Locator}, Path=UndiscoveredDepositsViewModel}">
+    <Grid Margin="5,10,5,10" HorizontalAlignment="Stretch">
+        <TabControl HorizontalAlignment="Stretch">
+            <TabItem HorizontalAlignment="Stretch" Header="Deposit Density Summary" DataContext="{Binding Source={StaticResource Locator}, Path=DepositDensityViewModel}">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="3*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <StackPanel>
+                        <TextBlock Name="Header" Text="Number of undiscovered" Grid.ColumnSpan="2" Margin="0,5,0,4"/>
+                        <Grid Margin="0,3,0,0" MaxHeight="700"  HorizontalAlignment="Left" VerticalAlignment="Top" Width="327" Grid.ColumnSpan="2">
+                            <UniformGrid Rows="1" Columns="3">
+                                <TextBlock Name="Header2" Text="deposits"/>
+                                <TextBlock Name="Header3" Text="Confidence" />
+                            </UniformGrid >
+                        </Grid>
+                        <ScrollViewer Margin="0,3,0,0" MaxHeight="700" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" HorizontalAlignment="Left" VerticalAlignment="Top" Width="317" Grid.ColumnSpan="2">
+                            <UniformGrid Rows="1" Columns="3">
+                                <TextBlock x:Name="N10" Text="{Binding Result.N10}"/>
+                                <TextBlock x:Name="N10header" Text="10%"/>
+                            </UniformGrid>
+                        </ScrollViewer>
+                        <ScrollViewer Margin="0,3,0,0" MaxHeight="700" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" HorizontalAlignment="Left" VerticalAlignment="Top" Width="317" Grid.ColumnSpan="2">
+                            <UniformGrid Rows="1" Columns="3">
+                                <TextBlock Name="N50" Text="{Binding Result.N50}"/>
+                                <TextBlock Name="N50header" Text="50%"/>
+                            </UniformGrid>
+                        </ScrollViewer>
+                        <ScrollViewer Margin="0,3,0,0" MaxHeight="700" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" HorizontalAlignment="Left" VerticalAlignment="Top" Width="317" Grid.ColumnSpan="2">
+                            <UniformGrid Rows="1" Columns="3">
+                                <TextBlock Name="N90" Text="{Binding Result.N90}"/>
+                                <TextBlock Name="N90header" Text="90%"/>
+                            </UniformGrid>
+                        </ScrollViewer>
+                        <ScrollViewer  Margin="0,33,0,0" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" HorizontalAlignment="Left" >
+                            <StackPanel Width="Auto">
+                                <UniformGrid Rows="1" Columns="3" HorizontalAlignment="Left">
+                                    <TextBlock x:Name="mHeader" Text="Model:" Width="Auto"/>
+                                    <TextBlock Margin="4,0,0,0" x:Name="Model" Text="{Binding Result.Model}"/>
+                                </UniformGrid>
+                                <UniformGrid Rows="1" Columns="3" HorizontalAlignment="Left">
+                                    <TextBlock x:Name="tHeader" Text="Median deposit tonnage (Mt): "/>
+                                    <TextBlock Margin="4,0,0,0" x:Name="tonnage" Text="{Binding Result.MTonnage}"/>
+                                </UniformGrid>
+                                <UniformGrid Rows="1" Columns="3" HorizontalAlignment="Left">
+                                    <TextBlock x:Name="taHeader" Text="Tract area (km2): "/>
+                                    <TextBlock Margin="4,0,0,0" x:Name="tArea" Text="{Binding Result.TArea}"/>
+                                </UniformGrid>
+                                <UniformGrid Rows="1" Columns="3" HorizontalAlignment="Left">
+                                    <TextBlock x:Name="kKdeposits" Text="Number of known deposits: "/>
+                                    <TextBlock Margin="4,0,0,0" x:Name="kDeposits" Text="{Binding Result.NKnown}"/>
+                                </UniformGrid>
+                            </StackPanel>
+                        </ScrollViewer>
+                    </StackPanel>
+                    <ScrollViewer Margin="4,20,0,0" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Disabled" HorizontalAlignment="Left" VerticalAlignment="Top" Grid.Column="1">
+                        <UniformGrid Rows="1" Columns="1">
+                            <TextBlock Name="Note" Text="{Binding Result.Note}" TextWrapping="WrapWithOverflow" FontWeight="Bold" Foreground="Red"/>
+                        </UniformGrid>
+                    </ScrollViewer>
+                </Grid>
+            </TabItem>
+            <TabItem Header="Deposit Density Plot" DataContext="{Binding Source={StaticResource Locator}, Path=DepositDensityViewModel}">
+                <ScrollViewer Margin="5,30,5,10"  HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto"  HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                    <UniformGrid>
+                        <Image Margin="0,0,0,200" Name="DensPlotImage" Source="{Binding Result.PlotImagePath}" />
+                    </UniformGrid>
+                </ScrollViewer>
+            </TabItem>
+            <TabItem HorizontalAlignment="Stretch" Header="Summary">
+                <Grid>
+                    <ScrollViewer Margin="5,30,5,10" MaxHeight="700" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" HorizontalAlignment="Left" VerticalAlignment="Top">
+                        <UniformGrid Rows="1" Columns="3">
+                            <TextBlock Name="SummaryTxt" Text="{Binding Result.Summary}"/>
+                        </UniformGrid>
+                    </ScrollViewer>
+                </Grid>
+            </TabItem>
+            <TabItem Header="Plot" >
+                <ScrollViewer Margin="5,30,5,10"  HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto"  HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                    <UniformGrid>
+                        <Image  Margin="0,0,0,200" Name="PlotImage" Source="{Binding Result.PlotImageBitMap}"  />
+                    </UniformGrid>
+                </ScrollViewer>
+            </TabItem>
+        </TabControl>
+    </Grid>
+</UserControl>

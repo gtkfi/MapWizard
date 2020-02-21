@@ -1,0 +1,54 @@
+﻿<UserControl HorizontalAlignment="Stretch"
+             x:Class="MapWizard.GradeTonnageResultView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:service="clr-namespace:MapWizard.Service"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800"
+             DataContext="{Binding Source={StaticResource Locator}, Path=GradeTonnageViewModel}">
+    <UserControl.Resources>
+        <service:FilePathToBitmapConverter x:Key="FilePathToBitmapConverter" />
+    </UserControl.Resources>
+    <Grid Height="Auto" Margin="0,10,0,0">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"></RowDefinition>
+            <RowDefinition Height="*"></RowDefinition>
+        </Grid.RowDefinitions>
+        <TabControl HorizontalAlignment="Stretch" Grid.Row="1" >
+            <TabItem Header="Grade plot" >
+                <ScrollViewer Margin="0, 10, 6, 0"   HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                    <UniformGrid Rows="1" Columns="1">
+                        <Image Name="gradeplot" Source="{Binding Result.GradePlotBitMap}"  />
+                    </UniformGrid>
+                </ScrollViewer>
+            </TabItem>
+            <TabItem HorizontalAlignment="Stretch" Header="Grade summary">
+                <Grid>
+                    <ScrollViewer Margin="0, 10, 6, 0" Height="Auto" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" HorizontalAlignment="Left" VerticalAlignment="Top">
+                        <UniformGrid Rows="1" Columns="3">
+                            <TextBlock Name="gradesummary" Text="{Binding Result.GradeSummary}" FontFamily="Consolas" FontSize="18"/>
+                        </UniformGrid>
+                    </ScrollViewer>
+                </Grid>
+            </TabItem>
+            <TabItem Header="Tonnage plot">
+                <ScrollViewer Margin="0, 10, 6, 0" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Visible"  HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                    <UniformGrid Rows="1" Columns="1">
+                        <Image Name="tonnageplot"  Source="{Binding Result.TonnagePlotBitMap}"/>
+                    </UniformGrid>
+                </ScrollViewer>
+            </TabItem>
+            <TabItem HorizontalAlignment="Stretch" Header="Tonnage summary">
+                <Grid>
+                    <ScrollViewer Margin="0, 10, 6, 0" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" HorizontalAlignment="Left" VerticalAlignment="Top">
+                        <UniformGrid Rows="1" Columns="3">
+                            <TextBlock Name="SummaryPDF" Text="{Binding Result.TonnageSummary}" FontFamily="Consolas" FontSize="18"/>
+                        </UniformGrid>
+                    </ScrollViewer>
+                </Grid>
+            </TabItem>
+        </TabControl>
+    </Grid>
+</UserControl>

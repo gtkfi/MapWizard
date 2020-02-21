@@ -1,0 +1,16 @@
+## Install Packages 12/7/18
+
+install.packages("ggplot2", lib="/data/Rpackages/")
+install.packages('gWidgets')
+install.packages('gWidgetstcltk')
+install.packages("dplyr")
+install.packages("compositions")
+install.packages("mvtnorm")
+install.packages("ks")
+install.packages("reshape2")
+install.packages("reshape")
+install.packages("evaluate")
+install.packages("Hmisc")
+install.packages("pid")
+install.packages("akima")
+install.packages("sqldf")

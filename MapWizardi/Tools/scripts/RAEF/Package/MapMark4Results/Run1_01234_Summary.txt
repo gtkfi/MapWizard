@@ -1,0 +1,233 @@
+Run Parameters:
+                                  [,1]                                          
+Date                              "Fri Jul 07 2017"                             
+Time                              "4:34:54 PM "                                 
+Working Directory                 "C:/Users/jshapiro/Desktop/Run7717All"        
+Tract ID                          "Tract1"                                      
+Run ID                            "Run1_01234"                                  
+GT Model Input                    "C:/Users/jshapiro/Desktop/Inputs/GTmodel.csv"
+NegBi Estimates Input             "None"                                        
+Seed number                       "10"                                          
+PMF model                         "Custom"                                      
+N[9] N[5] N[1] N[05] N[01] -Mark3 "0 1 2 3 4"                                   
+Truncate?                         "TRUE"                                        
+Distribution Type                 "normal"                                      
+
+ 
+Summary comparison of the pdf representing the tonnage
+and the actual tonnages in the model.
+------------------------------------------------------------
+Pdf type: normal
+Pdf is truncated at the lowest and the highest values
+of the tonnages in the model.
+Number of discovered deposits in the model: 121
+
+Deviance = -46.3912
+------------------------------------------------------------
+This table pertains to the log-transformed tonnages.
+Column Gatm refers to the actual tonnages in the
+grade and tonnage model; column Pdf refers to the
+pdf representing the tonnages.
+                   Gatm   Pdf
+Minimum            16.1 16.10
+0.25 quantile      19.2 19.20
+Median             20.4 20.20
+0.75 quantile      21.2 21.20
+Maximum            24.2 24.20
+Mean               20.2 20.20
+Standard deviation  1.5  1.46
+------------------------------------------------------------
+This table pertains to the (untransformed) tonnages.
+Column Gatm refers to the tonnages in the grade and
+tonnage model; column Pdf refers to the pdf
+representing the tonnages.
+                       Gatm      Pdf
+Minimum            9.61e+06 9.61e+06
+0.25 quantile      2.25e+08 2.19e+08
+Median             7.22e+08 5.99e+08
+0.75 quantile      1.60e+09 1.63e+09
+Maximum            3.08e+10 3.08e+10
+Mean               1.77e+09 1.62e+09
+Standard deviation 3.99e+09 2.99e+09
+
+###############################################################
+
+
+
+
+
+ 
+Summary comparison of the pdf representing the grades
+and the actual grades in the grade and tonnage model.
+------------------------------------------------------------
+Pdf type: normal
+Pdf is truncated at the lowest and the highest values
+of the grades in the grade and tonnage model.
+Number of discovered deposits in the grade and tonnage model: 121
+Number of resources: 4
+------------------------------------------------------------
+Quantiles (reported in percent)
+Column Gatm refers to the actual grades from the grade and
+model; column Pdf refers to the pdf representing the grades.
+Component: Cu
+               Gatm   Pdf
+Minimum       0.120 0.120
+0.25 quantile 0.350 0.318
+Median        0.421 0.409
+0.75 quantile 0.524 0.524
+Maximum       0.882 0.882
+
+Component: Mo
+               Gatm     Pdf
+Minimum       0.001 0.00100
+0.25 quantile 0.006 0.00522
+Median        0.010 0.00960
+0.75 quantile 0.018 0.01750
+Maximum       0.063 0.06300
+
+Component: Au
+                  Gatm      Pdf
+Minimum       1.10e-07 1.10e-07
+0.25 quantile 3.70e-06 3.60e-06
+Median        1.12e-05 8.95e-06
+0.75 quantile 2.50e-05 2.20e-05
+Maximum       2.00e-04 2.00e-04
+
+Component: Ag
+                  Gatm      Pdf
+Minimum       0.000013 0.000013
+0.25 quantile 0.000111 0.000104
+Median        0.000170 0.000174
+0.75 quantile 0.000271 0.000290
+Maximum       0.002000 0.002000
+
+Component: gangue
+              Gatm  Pdf
+Minimum       99.1 99.1
+0.25 quantile 99.5 99.5
+Median        99.6 99.6
+0.75 quantile 99.6 99.7
+Maximum       99.9 99.9
+
+------------------------------------------------------------
+Compositional mean (reported in percent)
+Column Gatm refers to the actual grades from the grade and
+model; column Pdf refers to the pdf representing the grades.
+           Gatm      Pdf
+Cu     4.13e-01 4.06e-01
+Mo     9.71e-03 9.47e-03
+Au     8.97e-06 8.78e-06
+Ag     1.76e-04 1.74e-04
+gangue 9.96e+01 9.96e+01
+------------------------------------------------------------
+Composite variation matrix
+          Cu    Mo   Au    Ag gangue
+Cu     0.000 1.030 2.10 0.687  0.146
+Mo     0.865 0.000 3.33 1.120  0.866
+Au     1.900 2.890 0.00 2.050  1.860
+Ag     0.660 1.020 1.90 0.000  0.589
+gangue 0.127 0.723 1.70 0.576  0.000
+
+
+Explanation
+The composite variation matrix has two parts: its upper
+triangle and its lower triangle. The upper triangle is
+the upper triangle of the variation matrix for the actual
+grades in the grade and tonnage model. The lower triangle
+is the lower triangle of the variation matrix for the
+pdf that the represents the grades. Thus, corresponding 
+elements in the upper and lower triangles should be
+compared to one another.
+
+###############################################################
+
+
+
+
+
+ 
+Summary of the pmf for the number of undiscovered deposits
+within the permissive tract.
+------------------------------------------------------------
+Type: Custom
+Description: 
+Mean: 1.105
+Variance: 0.963975
+Standard deviation: 0.981822
+Mode: 1
+Smallest number of deposits in the pmf: 0
+Largest number of deposits in the pmf: 4
+Information entropy: 1.30808
+
+###############################################################
+
+
+
+
+
+ 
+Summary of the pdf for the total ore and resource tonnages in
+all undiscovered deposits within the permissive tract.
+------------------------------------------------------------
+
+
+    Q_0.05 Q_0.1 Q_0.25    Q_0.5   Q_0.75    Q_0.9   Q_0.95     Mean  P(0)
+Ore      0     0      0 4.61e+08 1.89e+09 4.86e+09 7.88e+09 1.77e+09 0.298
+Cu       0     0      0 1.89e+06 7.95e+06 2.07e+07 3.40e+07 7.61e+06 0.298
+Mo       0     0      0 4.13e+04 2.05e+05 6.01e+05 1.07e+06 2.39e+05 0.298
+Au       0     0      0 3.51e+01 2.18e+02 7.82e+02 1.51e+03 3.35e+02 0.298
+Ag       0     0      0 7.56e+02 3.59e+03 1.04e+04 1.82e+04 4.04e+03 0.298
+    P(>Mean)
+Ore    0.263
+Cu     0.258
+Mo     0.224
+Au     0.194
+Ag     0.232
+
+
+Explanation
+"Q_0.05" is the 0.05 quantile, "Q_0.1" is the 0.1 quantile, and so on.
+"Mean" is the arithmetic mean. "P(0)" is probability of zero tonnage.
+"P(>Mean)" is probability that the tonnage exceeds the arithmetic mean.
+
+------------------------------------------------------------
+Comparison between statistics estimated from the multivariate
+pdf and statistics from analytic formulas.
+
+Mean vectors
+         Pdf  Formula
+Ore 1.77e+09 1.79e+09
+Cu  7.61e+06 7.71e+06
+Mo  2.39e+05 2.39e+05
+Au  3.35e+02 3.40e+02
+Ag  4.04e+03 4.13e+03
+
+Standard deviation vectors
+         Pdf  Formula
+Ore 3.47e+09 3.53e+09
+Cu  1.58e+07 1.61e+07
+Mo  6.32e+05 6.26e+05
+Au  1.16e+03 1.18e+03
+Ag  1.05e+04 1.08e+04
+
+Composite correlation matrix
+      Ore    Cu    Mo    Au    Ag
+Ore    NA 0.939 0.754 0.572 0.755
+Cu  0.943    NA 0.705 0.516 0.721
+Mo  0.753 0.706    NA 0.362 0.649
+Au  0.569 0.522 0.353    NA 0.537
+Ag  0.757 0.731 0.645 0.503    NA
+
+Explanation
+1. The upper triangle of the composite correlation matrix
+is the upper triangle of the correlation matrix that is
+estimated from the pdf.
+2. The lower triangle of the composite correlation matrix
+is the lower triangle of the correlation matrix that is
+calculated with analytic formulas.
+
+###############################################################
+
+
+
+

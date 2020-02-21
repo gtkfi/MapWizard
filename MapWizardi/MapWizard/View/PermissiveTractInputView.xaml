@@ -1,0 +1,658 @@
+﻿<UserControl 
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
+             x:Class="MapWizard.PermissiveTractView"
+             mc:Ignorable="d" Height="641" Width="796" DataContext="{Binding Source={StaticResource Locator}, Path=PermissiveTractViewModel}">
+    <UserControl.Resources>
+        <Style x:Key="WrapPanel" TargetType="WrapPanel">
+            <Setter Property="HorizontalAlignment" Value="left" />
+            <Setter Property="VerticalAlignment" Value="center"></Setter>
+        </Style>
+        <Style x:Key="ValueColumn" TargetType="WrapPanel">
+            <Setter Property="Margin" Value="10,05,0,05"></Setter>
+        </Style>
+    </UserControl.Resources>
+
+    <TabControl HorizontalAlignment="Stretch" SelectedIndex="{Binding TabIndex}" Margin="0,0,0,0">
+        <TabItem x:Name="PRaster">
+            <TabItem.Header >
+                <TextBlock ToolTip="Create a prospectivity raster using fuzzy logic or weights of evidence">Prospectivity raster</TextBlock>
+            </TabItem.Header>
+            <TabControl >
+                <TabItem x:Name="fuzzyL" >
+                    <TabItem.Header>
+                        <TextBlock ToolTip="Create the prospectivity raster using fuzzy logic">Fuzzy</TextBlock>
+                    </TabItem.Header>
+
+
+
+                    <StackPanel HorizontalAlignment="Left" Margin="0,0,0,00"  Width="600">
+
+
+                        <UniformGrid  Margin="0,0,0,0" Rows="1" Columns="2">
+                            <WrapPanel Style="{StaticResource WrapPanel}">
+                                <!--TextBlock Text="Input rasters" Margin="10" HorizontalAlignment="left" VerticalAlignment="Center"/-->
+                                <!--Style="{DynamicResource TextBlockViewHeaderHighlighted}"-->
+                            </WrapPanel>
+                            <WrapPanel Style="{StaticResource ValueColumn}" MaxHeight="50" HorizontalAlignment="left" VerticalAlignment="Center" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Auto">
+                                <Button FontWeight="Normal" mah:ButtonHelper.PreserveTextCase="True" Background="LightGray" BorderBrush="Black" FontSize="18" Content="Input rasters" 
+                                        Margin="0" Width="auto"  HorizontalAlignment="left" VerticalAlignment="Center"  DataContext="{Binding Source={StaticResource Locator}, Path=PermissiveTractViewModel}"
+                                        Command="{Binding SelectFilesCommand}" IsDefault="True" Click="Button_Click"
+                                        ToolTip="Upload all evidence layer rasters to be used as input in the fuzzy process. The rasters must be fuzzified."/>
+                                <!--Button Content="Upload rasters" Click="UploadRasters"></-->
+                            </WrapPanel>
+                        </UniformGrid>
+
+                        <UniformGrid  Rows="1" Columns="1">
+                            <WrapPanel Width="auto" Height="auto" HorizontalAlignment="left" VerticalAlignment="Center" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Auto">
+                                <ListBox HorizontalAlignment="Center" Height="auto" x:Name="listBox2">
+                                </ListBox>
+                            </WrapPanel>
+                        </UniformGrid>
+
+                        <UniformGrid  Margin="0,0,0,0" Rows="1" Columns="2">
+                            <WrapPanel Style="{StaticResource WrapPanel}">
+                                <!--TextBlock Text="Input rasters" Margin="10" HorizontalAlignment="left" VerticalAlignment="Center"/-->
+                                <!--Style="{DynamicResource TextBlockViewHeaderHighlighted}"-->
+                            </WrapPanel>
+                            <WrapPanel Style="{StaticResource ValueColumn}" MaxHeight="50" HorizontalAlignment="left" VerticalAlignment="Center" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Auto">
+                                <Button FontWeight="Normal" mah:ButtonHelper.PreserveTextCase="True" Background="LightGray" BorderBrush="Black" FontSize="18" Content="Rasters to be combined"
+                                        Margin="0" Width="auto"  HorizontalAlignment="left" VerticalAlignment="Center"  DataContext="{Binding Source={StaticResource Locator}, Path=PermissiveTractViewModel}" 
+                                        Command="{Binding SelectRastersCommand}" IsDefault="True" Click="Button_Click_1"
+                                        ToolTip="Evidence rasters to be combined in this round"/>
+                            </WrapPanel>
+                        </UniformGrid>
+
+                        <UniformGrid  Rows="1" Columns="1">
+                            <WrapPanel Width="auto" Height="auto" HorizontalAlignment="left" VerticalAlignment="Center" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Auto">
+                                <ListBox HorizontalAlignment="Center" Height="auto" x:Name="listBox" ItemsSource="{Binding Model.InRasterList, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}">
+                                </ListBox>
+                            </WrapPanel>
+                        </UniformGrid>
+
+                        <UniformGrid  Rows="1" Columns="2">
+                            <WrapPanel Style="{StaticResource WrapPanel}">
+                                <TextBlock HorizontalAlignment="left" VerticalAlignment="Center" Text="Fuzzy overlay type:" Margin="10" />
+                                <!--Style="{DynamicResource TextBlockViewHeaderHighlighted}"-->
+                            </WrapPanel>
+                            <WrapPanel Style="{StaticResource ValueColumn}">
+                                <ComboBox x:Name="fuzzyType" ItemsSource="{Binding FuzzyOverlayTypeIDs}" SelectedItem="{Binding Model.FuzzyOverlayType}"  SelectedIndex="0" HorizontalAlignment="left"  VerticalAlignment="Center" FontSize="18" Width="100" ToolTip="The fuzzy overlay to be used in this combination round."/>
+                            </WrapPanel>
+
+                        </UniformGrid>
+                        <UniformGrid  Margin="0,0,0,0" Rows="1" Columns="2">
+                            <WrapPanel Style="{StaticResource ValueColumn}">
+                                <TextBlock  Text="Gamma value:" Margin="0" HorizontalAlignment="left" VerticalAlignment="Center"/>
+                            </WrapPanel>
+                            <WrapPanel Style="{StaticResource ValueColumn}">
+                                <TextBox x:Name="gammaTextBox" Text="{Binding Model.FuzzyGammaValue}" HorizontalAlignment="left"  VerticalAlignment="Center" FontSize="18" Width="30" ToolTip="Gamma value if applicable">
+                                    <TextBox.Style>
+                                        <Style TargetType="TextBox">
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding Path=SelectedValue, ElementName=fuzzyType}" Value="AND">
+                                                    <Setter Property="IsEnabled" Value="False"/>
+                                                </DataTrigger>
+                                                <DataTrigger Binding="{Binding Path=SelectedValue, ElementName=fuzzyType}" Value="OR">
+                                                    <Setter Property="IsEnabled" Value="False"/>
+                                                </DataTrigger>
+                                                <DataTrigger Binding="{Binding Path=SelectedValue, ElementName=fuzzyType}" Value="PRODUCT">
+                                                    <Setter Property="IsEnabled" Value="False"/>
+                                                </DataTrigger>
+                                                <DataTrigger Binding="{Binding Path=SelectedValue, ElementName=fuzzyType}" Value="SUM">
+                                                    <Setter Property="IsEnabled" Value="False"/>
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </TextBox.Style>
+                                </TextBox>
+                            </WrapPanel>
+                        </UniformGrid>
+
+                        <UniformGrid Rows="1" Columns="2">
+                            <WrapPanel Style="{StaticResource ValueColumn}">
+                                <TextBlock  Text="Output filename:" Margin="0" HorizontalAlignment="left" VerticalAlignment="Center"/>
+                            </WrapPanel>
+                            <WrapPanel Style="{StaticResource ValueColumn}">
+                                <TextBox x:Name="outFileName" Text="{Binding Model.FuzzyOutputFile}" HorizontalAlignment="left"  VerticalAlignment="Center" FontSize="18" Width="287" ToolTip="Name of the output raster for this combination round"/>
+                            </WrapPanel>
+                        </UniformGrid>
+                        <UniformGrid Rows="1" Columns="2">
+                            <WrapPanel Style="{StaticResource ValueColumn}">
+                                <TextBlock  Text="Last round:" Margin="0" HorizontalAlignment="left" VerticalAlignment="Center"/>
+                            </WrapPanel>
+                            <WrapPanel Style="{StaticResource ValueColumn}">
+                                <CheckBox Name="lastround" IsChecked="{Binding Model.LastFuzzyRound}" Content="is last round" Margin="0,5,0,0" ToolTip="Is this the last combination round?"/>
+                            </WrapPanel>
+                        </UniformGrid>
+                        <UniformGrid Rows="1" Columns="2">
+                            <WrapPanel></WrapPanel>
+                            <WrapPanel Margin="10">
+                                <Button Padding="-10,0,0,0" 
+                          Command="{Binding RunToolCommand}"
+                          CommandParameter="{Binding ElementName=listBox, Path=SelectedItems}"
+                          DataContext="{Binding Source={StaticResource Locator}, Path=PermissiveTractViewModel}"                           
+                          Width="120"
+                          Height="50"
+                          Background="{DynamicResource AccentColorBrush}" 
+                          Foreground="White"
+                          Grid.Column="0" 
+                          Grid.Row="0">
+                                    <TextBlock FontSize="16" Text="Run Fuzzy" ></TextBlock>
+                                </Button>
+                            </WrapPanel>
+                        </UniformGrid>
+                        <!--UniformGrid  Rows="1" Columns="1">
+                    <mah:ProgressRing DataContext="{Binding Source={StaticResource Locator}, Path=PermissiveTractViewModel}" IsActive="{Binding IsBusy}" />
+                </-->
+
+                    </StackPanel>
+                </TabItem>
+                <TabItem x:Name="Wofe" HorizontalAlignment="Stretch">
+                    <TabItem.Header>
+                        <TextBlock ToolTip="Create the prospectivity raster using weights of evidence.">WofE</TextBlock>
+                    </TabItem.Header>
+                    <StackPanel HorizontalAlignment="Left" Margin="0,0,0,0"  Width="600">
+                        <!--UniformGrid Rows="1" Columns="2">
+                            <WrapPanel Style="{StaticResource ValueColumn}">
+                                <TextBlock  Text="ArcGis workspace:" Margin="10" HorizontalAlignment="left" VerticalAlignment="Center"/>
+                            </WrapPanel>
+                            <WrapPanel Style="{StaticResource ValueColumn}">
+                                <TextBox Text="{Binding Model.WorkSpace}" HorizontalAlignment="left"  VerticalAlignment="Center" FontSize="18" Width="287"/>
+                            </WrapPanel>
+                        </-->
+
+                        <!--UniformGrid Rows="1" Columns="2">
+                            <WrapPanel Style="{StaticResource ValueColumn}">
+                                <TextBlock  Text="ArcSDM.pyt location:" Margin="10" HorizontalAlignment="left" VerticalAlignment="Center"/>
+                            </WrapPanel>
+                            <WrapPanel Style="{StaticResource ValueColumn}">
+                                <TextBox Text="{Binding Model.Arcsdm}" HorizontalAlignment="left"  VerticalAlignment="Center" FontSize="18" Width="287"/>
+                            </WrapPanel>
+                        </-->
+
+                        <UniformGrid  Margin="0,0,0,0" Rows="1" Columns="2">
+                            <WrapPanel Style="{StaticResource WrapPanel}">
+                                <TextBlock Text="Evidence rasters" Margin="10" HorizontalAlignment="left" VerticalAlignment="Center"/>
+                            </WrapPanel>
+                            <WrapPanel Style="{StaticResource ValueColumn}" MaxHeight="50" HorizontalAlignment="left" VerticalAlignment="Center" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Auto">
+                                <Button FontWeight="Normal" mah:ButtonHelper.PreserveTextCase="True" Background="LightGray" BorderBrush="Black" FontSize="18" Content="Select input rasters"
+                                        Margin="0" Width="auto"  HorizontalAlignment="left" VerticalAlignment="Center"  DataContext="{Binding Source={StaticResource Locator}, Path=PermissiveTractViewModel}"
+                                        Command="{Binding SelectEvidenceFilesCommand}" IsDefault="True"
+                                        ToolTip="Select all evidence rasters to be used as input in WofE."/>
+                            </WrapPanel>
+                        </UniformGrid>
+
+                        <UniformGrid  Rows="1" Columns="1">
+                            <WrapPanel Width="auto" Height="auto" HorizontalAlignment="left" VerticalAlignment="Center" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Auto">
+                                <ListBox HorizontalAlignment="Center" Height="auto" x:Name="EvidenceRasterlistBox" ItemsSource="{Binding Path=Model.EvidenceRasterlist}"/>
+                            </WrapPanel>
+                        </UniformGrid>
+                        
+                        <UniformGrid  Rows="1" Columns="2">
+                            <WrapPanel Style="{StaticResource WrapPanel}">
+                                <TextBlock HorizontalAlignment="left" VerticalAlignment="Center" Text="Type of weights table" Margin="10" />
+                            </WrapPanel>
+                            <!--WrapPanel Style="{StaticResource ValueColumn}">
+                                <ComboBox ItemsSource="{Binding WofEWeightTypeIDs}" SelectedItem="{Binding Model.WofEWeightsType}"  SelectedIndex="0" HorizontalAlignment="left"  VerticalAlignment="Center" FontSize="16" Width="150"/>
+                            </-->
+                            <WrapPanel Style="{StaticResource ValueColumn}">
+                                <TextBox  Text="{Binding Model.WofEWeightsType}" Margin="0" HorizontalAlignment="left" VerticalAlignment="Center" FontSize="16" Width="287" ToolTip="Weight table type for each input raster, seprated by commas. Descending (D), Ascending (A), Categorical (C) or Unique (U). "/>
+                            </WrapPanel>
+                        </UniformGrid>
+
+
+                        <UniformGrid Rows="1" Columns="2">
+                            <WrapPanel Style="{StaticResource ValueColumn}">
+                                <TextBlock  Text="(Descending/Ascending/Categorial/Unique separated by commas)" Margin="0" HorizontalAlignment="left" VerticalAlignment="Center" FontSize="9" Width="300"/>
+                            </WrapPanel>
+                            <WrapPanel Style="{StaticResource ValueColumn}">
+                                <TextBlock Text="(for example: D,D,A)" HorizontalAlignment="left"  VerticalAlignment="Center" FontSize="10"/>
+                            </WrapPanel>
+                        </UniformGrid>
+
+
+                        <UniformGrid Rows="1" Columns="2">
+                            <WrapPanel Style="{StaticResource ValueColumn}">
+                                <TextBlock  Text="Unit area (km2):" Margin="0" HorizontalAlignment="left" VerticalAlignment="Center"/>
+                            </WrapPanel>
+                            <WrapPanel Style="{StaticResource ValueColumn}">
+                                <TextBox Text="{Binding Model.UnitArea}" HorizontalAlignment="left"  VerticalAlignment="Center" FontSize="18" Width="50" ToolTip="The Unit Area is used as the counting unit for area measurements. It must not be smaller than the cell size."/>
+                            </WrapPanel>
+                        </UniformGrid>
+                        <UniformGrid  Margin="0,0,0,0" Rows="1" Columns="2">
+                            <WrapPanel Style="{StaticResource WrapPanel}">
+                                <TextBlock Text="Confidence level:"   Margin="10" HorizontalAlignment="left" VerticalAlignment="Center"/>
+                            </WrapPanel>
+                            <WrapPanel Style="{StaticResource ValueColumn}" MaxHeight="50" HorizontalAlignment="left" VerticalAlignment="Center" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Auto">
+                                <TextBox x:Name="ConfLevel"  Text="{Binding Model.ConfidenceLevel}" HorizontalAlignment="left"  VerticalAlignment="Center" FontSize="18" Width="80" ToolTip="Confidence level of studentized contrast."/>
+                            </WrapPanel>
+                        </UniformGrid>
+
+                        <UniformGrid Rows="1" Columns="2">
+                            <WrapPanel Style="{StaticResource ValueColumn}">
+                                <TextBlock  Text="Mask polygon:" Margin="0" HorizontalAlignment="left" VerticalAlignment="Center"/>
+                            </WrapPanel>
+                            <WrapPanel Style="{StaticResource ValueColumn}" MaxHeight="50" HorizontalAlignment="left" VerticalAlignment="Center" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Auto">
+                                <Button FontWeight="Normal" mah:ButtonHelper.PreserveTextCase="True" Background="LightGray" BorderBrush="Black" FontSize="18" Content="Select mask" 
+                                        Margin="0" Width="auto"  HorizontalAlignment="left" VerticalAlignment="Center"  DataContext="{Binding Source={StaticResource Locator}, Path=PermissiveTractViewModel}" 
+                                        Command="{Binding SelectMaskCommand}" IsDefault="True"
+                                        ToolTip="Feature dataset (polygon) to define the are of analysis."/>
+                                <!--Button Content="Upload rasters" Click="UploadRasters"></-->
+                            </WrapPanel>
+                        </UniformGrid>
+                        <UniformGrid Rows="1" Columns="1">
+                            <WrapPanel Style="{StaticResource ValueColumn}">
+                                <TextBlock Text="{Binding Model.MaskRaster}" HorizontalAlignment="left"  VerticalAlignment="Center" FontSize="14" Width="auto"/>
+                            </WrapPanel>
+                        </UniformGrid>
+
+                        <UniformGrid Rows="1" Columns="2">
+                            <WrapPanel Style="{StaticResource ValueColumn}">
+                                <TextBlock  Text="Training points:" Margin="0" HorizontalAlignment="left" VerticalAlignment="Center"/>
+                            </WrapPanel>
+                            <WrapPanel Style="{StaticResource ValueColumn}" MaxHeight="50" HorizontalAlignment="left" VerticalAlignment="Center" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Auto">
+                                <Button FontWeight="Normal" mah:ButtonHelper.PreserveTextCase="True" Background="LightGray" BorderBrush="Black" FontSize="18" Content="Select training points" 
+                                        Margin="0" Width="auto"  HorizontalAlignment="left" VerticalAlignment="Center"  DataContext="{Binding Source={StaticResource Locator}, Path=PermissiveTractViewModel}" 
+                                        Command="{Binding SelectTPCommand}" IsDefault="True"
+                                        ToolTip="Training points used to calculate the weights and associated statistics."/>
+                                <!--Button Content="Upload rasters" Click="UploadRasters"></-->
+                            </WrapPanel>
+                        </UniformGrid>
+                        <UniformGrid Rows="1" Columns="1">
+                        <WrapPanel Style="{StaticResource ValueColumn}">
+                                <TextBlock Text="{Binding Model.TrainingPoints}" HorizontalAlignment="left"  VerticalAlignment="Center" FontSize="14"/>
+                            </WrapPanel>
+                        </UniformGrid>
+
+
+
+                        <UniformGrid Rows="1" Columns="2">
+                            <WrapPanel></WrapPanel>
+                            <WrapPanel Margin="10">
+                                <Button Padding="-10,0,0,0" Command="{Binding RunWofeCommand}"  
+                          DataContext="{Binding Source={StaticResource Locator}, Path=PermissiveTractViewModel}"                           
+                          Width="120"
+                          Height="50"
+                          Background="{DynamicResource AccentColorBrush}" 
+                          Foreground="White"
+                          Grid.Column="0" 
+                          Grid.Row="0">
+                                    <TextBlock FontSize="16" Text="Run WofE" ></TextBlock>
+                                </Button>
+                            </WrapPanel>
+                        </UniformGrid>
+                    </StackPanel>
+
+                </TabItem>
+
+            </TabControl>
+        </TabItem>
+
+
+
+        <TabItem x:Name="Delineation" HorizontalAlignment="Stretch" >
+            <TabItem.Header >
+                <TextBlock ToolTip="Delineate the tract by selecting a minimum prospectibity score value in the prospectivity raster.">Delineation process</TextBlock>
+            </TabItem.Header>
+            <StackPanel HorizontalAlignment="Left" Margin="0,0,0,0"  Width="600">
+                <UniformGrid  Margin="0,0,0,0" Rows="1" Columns="2">
+                    <WrapPanel Style="{StaticResource WrapPanel}">
+                        <TextBlock Text="Prospectivity raster:" Margin="10" HorizontalAlignment="left" VerticalAlignment="Center"/>
+                        <!--TextBlock Text="Input rasters" Margin="10" HorizontalAlignment="left" VerticalAlignment="Center"/-->
+                        <!--Style="{DynamicResource TextBlockViewHeaderHighlighted}"-->
+                    </WrapPanel>
+                    <WrapPanel Style="{StaticResource ValueColumn}" MaxHeight="50" HorizontalAlignment="left" VerticalAlignment="Center" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Auto">
+                        <Button FontWeight="Normal" mah:ButtonHelper.PreserveTextCase="True" Background="LightGray" BorderBrush="Black" FontSize="18" Content="Select prospectivity raster"
+                                Margin="0" Width="auto"  HorizontalAlignment="left" VerticalAlignment="Center"  DataContext="{Binding Source={StaticResource Locator}, Path=PermissiveTractViewModel}"
+                                Command="{Binding SelectPRCommand}" IsDefault="True"
+                                ToolTip="The prospectivity raster to be used in tract delineation."/>
+                        <!--Button Content="Upload rasters" Click="UploadRasters"></-->
+                    </WrapPanel>
+                </UniformGrid>
+                <UniformGrid  Margin="0,0,0,0" Rows="1" Columns="1">
+                    <WrapPanel Style="{StaticResource ValueColumn}" MaxHeight="50" HorizontalAlignment="left" VerticalAlignment="Center" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Auto">
+                        <TextBlock Text="{Binding Model.ProspectivityRaster}" FontSize="14" Margin="10" HorizontalAlignment="left" VerticalAlignment="Center" Width="auto"/>
+                    </WrapPanel>
+                </UniformGrid>
+
+                <UniformGrid  Margin="0,0,0,0" Rows="1" Columns="2">
+                    <WrapPanel Style="{StaticResource WrapPanel}">
+                        <TextBlock Text="Tract boundary values:" Margin="10" HorizontalAlignment="left" VerticalAlignment="Center"/>
+                        <!--TextBlock Text="Input rasters" Margin="10" HorizontalAlignment="left" VerticalAlignment="Center"/-->
+                        <!--Style="{DynamicResource TextBlockViewHeaderHighlighted}"-->
+                    </WrapPanel>
+                    <WrapPanel Style="{StaticResource ValueColumn}" MaxHeight="50" HorizontalAlignment="left" VerticalAlignment="Center" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Auto">
+                        <TextBox x:Name="boundaryValues" Text="{Binding Model.TractBoundaryValues}" HorizontalAlignment="left"  VerticalAlignment="Center" FontSize="18" Width="287" ToolTip="A prospectivity score value to define the outer limit of the tract. Several values separated by commas can be given, to produce a series of tract boundaries to choose from."/>
+                    </WrapPanel>
+                </UniformGrid>
+
+                <UniformGrid  Margin="0,0,0,0" Rows="1" Columns="2">
+                    <WrapPanel Style="{StaticResource WrapPanel}">
+                        <TextBlock Text="ID for this permissive tract:" Margin="10" HorizontalAlignment="left" VerticalAlignment="Center"/>
+                        <!--TextBlock Text="Input rasters" Margin="10" HorizontalAlignment="left" VerticalAlignment="Center"/-->
+                        <!--Style="{DynamicResource TextBlockViewHeaderHighlighted}"-->
+                    </WrapPanel>
+                    <WrapPanel Style="{StaticResource ValueColumn}" MaxHeight="50" HorizontalAlignment="left" VerticalAlignment="Center" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Auto">
+                        <TextBox x:Name="DelId" Text="{Binding Model.DelID}" HorizontalAlignment="left"  VerticalAlignment="Center" FontSize="18" Width="287" ToolTip="An ID for the tract to be delineated. This ID is used to identify the tract throughout the whole assessment process."/>
+                    </WrapPanel>
+                </UniformGrid>
+
+                <UniformGrid  Margin="0,0,0,0" Rows="1" Columns="2">
+                    <WrapPanel></WrapPanel>
+                    <WrapPanel Style="{StaticResource ValueColumn}" MaxHeight="50" HorizontalAlignment="left" VerticalAlignment="Center" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Auto">
+                        <Button FontWeight="Normal" mah:ButtonHelper.PreserveTextCase="True" Background="LightGray" BorderBrush="Black" FontSize="18" Content="Select evidence raster file" 
+                                Margin="0" Width="auto"  HorizontalAlignment="left" VerticalAlignment="Center"  DataContext="{Binding Source={StaticResource Locator}, Path=PermissiveTractViewModel}" 
+                                Command="{Binding SelectEvidenceLayerFileCommand}" IsDefault="True"
+                                ToolTip="The evidence raster on which the produced tract(s) will be plotted for viewing."/>
+                        <!--Button Content="Upload rasters" Click="UploadRasters"></-->
+                    </WrapPanel>
+                </UniformGrid>
+                <UniformGrid  Margin="0,0,0,0" Rows="1" Columns="1">
+                    <WrapPanel Style="{StaticResource ValueColumn}" MaxHeight="50" HorizontalAlignment="left" VerticalAlignment="Center" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Auto">
+                        <TextBlock Text="{Binding Model.EvidenceLayerFile}" FontSize="14" Margin="10" HorizontalAlignment="left" VerticalAlignment="Center" Width="auto"/>
+                    </WrapPanel>
+                </UniformGrid>
+
+
+                <UniformGrid Rows="1" Columns="2">
+                    <WrapPanel></WrapPanel>
+                    <WrapPanel Margin="10">
+                        <Button Padding="-10,0,0,0" 
+                          Command="{Binding RunToolCommand}"
+                          CommandParameter="{Binding ElementName=listBox, Path=SelectedItems}"
+                          DataContext="{Binding Source={StaticResource Locator}, Path=PermissiveTractViewModel}"                           
+                          Width="182"
+                          Height="30"
+                          Background="{DynamicResource AccentColorBrush}" 
+                          Foreground="White"
+                          Grid.Column="0" 
+                          Grid.Row="0"
+                          ToolTip="Generate the tract(s) using the boundary value(s) given">
+                            <TextBlock FontSize="16" Text="Generate boundaries" ></TextBlock>
+                        </Button>
+                    </WrapPanel>
+                </UniformGrid>
+
+                <!--UniformGrid Rows="1" Columns="1">
+                    <Button FontSize="18" Content="Show boundary images in filesystem" Style="{DynamicResource DialogButton}" Margin="0" Width="auto"  HorizontalAlignment="left" VerticalAlignment="Center"  DataContext="{Binding Source={StaticResource Locator}, Path=PermissiveTractViewModel}" Command="{Binding ShowBoundariesCommand}" IsDefault="True"/>
+                </-->
+
+                <UniformGrid  Rows="1" Columns="1">
+                    <WrapPanel Width="auto" Height="auto" HorizontalAlignment="left" VerticalAlignment="Center" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Auto">
+                        <ListBox HorizontalAlignment="Center" Height="auto" x:Name="tractboundarylistBox" ItemsSource="{Binding Model.TractBoundaryRasterlist, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" SelectedItem="{Binding SelectedBoundary}" MouseDoubleClick="TextBlock_MouseDown">
+                        </ListBox>
+                    </WrapPanel>
+                </UniformGrid>
+                <!--https://stackoverflow.com/questions/9934623/how-can-i-programatically-select-a-listview-item-from-within-the-viewmodel-->
+
+                <UniformGrid Rows="1" Columns="2">
+                    <WrapPanel></WrapPanel>
+                    <WrapPanel Margin="10">
+                        <Button Padding="-10,0,0,0" 
+                          Visibility="{Binding Path=ShowButton, Mode=TwoWay, Converter={StaticResource BooleanToVisibilityConverter} }"
+                          Command="{Binding AcceptSelectedBoundaryCommand}"
+                          CommandParameter="{Binding ElementName=listBox, Path=SelectedItems}"
+                          DataContext="{Binding Source={StaticResource Locator}, Path=PermissiveTractViewModel}"                           
+                          Width="182"
+                          Height="30"
+                          Background="{DynamicResource AccentColorBrush}" 
+                          Foreground="White"
+                          Grid.Column="0" 
+                          Grid.Row="0"
+                          ToolTip="Select one of the tract boundary values given, visualised by one of the plots listed above. Alternatively, give new tract boundary values and run the 'Generate boundaries' process again.">
+                            <TextBlock FontSize="16" Text="Select tract boundary" ></TextBlock>
+                        </Button>
+                    </WrapPanel>
+                </UniformGrid>
+
+
+                <UniformGrid  Margin="0,0,0,0" Rows="1" Columns="2">
+                    <WrapPanel Style="{StaticResource WrapPanel}">
+                        <TextBlock Text="Minimum polygon area (km2):"  Visibility="{Binding Path=ShowGenTracts, Mode=TwoWay, Converter={StaticResource BooleanToVisibilityConverter} }" Margin="10" HorizontalAlignment="left" VerticalAlignment="Center"/>
+                    </WrapPanel>
+                    <WrapPanel Style="{StaticResource ValueColumn}" MaxHeight="50" HorizontalAlignment="left" VerticalAlignment="Center" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Auto">
+                        <TextBox x:Name="MinArea"  Visibility="{Binding Path=ShowGenTracts, Mode=TwoWay, Converter={StaticResource BooleanToVisibilityConverter} }" Text="{Binding Model.MinArea}" HorizontalAlignment="left"  VerticalAlignment="Center" FontSize="18" Width="80" ToolTip="Minimum area of individual tract polygons to keep. Smaller polygons will be deleted."/>
+                    </WrapPanel>
+                </UniformGrid>
+
+                <UniformGrid Rows="1" Columns="2">
+                    <WrapPanel></WrapPanel>
+                    <WrapPanel Margin="10">
+                        <Button Padding="-10,0,0,0" 
+                          Visibility="{Binding Path=ShowGenTracts, Mode=TwoWay, Converter={StaticResource BooleanToVisibilityConverter} }"
+                          Command="{Binding GenerateTractsCommand}"
+                          CommandParameter="{Binding ElementName=listBox, Path=SelectedItems}"
+                          DataContext="{Binding Source={StaticResource Locator}, Path=PermissiveTractViewModel}"                           
+                          Width="182"
+                          Height="30"
+                          Background="{DynamicResource AccentColorBrush}" 
+                          Foreground="White"
+                          Grid.Column="0" 
+                          Grid.Row="0"
+                          ToolTip="Polygons smaller than the given area will be deleted">
+                            <TextBlock FontSize="16" Text="Clean tract" ></TextBlock>
+                        </Button>
+                    </WrapPanel>
+                </UniformGrid>
+
+                <!--UniformGrid  Rows="1" Columns="1">
+                    <mah:ProgressRing DataContext="{Binding Source={StaticResource Locator}, Path=PermissiveTractViewModel}" IsActive="{Binding IsBusy}" />
+                </-->
+            </StackPanel>
+
+        </TabItem>
+        <TabItem x:Name="Classification"  HorizontalAlignment="Stretch" >
+            <TabItem.Header >
+                <TextBlock ToolTip="Classify the delineated tract into areas of increasing favourability based on prospectivity score values">Classification process</TextBlock>
+            </TabItem.Header>
+            <StackPanel HorizontalAlignment="Left" Margin="0,0,0,0"  Width="600">
+                <UniformGrid  Margin="0,0,0,0" Rows="1" Columns="2">
+                    <WrapPanel Style="{StaticResource WrapPanel}">
+                        <TextBlock Text="Delineation raster:" Margin="10" HorizontalAlignment="left" VerticalAlignment="Center"/>
+                        <!--TextBlock Text="Input rasters" Margin="10" HorizontalAlignment="left" VerticalAlignment="Center"/-->
+                        <!--Style="{DynamicResource TextBlockViewHeaderHighlighted}"-->
+                    </WrapPanel>
+                    <WrapPanel Style="{StaticResource ValueColumn}" MaxHeight="50" HorizontalAlignment="left" VerticalAlignment="Center" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Auto">
+                        <Button FontWeight="Normal" mah:ButtonHelper.PreserveTextCase="True" Background="LightGray" BorderBrush="Black" FontSize="18" Content="Select delineation raster"
+                                Margin="0" Width="auto"  HorizontalAlignment="left" VerticalAlignment="Center"  DataContext="{Binding Source={StaticResource Locator}, Path=PermissiveTractViewModel}"
+                                Command="{Binding SelectDRCommand}" IsDefault="True"
+                                ToolTip="The tract delineation raster to be classified based on prospectivity."/>
+                        <!--Button Content="Upload rasters" Click="UploadRasters"></-->
+                    </WrapPanel>
+                </UniformGrid>
+                <UniformGrid  Margin="0,0,0,0" Rows="1" Columns="1">
+                    <WrapPanel Style="{StaticResource ValueColumn}" MaxHeight="50" HorizontalAlignment="left" VerticalAlignment="Center" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Auto">
+                        <TextBlock Text="{Binding Model.DelineationRaster}" FontSize="14" Margin="10" HorizontalAlignment="left" VerticalAlignment="Center" Width="auto"/>
+                    </WrapPanel>
+                </UniformGrid>
+                <UniformGrid Rows="1" Columns="2">
+                    <WrapPanel Style="{StaticResource ValueColumn}">
+                        <TextBlock  Text="Number of prospectivity classes:" Margin="0" HorizontalAlignment="left" VerticalAlignment="Center"/>
+                    </WrapPanel>
+                    <WrapPanel Style="{StaticResource ValueColumn}">
+                        <TextBox x:Name="numbOfProsClass" Text="{Binding Model.NumbOfProsClasses}" HorizontalAlignment="left"  VerticalAlignment="Center" FontSize="18" Width="50" ToolTip="Number of prospectivity classes to form."/>
+                    </WrapPanel>
+                </UniformGrid>
+
+                <UniformGrid Rows="1" Columns="2">
+                    <WrapPanel></WrapPanel>
+                    <WrapPanel Margin="10">
+                        <Button Padding="-10,0,0,0" 
+                          Command="{Binding CalculateTresholdCommand}"
+                          CommandParameter="{Binding ElementName=listBox, Path=SelectedItems}"
+                          DataContext="{Binding Source={StaticResource Locator}, Path=PermissiveTractViewModel}"                           
+                          Width="182"
+                          Height="30"
+                          Background="{DynamicResource AccentColorBrush}" 
+                          Foreground="White"
+                          Grid.Column="0" 
+                          Grid.Row="0"
+                          ToolTip="Calculate treshold values for the prospectivity classes using equal distance between values.">
+                            <TextBlock FontSize="16" Text="Calculate treshold values" ></TextBlock>
+                        </Button>
+                    </WrapPanel>
+                </UniformGrid>
+
+
+                <UniformGrid Rows="1" Columns="2">
+                    <WrapPanel Style="{StaticResource ValueColumn}">
+                        <TextBlock  Text="Raster min/max values:" Margin="0" HorizontalAlignment="left" VerticalAlignment="Center"/>
+                    </WrapPanel>
+                    <WrapPanel Style="{StaticResource ValueColumn}">
+                        <TextBlock x:Name="minmaxValues" Text="{Binding Model.MinMaxValues}" HorizontalAlignment="left"  VerticalAlignment="Center" FontSize="18" Width="250"/>
+                    </WrapPanel>
+                </UniformGrid>
+
+                <UniformGrid Rows="1" Columns="2">
+                    <WrapPanel Style="{StaticResource ValueColumn}">
+                        <TextBlock  Text="Treshold Values:" Margin="0" HorizontalAlignment="left" VerticalAlignment="Center"/>
+                    </WrapPanel>
+                    <WrapPanel Style="{StaticResource ValueColumn}">
+                        <TextBox x:Name="tresholdValues" Text="{Binding Model.TresholdValues}" HorizontalAlignment="left"  VerticalAlignment="Center" FontSize="18" Width="250" ToolTip="Prospectivity class treshold values separated by commas. Can be given by the user."/>
+                    </WrapPanel>
+                </UniformGrid>
+
+                <UniformGrid Rows="1" Columns="2">
+                    <WrapPanel Style="{StaticResource ValueColumn}">
+                        <TextBlock  Text="Classification ID:" Margin="0" HorizontalAlignment="left" VerticalAlignment="Center"/>
+                    </WrapPanel>
+                    <WrapPanel Style="{StaticResource ValueColumn}">
+                        <TextBox x:Name="classificationID" Text="{Binding Model.ClassificationId}" HorizontalAlignment="left"  VerticalAlignment="Center" FontSize="18" Width="100" ToolTip="An ID for this classification. Several classifications can be run and saved with different names."/>
+                    </WrapPanel>
+                </UniformGrid>
+
+
+                <UniformGrid Rows="1" Columns="2">
+                    <WrapPanel></WrapPanel>
+                    <WrapPanel Margin="10">
+                        <Button Padding="-10,0,0,0" 
+                          Command="{Binding ClassificationCommand }"
+                          CommandParameter="{Binding ElementName=listBox, Path=SelectedItems}"
+                          DataContext="{Binding Source={StaticResource Locator}, Path=PermissiveTractViewModel}"                           
+                          Width="182"
+                          Height="30"
+                          Background="{DynamicResource AccentColorBrush}" 
+                          Foreground="White"
+                          Grid.Column="0" 
+                          Grid.Row="0"
+                          ToolTip="Run the classification process. Several classifications can be performed using different numbers of classes and different class limits. ">
+                            <TextBlock FontSize="16" Text="Classify" ></TextBlock>
+                        </Button>
+                    </WrapPanel>
+                </UniformGrid>
+                <UniformGrid  Rows="1" Columns="1">
+                    <WrapPanel Width="auto" Height="auto" HorizontalAlignment="left" VerticalAlignment="Center" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Auto">
+                        <ListBox HorizontalAlignment="Center" Height="auto" x:Name="classifiedRasterlistBox" Visibility="{Binding Path=ShowClassRasters, Mode=TwoWay, Converter={StaticResource BooleanToVisibilityConverter}}" ItemsSource="{Binding Model.ClassifiedRasterlist, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" SelectedItem="{Binding SelectedClassificationRaster}" MouseDoubleClick="RasterList_MouseDown">
+                        </ListBox>
+                    </WrapPanel>
+                </UniformGrid>
+
+                <UniformGrid Rows="1" Columns="2">
+                    <WrapPanel></WrapPanel>
+                    <WrapPanel Margin="10">
+                        <Button Padding="-10,0,0,0" 
+                          Command="{Binding AcceptSelectedRasterCommand}"
+                          Visibility="{Binding Path=ShowClassRasters, Mode=TwoWay, Converter={StaticResource BooleanToVisibilityConverter} }"
+                          CommandParameter="{Binding ElementName=classifiedRasterlistBox, Path=SelectedItems}"
+                          DataContext="{Binding Source={StaticResource Locator}, Path=PermissiveTractViewModel}"                           
+                          Width="182"
+                          Height="30"
+                          Background="{DynamicResource AccentColorBrush}" 
+                          Foreground="White"
+                          Grid.Column="0" 
+                          Grid.Row="0"
+                          ToolTip="Select the classification to be used from the list above.">
+                            <TextBlock FontSize="16" Text="Select classification" ></TextBlock>
+                        </Button>
+                    </WrapPanel>
+                </UniformGrid>
+
+
+            </StackPanel>
+        </TabItem>
+        <!--TabItem x:Name="wofe"  Header="WofE" HorizontalAlignment="Stretch">
+
+            <StackPanel HorizontalAlignment="Left" Margin="0,0,0,0"  Width="600">
+                <UniformGrid Rows="1" Columns="2">
+                    <WrapPanel Style="{StaticResource ValueColumn}">
+                        <TextBlock  Text="ArcGis workspace:" Margin="10" HorizontalAlignment="left" VerticalAlignment="Center"/>
+                    </WrapPanel>
+                    <WrapPanel Style="{StaticResource ValueColumn}">
+                        <TextBox Text="{Binding Model.WorkSpace}" HorizontalAlignment="left"  VerticalAlignment="Center" FontSize="18" Width="287"/>
+                    </WrapPanel>
+
+                </UniformGrid>
+
+                <UniformGrid  Margin="0,0,0,0" Rows="1" Columns="2">
+                    <WrapPanel Style="{StaticResource WrapPanel}">
+                        <TextBlock Text="Evidence rasters" Margin="10" HorizontalAlignment="left" VerticalAlignment="Center"/>
+                     /WrapPanel>
+                    <WrapPanel Style="{StaticResource ValueColumn}" MaxHeight="50" HorizontalAlignment="left" VerticalAlignment="Center" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Auto">
+                        <Button Style="{DynamicResource DialogButton}" FontSize="18" Content="Select input rasters" Margin="0" Width="auto"  HorizontalAlignment="left" VerticalAlignment="Center"  DataContext="{Binding Source={StaticResource Locator}, Path=PermissiveTractViewModel}" Command="{Binding SelectEvidenceFilesCommand}" IsDefault="True"/>
+                    </WrapPanel>
+                </UniformGrid>
+
+                <UniformGrid  Rows="1" Columns="1">
+                    <WrapPanel Width="auto" Height="auto" HorizontalAlignment="left" VerticalAlignment="Center" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Auto">
+                        <ListBox HorizontalAlignment="Center" Height="auto" x:Name="EvidenceRasterlistBox" ItemsSource="{Binding Path=Model.EvidenceRasterlist}"/>
+                    </WrapPanel>
+                </UniformGrid>
+
+                <UniformGrid Rows="1" Columns="2">
+                    <WrapPanel Style="{StaticResource ValueColumn}">
+                        <TextBlock  Text="Cell size:" Margin="10" HorizontalAlignment="left" VerticalAlignment="Center"/>
+                    </WrapPanel>
+                    <WrapPanel Style="{StaticResource ValueColumn}">
+                        <TextBox Text="{Binding Model.CellSize}" HorizontalAlignment="left"  VerticalAlignment="Center" FontSize="18" Width="50"/>
+                    </WrapPanel>
+
+                </UniformGrid>
+
+                <UniformGrid Rows="1" Columns="2">
+                    <WrapPanel Style="{StaticResource ValueColumn}">
+                        <TextBlock  Text="Mask raster:" Margin="10" HorizontalAlignment="left" VerticalAlignment="Center"/>
+                    </WrapPanel>
+                    <WrapPanel Style="{StaticResource ValueColumn}">
+                        <TextBox Text="{Binding Model.MaskRaster}" HorizontalAlignment="left"  VerticalAlignment="Center" FontSize="18" Width="287"/>
+                    </WrapPanel>
+
+                </UniformGrid>
+
+                <UniformGrid  Rows="1" Columns="2">
+                    <WrapPanel Style="{StaticResource WrapPanel}">
+                        <TextBlock HorizontalAlignment="left" VerticalAlignment="Center" Text="WofE weights type:" Margin="10" />
+                    </WrapPanel>
+                    <WrapPanel Style="{StaticResource ValueColumn}">
+                        <ComboBox ItemsSource="{Binding WofEWeightTypeIDs}" SelectedItem="{Binding Model.WofEWeightsType}"  SelectedIndex="0" HorizontalAlignment="left"  VerticalAlignment="Center" FontSize="16" Width="150"/>
+                    </WrapPanel>
+                </UniformGrid>
+
+                <UniformGrid Rows="1" Columns="2">
+                    <WrapPanel Margin="10">
+                        <Button Padding="-10,0,0,0" Command="{Binding RunToolCommand}"  
+                          DataContext="{Binding Source={StaticResource Locator}, Path=PermissiveTractViewModel}"                           
+                          Width="120"
+                          Height="50"
+                          Background="{DynamicResource AccentColorBrush}" 
+                          Foreground="White"
+                          Grid.Column="0" 
+                          Grid.Row="0">
+                            <TextBlock FontSize="16" Text="Run Tool" ></TextBlock>
+                        </Button>
+                    </WrapPanel>
+                    <WrapPanel>
+                        <mah:ProgressRing DataContext="{Binding Source={StaticResource Locator}, Path=PermissiveTractViewModel}" IsActive="{Binding IsBusy}" />
+                    </WrapPanel>
+                </UniformGrid>
+
+
+            </StackPanel>
+        </ -->
+
+    </TabControl>
+
+
+</UserControl>
