@@ -12,6 +12,10 @@ using System.Diagnostics;
 using System.ComponentModel;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using System.Collections.ObjectModel;
+using MahApps.Metro.Controls;
+using MahApps.Metro.Controls.Dialogs;
+using System.Windows;
 
 namespace MapWizard.ViewModel
 {
@@ -34,10 +38,7 @@ namespace MapWizard.ViewModel
         private readonly ISettingsService settingsService;
         private MonteCarloSimulationModel model;
         private MonteCarloSimulationResultModel result;
-        private bool isBusy;
-        private bool useModelName;
-        private string lastRunDate;
-        private int runStatus;
+        private ViewModelLocator viewModelLocator=new ViewModelLocator();
 
         /// <summary>
         /// Initializes an instance of MonteCarloSimulationViewModel Class.
@@ -50,15 +51,18 @@ namespace MapWizard.ViewModel
             this.logger = logger;
             this.dialogService = dialogService;
             this.settingsService = settingsService;
-            lastRunDate = "Last Run: Never";
-            runStatus = 2;
-            useModelName = false;
+            viewModelLocator = new ViewModelLocator();
             result = new MonteCarloSimulationResultModel();
             RunToolCommand = new RelayCommand(RunTool, CanRunTool);
+            TractChangedCommand = new RelayCommand(TractChanged, CanRunTool);
+            ShowModelDialog = new RelayCommand(OpenModelDialog, CanRunTool);
+            SelectModelCommand = new RelayCommand(SelectResult, CanRunTool);
             SelectGradeObjectCommand = new RelayCommand(SelectGradeObject, CanRunTool);
             SelectTonnageObjectCommand = new RelayCommand(SelectTonnageObject, CanRunTool);
             SelectNDepositsPmfObjectCommand = new RelayCommand(SelectNDepositsPmfObject, CanRunTool);
             OpenResultExcelObjectCommand = new RelayCommand(OpenResultExcelObject, CanRunTool);
+            OpenTotalTonnagePlotCommand = new RelayCommand(OpenTotalTonnagePlot, CanRunTool);
+            OpenMarginalPlotCommand = new RelayCommand(OpenMarginalPlot, CanRunTool);
             MonteCarloSimulationInputParams inputParams = new MonteCarloSimulationInputParams();
             string projectFolder = Path.Combine(settingsService.RootPath, "MCSim");
             if (!Directory.Exists(projectFolder))
@@ -73,124 +77,45 @@ namespace MapWizard.ViewModel
                     inputParams.Load(param_json);
                     Model = new MonteCarloSimulationModel
                     {
-                        GradePdf = inputParams.GradePdf,
-                        TonnagePdf = inputParams.TonnagePdf,
-                        NDepositsPmf = inputParams.NDepositsPmf
+                        GradePlot = inputParams.GradePlot,
+                        TonnagePlot = inputParams.TonnagePlot,
+                        NDepositsPmf = inputParams.NDepositsPmf,
+                        SelectedTract = inputParams.TractID
                     };
-                    if (String.IsNullOrEmpty(Model.GradePdf))
-                    {
-                        Model.GradePdf = "Please select Grade object";
-                    }
-                    if (String.IsNullOrEmpty(Model.TonnagePdf))
-                    {
-                        Model.TonnagePdf = "Please select Tonnage object";
-                    }
-                    if (String.IsNullOrEmpty(Model.NDepositsPmf))
-                    {
-                        Model.NDepositsPmf = "Please select NDepositsPmf object";
-                    }
-                    else
-                    {
-                        Model = new MonteCarloSimulationModel
-                        {
-                            GradePdf = inputParams.GradePdf,
-                            TonnagePdf = inputParams.TonnagePdf,
-                            NDepositsPmf = inputParams.NDepositsPmf
-                        };
-                    }
+                    FindTractIDs();  // Gets the tractID names from PermissiveTractTool's Delineation folder.
+                    //FindMCSimTractIDs(); // Gets the tractID names from MCSim folder
                 }
                 catch (Exception ex)
                 {
-                    Model = new MonteCarloSimulationModel
-                    {
-                        GradePdf = "Please select Grade object",
-                        TonnagePdf = "Please select Tonnage object",
-                        NDepositsPmf = "Please select NDepositsPmf object",
-                        ExtensionFolder = ""
-                    };
+                    Model = new MonteCarloSimulationModel();
                     logger.Error(ex, "Failed to read json file");
-                    dialogService.ShowNotification("Couldn't load Monte Carlo Simulation tool's inputs correctly.", "Error");
+                    dialogService.ShowNotification("Couldn't load Monte Carlo Simulation tool's inputs correctly. Inputs were initialized to default values.", "Error");
+                    viewModelLocator.SettingsViewModel.WriteLogText("Couldn't load Monte Carlo Simulation tool's inputs correctly. Inputs were initialized to default values.", "Error");
                 }
             }
             else
             {
-                Model = new MonteCarloSimulationModel
-                {
-                    GradePdf = "Please select Grade object",
-                    TonnagePdf = "Please select Tonnage object",
-                    NDepositsPmf = "Please select NDepositsPmf object",
-                    ExtensionFolder = ""
-                };
+                Model = new MonteCarloSimulationModel();
+                FindTractIDs();  // Gets the tractID names from PermissiveTractTool's Delineation folder.
+                //FindMCSimTractIDs(); // Gets the tractID names from MCSim folder
             }
-            if (Directory.GetFiles(projectFolder).Length != 0)
+            if (Model.SelectedTract != null)
             {
                 LoadResults();
+            }
+            if (Model.SelectedTract != null)
+            {
+                projectFolder = Path.Combine(projectFolder, Model.SelectedTract);
+                if (Directory.Exists(projectFolder))
+                {
+                    Model.ModelNames.Clear();
+                    FindModelnames(projectFolder);  // Find saved results.
+                }
             }
             var lastRunFile = Path.Combine(settingsService.RootPath, "MCSim", "monte_carlo_simulation_last_run.lastrun");
             if (File.Exists(lastRunFile))
             {
-                LastRunDate = "Last Run: " + (new FileInfo(lastRunFile)).LastWriteTime.ToString();
-            }
-        }
-
-        /// <summary>
-        /// Load results of the last run.
-        /// </summary>
-        private void LoadResults()
-        {
-            var projectFolder = Path.Combine(settingsService.RootPath, "MCSim");
-            var SummaryTotalTonnage = Path.Combine(projectFolder, "summary.txt");
-            var SimulatedDepositsCSV = Path.Combine(projectFolder, "Tract_05_Sim_EF.csv"); // TAGGED: Change the naming of the file.
-            var TotalTonPdf = Path.Combine(projectFolder, "plot.jpeg");
-            var MarginalPdf = Path.Combine(projectFolder, "plotMarginals.jpeg");
-            RunStatus = 1; // This will be changed into 0 if something goes wrong.
-            try
-            {
-                if (File.Exists(SummaryTotalTonnage))
-                {
-                    Result.SummaryTotalTonnage = File.ReadAllText(SummaryTotalTonnage);
-                }
-                else
-                {
-                    Result.SummaryTotalTonnage = null;
-                    RunStatus = 0;
-                }
-                //  TAGGED: Doesn't check all the files.
-                if (File.Exists(SimulatedDepositsCSV))
-                {
-                    Result.SimulatedDepositsCSV = SimulatedDepositsCSV;
-                }
-                else
-                {
-                    Result.SimulatedDepositsCSV = null;
-                    RunStatus = 0;
-                }
-
-                if (File.Exists(TotalTonPdf))
-                {
-                    Result.TotalTonPdf = TotalTonPdf;
-                    Result.TotalTonPdfBitMap = BitmapFromUri(TotalTonPdf);
-                }
-                else
-                {
-                    Result.TotalTonPdf = null;
-                    RunStatus = 0;
-                }
-                if (File.Exists(MarginalPdf))
-                {
-                    Result.MarginalPdf = MarginalPdf;
-                    Result.MarginalPdfBitMap = BitmapFromUri(MarginalPdf);
-                }
-                else
-                {
-                    Result.MarginalPdf = null;
-                    RunStatus = 0;
-                }
-            }
-            catch (Exception ex)
-            {
-                logger.Error(ex + " Could not load results files");
-                RunStatus = 0;
+                Model.LastRunDate = "Last Run: " + (new FileInfo(lastRunFile)).LastWriteTime.ToString();
             }
         }
 
@@ -199,6 +124,24 @@ namespace MapWizard.ViewModel
         /// </summary>
         /// @return Command.
         public RelayCommand RunToolCommand { get; }
+
+        /// <summary>
+        /// Tract change command.
+        /// </summary>
+        /// @return Command.
+        public RelayCommand TractChangedCommand { get; }
+
+        /// <summary>
+        /// Show model dialog command.
+        /// </summary>
+        /// @return Command.
+        public RelayCommand ShowModelDialog { get; }
+
+        /// <summary>
+        /// Select model command.
+        /// </summary>
+        /// @return Command.
+        public RelayCommand SelectModelCommand { get; }
 
         /// <summary>
         /// Select Grade Object command.
@@ -223,6 +166,18 @@ namespace MapWizard.ViewModel
         /// </summary>
         /// @return Command.
         public RelayCommand OpenResultExcelObjectCommand { get; }
+
+        /// <summary>
+        /// Open total tonnage plot -command.
+        /// </summary>
+        /// @return Command.
+        public RelayCommand OpenTotalTonnagePlotCommand { get; }
+
+        /// <summary>
+        /// Open maarginal plot -command.
+        /// </summary>
+        /// @return Command.
+        public RelayCommand OpenMarginalPlotCommand { get; }
 
         /// <summary>
         /// Monte Carlo Simulation model.
@@ -259,32 +214,14 @@ namespace MapWizard.ViewModel
         }
 
         /// <summary>
-        /// Is busy?.
-        /// </summary>
-        /// <returns>Boolean representing the state.</returns>
-        public bool IsBusy
-        {
-            get { return isBusy; }
-            set
-            {
-                if (isBusy == value) return;
-                isBusy = value;
-                RaisePropertyChanged(() => IsBusy);
-                RunToolCommand.RaiseCanExecuteChanged();
-                SelectGradeObjectCommand.RaiseCanExecuteChanged();
-            }
-        }
-
-        /// <summary>
         /// Run tool with user input.
         /// </summary>
         private async void RunTool()
         {
-
-            Result.TotalTonPdf = null;
-            Result.MarginalPdf = null;
+            Result.TotalTonPlot = null;
+            Result.MarginalPlot = null;
             logger.Info("-->{0}", this.GetType().Name);
-            if (UseModelName == false)
+            if (Model.UseModelName == false)
             {
                 Model.ExtensionFolder = "";
             }
@@ -304,22 +241,24 @@ namespace MapWizard.ViewModel
             catch (Exception ex)
             {
                 logger.Error(ex, "Failed to clear output folder");
-                dialogService.ShowNotification("Failed to clear output folder", "Error");
-                RunStatus = 0;
+                dialogService.ShowNotification("Failed to clear output folder.", "Error");
+                viewModelLocator.SettingsViewModel.WriteLogText("Failed to clear output folder in Monte Carlo Simulation tool.", "Error");
+                Model.RunStatus = 0;
                 return;
             }
             // 1. Collect input parameters
             MonteCarloSimulationInputParams input = new MonteCarloSimulationInputParams
             {
 
-                GradePdf = Model.GradePdf,
-                TonnagePdf = Model.TonnagePdf,
+                GradePlot = Model.GradePlot,
+                TonnagePlot = Model.TonnagePlot,
                 NDepositsPmf = Model.NDepositsPmf,
-                ExtensionFolder = Model.ExtensionFolder
+                ExtensionFolder = Model.ExtensionFolder,
+                TractID = model.SelectedTract
             };
             // 2. Execute tool
             MonteCarloSimulationResult ddResult = default(MonteCarloSimulationResult);
-            IsBusy = true;
+            Model.IsBusy = true;
             try
             {
                 await Task.Run(() =>
@@ -327,39 +266,242 @@ namespace MapWizard.ViewModel
                     MonteCarloSimulationTool tool = new MonteCarloSimulationTool();
                     ddResult = tool.Execute(input) as MonteCarloSimulationResult;
                     Result.SummaryTotalTonnage = ddResult.SummaryTotalTonnage;
-                    Result.TotalTonPdf = ddResult.TotalTonPdf;
-                    Result.MarginalPdf = ddResult.MarginalPdf;
+                    Result.TotalTonPlot = ddResult.TotalTonPlot;
+                    Result.MarginalPlot = ddResult.MarginalPlot;
                     Result.SimulatedDepositsCSV = ddResult.SimulatedDepositsCSV;
-                    Result.TotalTonPdfBitMap = BitmapFromUri(Result.TotalTonPdf);
-                    Result.MarginalPdfBitMap = BitmapFromUri(Result.MarginalPdf);
+                    Result.TotalTonPlotBitMap = BitmapFromUri(Result.TotalTonPlot);
+                    Result.MarginalPlotBitMap = BitmapFromUri(Result.MarginalPlot);
                 });
-                if (Model.ExtensionFolder != "" && Model.ExtensionFolder != null)
-                {
-                    DirectoryInfo extDirectory = new DirectoryInfo(Path.Combine(rootPath, Model.ExtensionFolder));
-                    foreach (FileInfo file2 in extDirectory.GetFiles()) // Select files from selected model root folder.
-                    {
-                        var destPath = Path.Combine(rootPath, file2.Name);
-                        var sourcePath = Path.Combine(Path.Combine(rootPath, Model.ExtensionFolder), file2.Name);
-                        File.Copy(sourcePath, destPath, true); // Copy files to new Root folder.
-                    }
-                }
+                var modelFolder = Path.Combine(rootPath, Model.SelectedTract, Model.ExtensionFolder);
+                Model.ModelNames.Clear();
+                FindModelnames(Path.Combine(rootPath, Model.SelectedTract));  // Find saved results.
                 string lastRunFile = Path.Combine(Path.Combine(settingsService.RootPath, "MCSim", "monte_carlo_simulation_last_run.lastrun"));
-                File.Create(lastRunFile);
-                dialogService.ShowNotification("Monte Carlo simulation tool completed successfully", "Success");
-                LastRunDate = "Last Run: " + DateTime.Now.ToString("g");
-                RunStatus = 1;
+                File.Create(lastRunFile).Close();
+                dialogService.ShowNotification("Monte Carlo simulation tool completed successfully.", "Success");
+                viewModelLocator.SettingsViewModel.WriteLogText("Monte Carlo simulation tool completed successfully.", "Success");
+                Model.LastRunDate = "Last Run: " + DateTime.Now.ToString("g");
+                Model.RunStatus = 1;
             }
             catch (Exception ex)
             {
                 logger.Error(ex, "Failed to execute REngine() script");
-                dialogService.ShowNotification("Run failed. Check output for details", "Error");
-                RunStatus = 0;
+                dialogService.ShowNotification("Run failed. Check output for details. Check output for details\r\n- Are all input parameters correct?\r\n- Are all input files valid? \r\n- Are all input and output files closed?", "Error");
+                viewModelLocator.SettingsViewModel.WriteLogText("Monte Carlo Simulation tool run failed. Check output for details\r\n- Are all input parameters correct?\r\n- Are all input files valid? \r\n- Are all input and output files closed?", "Error");
+                Model.RunStatus = 0;
             }
             finally
             {
-                IsBusy = false;
+                Model.IsBusy = false;
             }
             logger.Info("<--{0} completed", this.GetType().Name);
+        }
+
+        /// <summary>
+        /// Select certain result.
+        /// </summary>
+        private void SelectResult()
+        {
+            if (Model.ModelNames.Count <= 0)
+            {
+                dialogService.ShowNotification("There are no results to select.", "Error");
+                viewModelLocator.SettingsViewModel.WriteLogText("There are no results to select.", "Error");
+                return;
+            }
+            try
+            {
+                var modelDirPath = Model.ModelNames[Model.SelectedModelIndex];
+                var modelDirInfo = new DirectoryInfo(Model.ModelNames[Model.SelectedModelIndex]);
+                var selectedProjectFolder = Path.Combine(settingsService.RootPath, "MCSim", Model.SelectedTract, "SelectedResult");
+                if (modelDirPath == selectedProjectFolder)
+                {
+                    dialogService.ShowNotification("SelectedResult folder cannot be selected. ", "Error");
+                    return;
+                }
+                if (!Directory.Exists(selectedProjectFolder))
+                {
+                    Directory.CreateDirectory(selectedProjectFolder);
+                }
+                DirectoryInfo di = new DirectoryInfo(selectedProjectFolder);
+                foreach (FileInfo file in di.GetFiles())
+                {
+                    file.Delete();
+                }
+                foreach (DirectoryInfo dir in di.GetDirectories())
+                {
+                    dir.Delete(true);
+                }
+                foreach (FileInfo file2 in modelDirInfo.GetFiles())
+                {
+                    var destPath = Path.Combine(selectedProjectFolder, file2.Name);
+                    var sourcePath = Path.Combine(modelDirPath, file2.Name);
+                    File.Copy(sourcePath, destPath, true);
+                }
+                MonteCarloSimulationInputParams inputParams = new MonteCarloSimulationInputParams();
+                string param_json = Path.Combine(selectedProjectFolder, "monte_carlo_simulation_input_params.json");
+                if (File.Exists(param_json))
+                {
+                    inputParams.Load(param_json);
+                    Model.GradePlot = inputParams.GradePlot;
+                    Model.TonnagePlot = inputParams.TonnagePlot;
+                    Model.NDepositsPmf = inputParams.NDepositsPmf;
+                    Model.ExtensionFolder = inputParams.ExtensionFolder;
+                    Model.SelectedTract = inputParams.TractID;
+                    File.Copy(param_json, Path.Combine(settingsService.RootPath, "MCSim", "monte_carlo_simulation_input_params.json"), true);
+                }
+                dialogService.ShowNotification("Monte Carlo Simulation result selected successfully.", "Success");
+                viewModelLocator.SettingsViewModel.WriteLogText("Monte Carlo Simulation result selected successfully.", "Success");
+            }
+            catch (Exception ex)
+            {
+                logger.Trace(ex, "Error in result selection");
+                dialogService.ShowNotification("Failed to select result.", "Error");
+                viewModelLocator.SettingsViewModel.WriteLogText("Failed to select result in Monte Carlo Simulation tool.", "Error");
+            }
+            var metroWindow = (Application.Current.MainWindow as MetroWindow);
+            var dialog = metroWindow.GetCurrentDialogAsync<BaseMetroDialog>();
+            metroWindow.HideMetroDialogAsync(dialog.Result);
+            LoadResults();
+        }
+
+        /// <summary>
+        /// Load results of the last run.
+        /// </summary>
+        private void LoadResults()
+        {
+            // This makes sure that tool doesn't throw an error when it's not run.
+            if (Model.SelectedTract != null)
+            {
+                var projectFolder = Path.Combine(settingsService.RootPath, "MCSim", Model.SelectedTract, "SelectedResult");
+                var SummaryTotalTonnage = Path.Combine(projectFolder, "summary.txt");
+                var SimulatedDepositsCSV = Path.Combine(projectFolder, Model.SelectedTract + "_05_Sim_EF.csv"); // TAGGED: Change the naming of the file.
+                var TotalTonPdf = Path.Combine(projectFolder, "plot.jpeg");
+                var MarginalPdf = Path.Combine(projectFolder, "plotMarginals.jpeg");
+                if (Directory.Exists(projectFolder))
+                {
+                    Model.RunStatus = 1; // This will be changed into 0 if something goes wrong.
+                    try
+                    {
+                        if (File.Exists(SummaryTotalTonnage))
+                        {
+                            Result.SummaryTotalTonnage = File.ReadAllText(SummaryTotalTonnage);
+                        }
+                        else
+                        {
+                            Result.SummaryTotalTonnage = null;
+                            Model.RunStatus = 0;
+                        }
+                        //  TAGGED: Doesn't check all the files.
+                        if (File.Exists(SimulatedDepositsCSV))
+                        {
+                            Result.SimulatedDepositsCSV = SimulatedDepositsCSV;
+                        }
+                        else
+                        {
+                            Result.SimulatedDepositsCSV = null;
+                            Model.RunStatus = 0;
+                        }
+
+                        if (File.Exists(TotalTonPdf))
+                        {
+                            Result.TotalTonPlot = TotalTonPdf;
+                            Result.TotalTonPlotBitMap = BitmapFromUri(TotalTonPdf);
+                        }
+                        else
+                        {
+                            Result.TotalTonPlot = null;
+                            Model.RunStatus = 0;
+                        }
+                        if (File.Exists(MarginalPdf))
+                        {
+                            Result.MarginalPlot = MarginalPdf;
+                            Result.MarginalPlotBitMap = BitmapFromUri(MarginalPdf);
+                        }
+                        else
+                        {
+                            Result.MarginalPlot = null;
+                            Model.RunStatus = 0;
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        logger.Error(ex + " Could not load result files.");
+                        dialogService.ShowNotification("Couldn't load Monte Carlo Simulation tool's result files correctly.", "Error");
+                        viewModelLocator.SettingsViewModel.WriteLogText("Couldn't load Monte Carlo Simulation tool's result files correctly.", "Error");
+                        Model.RunStatus = 0;
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Update which tract is chosen and get the tract spesific results.
+        /// </summary>
+        private void TractChanged()
+        {
+            if (Model.SelectedTract != null)
+            {
+                string projectFolder = Path.Combine(settingsService.RootPath, "MCSim");
+                projectFolder = Path.Combine(projectFolder, Model.SelectedTract);
+                if (Directory.Exists(projectFolder))
+                {
+                    Model.ModelNames.Clear();
+                    FindModelnames(projectFolder);  // Find saved results.
+                }
+            }
+        }
+
+        /// <summary>
+        /// Find all saved results, which have been made by past runs.
+        /// </summary>
+        /// <param name="projectFolder">Models's folder.</param>
+        private void FindModelnames(string projectFolder)
+        {
+            DirectoryInfo folderInfo = new DirectoryInfo(projectFolder);
+            foreach (DirectoryInfo result in folderInfo.GetDirectories())
+            {
+                if (result.Name != "SelectedResult")
+                {
+                    foreach (FileInfo file in result.GetFiles())
+                    {
+                        if (file.Name == "monte_carlo_simulation_input_params.json")
+                        {
+                            Model.ModelNames.Add(result.FullName);
+                        }
+                    }
+                }
+            }
+            // Goes also through the main folder.
+            foreach (FileInfo file in folderInfo.GetFiles())
+            {
+                if (file.Name == "monte_carlo_simulation_input_params.json")
+                {
+                    Model.ModelNames.Add(folderInfo.FullName);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Get TractIDs.
+        /// </summary>
+        public void FindTractIDs()
+        {
+            Model.TractIDNames = new ObservableCollection<string>();
+            string tractRootPath = Path.Combine(settingsService.RootPath, "TractDelineation", "Tracts");
+            if (Directory.Exists(tractRootPath))
+            {
+                DirectoryInfo di = new DirectoryInfo(tractRootPath);
+                foreach (DirectoryInfo dir in di.GetDirectories())
+                {
+                    if (!dir.Name.StartsWith("AGG"))
+                    {
+                        Model.TractIDNames.Add(dir.Name);  // Get TractID by getting the name of the directory.
+                    }
+                }
+            }
+            else
+            {
+                Directory.CreateDirectory(Path.Combine(settingsService.RootPath, "TractDelineation", "Tracts"));
+            }
         }
 
         /// <summary>
@@ -369,15 +511,17 @@ namespace MapWizard.ViewModel
         {
             try
             {
-                string objectFile = dialogService.OpenFileDialog(Path.Combine(settingsService.RootPath, "GTModel", "SelectedResult"), "", true, true);
+                string objectFile = dialogService.OpenFileDialog(Path.Combine(settingsService.RootPath, "GTModel", "SelectedResult"), "", true, true, settingsService.RootPath);
                 if (!string.IsNullOrEmpty(objectFile))
                 {
-                    Model.GradePdf = objectFile.Replace("\\", "/");
+                    Model.GradePlot = objectFile.Replace("\\", "/");
                 }
             }
             catch (Exception ex)
             {
                 logger.Error(ex, "Failed to show OpenFileDialog");
+                dialogService.ShowNotification("Failed to select input file", "Error");
+                viewModelLocator.SettingsViewModel.WriteLogText("Failed to select input file for Grade Object in Monte Carlo Simulation tool.", "Error");
             }
         }
 
@@ -388,15 +532,17 @@ namespace MapWizard.ViewModel
         {
             try
             {
-                string objectFile = dialogService.OpenFileDialog(Path.Combine(settingsService.RootPath, "GTModel", "SelectedResult"), "", true, true);
+                string objectFile = dialogService.OpenFileDialog(Path.Combine(settingsService.RootPath, "GTModel", "SelectedResult"), "", true, true, settingsService.RootPath);
                 if (!string.IsNullOrEmpty(objectFile))
                 {
-                    Model.TonnagePdf = objectFile.Replace("\\", "/");
+                    Model.TonnagePlot = objectFile.Replace("\\", "/");
                 }
             }
             catch (Exception ex)
             {
                 logger.Error(ex, "Failed to show OpenFileDialog");
+                dialogService.ShowNotification("Failed to select input file", "Error");
+                viewModelLocator.SettingsViewModel.WriteLogText("Failed to select input file for Tonnage Object in Monte Carlo Simulation tool.", "Error");
             }
         }
 
@@ -407,7 +553,7 @@ namespace MapWizard.ViewModel
         {
             try
             {
-                string objectFile = dialogService.OpenFileDialog(Path.Combine(settingsService.RootPath, "UndiscDep", "SelectedResult"), "", true, true);
+                string objectFile = dialogService.OpenFileDialog(Path.Combine(settingsService.RootPath, "UndiscDep", Model.SelectedTract, "SelectedResult"), "", true, true, settingsService.RootPath);
                 if (!string.IsNullOrEmpty(objectFile))
                 {
                     Model.NDepositsPmf = objectFile.Replace("\\", "/");
@@ -416,6 +562,8 @@ namespace MapWizard.ViewModel
             catch (Exception ex)
             {
                 logger.Error(ex, "Failed to show OpenFileDialog");
+                dialogService.ShowNotification("Failed to select input file.", "Error");
+                viewModelLocator.SettingsViewModel.WriteLogText("Failed to select input file for Pmf Object in Monte Carlo Simulation tool.", "Error");
             }
         }
 
@@ -431,22 +579,54 @@ namespace MapWizard.ViewModel
             catch (Exception ex)
             {
                 logger.Error(ex, "Failed to open csv file");
-                dialogService.ShowNotification("Failed to open csv file. Check output for details", "Error");
+                dialogService.ShowNotification("Failed to open csv file. Check output for details.", "Error");
+                viewModelLocator.SettingsViewModel.WriteLogText("Failed to open csv file in Monte Carlo Simulation tool.", "Error");
             }
         }
 
         /// <summary>
-        /// Whether to save result in separate folder.
+        /// Open total tonnage image.
         /// </summary>
-        /// @return Boolean representing the choice.
-        public bool UseModelName
+        private void OpenTotalTonnagePlot()
         {
-            get { return useModelName; }
-            set
+            try
             {
-                if (value == useModelName) return;
-                useModelName = value;
-                RaisePropertyChanged("UseModelName");
+                bool openFile = dialogService.MessageBoxDialog();
+                if (openFile == true)
+                {
+                    if (File.Exists(Result.TotalTonPlot))
+                    {
+                        Process.Start(Result.TotalTonPlot);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                logger.Error(ex, "Failed to open imagefile");
+                dialogService.ShowNotification("Failed to open imagefile.", "Error");
+            }
+        }
+
+        /// <summary>
+        /// Open marginal image.
+        /// </summary>
+        private void OpenMarginalPlot()
+        {
+            try
+            {
+                bool openFile = dialogService.MessageBoxDialog();
+                if (openFile == true)
+                {
+                    if (File.Exists(Result.MarginalPlot))
+                    {
+                        Process.Start(Result.MarginalPlot);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                logger.Error(ex, "Failed to open imagefile");
+                dialogService.ShowNotification("Failed to open imagefile.", "Error");
             }
         }
 
@@ -456,37 +636,16 @@ namespace MapWizard.ViewModel
         /// <returns>Boolean representing the state.</returns>
         private bool CanRunTool()
         {
-            return !IsBusy;
+            return !Model.IsBusy;
         }
 
         /// <summary>
-        /// Run status.
+        /// Method stub to show selectPDFs-dialog
         /// </summary>
-        /// @return Boolean representing the state.
-        public int RunStatus
+        public void OpenModelDialog()
         {
-            get { return runStatus; }
-            set
-            {
-                if (value == runStatus) return;
-                runStatus = value;
-                RaisePropertyChanged("RunStatus");
-            }
-        }
-
-        /// <summary>
-        /// Date and time of last run.
-        /// </summary>
-        /// @return Date.
-        public string LastRunDate
-        {
-            get { return lastRunDate; }
-            set
-            {
-                if (value == lastRunDate) return;
-                lastRunDate = value;
-                RaisePropertyChanged("LastRunDate");
-            }
+            viewModelLocator.Main.DialogContentSource = "MonteCarloSimulationViewModel";
+            dialogService.ShowMessageDialog();
         }
 
         /// <summary>

@@ -1,0 +1,26 @@
+Type: Package
+Package: smoothr
+Title: Smooth and Tidy Spatial Features
+Version: 0.1.2
+Authors@R: person("Matthew", "Strimas-Mackey", email = "mstrimas@gmail.com", role = c("aut", "cre"), comment = c(ORCID = "0000-0001-8929-7776"))
+Description: Tools for smoothing and tidying spatial features (i.e. lines and 
+    polygons) to make them more aesthetically pleasing. Smooth curves, fill 
+    holes, and remove small fragments from lines and polygons.
+License: GPL-3
+URL: http://strimas.com/smoothr, https://github.com/mstrimas/smoothr
+BugReports: https://github.com/mstrimas/smoothr/issues
+Depends: R (>= 3.1.2)
+Imports: methods, raster, sf, stats, units
+Suggests: covr, knitr, lwgeom, rmarkdown, sp, testthat
+VignetteBuilder: knitr
+Encoding: UTF-8
+LazyData: true
+RoxygenNote: 7.0.2
+NeedsCompilation: no
+Packaged: 2020-01-23 17:54:44 UTC; mes335
+Author: Matthew Strimas-Mackey [aut, cre]
+    (<https://orcid.org/0000-0001-8929-7776>)
+Maintainer: Matthew Strimas-Mackey <mstrimas@gmail.com>
+Repository: CRAN
+Date/Publication: 2020-01-23 22:50:02 UTC
+Built: R 3.6.2; ; 2020-01-31 22:06:44 UTC; windows

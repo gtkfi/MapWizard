@@ -1,0 +1,17 @@
+Package: conf.design
+Type: Package
+Title: Construction of factorial designs
+Version: 2.0.0
+Date: 2013-02-22
+Suggests: stats, utils
+Author: Bill Venables
+Maintainer: Bill Venables <Bill.Venables@gmail.com>
+Description: This small library contains a series of simple tools for
+        constructing and manipulating confounded and fractional
+        factorial designs.
+License: GPL-2
+Packaged: 2013-02-23 13:35:16 UTC; owner
+NeedsCompilation: no
+Repository: CRAN
+Date/Publication: 2013-02-23 15:18:29
+Built: R 3.6.0; ; 2019-05-28 21:04:25 UTC; windows

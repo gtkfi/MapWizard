@@ -1,0 +1,184 @@
+Dear Emacs, please make this -*-Text-*- mode!
+
+NEWS for gWidgets
+
+Changes for 0.0-54
+------------------
+
+* fixes to variables to get working with pmg
+
+* fixes to ggenericwidget to work with tcltk
+
+Changes for 0.0-53
+------------------
+
+
+Changes for 0.0-52
+------------------
+
+ 
+* fix typos, cont= to get past R CMD check
+
+Changes for 0.0-51
+------------------
+* fix to svalue method when index=TRUE (don't use coercewith here)
+Thanks Fabio
+
+CHanges for 0.0-49, 50
+-----------------------
+* oops, forgot to note
+
+Changes for 0.0-48
+------------------
+* Minor tweak for getting cleanly through R CMD check
+ 
+
+Changes for 0.0-47
+------------------
+* minor tweaks for getting docs past check 
+
+Changes for 0.0-46
+------------------
+
+* added some error checking on input arguments
+
+* added do.buttons argument to gbasicdialog
+
+* modify [ method for glayout. Returns object, list of objects or
+  matrix of objects
+
+Changes for 0.0-45
+------------------
+* focus generic for gwindow
+
+Changes for 0.0-44
+------------------
+* add editable, editable<- methods. 
+
+Changes for 0.0-43
+------------------
+* start to use roxygen for documentation
+* redid ghelp, ghelpbrowser
+ 
+Changes for 0.0-42
+------------------
+* minor doc fixes
+* new multiple argument for gfile
+
+Changes for 0.0-41
+-------------------
+* toolkitProvidesWidget: new method to test if a widget is provided by the toolkit
+* did ghelp for R2.11.0. (Working?)
+* new constructor gsvg (Qt, WWW only)
+* bug fix in gcommandline
+* leave message for ghelp if newer R version. (Need to update for html
+  help changes)
+* added use.table argument for gcheckboxgroup. If implemented, uses a two column
+  table with a checkbox column and a labels column.
+
+Changes for 0.0-40	
+-------------------
+* oops, forgot to document
+
+Changes for 0.0-39
+-------------------
+* deprecated .fixFontMessUp -- was giving issues in the toolkit. From
+  now on fonts are specified in appropriate way (see ?font)
+
+* font(gtext_object) <- value will set for entire buffer if no
+  selection. Aslo gtext(---, font.attr=c(...)) will set font
+  attributes for
+  buffer, not just initial text.
+
+Changes for 0.0-38
+------------------
+
+* change to API to introduce addHandlerColumnClicked,
+addHandlerColumnDoubleClick, addHandlerColumnRightClick. For use with
+grid widgets gdf and gtable.
+
+Changes for 0.0-37
+------------------
+* fix to tests to get passed CRAN checks
+
+Changes for 0.0-36
+------------------
+ 
+* added [<- method for gspinbutton, gslider to update value. The value
+  must be a regular sequence
+
+Changes for 0.0-33
+------------------
+
+* remove popup when no toolkits are installed.
+
+* fix to ggenericwidget and cli
+
+Changes for 0.0-32
+------------------
+
+* fixes to the ghelpbrowser GUI. This works -- and looks -- much
+  better under tcltk, RGtk2. (Under rJava it is still awfule).
+
+* added new function installing_gWidgets_toolkits
+
+* made svalue<- for gcheckboxgroup use logicals, character or indices;
+  fixed up docs
+
+* added gseparator() in defn of gmenu, gtoolbar list.
+
+* started puting in RUnit test suites for better testingn of packages.
+
+* new gformlayout constructor. This allows programmer to define
+  compound GUI components using a list (like how XML is used with
+  glade, say). This is similar, but much more flexible and better
+  layed out, than ggenericwidget.
+
+Changes for 0.0-31
+------------------
+
+* Added gaction constructor to make action object for buttons, menus,
+  toolbars.
+
+* Added tooltip<- method to set a tooltip for a widget. Should work
+  with RGtk2 and windows at a minimum
+
+* to handle case with no toolkit, check with popups is made.
+
+* added toolkits to SUGGESTS: line in DESCRIPTION
+
+Changes for 0.0-29
+------------------
+
+* updated gWidgets vignette
+
+Changes for 0.0-28
+-------------------
+
+* fix to ghelp to work better under windows
+
+* added a tests suddirectory to inst. This allows the toolkit packages
+  to run tests on installation.
+
+
+Changes for  0.0-27
+-------------------
+
+* Added parent argument to dialogs. If specified will located dialog
+  in relation to the parent gwindow instance. Also changed "location"
+  argument for gwindow to "parent" to match argument names. That
+  argument still accepts x,y coordinates too. 
+
+* added function gwCat to be used to give messages in toolkit. Set
+  option gWidgetsDebug=TRUE to see messages.
+
+* added blockHandler, unblockHandler to API. Only implemented in
+  gWidgetsRGtk2
+
+* names method refers to label for gframe, gexpandgroup
+
+* added addHandlerMouseMotion -- like mouse over, different from
+  draggin drop action over an item
+
+* added defaultWidget, and defaultWidget<- for setting the default
+  widget in a dialog.

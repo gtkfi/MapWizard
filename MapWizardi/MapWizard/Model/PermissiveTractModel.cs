@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using GalaSoft.MvvmLight;
-
 
 namespace MapWizard.Model
 {
@@ -9,8 +9,6 @@ namespace MapWizard.Model
     /// </summary>
     public class PermissiveTractModel : ObservableObject
     {
-        private string pythonpath;
-        private string scriptpath;
         private string envpath;
         private List<string> inrasterlist = new List<string> { "" };
         private string outraster;
@@ -40,38 +38,18 @@ namespace MapWizard.Model
         private string trainingpoints;
         private string arcsdm;
         private string confidenceLevel;
-
-
-        /// <summary>
-        /// Path to python.
-        /// </summary>
-        /// @return string
-        public string PythonPath
-        {
-            get
-            {
-                return pythonpath;
-            }
-            set
-            {
-                Set<string>(() => this.PythonPath, ref pythonpath, value);
-            }
-        }
-
-        /// <summary>
-        /// Path to Permissive Tract script.
-        /// </summary>
-        public string ScriptPath
-        {
-            get
-            {
-                return scriptpath;
-            }
-            set
-            {
-                Set<string>(() => this.ScriptPath, ref scriptpath, value);
-            }
-        }
+        private string pathToTractPolygon;
+        private string explanationOfTract;
+        private string idOfTract;
+        private string explanationOfRasters;
+        private string delRasterFolder;
+        private string delRasterFolderWofe;
+        private string explanationOfEvidenceRasters;
+        private string explanationOfMaskPolygon;
+        private string explanationOfTrainingPoints;
+        private List<string> delineationCleanFilelist;
+        private ObservableCollection<string> tractIDNames = new ObservableCollection<string>();
+        private string selectedTract;
 
         /// <summary>
         /// Environment path.
@@ -506,6 +484,199 @@ namespace MapWizard.Model
             set
             {
                 Set<string>(() => this.ConfidenceLevel, ref confidenceLevel, value);
+            }
+        }
+
+        
+        /// <summary>
+        /// Path to polygon layer (Delineation -> input tract polygon)
+        /// </summary>
+        public string PathToTractPolygon
+        {
+            get
+            {
+                return pathToTractPolygon;
+            }
+            set
+            {
+                Set<string>(() => this.PathToTractPolygon, ref pathToTractPolygon, value);
+            }
+        }
+        
+        /// <summary>
+        /// Explanation of the tract
+        /// </summary>
+        public string ExplanationOfTract
+        {
+            get
+            {
+                return explanationOfTract;
+            }
+            set
+            {
+                Set<string>(() => this.ExplanationOfTract, ref explanationOfTract, value);
+            }
+        }
+
+
+        /// <summary>
+        /// ID of the tract
+        /// </summary>
+        public string IdOfTract
+        {
+            get
+            {
+                return idOfTract;
+            }
+            set
+            {
+                Set<string>(() => this.IdOfTract, ref idOfTract, value);
+            }
+        }
+
+        /// <summary>
+        /// Explanation of the rasters that are compined in Fuzzy process
+        /// </summary>
+        public string ExplanationOfRasters
+        {
+            get
+            {
+                return explanationOfRasters;
+            }
+            set
+            {
+                Set<string>(() => this.ExplanationOfRasters, ref explanationOfRasters, value);
+            }
+        }
+
+      
+        /// <summary>
+        /// Final deliniation raster folder where fuzzy saves deliniation raster
+        /// </summary>
+        public string DelRasterFolder
+        {
+            get
+            {
+                return delRasterFolder;
+            }
+            set
+            {
+                Set<string>(() => this.DelRasterFolder, ref delRasterFolder, value);
+            }
+        }
+
+        /// <summary>
+        /// Final deliniation raster folder where Wofe saves deliniation raster
+        /// </summary>
+        public string DelRasterFolderWofe
+        {
+            get
+            {
+                return delRasterFolderWofe;
+            }
+            set
+            {
+                Set<string>(() => this.DelRasterFolderWofe, ref delRasterFolderWofe, value);
+            }
+        }
+
+
+        /// <summary>
+        /// Explanation Of Evidence Rasters on WofE -process
+        /// </summary>
+        public string ExplanationOfEvidenceRasters
+        {
+            get
+            {
+                return explanationOfEvidenceRasters;
+            }
+            set
+            {
+                Set<string>(() => this.ExplanationOfEvidenceRasters, ref explanationOfEvidenceRasters, value);
+            }
+        }
+
+        
+        /// <summary>
+        /// Explanation Of mask polygon on WofE -process
+        /// </summary>
+        public string ExplanationOfMaskPolygon
+        {
+            get
+            {
+                return explanationOfMaskPolygon;
+            }
+            set
+            {
+                Set<string>(() => this.ExplanationOfMaskPolygon, ref explanationOfMaskPolygon, value);
+            }
+        }
+
+        
+        /// <summary>
+        /// Explanation Of training points on WofE -process
+        /// </summary>
+        public string ExplanationOfTrainingPoints
+        {
+            get
+            {
+                return explanationOfTrainingPoints;
+            }
+            set
+            {
+                Set<string>(() => this.ExplanationOfTrainingPoints, ref explanationOfTrainingPoints, value);
+            }
+        }
+
+        
+        /// <summary>
+        /// Cleaned delineation pdf -file
+        /// </summary>
+        public List<string> DelineationCleanFilelist
+        {
+            get
+            {
+                return delineationCleanFilelist;
+            }
+            set
+            {
+                Set<List<string>>(() => this.DelineationCleanFilelist, ref delineationCleanFilelist, value);
+            }
+        }
+
+        /// <summary>
+        /// TractID collection.
+        /// </summary>
+        /// @return TractID collection.
+        public ObservableCollection<string> TractIDNames
+        {
+            get
+            {
+                return tractIDNames;
+            }
+            set
+            {
+                if (value == null)
+                {
+                    value = new ObservableCollection<string>();
+                }
+                Set<ObservableCollection<string>>(() => this.TractIDNames, ref tractIDNames, value);
+            }
+        }
+
+        /// <summary>
+        /// Selected index of TractID Collection.
+        /// </summary>
+        /// @return Index.
+        public string SelectedTract
+        {
+            get
+            {
+                return selectedTract;
+            }
+            set
+            {
+                Set<string>(() => this.SelectedTract, ref selectedTract, value);
             }
         }
 

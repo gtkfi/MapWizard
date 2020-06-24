@@ -1,0 +1,467 @@
+useDynLib("sets", .registration = TRUE)
+
+importFrom("graphics", "axis", "barplot", "lines", "par", "plot", "text")
+importFrom("grDevices", "grey.colors")
+importFrom("stats", "approxfun", "dnorm", "median", "na.omit", "weighted.mean")
+importFrom("utils", "combn", "str")
+
+export("%e%",
+       "%D%",
+       "as.set",
+       "canonicalize_set_and_mapping",
+       "is.set",
+       "make_set_with_order",
+       "set",
+       "set_cardinality",
+       "set_cartesian",
+       "set_combn",
+       "set_complement",
+       "set_contains_element",
+       "set_intersection",
+       "set_is_empty",
+       "set_is_equal",
+       "set_is_proper_subset",
+       "set_is_subset",
+       "set_outer",
+       "set_power",
+       "set_similarity",
+       "set_dissimilarity",
+       "set_symdiff",
+       "set_union",
+       "sets_options"
+       )
+
+S3method("[", "set")
+S3method("[[", "set")
+S3method("[<-", "set")
+S3method("[[<-", "set")
+S3method("Math","set")
+#S3method("Ops","set")
+S3method("Summary","set")
+S3method("all.equal","set")
+S3method("as.list", "set")
+#S3method("as.list", "function")
+S3method("make_set_with_order", "character")
+S3method("make_set_with_order", "data.frame")
+S3method("make_set_with_order", "matrix")
+S3method("make_set_with_order", "default")
+S3method("make_set_with_order", "factor")
+S3method("make_set_with_order", "integer")
+S3method("make_set_with_order", "list")
+S3method("make_set_with_order", "logical")
+S3method("make_set_with_order", "NULL")
+S3method("make_set_with_order", "numeric")
+S3method("make_set_with_order", "ordered")
+S3method("make_set_with_order", "set")
+S3method("make_set_with_order", "gset")
+S3method("make_set_with_order", "cset")
+S3method("make_set_with_order", "tuple")
+S3method("c","set")
+S3method("format", "set")
+S3method("length", "set")
+S3method("lengths", "set")
+S3method("mean", "set")
+S3method("median", "set")
+S3method("plot","set")
+S3method("lines","set")
+S3method("print","set")
+S3method("print","summary.set")
+S3method("rep","set")
+S3method("str","set")
+S3method("summary","set")
+
+## Generalized set stuff.
+export("e")
+export("is_element")
+S3method("format","element")
+S3method("LABEL","element")
+S3method("print","element")
+
+export("%e%",
+       "%D%",
+       "as.gset",
+       "gset",
+       "gset_bound",
+       "gset_cardinality",
+       "gset_cartesian",
+       "gset_charfun",
+       "gset_combn",
+       "gset_complement",
+       "gset_core",
+       "gset_concentrate",
+       "gset_contains_element",
+       "gset_defuzzify",
+       "gset_difference",
+       "gset_dilate",
+       "gset_has_missings",
+       "gset_height",
+       "gset_intersection",
+       "gset_is_crisp",
+       "gset_is_empty",
+       "gset_is_equal",
+       "gset_is_fuzzy_multiset",
+       "gset_is_fuzzy_set",
+       "gset_is_multiset",
+       "gset_is_proper_subset",
+       "gset_is_set",
+       "gset_is_set_or_fuzzy_set",
+       "gset_is_set_or_multiset",
+       "gset_is_subset",
+       "gset_memberships",
+       "gset_transform_memberships",
+       "gset_normalize",
+       "gset_outer",
+       "gset_peak",
+       "gset_power",
+       "gset_product",
+       "gset_mean",
+       "gset_similarity",
+       "gset_dissimilarity",
+       "gset_sum",
+       "gset_support",
+       "gset_symdiff",
+       "gset_union",
+       "gset_universe",
+       "is.gset"
+       )
+
+#S3method("Ops","gset")
+S3method("Summary","gset")
+S3method("[", "gset")
+S3method("[[", "gset")
+S3method("[<-", "gset")
+S3method("[[<-", "gset")
+S3method("all.equal","gset")
+S3method("as.gset", "character")
+S3method("as.gset", "data.frame")
+S3method("as.gset", "matrix")
+S3method("as.gset", "default")
+S3method("as.gset", "factor")
+S3method("as.gset", "gset")
+S3method("as.gset", "cset")
+S3method("as.gset", "integer")
+S3method("as.gset", "list")
+S3method("as.gset", "logical")
+S3method("as.gset", "numeric")
+S3method("as.gset", "ordered")
+S3method("as.gset", "tuple")
+S3method("as.list", "gset")
+S3method("c","gset")
+S3method("cut","gset")
+S3method("format", "gset")
+S3method("length", "gset")
+S3method("lengths", "gset")
+S3method("mean", "gset")
+S3method("median", "gset")
+S3method("plot", "gset")
+S3method("lines", "gset")
+S3method("plot", "charfun_generator")
+S3method("lines", "charfun_generator")
+S3method("print","gset")
+S3method("print","gset_charfun")
+S3method("print","summary.gset")
+S3method("rep","gset")
+S3method("str","gset")
+S3method("summary","gset")
+
+## Customizable set stuff
+export("as.cset",
+       "cset",
+       "cset_bound",
+       "cset_cardinality",
+       "cset_cartesian",
+       "cset_charfun",
+       "cset_combn",
+       "cset_complement",
+       "cset_concentrate",
+       "cset_contains_element",
+       "cset_core",
+       "cset_defuzzify",
+       "cset_difference",
+       "cset_dilate",
+       "cset_has_missings",
+       "cset_height",
+       "cset_intersection",
+       "cset_is_crisp",
+       "cset_is_empty",
+       "cset_is_equal",
+       "cset_is_fuzzy_multiset",
+       "cset_is_fuzzy_set",
+       "cset_is_multiset",
+       "cset_is_proper_subset",
+       "cset_is_set",
+       "cset_is_set_or_fuzzy_set",
+       "cset_is_set_or_multiset",
+       "cset_is_subset",
+       "cset_matchfun",
+       "cset_matchfun<-",
+       "cset_memberships",
+       "cset_transform_memberships",
+       "cset_normalize",
+       "cset_orderfun",
+       "cset_orderfun<-",
+       "cset_outer",
+       "cset_power",
+       "cset_product",
+       "cset_mean",
+       "cset_peak",
+       "cset_similarity",
+       "cset_dissimilarity",
+       "cset_sum",
+       "cset_support",
+       "cset_symdiff",
+       "cset_union",
+       "cset_universe",
+       "is.cset",
+       "matchfun"
+       )
+
+S3method("Ops","cset")
+S3method("Summary","cset")
+S3method("[", "cset")
+S3method("[[", "cset")
+S3method("[<-", "cset")
+S3method("[[<-", "cset")
+S3method("all.equal","cset")
+S3method("as.cset", "character")
+S3method("as.cset", "data.frame")
+S3method("as.cset", "matrix")
+S3method("as.cset", "default")
+S3method("as.cset", "factor")
+S3method("as.cset", "cset")
+S3method("as.cset", "integer")
+S3method("as.cset", "list")
+S3method("as.cset", "logical")
+S3method("as.cset", "numeric")
+S3method("as.cset", "ordered")
+S3method("as.cset", "tuple")
+S3method("as.list", "cset")
+S3method("as.character", "cset")
+S3method("c","cset")
+S3method("cut","cset")
+S3method("format", "cset")
+S3method("length", "cset")
+S3method("lengths", "cset")
+S3method("mean", "cset")
+S3method("median", "cset")
+S3method("na.omit", "cset")
+S3method("plot", "cset")
+S3method("lines", "cset")
+S3method("print","cset")
+S3method("print","cset_charfun")
+S3method("print","summary.cset")
+S3method("rep","cset")
+S3method("str","cset")
+S3method("summary","cset")
+
+## Closure and reduction
+export("binary_closure")
+export("closure")
+S3method("closure","set")
+S3method("closure","default")
+
+export("binary_reduction")
+export("reduction")
+S3method("reduction","set")
+S3method("reduction","default")
+
+## Tuple stuff.
+export("%e%",
+       "as.tuple",
+       "is.tuple",
+       "pair",
+       "singleton",
+       "triple",
+       "tuple",
+       "tuple_is_ntuple",
+       "tuple_is_pair",
+       "tuple_is_singleton",
+       "tuple_is_triple",
+       "tuple_outer"
+       )
+
+S3method("[", "tuple")
+S3method("[<-", "tuple")
+S3method("Math","tuple")
+S3method("Ops","tuple")
+S3method("Summary","tuple")
+S3method("print","tuple")
+S3method("format", "tuple")
+S3method("as.tuple", "default")
+S3method("as.tuple", "factor")
+S3method("as.tuple", "integer")
+S3method("as.tuple", "list")
+S3method("as.tuple", "logical")
+S3method("as.tuple", "character")
+S3method("as.tuple", "numeric")
+S3method("as.tuple", "ordered")
+S3method("as.tuple", "tuple")
+S3method("as.tuple", "data.frame")
+S3method("as.tuple", "set")
+S3method("as.tuple", "cset")
+S3method("as.tuple", "gset")
+S3method("as.list", "tuple")
+S3method("plot","tuple")
+S3method("lines","tuple")
+S3method("c", "tuple")
+S3method("mean", "tuple")
+S3method("median", "tuple")
+S3method("rep", "tuple")
+
+## LABEL(S)
+export("LABEL",
+       "LABELS")
+
+S3method("LABEL", "character")
+S3method("LABEL", "default")
+S3method("LABEL", "factor")
+S3method("LABEL", "integer")
+S3method("LABEL", "logical")
+S3method("LABEL", "matrix")
+S3method("LABEL", "numeric")
+S3method("LABEL", "set")
+S3method("LABEL", "gset")
+S3method("LABEL", "cset")
+S3method("LABEL", "tuple")
+S3method("LABEL", "list")
+
+
+### fuzzy logic stuff
+export(".N.",
+       ".T.",
+       ".S.",
+       ".I.",
+       "%is%",
+       "charfun_generator",
+       "fuzzy_bell",
+       "fuzzy_bell_gset",
+       "fuzzy_cone",
+       "fuzzy_cone_gset",
+       "fuzzy_inference",
+       "fuzzy_logic",
+       "fuzzy_normal",
+       "fuzzy_normal_gset",
+       "fuzzy_partition",
+       "fuzzy_pi3",
+       "fuzzy_pi4",
+       "fuzzy_pi3_gset",
+       "fuzzy_pi4_gset",
+       "fuzzy_rule",
+       "fuzzy_sigmoid",
+       "fuzzy_sigmoid_gset",
+       "fuzzy_system",
+       "fuzzy_trapezoid",
+       "fuzzy_trapezoid_gset",
+       "fuzzy_triangular",
+       "fuzzy_triangular_gset",
+       "fuzzy_tuple",
+       "fuzzy_two_normals",
+       "fuzzy_two_normals_gset",
+       "fuzzy_variable",
+       "is.charfun_generator"
+       )
+
+S3method("print","fuzzy_rule")
+S3method("print","fuzzy_system")
+S3method("print","fuzzy_variable")
+S3method("plot","fuzzy_system")
+S3method("plot","fuzzy_variable")
+
+## interval stuff
+export("%..%",
+       "%<%",
+       "%>%",
+       "%<=%",
+       "%<=%",
+       "as.interval",
+       "integers",
+       "integers2reals",
+       "interval",
+       "interval_complement",
+       "interval_contains_element",
+       "interval_difference",
+       "interval_division",
+       "interval_domain",
+       "interval_intersection",
+       "interval_is_bounded",
+       "interval_is_closed",
+       "interval_is_countable",
+       "interval_is_degenerate",
+       "interval_is_empty",
+       "interval_is_equal",
+       "interval_is_finite",
+       "interval_is_greater_than",
+       "interval_is_greater_than_or_equal",
+       "interval_is_half_bounded",
+       "interval_is_left_bounded",
+       "interval_is_left_closed",
+       "interval_is_left_open",
+       "interval_is_less_than",
+       "interval_is_less_than_or_equal",
+       "interval_is_left_unbounded",
+       "interval_is_proper",
+       "interval_is_proper_subinterval",
+       "interval_is_right_bounded",
+       "interval_is_right_closed",
+       "interval_is_right_open",
+       "interval_is_right_unbounded",
+       "interval_is_subinterval",
+       "interval_is_unbounded",
+       "interval_is_uncountable",
+       "interval_measure",
+       "interval_power",
+       "interval_product",
+       "interval_sum",
+       "interval_symdiff",
+       "interval_union",
+       "is.interval",
+       "naturals",
+       "naturals0",
+       "reals",
+       "reals2integers"
+       )
+
+S3method("Math", "interval")
+S3method("abs", "interval")
+S3method("as.character", "interval")
+S3method("as.double", "interval")
+S3method("as.interval", "default")
+S3method("as.interval", "interval")
+S3method("as.interval", "list")
+S3method("as.interval", "NULL")
+S3method("as.interval", "numeric")
+S3method("as.interval", "set")
+S3method("as.interval", "tuple")
+S3method("as.list", "interval")
+S3method("c", "interval")
+S3method("format", "interval")
+S3method("[", "interval")
+S3method("[[", "interval")
+S3method("length", "interval")
+S3method("make_set_with_order", "interval")
+S3method("max", "interval")
+S3method("mean", "interval")
+S3method("min", "interval")
+S3method("Ops", "interval")
+S3method("print", "interval")
+S3method("print", "summary.interval")
+S3method("prod", "interval")
+S3method("range", "interval")
+S3method("str", "interval")
+S3method("sum", "interval")
+S3method("summary", "interval")
+
+### internal dispatch
+S3method(".as.list", "default")
+S3method(".as.list", "set")
+S3method(".as.list", "gset")
+
+### intended for internal usage only
+export(".cartesian_product",
+       ".exact_match",
+       ".get_memberships",
+       ".make_gset_from_support_and_memberships",
+       ".make_set_of_tuples_from_list_of_lists",
+       ".ntuple",
+       ".set_subset",
+       "fuzzy_logic_predicates")

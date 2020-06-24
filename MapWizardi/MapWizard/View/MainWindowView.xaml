@@ -97,7 +97,7 @@
                 <ColumnDefinition Width="*"></ColumnDefinition>
             </Grid.ColumnDefinitions>
             <Image Margin="0 0 -20 10" Width="240" Height="70" Grid.Column="0" Grid.Row="0" HorizontalAlignment="Right" Source="/Resources/images/eit_logo.png"/>
-            <Image Margin="110 0 0 10" Width="50" Height="70" Grid.Column="1" Grid.Row="0" HorizontalAlignment="Left" Source="/Resources/images/GTK_logo.jpg"/>
+            <Image Margin="110 0 0 10" Width="150" Height="70" Grid.Column="1" Grid.Row="0" HorizontalAlignment="Left" Source="/Resources/images/GTK_logo.png"/>
             <StatusBar Grid.ColumnSpan="3" Grid.Row="3">
                 <StatusBarItem Margin="10,0,0,0">
                     <TextBlock  Text="Project:" Visibility="Hidden"/>

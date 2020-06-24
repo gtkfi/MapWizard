@@ -6,7 +6,8 @@
              x:Class="MapWizard.DepositDensityView"
              xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
              xmlns:service="clr-namespace:MapWizard.Service"
-             mc:Ignorable="d" Height="641" Width="796" DataContext="{Binding Source={StaticResource Locator}, Path=DepositDensityViewModel}">
+    xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+    mc:Ignorable="d" Height="641" Width="796" DataContext="{Binding Source={StaticResource Locator}, Path=DepositDensityViewModel}">
     <UserControl.Resources>
         <service:FilePathToFileNameConverter x:Key="FilePathToFileNameConverter" />
         <Style x:Key="WrapPanel" TargetType="WrapPanel">
@@ -20,24 +21,33 @@
     <StackPanel Margin="0 20 0 0" Width="600" HorizontalAlignment="Left">
         <UniformGrid  Rows="1" Columns="2">
             <WrapPanel Style="{StaticResource WrapPanel}">
+                <TextBlock Text="Tract id:"
+                                   Margin="10"
+                                   HorizontalAlignment="left"
+                                   VerticalAlignment="Center" />
+            </WrapPanel>
+            <WrapPanel Style="{StaticResource ValueColumn}">
+                <ComboBox Name="cmbx"                 
+                              ItemsSource="{Binding Model.TractIDNames, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"  
+                              Margin="0,0,0,0"
+                              SelectedValue="{Binding Model.SelectedTract, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                              HorizontalAlignment="left"  VerticalAlignment="Center" FontSize="18" Width="150"
+                              ToolTip="Select tract.">
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="SelectionChanged">
+                            <i:InvokeCommandAction Command="{Binding TractChangedDeposit}"/>
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+                </ComboBox>
+            </WrapPanel>
+        </UniformGrid>
+
+        <UniformGrid  Rows="1" Columns="2">
+            <WrapPanel Style="{StaticResource WrapPanel}">
                 <TextBlock HorizontalAlignment="left" VerticalAlignment="Center" Text="Model:" Margin="10" />
             </WrapPanel>
             <WrapPanel Style="{StaticResource ValueColumn}">
                 <ComboBox ItemsSource="{Binding ModelIds}" SelectedItem="{Binding Model.ExistingDepositDensityModelID}"  SelectedIndex="0" HorizontalAlignment="left"  VerticalAlignment="Center" FontSize="18" Width="150" ToolTip="Deposit density model to use."/>
-            </WrapPanel>
-        </UniformGrid>
-        <UniformGrid Rows="1" Columns="2">
-            <WrapPanel Style="{StaticResource WrapPanel}">
-                <TextBlock Text="Model data file:"   Margin="10" HorizontalAlignment="left" VerticalAlignment="Center"/>
-            </WrapPanel>
-            <WrapPanel Style="{StaticResource ValueColumn}">
-                <Button  FontSize="18" Content="{Binding Model.CSVPath, Converter={StaticResource FilePathToFileNameConverter}}" Width="200" FontWeight="Normal"  mah:ButtonHelper.PreserveTextCase="True"
-                         Background="LightGray" BorderBrush="Black" Margin="0" HorizontalAlignment="Left" VerticalAlignment="Center"  DataContext="{Binding DepositDensityViewModel, Source={StaticResource Locator}}"
-                         Command="{Binding SelectFileCommand}" IsDefault="True" >
-                    <Button.ToolTip>
-                        <TextBlock Text="{Binding Model.CSVPath}"></TextBlock>
-                    </Button.ToolTip>
-                </Button>
             </WrapPanel>
         </UniformGrid>
         <UniformGrid  Rows="1" Columns="2">
@@ -45,7 +55,7 @@
                 <TextBlock HorizontalAlignment="left"  VerticalAlignment="Center" Text="Median tonnage (Mt):" Margin="10"/>
             </WrapPanel>
             <WrapPanel Style="{StaticResource ValueColumn}">
-                <TextBox Text="{Binding Model.MedianTonnage}" FontSize="18" Width="60" HorizontalAlignment="left" VerticalAlignment="Center" ToolTip="Median ore tonnage of the deposit type being assessed."/>
+                <TextBox Text="{Binding Model.MedianTonnage}" FontSize="18" Width="90" HorizontalAlignment="left" VerticalAlignment="Center" ToolTip="Median ore tonnage of the deposit type being assessed."/>
             </WrapPanel>
         </UniformGrid>
         <UniformGrid  Rows="1" Columns="2">
@@ -53,7 +63,7 @@
                 <TextBlock HorizontalAlignment="left"  VerticalAlignment="Center" Text="Tract area (km2):"  Margin="10"/>
             </WrapPanel>
             <WrapPanel Style="{StaticResource ValueColumn}">
-                <TextBox Text="{Binding Model.AreaOfPermissiveTract}" FontSize="18" Width="60"  HorizontalAlignment="left" VerticalAlignment="Bottom" ToolTip="Area of the permissive tract for which the number of deposits is being estimated."/>
+                <TextBox Text="{Binding Model.AreaOfPermissiveTract}" FontSize="18" Width="90"  HorizontalAlignment="left" VerticalAlignment="Bottom" ToolTip="Area of the permissive tract for which the number of deposits is being estimated."/>
             </WrapPanel>
         </UniformGrid>
         <UniformGrid  Rows="1" Columns="2">
@@ -61,7 +71,7 @@
                 <TextBlock HorizontalAlignment="left"  VerticalAlignment="Center" Text="Number of known deposits:" Margin="10"/>
             </WrapPanel>
             <WrapPanel Style="{StaticResource ValueColumn}">
-                <TextBox Text="{Binding Model.NumbOfKnownDeposits}" FontSize="18" Width="60"  HorizontalAlignment="left" VerticalAlignment="Center" ToolTip="Number of well-known deposits of the type being assessed within the permissive tract."/>
+                <TextBox Text="{Binding Model.NumbOfKnownDeposits}" FontSize="18" Width="90"  HorizontalAlignment="left" VerticalAlignment="Center" ToolTip="Number of well-known deposits of the type being assessed within the permissive tract."/>
             </WrapPanel>
         </UniformGrid>
         <UniformGrid Rows="1" Columns="2">

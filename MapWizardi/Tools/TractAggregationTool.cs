@@ -1,9 +1,6 @@
 ﻿using System;
 using System.IO;
-using System.Linq;
-using Microsoft.Win32;
 using System.Diagnostics;
-using System.Text;
 using NLog;
 
 namespace MapWizard.Tools
@@ -56,6 +53,14 @@ namespace MapWizard.Tools
             get { return GetValue<string>("CreateInputFile"); }
             set { Add<string>("CreateInputFile", value); }
         }
+        /// <summary>
+        /// Create input file? String representation for boolean.
+        /// </summary>
+        public string TractCombinationName
+        {
+            get { return GetValue<string>("TractCombinationName"); }
+            set { Add<string>("TractCombinationName", value); }
+        }
     }
     /// <summary>
     /// Tract aggregation results
@@ -85,18 +90,23 @@ namespace MapWizard.Tools
         /// <returns> ToolResult as TractAggregationTool result</returns>
         public ToolResult Execute(ToolParameters inputParams)
         {
-
             string procResult = string.Empty;
             var input = inputParams as TractAggregationInputParams;
             string rScriptExecutablePath = inputParams.Env.RPath;
             var path = System.AppDomain.CurrentDomain.BaseDirectory.Replace(@"\", @"/");
             var info = new ProcessStartInfo();
             info.FileName = rScriptExecutablePath;
-            var tractAggregationProject = Path.Combine(inputParams.Env.RootPath, "AggResults");
+            var projectFolder = Path.Combine(inputParams.Env.RootPath, "TractAggregation");
+            if (!Directory.Exists(projectFolder))
+            {
+                Directory.CreateDirectory(projectFolder);
+            }
+            input.Save(Path.Combine(projectFolder, "tract_aggregation_input_params.json"));
+            var tractAggregationProject = Path.Combine(inputParams.Env.RootPath, "TractAggregation", "AggResults");
             string rProjectPath = tractAggregationProject.Replace("\\", "/");
             var rTractAggregationPath = Path.Combine(path, "scripts", "TractAggregation.R");
             TractAggregationResult result = new TractAggregationResult();
-            var AggResultsPath = Path.Combine(inputParams.Env.RootPath, "AggResults");
+            var AggResultsPath = Path.Combine(inputParams.Env.RootPath, "TractAggregation", "AggResults", "AGG" + input.TractCombinationName);
             var TractCorrelationsFile = Path.Combine(AggResultsPath, "TractCorrelations.csv");
             var TractProbDistsFile = Path.Combine(AggResultsPath, "TractProbDists.csv");
             if (!Directory.Exists(AggResultsPath))
@@ -137,8 +147,8 @@ namespace MapWizard.Tools
                     {
                         proc.StartInfo = info;
                         proc.Start();
-                        StreamReader errorReader = proc.StandardError;
-                        StreamReader myStreamReader = proc.StandardOutput;
+                        //StreamReader errorReader = proc.StandardError; TAGGED: no usage?
+                        //StreamReader myStreamReader = proc.StandardOutput; TAGGED: no usage?
                         string procErrors = "";
                         proc.ErrorDataReceived += new DataReceivedEventHandler((sender, e) =>  //Use DataReceivedEventHandler to read error data, simply using proc.StandardError would sometimes freeze, due to buffer filling up
                         {                                                                      //Also, this approach makes it easier to implement a possible log window in the future
@@ -147,7 +157,7 @@ namespace MapWizard.Tools
                                 procErrors += (e.Data);
                             }
                         });
-                        string stream = myStreamReader.ReadToEnd();
+                        //string stream = myStreamReader.ReadToEnd(); TAGGED: no usage?
                         procResult = proc.StandardOutput.ReadToEnd();
                         proc.Close();
                         if (procErrors.Length > 1 && procErrors.ToLower().Contains("error"))  //Don't throw exception over warnings or empty error message.
@@ -184,7 +194,6 @@ namespace MapWizard.Tools
                         if (!String.IsNullOrEmpty(e.Data))
                         {
                             procErrors += (e.Data);
-                            //throw new Exception("R script execution failed. Check log file for details");  // TAGGED: Check error management and make it better.
                         }
                     });
                     proc.BeginErrorReadLine();

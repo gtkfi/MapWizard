@@ -1,0 +1,7 @@
+file99a <<- paste("EF_08_10Depth_MineTypes.csv",sep="")
+file.remove(file99a)
+file99b <<- paste("EF_06_10Depth_Stats_",TN1,".csv",sep="")
+file.remove(file99b)
+file99c <<- paste("EF_09_10Depth_New.csv",sep="")
+file99d <<- paste("EF_06_10Depth_Stats_",TN1,".csv",sep="")
+file.rename(file99c,file99d)

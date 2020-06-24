@@ -10,7 +10,7 @@
         xmlns:service="clr-namespace:MapWizard.Service"
         xmlns:Dialog="clr-namespace:MahApps.Metro.Controls.Dialogs;assembly=MahApps.Metro"
         mc:Ignorable="d"
-        Title="Map Wizard 1.0.2" Height="768" Width="1024"
+        Title="Map Wizard 1.0.7" Height="768" Width="1024"
         DataContext="{Binding Source={StaticResource Locator}, Path=Main}" 
         GlowBrush="{DynamicResource AccentColorBrush}"
         TitleCaps="False"
@@ -31,10 +31,9 @@
         </mah:WindowCommands>
     </mah:MetroWindow.RightWindowCommands>
     <Window.Resources>
-        <service:ToolStatusColorConverter x:Key="ToolStatusColorConverter" />
-        <service:ToolStatusToStringConverter x:Key="ToolStatusToStringConverter" />
-        <service:ToolStatusSymbolConverter x:Key="ToolStatusSymbolConverter"/>
         <service:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
+        <service:DoubleGridLengthConverter x:Key="DoubleGridLengthConverter"/>
+        <service:MathConverter x:Key="MathConverter"/>
         <Style x:Key="LargeTileStyle" TargetType="mah:Tile">
             <Setter Property="Width" Value="300" />
             <Setter Property="Height" Value="125" />
@@ -53,24 +52,19 @@
         <DataTemplate x:Key="DescriptiveContent">
             <StackPanel DataContext="{Binding Source={StaticResource Locator}, Path=DescriptiveViewModel}">
                 <TextBlock Margin="0,-20,0,40"  FontSize="22" FontWeight="Bold"  Text="Choose Model" />
-                <ComboBox Name="cmbx"                 ItemsSource="{Binding Path =ModelNames}"                                                      
+                <ComboBox Name="cmbx"                 ItemsSource="{Binding Path=CurrentModel.ModelNames}"                                                      
                                                       FocusManager.FocusedElement="{Binding RelativeSource={RelativeSource Mode=Self}}"
-                                                      SelectedIndex="{Binding SelectedModelIndex, Mode=TwoWay}"
+                                                      SelectedIndex="{Binding CurrentModel.SelectedModelIndex, Mode=TwoWay}"
                                                       ToolTip="Choose the model from a drop-down list">
                 </ComboBox>
+                <UniformGrid Margin="0,20,0,20">
+                    <TextBox mah:TextBoxHelper.Watermark="Type model name" DataContext="{Binding Source={StaticResource Locator}, Path=DescriptiveViewModel}" Text="{Binding CurrentModel.DepositModelsExtension}" MinWidth="120"></TextBox>
+                </UniformGrid>
                 <WrapPanel ToolTip="Select whether to save the model permanently for use in other assessment projects.">
-                    <CheckBox Name="YesButton" DataContext="{Binding Source={StaticResource Locator}, Path=DescriptiveViewModel}" IsChecked="{Binding SaveToDepositModels}" Margin="10,20,5,10"></CheckBox>
+                    <CheckBox Name="YesButton" DataContext="{Binding Source={StaticResource Locator}, Path=DescriptiveViewModel}" IsChecked="{Binding CurrentModel.SaveToDepositModels}" Margin="10,20,5,10"></CheckBox>
                     <TextBlock Text="Save model for further use?" Margin="0,20,10,10"></TextBlock>
-
                 </WrapPanel>
-                <UniformGrid Margin="0,5,0,20" IsEnabled="{Binding ElementName=YesButton, Path=IsChecked}" Visibility="{Binding ElementName=YesButton, Path=IsChecked, Converter={StaticResource BoolToVisibilityConverter}}">
-                    <TextBox mah:TextBoxHelper.Watermark="Type model name" DataContext="{Binding Source={StaticResource Locator}, Path=DescriptiveViewModel}" Text="{Binding DepositModelsExtension}" MinWidth="120"></TextBox>
-                </UniformGrid>
-
-                <UniformGrid Margin="0,5,0,20"  IsEnabled="{Binding ElementName=YesButton, Path=IsChecked}" Visibility="{Binding ElementName=YesButton, Path=IsChecked, Converter={StaticResource BoolToVisibilityConverter}}">
-                    <TextBlock Foreground="Red" Text="Please insert model name." DataContext="{Binding Source={StaticResource Locator}, Path=DescriptiveViewModel}" Visibility="{Binding NoFolderNameGiven, Converter={StaticResource BoolToVisibilityConverter}}"></TextBlock>
-                </UniformGrid>
-                <Button  Width="180" HorizontalAlignment="Left" Style="{StaticResource AccentedSquareButtonStyle}" DataContext="{Binding Source={StaticResource Locator}, Path=DescriptiveViewModel}" Command="{Binding SelectModelCommand}" ToolTip="Confirm the selection of the model">
+                <Button Margin="0,40,0,-20"  Width="180" HorizontalAlignment="Left" Style="{StaticResource AccentedSquareButtonStyle}" DataContext="{Binding Source={StaticResource Locator}, Path=DescriptiveViewModel}" Command="{Binding SelectModelCommand}" ToolTip="Confirm the selection of the model">
                     <TextBlock>Confirm selection</TextBlock>
                 </Button>
             </StackPanel>
@@ -78,24 +72,19 @@
         <DataTemplate x:Key="GradeTonnageContent">
             <StackPanel DataContext="{Binding Source={StaticResource Locator}, Path=GradeTonnageViewModel}">
                 <TextBlock Margin="0,-20,0,40"  FontSize="22" FontWeight="Bold"  Text="Choose Model" />
-                <ComboBox Name="cmbx"                 ItemsSource="{Binding Path =ModelNames}"                                                      
+                <ComboBox Name="cmbx"                 ItemsSource="{Binding Path=Model.ModelNames}"                                                      
                                                       FocusManager.FocusedElement="{Binding RelativeSource={RelativeSource Mode=Self}}"
-                                                      SelectedIndex="{Binding SelectedModelIndex, Mode=TwoWay}"
+                                                      SelectedIndex="{Binding Model.SelectedModelIndex, Mode=TwoWay}"
                                                       ToolTip="Choose the model to be used in this assessment from a drop-down list">
                 </ComboBox>
+                <UniformGrid Margin="0,20,0,20">
+                    <TextBox mah:TextBoxHelper.Watermark="Type model name" DataContext="{Binding Source={StaticResource Locator}, Path=GradeTonnageViewModel}" Text="{Binding Model.DepositModelsExtension}" MinWidth="120"></TextBox>
+                </UniformGrid>
                 <WrapPanel>
-                    <CheckBox Name="YesButton" DataContext="{Binding Source={StaticResource Locator}, Path=GradeTonnageViewModel}" IsChecked="{Binding SaveToDepositModels}" Margin="10,20,5,10"></CheckBox>
+                    <CheckBox Name="YesButton" DataContext="{Binding Source={StaticResource Locator}, Path=GradeTonnageViewModel}" IsChecked="{Binding Model.SaveToDepositModels}" Margin="10,20,5,10"></CheckBox>
                     <TextBlock Text="Save model for further use?" Margin="0,20,10,10" ToolTip="Select whether to save the model permanently for use in other assessment projects."></TextBlock>
-
                 </WrapPanel>
-                <UniformGrid Margin="0,5,0,20" IsEnabled="{Binding ElementName=YesButton, Path=IsChecked}" Visibility="{Binding ElementName=YesButton, Path=IsChecked, Converter={StaticResource BoolToVisibilityConverter}}">
-                    <TextBox mah:TextBoxHelper.Watermark="Type model name" DataContext="{Binding Source={StaticResource Locator}, Path=GradeTonnageViewModel}" Text="{Binding DepositModelsExtension}" MinWidth="120"></TextBox>
-                </UniformGrid>
-
-                <UniformGrid Margin="0,5,0,20"  IsEnabled="{Binding ElementName=YesButton, Path=IsChecked}" Visibility="{Binding ElementName=YesButton, Path=IsChecked, Converter={StaticResource BoolToVisibilityConverter}}">
-                    <TextBlock Foreground="Red" Text="Please insert model name." DataContext="{Binding Source={StaticResource Locator}, Path=GradeTonnageViewModel}" Visibility="{Binding NoFolderNameGiven, Converter={StaticResource BoolToVisibilityConverter}}"></TextBlock>
-                </UniformGrid>
-                <Button  Width="180" HorizontalAlignment="Left" Style="{StaticResource AccentedSquareButtonStyle}" DataContext="{Binding Source={StaticResource Locator}, Path=GradeTonnageViewModel}" Command="{Binding SelectModelCommand}">
+                <Button Margin="0,40,0,-20" Width="180" HorizontalAlignment="Left" Style="{StaticResource AccentedSquareButtonStyle}" DataContext="{Binding Source={StaticResource Locator}, Path=GradeTonnageViewModel}" Command="{Binding SelectModelCommand}">
                     <TextBlock ToolTip="Confirm the selection of the model">Confirm selection</TextBlock>
                 </Button>
             </StackPanel>
@@ -104,10 +93,10 @@
             <StackPanel DataContext="{Binding Source={StaticResource Locator}, Path=EconomicFilterViewModel}">
                 <TextBlock Margin="0,-20,0,40"  FontSize="22" FontWeight="Bold"  Text="Choose Result" />
                 <ComboBox Name="cmbx"                 
-                          ItemsSource="{Binding Path = RaefModelNames}"  
+                          ItemsSource="{Binding Path = Model.RaefModelNames}"  
                           Margin="0,20,0,0"
                           FocusManager.FocusedElement="{Binding RelativeSource={RelativeSource Mode=Self}}"
-                          SelectedIndex="{Binding RaefSelectedModelIndex, Mode=TwoWay}">
+                          SelectedIndex="{Binding Model.RaefSelectedModelIndex, Mode=TwoWay}">
                 </ComboBox>
                 <Button Margin="0,40,0,0" Width="180" HorizontalAlignment="Left" Style="{StaticResource AccentedSquareButtonStyle}" DataContext="{Binding Source={StaticResource Locator}, Path=EconomicFilterViewModel}" Command="{Binding RaefSelectModelCommand}" ToolTip="Select the RAEF result to be used">
                     <TextBlock>Confirm selection</TextBlock>
@@ -118,10 +107,10 @@
             <StackPanel DataContext="{Binding Source={StaticResource Locator}, Path=EconomicFilterViewModel}">
                 <TextBlock Margin="0,-20,0,40"  FontSize="22" FontWeight="Bold"  Text="Choose Result" />
                 <ComboBox Name="cmbx"                 
-                          ItemsSource="{Binding Path = ScreenerModelNames}"  
+                          ItemsSource="{Binding Path = Model.ScreenerModelNames}"  
                           Margin="0,20,0,0"
                           FocusManager.FocusedElement="{Binding RelativeSource={RelativeSource Mode=Self}}"
-                          SelectedIndex="{Binding ScreenerSelectedModelIndex, Mode=TwoWay}">
+                          SelectedIndex="{Binding Model.ScreenerSelectedModelIndex, Mode=TwoWay}">
                 </ComboBox>
                 <Button Margin="0,40,0,0" Width="180" HorizontalAlignment="Left" Style="{StaticResource AccentedSquareButtonStyle}" DataContext="{Binding Source={StaticResource Locator}, Path=EconomicFilterViewModel}" Command="{Binding ScreenerSelectModelCommand}">
                     <TextBlock>Select Result</TextBlock>
@@ -132,13 +121,28 @@
             <StackPanel DataContext="{Binding Source={StaticResource Locator}, Path=UndiscoveredDepositsViewModel}">
                 <TextBlock Margin="0,-20,0,40"  FontSize="22" FontWeight="Bold"  Text="Choose Result" />
                 <ComboBox Name="cmbx"                 
-                          ItemsSource="{Binding Path = ModelNames}"  
+                          ItemsSource="{Binding Path = Model.ModelNames}"  
                           Margin="0,20,0,0"
                           FocusManager.FocusedElement="{Binding RelativeSource={RelativeSource Mode=Self}}"
-                          SelectedIndex="{Binding SelectedModelIndex, Mode=TwoWay}" 
+                          SelectedIndex="{Binding Model.SelectedModelIndex, Mode=TwoWay}" 
                           ToolTip="Choose the model to be used in this assessment from a drop-down list.">
                 </ComboBox>
                 <Button Margin="0,40,0,0" Width="180" HorizontalAlignment="Left" Style="{StaticResource AccentedSquareButtonStyle}" DataContext="{Binding Source={StaticResource Locator}, Path=UndiscoveredDepositsViewModel}" Command="{Binding SelectModelCommand}" ToolTip="Confirm the selection of the model.">
+                    <TextBlock>Confirm selection</TextBlock>
+                </Button>
+            </StackPanel>
+        </DataTemplate>
+        <DataTemplate x:Key="MonteCarloSimulationContent">
+            <StackPanel DataContext="{Binding Source={StaticResource Locator}, Path=MonteCarloSimulationViewModel}">
+                <TextBlock Margin="0,-20,0,40"  FontSize="22" FontWeight="Bold"  Text="Choose Result" />
+                <ComboBox Name="cmbx"                 
+                          ItemsSource="{Binding Path = Model.ModelNames}"  
+                          Margin="0,20,0,0"
+                          FocusManager.FocusedElement="{Binding RelativeSource={RelativeSource Mode=Self}}"
+                          SelectedIndex="{Binding Model.SelectedModelIndex, Mode=TwoWay}" 
+                          ToolTip="Choose the model to be used in this assessment from a drop-down list.">
+                </ComboBox>
+                <Button Margin="0,40,0,0" Width="180" HorizontalAlignment="Left" Style="{StaticResource AccentedSquareButtonStyle}" DataContext="{Binding Source={StaticResource Locator}, Path=MonteCarloSimulationViewModel}" Command="{Binding SelectModelCommand}" ToolTip="Confirm the selection of the model.">
                     <TextBlock>Confirm selection</TextBlock>
                 </Button>
             </StackPanel>
@@ -209,6 +213,9 @@
                                                                 <DataTrigger Binding="{Binding DialogContentSource, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Value="UndiscoveredDepositsViewModel" >
                                                                     <Setter Property="ContentTemplate" Value="{StaticResource UndiscoveredDepositsContent}" />
                                                                 </DataTrigger>
+                                                                <DataTrigger Binding="{Binding DialogContentSource, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Value="MonteCarloSimulationViewModel" >
+                                                                    <Setter Property="ContentTemplate" Value="{StaticResource MonteCarloSimulationContent}" />
+                                                                </DataTrigger>
                                                             </Style.Triggers>
                                                         </Style>
                                                     </ContentControl.Style>
@@ -266,9 +273,56 @@
             <mah:Flyout x:Name="settingsFlyout"  Header="Settings" Position="Right" Width="600" Theme="Dark" >
                 <Views:SettingsView></Views:SettingsView>
             </mah:Flyout>
+            <!--<mah:Flyout x:Name="logFlyout"  Header="Settings" Position="Bottom"  Height="600" Theme="Light" >
+                <Views:SettingsView></Views:SettingsView>
+            </mah:Flyout>-->
         </mah:FlyoutsControl>
     </mah:MetroWindow.Flyouts>
-    <ContentPresenter x:Name="MainArea" 
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="111*"/>
+            <ColumnDefinition Width="905*"/>
+        </Grid.ColumnDefinitions>
+        <Grid Grid.ColumnSpan="2">
+            <ContentPresenter x:Name="MainArea" 
                       DataContext="{Binding Source={StaticResource Locator}, Path=Main}"  
                       Content="{Binding ActiveView, Mode=TwoWay}"/>
+        </Grid>
+        <Grid DataContext="{Binding Source={StaticResource Locator}, Path=SettingsViewModel}" Margin="0,0,0,21"  VerticalAlignment="Bottom" 
+              MaxHeight="{Binding ElementName=MapWizardMainWindow, Path=ActualHeight,
+                                  Converter={StaticResource MathConverter},
+                                  ConverterParameter=@VALUE/2}" Grid.ColumnSpan="2">
+            <Grid.RowDefinitions>
+                <RowDefinition></RowDefinition>
+                <RowDefinition MaxHeight="{Binding ElementName=MapWizardMainWindow, Path=ActualHeight,
+                               Converter={StaticResource MathConverter},
+                               ConverterParameter=@VALUE*0.4}"
+                 Height="{Binding Model.LogHeight, Mode=TwoWay, Converter={StaticResource DoubleGridLengthConverter}}"></RowDefinition>
+                <!--<RowDefinition ></RowDefinition>-->
+            </Grid.RowDefinitions>
+            <DockPanel Grid.Row="1" Background="WhiteSmoke" Opacity="0.85">
+                <Button Content="{Binding Model.LogTitle}" FontWeight="SemiBold" Command="{Binding ShowLogCommand}" DockPanel.Dock="Top" VerticalAlignment="Top" Grid.Row="0" Width="100" Height="23" Background="LightBlue" Opacity="0.85" Margin="0,-24,0,0">
+                    <Button.Resources>
+                        <Style TargetType="Border">
+                            <Setter Property="CornerRadius" Value="15,15,0,0"/>
+                        </Style>
+                    </Button.Resources>
+                </Button>
+                <ScrollViewer Grid.Row="1"  Margin="5,8,0,0" HorizontalAlignment="Stretch" VerticalScrollBarVisibility="Visible" >
+                    <StackPanel>
+                        <TextBlock Text="{Binding Model.LogText}" FontWeight="SemiBold"></TextBlock>
+                    </StackPanel>
+                </ScrollViewer>
+            </DockPanel>
+            <GridSplitter  Height="5.5" Background="Black" 
+                           Grid.Row="0"
+                           VerticalAlignment="Bottom"
+                           HorizontalAlignment="Stretch"
+                           ResizeDirection="Rows"
+                           Margin="0,-4,0,-2"
+                           BorderThickness="0,2.6"
+                           BorderBrush="Transparent"
+                           />
+        </Grid>
+    </Grid>
 </mah:MetroWindow>

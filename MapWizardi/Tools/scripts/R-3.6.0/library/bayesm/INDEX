@@ -1,0 +1,99 @@
+Scotch                  Survey Data on Brands of Scotch Consumed
+bank                    Bank Card Conjoint Data
+breg                    Posterior Draws from a Univariate Regression
+                        with Unit Error Variance
+camera                  Conjoint Survey Data for Digital Cameras
+cgetC                   Obtain A List of Cut-offs for Scale Usage
+                        Problems
+cheese                  Sliced Cheese Data
+clusterMix              Cluster Observations Based on Indicator MCMC
+                        Draws
+condMom                 Computes Conditional Mean/Var of One Element of
+                        MVN given All Others
+createX                 Create X Matrix for Use in Multinomial Logit
+                        and Probit Routines
+customerSat             Customer Satisfaction Data
+detailing               Physician Detailing Data
+eMixMargDen             Compute Marginal Densities of A Normal Mixture
+                        Averaged over MCMC Draws
+ghkvec                  Compute GHK approximation to Multivariate
+                        Normal Integrals
+llmnl                   Evaluate Log Likelihood for Multinomial Logit
+                        Model
+llmnp                   Evaluate Log Likelihood for Multinomial Probit
+                        Model
+llnhlogit               Evaluate Log Likelihood for non-homothetic
+                        Logit Model
+lndIChisq               Compute Log of Inverted Chi-Squared Density
+lndIWishart             Compute Log of Inverted Wishart Density
+lndMvn                  Compute Log of Multivariate Normal Density
+lndMvst                 Compute Log of Multivariate Student-t Density
+logMargDenNR            Compute Log Marginal Density Using
+                        Newton-Raftery Approx
+margarine               Household Panel Data on Margarine Purchases
+mixDen                  Compute Marginal Density for Multivariate
+                        Normal Mixture
+mixDenBi                Compute Bivariate Marginal Density for a Normal
+                        Mixture
+mnlHess                 Computes -Expected Hessian for Multinomial
+                        Logit
+mnpProb                 Compute MNP Probabilities
+momMix                  Compute Posterior Expectation of Normal Mixture
+                        Model Moments
+nmat                    Convert Covariance Matrix to a Correlation
+                        Matrix
+numEff                  Compute Numerical Standard Error and Relative
+                        Numerical Efficiency
+orangeJuice             Store-level Panel Data on Orange Juice Sales
+plot.bayesm.hcoef       Plot Method for Hierarchical Model Coefs
+plot.bayesm.mat         Plot Method for Arrays of MCMC Draws
+plot.bayesm.nmix        Plot Method for MCMC Draws of Normal Mixtures
+rDPGibbs                Density Estimation with Dirichlet Process Prior
+                        and Normal Base
+rbayesBLP               Bayesian Analysis of Random Coefficient Logit
+                        Models Using Aggregate Data
+rbiNormGibbs            Illustrate Bivariate Normal Gibbs Sampler
+rbprobitGibbs           Gibbs Sampler (Albert and Chib) for Binary
+                        Probit
+rdirichlet              Draw From Dirichlet Distribution
+rhierBinLogit           MCMC Algorithm for Hierarchical Binary Logit
+rhierLinearMixture      Gibbs Sampler for Hierarchical Linear Model
+                        with Mixture-of-Normals Heterogeneity
+rhierLinearModel        Gibbs Sampler for Hierarchical Linear Model
+                        with Normal Heterogeneity
+rhierMnlDP              MCMC Algorithm for Hierarchical Multinomial
+                        Logit with Dirichlet Process Prior
+                        Heterogeneity
+rhierMnlRwMixture       MCMC Algorithm for Hierarchical Multinomial
+                        Logit with Mixture-of-Normals Heterogeneity
+rhierNegbinRw           MCMC Algorithm for Hierarchical Negative
+                        Binomial Regression
+rivDP                   Linear "IV" Model with DP Process Prior for
+                        Errors
+rivGibbs                Gibbs Sampler for Linear "IV" Model
+rmixGibbs               Gibbs Sampler for Normal Mixtures w/o Error
+                        Checking
+rmixture                Draw from Mixture of Normals
+rmnlIndepMetrop         MCMC Algorithm for Multinomial Logit Model
+rmnpGibbs               Gibbs Sampler for Multinomial Probit
+rmultireg               Draw from the Posterior of a Multivariate
+                        Regression
+rmvpGibbs               Gibbs Sampler for Multivariate Probit
+rmvst                   Draw from Multivariate Student-t
+rnegbinRw               MCMC Algorithm for Negative Binomial Regression
+rnmixGibbs              Gibbs Sampler for Normal Mixtures
+rordprobitGibbs         Gibbs Sampler for Ordered Probit
+rscaleUsage             MCMC Algorithm for Multivariate Ordinal Data
+                        with Scale Usage Heterogeneity
+rsurGibbs               Gibbs Sampler for Seemingly Unrelated
+                        Regressions (SUR)
+rtrun                   Draw from Truncated Univariate Normal
+runireg                 IID Sampler for Univariate Regression
+runiregGibbs            Gibbs Sampler for Univariate Regression
+rwishart                Draw from Wishart and Inverted Wishart
+                        Distribution
+simnhlogit              Simulate from Non-homothetic Logit Model
+summary.bayesm.mat      Summarize Mcmc Parameter Draws
+summary.bayesm.nmix     Summarize Draws of Normal Mixture Components
+summary.bayesm.var      Summarize Draws of Var-Cov Matrices
+tuna                    Canned Tuna Sales Data

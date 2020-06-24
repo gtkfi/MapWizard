@@ -1,0 +1,12 @@
+P                       Number of partitions of an integer
+as.matrix.partition     Coerce partitions to matrices and vice versa
+bin                     Sundry binary functionality
+conjugate               Conjugate partitions and Durfee squares
+nextpart                Next partition
+partitions-package      Integer partitions
+parts                   Enumerate the partitions of an integer
+perms                   Enumerate the permutations of a vector
+print.partition         Print methods for partition objects and
+                        equivalence objects
+setparts                Set partitions
+summary.partition       Provides a summary of a partition

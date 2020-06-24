@@ -90,9 +90,9 @@
                 </TabItem.Header>
                 <Grid>
                     <Rectangle Height="3" Fill="LightGray" Stroke="LightGray" VerticalAlignment="Top" HorizontalAlignment="Left" Width="200" Grid.Row="0" />
-                    <local:GradeTonnageView HorizontalAlignment="Left" VerticalAlignment="Top" DataContext="{Binding Source={StaticResource Locator}, Path=GradeTonnageViewModel}" IsEnabled="{Binding IsBusy,Converter={StaticResource ReverseBooleanConverter}}"/>
+                    <local:GradeTonnageView HorizontalAlignment="Left" VerticalAlignment="Top" DataContext="{Binding Source={StaticResource Locator}, Path=GradeTonnageViewModel}" IsEnabled="{Binding Model.IsBusy,Converter={StaticResource ReverseBooleanConverter}}"/>
                     <UniformGrid  Rows="1" Columns="1">
-                        <mah:ProgressRing DataContext="{Binding Source={StaticResource Locator}, Path=GradeTonnageViewModel}" IsActive="{Binding IsBusy}" Width="200"/>
+                        <mah:ProgressRing DataContext="{Binding Source={StaticResource Locator}, Path=GradeTonnageViewModel}" IsActive="{Binding Model.IsBusy}" Width="200"/>
                     </UniformGrid>
                 </Grid>
             </mah:MetroTabItem>
@@ -107,13 +107,13 @@
                                                   Margin="0,0,0,0" />
                     <Button 
                         HorizontalAlignment="Right" 
-                        VerticalAlignment="Bottom" 
-                        Margin="0,0,40,40"
+                        VerticalAlignment="Top" 
+                        Margin="0,65,40,0"
                         Padding="-10,0,0,0"                          
                         Background="{DynamicResource AccentColorBrush}" 
                         Foreground="White"
                         BorderThickness="0" 
-                        Width="160" Height="50"                         
+                        Width="160" Height="45"                         
                         DataContext="{Binding Source={StaticResource Locator}, Path=GradeTonnageViewModel}"
                         Command="{Binding ShowModelDialog}"
                         ToolTip="Select model to be used in this assessment project"
@@ -121,7 +121,7 @@
                         <TextBlock FontSize="16" Text=" Select Model"></TextBlock>
                     </Button>
                     <UniformGrid  Rows="1" Columns="1">
-                        <mah:ProgressRing DataContext="{Binding Source={StaticResource Locator}, Path=GradeTonnageViewModel}" IsActive="{Binding IsBusy}" Width="200"/>
+                        <mah:ProgressRing DataContext="{Binding Source={StaticResource Locator}, Path=GradeTonnageViewModel}" IsActive="{Binding Model.IsBusy}" Width="200"/>
                     </UniformGrid>
                 </Grid>
             </mah:MetroTabItem>

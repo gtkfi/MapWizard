@@ -514,7 +514,7 @@ plot.NDepositsPmf <- function( object,
 summary.NDepositsPmf <- function( object) {
 
   cat(sprintf("Summary of the pmf for the number of undiscovered deposits\n"))
-  cat(sprintf("within the permissive tract.\n"))
+  cat(sprintf("within the permissive tracts.\n"))
   cat(sprintf("------------------------------------------------------------\n"))
   cat( sprintf( "Type: %s\n", object$type ))
   #cat( sprintf( "Description: %s\n", object$description ))

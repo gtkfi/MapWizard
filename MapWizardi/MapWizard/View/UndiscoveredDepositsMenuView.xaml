@@ -92,8 +92,8 @@
                     <local:UndiscoveredDepositsView VerticalAlignment="Top" 
                                                     HorizontalAlignment="Left" 
                                                     DataContext="{Binding Source={StaticResource Locator}, Path=UndiscoveredDepositsViewModel}" 
-                                                    IsEnabled="{Binding IsBusy,Converter={StaticResource ReverseBooleanConverter}}"/>
-                    <mah:ProgressRing DataContext="{Binding Source={StaticResource Locator}, Path=UndiscoveredDepositsViewModel}" IsActive="{Binding IsBusy}" Width="200"/>
+                                                    IsEnabled="{Binding Model.IsBusy,Converter={StaticResource ReverseBooleanConverter}}"/>
+                    <mah:ProgressRing DataContext="{Binding Source={StaticResource Locator}, Path=UndiscoveredDepositsViewModel}" IsActive="{Binding Model.IsBusy}" Width="200"/>
                 </Grid>
             </mah:MetroTabItem>
             <mah:MetroTabItem Padding="5">
@@ -103,11 +103,11 @@
                 <Grid>
                     <Rectangle Height="3" Fill="LightGray" Stroke="LightGray" VerticalAlignment="Top" HorizontalAlignment="Left" Width="200" Grid.Row="0" />
                     <local:UndiscoveredDepositsResultView VerticalAlignment="Top" HorizontalAlignment="Left"/>
-                    <mah:ProgressRing DataContext="{Binding Source={StaticResource Locator}, Path=UndiscoveredDepositsViewModel}" IsActive="{Binding IsBusy}" Width="200"/>
+                    <mah:ProgressRing DataContext="{Binding Source={StaticResource Locator}, Path=UndiscoveredDepositsViewModel}" IsActive="{Binding Model.IsBusy}" Width="200"/>
                     <Button 
                         HorizontalAlignment="Right" 
-                        VerticalAlignment="Bottom" 
-                        Margin="0,0,40,40"
+                        VerticalAlignment="Top" 
+                        Margin="0,65,40,0"
                         Padding="-10,0,0,0"                          
                         Background="{DynamicResource AccentColorBrush}" 
                         Foreground="White"

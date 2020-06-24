@@ -1,0 +1,17 @@
+.N.                     Fuzzy logic
+LABELS                  Labels from objects
+canonicalize_set_and_mapping
+                        Canonicalize set and mapping
+charfun_generator       Fuzzy membership functions
+closure                 Closure and reduction
+cset                    Customizable sets
+fuzzy_docs              Documents on Fuzzy Theory
+fuzzy_rule              Fuzzy inference
+gset                    Generalized sets
+interval                Intervals
+plot.gset               Plot functions for generalized sets
+set                     Sets
+set_outer               Outer Product of Sets (Tuples)
+set_similarity          Similarity and Dissimilarity Functions
+sets_options            Options for the 'sets' package
+tuple                   Tuples

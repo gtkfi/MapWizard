@@ -18,6 +18,11 @@ namespace MapWizard.Tools
             get { return GetValue<string>("TextFile"); }
             set { Add<string>("TextFile", value); }
         }
+        public string WordFile
+        {
+            get { return GetValue<string>("WordFile"); }
+            set { Add<string>("WordFile", value); }
+        }
         /// <summary>
         /// Determines if the tool is running in File or Edit -tab.
         /// </summary>
@@ -109,6 +114,14 @@ namespace MapWizard.Tools
                 }
                 input.Save(Path.Combine(descriptiveProject, "descriptive_input_params.json"));
 
+                if (input.Method == "WordFile")
+                {
+                    if (!Directory.Exists(Path.Combine(descriptiveProject, "SelectedResult")))
+                    {
+                        Directory.CreateDirectory(Path.Combine(descriptiveProject, "SelectedResult"));
+                    }
+                    result.WordOutputFile = Path.Combine(descriptiveProject, "SelectedResult", "DescriptiveWordModel(docx).docx");
+                }
                 if (input.Method == "EditedFile")
                 {
                     result.OutputFile = Path.Combine(descriptiveProject, "DescriptiveModel.txt");

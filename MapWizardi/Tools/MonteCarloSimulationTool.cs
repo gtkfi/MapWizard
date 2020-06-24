@@ -1,12 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
-using System.ServiceModel.Channels;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.Win32;
 using NLog;
 
 namespace MapWizard.Tools
@@ -22,18 +16,18 @@ namespace MapWizard.Tools
         /// <summary>
         ///Location of the R object (grade.rds) produced by the Grade-tonnage model tool. The object contains the estimated probability density functions of metal grades.
         /// </summary>
-        public string GradePdf
+        public string GradePlot
         {
-            get { return GetValue<string>("GradePdf"); }
-            set { Add<string>("GradePdf", value); }
+            get { return GetValue<string>("GradePlot"); }
+            set { Add<string>("GradePlot", value); }
         }
         /// <summary>
         /// Location of the R object (tonnage.rds) produced by the Grade-tonnage model tool.  The object contains the estimated probability density function of ore or metal tonnage. 
         /// </summary>
-        public string TonnagePdf
+        public string TonnagePlot
         {
-            get { return GetValue<string>("TonnagePdf"); }
-            set { Add<string>("TonnagePdf", value); }
+            get { return GetValue<string>("TonnagePlot"); }
+            set { Add<string>("TonnagePlot", value); }
         }
         /// <summary>
         ///  Location of the R object (oPmf.rds) produced by the Undiscovered deposits tool. The object contains the estimated probability mass function of the number of undiscovered deposits. 
@@ -50,6 +44,15 @@ namespace MapWizard.Tools
         {
             get { return GetValue<string>("ExtensionFolder"); }
             set { Add<string>("ExtensionFolder", value); }
+        }
+
+        /// <summary>
+        /// Name of selected tract
+        /// </summary>
+        public string TractID
+        {
+            get { return GetValue<string>("TractId"); }
+            set { Add<string>("TractId", value); }
         }
     }
 
@@ -73,18 +76,18 @@ namespace MapWizard.Tools
         /// <summary>
         /// Total tonnage pdf.
         /// </summary>
-        public string TotalTonPdf
+        public string TotalTonPlot
         {
-            get { return GetValue<string>("TotalTonPdf"); }
-            internal set { Add<string>("TotalTonPdf", value); }
+            get { return GetValue<string>("TotalTonPlot"); }
+            internal set { Add<string>("TotalTonPlot", value); }
         }
         /// <summary>
         /// Marginal pdf.
         /// </summary>
-        public string MarginalPdf
+        public string MarginalPlot
         {
-            get { return GetValue<string>("MarginalPdf"); }
-            internal set { Add<string>("MarginalPdf", value); }
+            get { return GetValue<string>("MarginalPlot"); }
+            internal set { Add<string>("MarginalPlot", value); }
         }
         /// <summary>
         /// Simulated deposits csv file.
@@ -113,17 +116,26 @@ namespace MapWizard.Tools
         {
             var input = inputParams as MonteCarloSimulationInputParams;
             MonteCarloSimulationResult result = new MonteCarloSimulationResult();
-            string projectFolder = Path.Combine(inputParams.Env.RootPath, "MCSim", input.ExtensionFolder);
-            projectFolder = projectFolder.Replace("\\", "/");
+            //string projectFolder = Path.Combine(inputParams.Env.RootPath, "MCSim", input.ExtensionFolder);
+            string MCSimFolder = Path.Combine(inputParams.Env.RootPath, "MCSim");
+            string projectFolder = Path.Combine(MCSimFolder, input.TractID, input.ExtensionFolder);
             try
             {
-
                 if (!Directory.Exists(projectFolder))
                 {
                     Directory.CreateDirectory(projectFolder);
                 }
-
+                input.Save(Path.Combine(MCSimFolder, "monte_carlo_simulation_input_params.json"));
                 input.Save(Path.Combine(projectFolder, "monte_carlo_simulation_input_params.json"));
+                ////Create possible extension folder
+                //if (input.ExtensionFolder != null && input.ExtensionFolder != "")
+                //{
+                //    projectFolder = Path.Combine(projectFolder,input.ExtensionFolder);
+                //    if (!Directory.Exists(projectFolder))
+                //    {
+                //        Directory.CreateDirectory(projectFolder);
+                //    }
+                //}
             }
             catch (Exception ex)
             {
@@ -135,11 +147,13 @@ namespace MapWizard.Tools
             var summaryTxt = Path.Combine(projectFolder, "summary.txt");
             string rScriptExecutablePath = result.Env.RPath;
             string procResult = string.Empty;
+            string tractName = input.TractID;
 
             var info = new ProcessStartInfo();
             info.FileName = rScriptExecutablePath;
             info.WorkingDirectory = path + "scripts/";
-            info.Arguments = "\"" + rCodeFilePath + "\" \"" + input.NDepositsPmf + "\" \"" + input.TonnagePdf + "\" \"" + input.GradePdf + "\" \"" + scriptPath + "oMeta.rds" + "\" \"" + summaryTxt + "\" \"" + projectFolder + "\" " + input.ExtensionFolder;
+            info.Arguments = "\"" + rCodeFilePath + "\" \"" + input.NDepositsPmf + "\" \"" + input.TonnagePlot + "\" \"" + input.GradePlot + "\" \"" + scriptPath + "oMeta.rds" + "\" \"" + summaryTxt + "\" \"" + projectFolder + "\"";
+            info.Arguments += " "+tractName;
             info.RedirectStandardInput = false;
             info.RedirectStandardOutput = true;
             info.RedirectStandardError = true;
@@ -166,19 +180,21 @@ namespace MapWizard.Tools
                     if (procErrors.Length > 1)
                         logger.Error(procErrors);
                     result.SummaryTotalTonnage = File.ReadAllText(Path.Combine(projectFolder, "summary.txt"));
-                    result.SimulatedDepositsCSV = Path.Combine(projectFolder, "Tract_05_Sim_EF.csv");
-                    result.TotalTonPdf = Path.Combine(input.Env.RootPath, "MCSim", input.ExtensionFolder, "plot.jpeg");
-                    result.MarginalPdf = Path.Combine(input.Env.RootPath, "MCSim", input.ExtensionFolder, "plotMarginals.jpeg");
+                    result.SimulatedDepositsCSV = Path.Combine(projectFolder, tractName + "_05_SIM_EF.csv");
+                    result.TotalTonPlot = Path.Combine(projectFolder, "plot.jpeg");
+                    result.MarginalPlot = Path.Combine(projectFolder, "plotMarginals.jpeg");
                 }
                 catch (Exception ex)
                 {
                     throw new Exception("R script failed, check log file for details.");
                 }
             }
-
             return result;
         }
 
+        /// <summary>
+        /// Create Estimation CSV.
+        /// </summary>
         private void CreateEstimationCsv(string pathToCsv, string depositsEstimations)
         {
             File.WriteAllText(pathToCsv, depositsEstimations);

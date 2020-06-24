@@ -1,0 +1,146 @@
+importFrom("stats","update")
+importFrom("methods","show")
+importFrom("utils", "installed.packages")
+
+## functions to export
+export("guiToolkit","gwCat", "gtoolkit")
+
+## constructors
+export("glabel", "gbutton", "gcheckbox", "gradio", "gdroplist","gcombobox",
+"gcheckboxgroup", "gspinbutton", "gslider", "gedit", "gtext", "gaction", "gmenu",
+"gtoolbar", "gtable", "gdf", "gdfnotebook", "gtree", "gfile",
+"gfilebrowse", "gcalendar", "ggraphics", "ggraphicsnotebook",
+"ghtml","gimage", "gsvg", "gstatusbar", "gseparator", "gcommandline", "ghelp",
+"ghelpbrowser", "ggenericwidget", "gformlayout","gvarbrowser",
+#       "gdynamicselect",
+       "gwindow", "ggroup",
+"gframe", "gexpandgroup", "gnotebook", "glayout", "gpanedgroup",
+"galert", "gmessage",
+"ginput", "gconfirm", "gbasicdialog",
+       "galert",
+"addStockIcons","getStockIcons",
+       "stockIconFromClass","stockIconFromObject",
+       "toolkitProvidesWidget"
+)
+
+## export toolkits and the basic gui-classes
+exportClasses("guiWidgetsToolkit",
+              
+              "guiWidgetsToolkitRGtk2",
+              "guiWidgetsToolkitrJava",
+              "guiWidgetsToolkitSJava",
+              "guiWidgetsToolkittcltk",
+              "guiWidgetsToolkitRwxWidgets",                            
+              "guiWidget","guiComponent","guiContainer","guiDialog",
+              "gWidgetANY","gComponentANY","gContainerANY","guiDialog",
+              "guiWidgetOrNULL",
+              "guiDialog", "gAction", "gButton", "gCalendar", "gCheckbox","gCheckboxGroup",
+              "gCombobox","gCommandline", "gCommandlineANY",  "gDfNotebook", "gEdit",
+              "gExpandGroup", "gFilebrowse", "gFormLayout","gFormLayoutANY", "gFrame", "gGenericWidget",
+              "gGenericWidgetANY", "gGraphics", "gGraphicsNotebook",
+              "gGridComponent", "gDf",  "gTable",
+              "gGroup", "gHelp", "gHelpBrowser",
+              "gHelpANY", "gHelpbrowserANY", "gHtml", "gImage", "gLabel", "gLayout", "gMenu", "gNotebook",
+              "gPanedGroup", "gRadio", "gSeparator", "gSlider", "guiComponentRangeSelector", "gSpinbutton",
+              "gStatusbar", "gSvg", "gText", "gToolbar", "gTree",
+              "guiComponentWithItems", "gVarBrowser", "gWindow"
+              )
+
+## these are used by others but defined here.
+export("editSubsetDialog","editSelectDialog", "editFormulaDialog",".fixFontMessUp", "str2")
+
+exportMethods(
+"show",
+"[", 
+"svalue", "svalue<-", "add", "addSpace", "addSpring", "insert", "delete",
+"dispose", "visible", "visible<-", "enabled", "enabled<-", "editable", "editable<-",
+              "size", "size<-", "focus", "focus<-", "tooltip<-", "defaultWidget","defaultWidget<-", "font", "font<-", "undo", "redo", "tag", "tag<-", "id",
+"id<-", "isExtant",
+              "addhandler", "addHandler",
+              "addhandlerchanged",  "addHandlerChanged",
+              "addhandlerkeystroke","addHandlerKeystroke",
+              "addhandlerclicked",  "addHandlerClicked",
+              "addhandlerdoubleclick","addHandlerDoubleclick",
+              "addhandlerrightclick","addHandlerRightclick",
+              "addhandlercolumnclicked",  "addHandlerColumnClicked",
+              "addhandlercolumndoubleclick","addHandlerColumnDoubleclick",
+              "addhandlercolumnrightclick","addHandlerColumnRightclick",
+              "addhandlerfocus","addHandlerFocus",
+              "addhandlerblur","addHandlerBlur",
+              "addhandlerdestroy",   "addHandlerDestroy",
+              "addhandlerexpose",    "addHandlerExpose",
+              "addhandlerunrealize", "addHandlerUnrealize",
+              "addhandlermousemotion","addHandlerMouseMotion",              
+              "addhandleridle",      "addHandlerIdle",
+              "addpopupmenu",        "addPopupmenu",
+              "add3rdmousepopupmenu","add3rdMousePopupmenu",
+              "adddropsource",       "addDropSource",
+              "adddropmotion",       "addDropMotion",
+              "adddroptarget",       "addDropTarget",
+              "removehandler",       "removeHandler",
+              "blockhandler",       "blockHandler",
+              "unblockhandler",       "unblockHandler",
+".glabel", ".gbutton", ".gcheckbox", ".gradio", ".gdroplist",
+".gcheckboxgroup", ".gspinbutton", ".gslider", ".gedit", ".gtext",
+".gaction", ".gmenu", ".gtoolbar", ".gtable", ".gdf", ".gdfnotebook", ".gtree",
+".gfile", ".gfilebrowse", ".gcalendar", ".ggraphics",
+".ggraphicsnotebook", ".ghtml",".gimage", ".gsvg", ".gstatusbar", ".gseparator",
+".gcommandline", ".ghelp", ".ghelpbrowser", ".ggenericwidget", ".gformlayout",
+".gvarbrowser",
+##              ".gdynamicselect",
+              ".gwindow", ".ggroup", ".gframe", ".gexpandgroup",
+              ".gnotebook", ".glayout", ".gpanedgroup", ".svalue", ".svalue<-",
+              ".leftBracket", ".leftBracket<-", ".add", ".addSpace", ".addSpring",
+              ".insert", ".delete", ".dispose", ".visible", ".visible<-", ".enabled",
+              ".enabled<-", ".editable", ".editable<-",  ".size", ".size<-", ".focus", ".focus<-",
+              ".tooltip<-", ".defaultWidget",".defaultWidget<-",
+              ".font", ".font<-",
+              ".undo", ".redo",
+              ".tag", ".tag<-", ".id", ".id<-",
+              ".isExtant",".toolkitProvidesWidget",
+              ".removehandler",
+              ".blockhandler",
+              ".unblockhandler",
+              ".addhandler",
+              ".addhandlerchanged",
+              ".addhandlerkeystroke",
+              ".addhandlerclicked",
+              ".addhandlerdoubleclick", ".addhandlerrightclick",
+              ".addhandlercolumnclicked",
+              ".addhandlercolumndoubleclick", ".addhandlercolumnrightclick",
+              ".addhandlerfocus", ".addhandlerblur",
+".addhandlerdestroy", ".addhandlerexpose", ".addhandlerunrealize",
+              ".addhandlermousemotion",
+".addhandleridle", ".addpopupmenu", ".add3rdmousepopupmenu",
+".adddropsource", ".adddropmotion", ".adddroptarget",
+              ".galert",".gmessage",
+".ginput", ".gconfirm", ".gbasicdialog", ".gbasicdialognoparent",".galert",
+".addStockIcons",".getStockIcons",
+".stockIconFromClass",".stockIconFromObject",
+"update",".update",
+"length",".length",
+"dim",".dim",
+"dimnames",".dimnames",
+"dimnames<-",".dimnames<-",
+"names",".names",
+"names<-",".names<-",
+"getToolkitWidget",".getToolkitWidget",
+              ".callToolkitMethod",
+              ".getToolkitProperty",
+              ".setToolkitProperty"
+ )
+
+export("$.guiWidget")
+export("[[.guiWidget")
+export("[[<-.guiWidget")
+## put into toolkit only (RGtk2)
+##export("as.gWidget")
+##S3method("as.gWidget","default")
+
+S3method("$", guiWidget)
+S3method("[[", guiWidget)
+S3method("[[<-", guiWidget)
+
+importFrom("methods", "callNextMethod", "is", "new")
+importFrom("utils", "RweaveEvalWithOpt", "assignInNamespace",
+           "getFromNamespace", "head", "help", "help.search", "menu")

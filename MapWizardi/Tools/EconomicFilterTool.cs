@@ -2,11 +2,6 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
-using System.ServiceModel.Channels;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.Win32;
 using NLog;
 
 namespace MapWizard.Tools
@@ -99,7 +94,14 @@ namespace MapWizard.Tools
             get { return GetValue<string>("RaefEconFilterFile"); }
             set { Add<string>("RaefEconFilterFile", value); }
         }
-
+        /// <summary>
+        /// Tract ID.
+        /// </summary>
+        public string TractID
+        {
+            get { return GetValue<string>("TractID"); }
+            set { Add<string>("TractID", value); }
+        }
         /// <summary>
         /// Folder extension name for RAEF.
         /// </summary>
@@ -116,7 +118,21 @@ namespace MapWizard.Tools
             get { return GetValue<string>("ScreenerExtensionFolder"); }
             set { Add<string>("ScreenerExtensionFolder", value); }
         }
-
+        public string RaefEmpiricalModel
+        {
+            get { return GetValue<string>("RaefEmpiricalModel"); }
+            set { Add<string>("RaefEmpiricalModel", value); }
+        }
+        public string RaefGtmFile
+        {
+            get { return GetValue<string>("RaefGtmFile"); }
+            set { Add<string>("RaefGtmFile", value); }
+        }
+        public string RaefRunName
+        {
+            get { return GetValue<string>("RaefRunName"); }
+            set { Add<string>("RaefRunName", value); }
+        }
     }
 
     /// <summary>
@@ -171,9 +187,49 @@ namespace MapWizard.Tools
     /// </summary>
     public class EconomicFilterTool : ITool
     {
-
-
         private readonly ILogger logger = NLog.LogManager.GetCurrentClassLogger();
+
+        public string RaefGetCVandMRR(string inputFile, string rPath)
+        {
+            string CVandMRRList = "";
+
+            string valueTabsFolder = Path.Combine(System.AppDomain.CurrentDomain.BaseDirectory, "scripts", "RAEF", "Package", "Auxfiles", "Valuetabs");
+            string CVpath = Path.Combine(valueTabsFolder, "CValues.csv");
+            string MRRpath = Path.Combine(valueTabsFolder, "MillR.csv");
+            //inputfilen se tarvii.
+
+            var path = System.AppDomain.CurrentDomain.BaseDirectory.Replace(@"\", @"/");
+            var rCodeFilePath = "\"" + path + "scripts/RAEF_Read_CV_And_MRR.r" + "\"";
+            string rScriptExecutablePath = rPath;
+            string procResult = string.Empty;
+            var info = new ProcessStartInfo();
+            info.FileName = rScriptExecutablePath;
+            info.WorkingDirectory = Path.Combine(path, "scripts");
+            info.Arguments = rCodeFilePath + " " + "\"" + inputFile + "\"" + " " + "\"" + CVpath + "\"" + " " + "\"" + MRRpath + "\"";
+            info.RedirectStandardInput = false;
+            info.RedirectStandardOutput = true;
+            info.RedirectStandardError = true;
+            info.UseShellExecute = false;
+            info.CreateNoWindow = true;
+
+            using (var proc = new Process())
+            {
+                proc.StartInfo = info;
+                proc.Start();
+                StreamReader errorReader = proc.StandardError;
+                StreamReader myStreamReader = proc.StandardOutput;
+                string errors = errorReader.ReadToEnd();
+                if (errors.Length > 1 && errors.ToLower().Contains("error"))  //Don't throw exception over warnings or empty error message.
+                {
+                    logger.Error(errors);
+                    throw new Exception("R script failed, check log file for details.");
+                }
+                procResult = proc.StandardOutput.ReadToEnd();
+                CVandMRRList = procResult;
+                proc.Close();
+            }
+            return CVandMRRList;
+        }
 
         /// <summary>
         /// Run tool
@@ -193,7 +249,7 @@ namespace MapWizard.Tools
                 {
                     string projectFolder = Path.Combine(inputParams.Env.RootPath, "EconFilter", "Screener", input.ScreenerExtensionFolder);
                     try
-                    {                      
+                    {
                         if (!Directory.Exists(projectFolder))
                         {
                             Directory.CreateDirectory(projectFolder);
@@ -229,16 +285,20 @@ namespace MapWizard.Tools
                     {
                         proc.StartInfo = info;
                         proc.Start();
-                        StreamReader errorReader = proc.StandardError;
-                        StreamReader myStreamReader = proc.StandardOutput;
-                        string errors = errorReader.ReadToEnd();
-                        if (errors.Length > 1 && errors.ToLower().Contains("error"))  //Don't throw exception over warnings or empty error message.
+                        using (StreamReader errorReader = proc.StandardError)
                         {
-                            logger.Error(errors);
-                            throw new Exception("R script failed, check log file for details.");
+                            using (StreamReader myStreamReader = proc.StandardOutput)
+                            {
+                                string errors = errorReader.ReadToEnd();
+                                if (errors.Length > 1 && errors.ToLower().Contains("error"))  //Don't throw exception over warnings or empty error message.
+                                {
+                                    logger.Error(errors);
+                                    throw new Exception("R script failed, check log file for details.");
+                                }
+                                string stream = myStreamReader.ReadToEnd();
+                                procResult = proc.StandardOutput.ReadToEnd();
+                            }
                         }
-                        string stream = myStreamReader.ReadToEnd();
-                        procResult = proc.StandardOutput.ReadToEnd();
                         proc.Close();
                         result.EcoTonnage = Path.Combine(projectFolder, "eco_tonnages.csv");
                         result.EcoTonnageStats = Path.Combine(projectFolder, "eco_tonnage_stat.csv");
@@ -254,81 +314,158 @@ namespace MapWizard.Tools
             }
             else //If type is RAEF
             {
-                try
+                if (input.RaefEmpiricalModel == "True")//tähä runtype==empirical checki
                 {
-                    string projectFolder = Path.Combine(inputParams.Env.RootPath, "EconFilter", "RAEF", input.RaefExtensionFolder);
-                    string packageFolder = Path.Combine(System.AppDomain.CurrentDomain.BaseDirectory, "scripts", "RAEF", "Package");
+                    //tehdäkö oma pätkä tälle kokonaan vai yhdistää raefin kaa? vaikka onki vähän toistoa, niin ehkä fiksumpi tehä silti oma pätkä.
+                    //MM4File < --args[1] #     SIM file                           
+                    //GTMEmp << -args[2]# GTM file                                
+                    //InputFolder2 << -args[3]#output directory
+                    //TestNameEmp << -args[4] # test/run name
                     try
                     {
-                      
-
-                        if (!Directory.Exists(projectFolder))
+                        string projectFolder = Path.Combine(inputParams.Env.RootPath, "EconFilter", "RAEF", input.TractID, input.RaefExtensionFolder);//tohon vois tietty laittaa esim EMP?
+                        string packageFolder = Path.Combine(System.AppDomain.CurrentDomain.BaseDirectory, "scripts", "RAEF", "Package");
+                        try
                         {
-                            Directory.CreateDirectory(projectFolder);
+                            if (!Directory.Exists(projectFolder))
+                            {
+                                Directory.CreateDirectory(projectFolder);
+                            }
+                            var projectFolderInfo = new DirectoryInfo(projectFolder);
+                            foreach (FileInfo file in projectFolderInfo.GetFiles())
+                            {
+                                file.Delete();
+                            }
+                            input.Save(Path.Combine(inputParams.Env.RootPath, "EconFilter", "economic_filter_input_params.json"));
+                            input.Save(Path.Combine(projectFolder, "economic_filter_input_params.json")); //Save also to raef folder for selecting results
                         }
-
-
-                        var projectFolderInfo = new DirectoryInfo(projectFolder);
-
-                        foreach (FileInfo file in projectFolderInfo.GetFiles())
+                        catch (Exception ex)
                         {
-                            file.Delete();
+                            throw new Exception("Failed to initialize project folder: " + ex);
                         }
+                        var path = System.AppDomain.CurrentDomain.BaseDirectory.Replace(@"\", @"/");
+                        var rCodeFilePath = "\"" + path + "scripts/RaefEmpModel.r" + "\"";
+                        string rScriptExecutablePath = inputParams.Env.RPath;
+                        string procResult = string.Empty;
+                        var info = new ProcessStartInfo();
+                        info.FileName = rScriptExecutablePath;
+                        info.WorkingDirectory = Path.Combine(path, "scripts");
+                        //kato näiden pathit että ei oo backslashei
+                        info.Arguments = rCodeFilePath + " " + "\"" + input.RaefEconFilterFile + "\"" + " " + "\"" + input.RaefGtmFile + "\"" + " " + "\"" + projectFolder + "\"" + " " + "\"" + input.RaefRunName + "\"";//input.RaefExtensionFolder
 
-                        input.Save(Path.Combine(inputParams.Env.RootPath, "EconFilter", "economic_filter_input_params.json"));
-                        input.Save(Path.Combine(projectFolder, "economic_filter_input_params.json")); //Save also to raef folder for selecting results
+                        info.RedirectStandardInput = false;
+                        info.RedirectStandardOutput = true;
+                        info.RedirectStandardError = true;
+                        info.UseShellExecute = false;
+                        info.CreateNoWindow = true;
+
+                        using (var proc = new Process())
+                        {
+                            proc.StartInfo = info;
+                            proc.Start();
+                            using (StreamReader myStreamReader = proc.StandardOutput)
+                            {
+                                string procErrors = "";
+                                proc.ErrorDataReceived += new DataReceivedEventHandler((sender, e) =>  //Use DataReceivedEventHandler to read error data, simply using proc.StandardError would sometimes freeze, due to buffer filling up
+                                {
+                                    if (!String.IsNullOrEmpty(e.Data))
+                                    {
+                                        procErrors += (e.Data);
+                                    }
+                                });
+                                proc.BeginErrorReadLine();
+                                string stream = myStreamReader.ReadToEnd();
+                                logger.Trace(stream);
+                                if (procErrors.Length > 1 && procErrors.ToLower().Contains("error"))  //Don't throw exception over warnings or empty error message.
+                                {
+                                    logger.Error(procErrors);
+                                    throw new Exception("R script failed, check log file for details");
+                                }
+                                procResult = proc.StandardOutput.ReadToEnd();
+                            }
+                            proc.Close();
+                        }
                     }
                     catch (Exception ex)
                     {
-                        throw new Exception("Failed to initialize project folder: " + ex);
+                        logger.Trace("Error: " + ex);
+                        throw new Exception("Economic filter RAEF tool failed: ");
                     }
+                    return result;
 
-                    var path = System.AppDomain.CurrentDomain.BaseDirectory.Replace(@"\", @"/");
-                    var rCodeFilePath = "\"" + path + "scripts/RAEF_MW.r" + "\"";
-                    string rScriptExecutablePath = inputParams.Env.RPath;
-                    string procResult = string.Empty;
-                    var info = new ProcessStartInfo();
-                    info.FileName = rScriptExecutablePath;
-                    info.WorkingDirectory = Path.Combine(path, "scripts");
-                    info.Arguments = rCodeFilePath + " " + "\"" + packageFolder + "\"" + " " + "\"" + input.RaefPresetFile + "\"" + " " + "\"" + projectFolder + "\"" + " " + "\"" + input.RaefEconFilterFile + "\"";
-                    info.RedirectStandardInput = false;
-                    info.RedirectStandardOutput = true;
-                    info.RedirectStandardError = true;
-                    info.UseShellExecute = false;
-                    info.CreateNoWindow = true;
-
-                    using (var proc = new Process())
-                    {
-                        proc.StartInfo = info;
-                        proc.Start();
-                        StreamReader myStreamReader = proc.StandardOutput;
-                        string procErrors = "";
-                        proc.ErrorDataReceived += new DataReceivedEventHandler((sender, e) =>  //Use DataReceivedEventHandler to read error data, simply using proc.StandardError would sometimes freeze, due to buffer filling up
-                        {
-                            if (!String.IsNullOrEmpty(e.Data))
-                            {
-                                procErrors += (e.Data);
-                            }
-                        });
-                        proc.BeginErrorReadLine();
-                        string stream = myStreamReader.ReadToEnd();
-                        logger.Trace(stream);
-                        if (procErrors.Length > 1 && procErrors.ToLower().Contains("error"))  //Don't throw exception over warnings or empty error message.
-                        {
-                            logger.Error(procErrors);
-                            throw new Exception("R script failed, check log file for details");
-                        }
-                        procResult = proc.StandardOutput.ReadToEnd();
-                        proc.Close();
-                    }
                 }
-                catch (Exception ex)
+                else
                 {
-                    logger.Trace("Error: " + ex);
-                    throw new Exception("Economic filter RAEF tool failed: ");
-                }
-                return result;
+                    try
+                    {
+                        string projectFolder = Path.Combine(inputParams.Env.RootPath, "EconFilter", "RAEF", input.TractID, input.RaefExtensionFolder);
+                        string packageFolder = Path.Combine(System.AppDomain.CurrentDomain.BaseDirectory, "scripts", "RAEF", "Package");
+                        try
+                        {
+                            if (!Directory.Exists(projectFolder))
+                            {
+                                Directory.CreateDirectory(projectFolder);
+                            }
+                            var projectFolderInfo = new DirectoryInfo(projectFolder);
+                            foreach (FileInfo file in projectFolderInfo.GetFiles())
+                            {
+                                file.Delete();
+                            }
+                            input.Save(Path.Combine(inputParams.Env.RootPath, "EconFilter", "economic_filter_input_params.json"));
+                            input.Save(Path.Combine(projectFolder, "economic_filter_input_params.json")); //Save also to raef folder for selecting results
+                        }
+                        catch (Exception ex)
+                        {
+                            throw new Exception("Failed to initialize project folder: " + ex);
+                        }
+                        var path = System.AppDomain.CurrentDomain.BaseDirectory.Replace(@"\", @"/");
+                        var rCodeFilePath = "\"" + path + "scripts/RAEF_MW.r" + "\"";
+                        string rScriptExecutablePath = inputParams.Env.RPath;
+                        string procResult = string.Empty;
+                        var info = new ProcessStartInfo();
+                        info.FileName = rScriptExecutablePath;
+                        info.WorkingDirectory = Path.Combine(path, "scripts");
+                        info.Arguments = rCodeFilePath + " " + "\"" + packageFolder + "\"" + " " + "\"" + input.RaefPresetFile + "\"" + " " + "\"" + projectFolder + "\"" + " " + "\"" + input.RaefEconFilterFile + "\"";
+                        info.RedirectStandardInput = false;
+                        info.RedirectStandardOutput = true;
+                        info.RedirectStandardError = true;
+                        info.UseShellExecute = false;
+                        info.CreateNoWindow = true;
 
+                        using (var proc = new Process())
+                        {
+                            proc.StartInfo = info;
+                            proc.Start();
+                            using (StreamReader myStreamReader = proc.StandardOutput)
+                            {
+                                string procErrors = "";
+                                proc.ErrorDataReceived += new DataReceivedEventHandler((sender, e) =>  //Use DataReceivedEventHandler to read error data, simply using proc.StandardError would sometimes freeze, due to buffer filling up
+                                {
+                                    if (!String.IsNullOrEmpty(e.Data))
+                                    {
+                                        procErrors += (e.Data);
+                                    }
+                                });
+                                proc.BeginErrorReadLine();
+                                string stream = myStreamReader.ReadToEnd();
+                                logger.Trace(stream);
+                                if (procErrors.Length > 1 && procErrors.ToLower().Contains("error"))  //Don't throw exception over warnings or empty error message.
+                                {
+                                    logger.Error(procErrors);
+                                    throw new Exception("R script failed, check log file for details");
+                                }
+                                procResult = proc.StandardOutput.ReadToEnd();
+                            }
+                            proc.Close();
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        logger.Trace("Error: " + ex);
+                        throw new Exception("Economic filter RAEF tool failed: ");
+                    }
+                    return result;
+                }
             }
         }
     }

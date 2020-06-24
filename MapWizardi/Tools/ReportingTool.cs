@@ -10,7 +10,7 @@ using Xceed.Words.NET;
 namespace MapWizard.Tools
 {
     /// <summary>
-    /// Input parameters for R tool.
+    /// Input parameters for Reporting tool.
     /// </summary>
     public class ReportingInputParams : ToolParameters
     {
@@ -23,12 +23,12 @@ namespace MapWizard.Tools
             set { Add<ObservableCollection<string>>("TractIDNames ", value); }
         }
         /// <summary>
-        /// Index of the selected tract.
+        /// Selected tract.
         /// </summary>
-        public string SelectedTractIndex
+        public string SelectedTract
         {
-            get { return GetValue<string>("SelectedTractIndex"); }
-            set { Add<string>("SelectedTractIndex", value); }
+            get { return GetValue<string>("SelectedTract"); }
+            set { Add<string>("SelectedTract", value); }
         }
         /// <summary>
         /// Input the names of authors for this Tract report.
@@ -117,14 +117,6 @@ namespace MapWizard.Tools
         {
             get { return GetValue<string>("EnableGTCheck"); }
             set { Add<string>("EnableGTCheck", value); }
-        }
-        /// <summary>
-        /// Criteria used in the delineation of the tract in text format.
-        /// </summary>
-        public string TractCriteriaFile
-        {
-            get { return GetValue<string>("TractCriteriaFile"); }
-            set { Add<string>("TractCriteriaFile", value); }
         }
         /// <summary>
         /// Location of an image showing the location of the tract. Accepted formats are jpeg, tiff and png.
@@ -238,6 +230,15 @@ namespace MapWizard.Tools
     public class ReportingResult : ToolResult
     {
         private readonly ILogger logger = NLog.LogManager.GetCurrentClassLogger();
+
+        /// <summary>
+        /// Output document file of Reporting tool. 
+        /// </summary>
+        public string OutputDocument
+        {
+            get { return GetValue<string>("OutputDocument"); }
+            internal set { Add<string>("OutputDocument", value); }
+        }
     }
 
     /// <summary>
@@ -255,30 +256,36 @@ namespace MapWizard.Tools
         public ToolResult Execute(ToolParameters inputParams)
         {
             ReportingInputParams input = inputParams as ReportingInputParams;
-            string outputFolder = Path.Combine(inputParams.Env.RootPath, "TractReport");
+            string outputFolder = Path.Combine(inputParams.Env.RootPath, "Reporting");
             if (!Directory.Exists(outputFolder))
             {
                 Directory.CreateDirectory(outputFolder);
             }
             input.Save(Path.Combine(outputFolder, "tract_report_input_params.json"));
+            ReportingResult result = new ReportingResult();
             try
             {
-                string tractID = input.TractIDNames[Convert.ToInt32(input.SelectedTractIndex)];
-                string docOutputFile = Path.Combine(outputFolder, "TractReport" + tractID + ".docx");
-                var document = DocX.Create(docOutputFile);
-                WriteInputs(input, document, tractID);
-                WriteUndiscoveredDeposits(input, document, tractID);
-                WriteMonteCarlo(input, document, tractID);
-                WriteEconomicFilter(input, document, tractID);
-                WriteInputFiles(input, document, tractID);
-                WriteAppendixes(input, document);
-                document.Save();
+                if (!Directory.Exists(Path.Combine(outputFolder, input.SelectedTract)))
+                {
+                    Directory.CreateDirectory(Path.Combine(outputFolder, input.SelectedTract));
+                }
+                string docOutputFile = Path.Combine(outputFolder, input.SelectedTract, "TractReport" + input.SelectedTract + ".docx");
+                using (var document = DocX.Create(docOutputFile))
+                {
+                    WriteInputs(input, document);
+                    WriteUndiscoveredDeposits(input, document);
+                    WriteMonteCarlo(input, document);
+                    WriteEconomicFilter(input, document);
+                    WriteInputFiles(input, document);
+                    WriteAppendixes(input, document);
+                    document.Save();
+                }
+                result.OutputDocument = docOutputFile;
             }
             catch (Exception ex)
             {
                 throw new Exception("Word file creation failed: ", ex);
             }
-            ReportingResult result = new ReportingResult(); // This should return the output file.
             return result;
         }
 
@@ -288,9 +295,9 @@ namespace MapWizard.Tools
         /// <param name="input">Inputs</param>
         /// <param name="document">Word document</param>
         /// <param name="tractID">Selected tractID</param>
-        private void WriteInputs(ReportingInputParams input, DocX document, string tractID)
+        private void WriteInputs(ReportingInputParams input, DocX document)
         {
-            string paragraph = tractID;
+            string paragraph = input.SelectedTract;
             document.InsertParagraph(paragraph).FontSize(16).Bold().Alignment = Alignment.center;
             if (File.Exists(input.TractImageFile))
             {
@@ -313,9 +320,9 @@ namespace MapWizard.Tools
                 p.SpacingAfter(10);
             }
             Paragraph severalParagraphs = document.InsertParagraph("Figure 1. ").Bold();
-            severalParagraphs.Append("Location of tract " + tractID + ".");
-            document.InsertSectionPageBreak(true);
-            paragraph = input.DepositType + " ASSESMENT FOR TRACT " + "'" + tractID + "' " + input.Country + "\r\n";
+            severalParagraphs.Append("Location of tract " + input.SelectedTract + ".");
+            document.InsertParagraph().InsertPageBreakAfterSelf();
+            paragraph = input.DepositType + " ASSESMENT FOR TRACT " + "'" + input.SelectedTract + "' " + input.Country + "\r\n";
             document.InsertParagraph(paragraph).FontSize(16).Bold();
             paragraph = "Deposit type: " + input.DepositType;
             document.InsertParagraph(paragraph).FontSize(10);
@@ -327,7 +334,7 @@ namespace MapWizard.Tools
             document.InsertParagraph(paragraph).FontSize(10);
             paragraph = "Grade-tonnage model: " + input.GTModelName + "\r\n";
             document.InsertParagraph(paragraph).FontSize(10);
-            paragraph = tractID;
+            paragraph = input.SelectedTract;
             document.InsertParagraph(paragraph).FontSize(10);
             paragraph = input.AsDate;
             document.InsertParagraph(paragraph).FontSize(10);
@@ -347,112 +354,112 @@ namespace MapWizard.Tools
         /// <param name="input">Inputs.</param>
         /// <param name="document">Word document.</param>
         /// <param name="tractID">Selected tractID.</param>
-        private void WriteUndiscoveredDeposits(ReportingInputParams input, DocX document, string tractID)
+        private void WriteUndiscoveredDeposits(ReportingInputParams input, DocX document)
         {
             string paragraph = "";
             Paragraph severalParagraphs = null;
             string depEst = "";
-            if ((input.IsUndiscDepDone == "Yes (NegativeBinomial)" && File.Exists(depEst = Path.Combine(input.Env.RootPath, "UndiscDep", "SelectedResult", "nDepEst.csv"))) || //käydään läpi että onko depEst tiedostoa olemassa missään muodossa
-                (input.IsUndiscDepDone == "Yes (MARK3)" && File.Exists(depEst = Path.Combine(input.Env.RootPath, "UndiscDep", "SelectedResult", "nDepEstMiddle.csv"))) ||
-                (input.IsUndiscDepDone == "Yes (Custom)" && File.Exists(depEst = Path.Combine(input.Env.RootPath, "UndiscDep", "SelectedResult", "nDepEstCustom.csv"))))
+            if ((input.IsUndiscDepDone == "Yes (NegativeBinomial)" && File.Exists(depEst = Path.Combine(input.Env.RootPath, "UndiscDep", input.SelectedTract, "SelectedResult", "nDepEst.csv"))) || //käydään läpi että onko depEst tiedostoa olemassa missään muodossa
+                (input.IsUndiscDepDone == "Yes (MARK3)" && File.Exists(depEst = Path.Combine(input.Env.RootPath, "UndiscDep", input.SelectedTract, "SelectedResult", "nDepEstMiddle.csv"))) ||
+                (input.IsUndiscDepDone == "Yes (Custom)" && File.Exists(depEst = Path.Combine(input.Env.RootPath, "UndiscDep", input.SelectedTract, "SelectedResult", "nDepEstCustom.csv"))))
             {
                 severalParagraphs = document.InsertParagraph("Table 1. ").Bold();
                 severalParagraphs.Append("Estimated numbers of deposits at 90, 50 and 10 percentile levels of confidence" + "\r\n");
                 string value;
                 using (TextReader fileReader = File.OpenText(depEst))
                 {
-                    var csv = new CsvReader(fileReader);
-                    csv.Configuration.HasHeaderRecord = false;
-                    csv.Configuration.Delimiter = ";";
-                    Table t = null;
-                    if (depEst == Path.Combine(input.Env.RootPath, "UndiscDep", "SelectedResult", "nDepEst.csv"))
+                    using (var csv = new CsvReader(fileReader))
                     {
-                        t = document.AddTable(1, 5);
-                    }
-                    else if (depEst == Path.Combine(input.Env.RootPath, "UndiscDep", "SelectedResult", "nDepEstMiddle.csv"))
-                    {
-                        t = document.AddTable(1, 6);
-                    }
-                    else //(depEst == Path.Combine(input.Env.RootPath, "UndiscDep", "SelectedResult", "nDepEstCustom.csv"))
-                    {
-                        t = document.AddTable(1, 2);
-                    }
-                    bool addToFirstRow = true;
-                    var r = t.Rows[0];
-                    int cellNumber = 1;
-                    // Inserts the data from CSV file corrctly into a table.
-                    while (csv.Read())
-                    {
-                        for (int i = 0; csv.TryGetField<string>(i, out value); i++)
+                        csv.Configuration.HasHeaderRecord = false;
+                        csv.Configuration.Delimiter = ";";
+                        Table t = null;
+                        if (depEst == Path.Combine(input.Env.RootPath, "UndiscDep", input.SelectedTract, "SelectedResult", "nDepEst.csv"))
                         {
-                            if (depEst == Path.Combine(input.Env.RootPath, "UndiscDep", "SelectedResult", "nDepEstMiddle.csv"))
+                            t = document.AddTable(1, 5);
+                        }
+                        else if (depEst == Path.Combine(input.Env.RootPath, "UndiscDep", input.SelectedTract, "SelectedResult", "nDepEstMiddle.csv"))
+                        {
+                            t = document.AddTable(1, 6);
+                        }
+                        else //(depEst == Path.Combine(input.Env.RootPath, "UndiscDep", "SelectedResult", "nDepEstCustom.csv"))
+                        {
+                            t = document.AddTable(1, 2);
+                        }
+                        bool addToFirstRow = true;
+                        var r = t.Rows[0];
+                        int cellNumber = 1;
+                        // Inserts the data from CSV file corrctly into a table.
+                        while (csv.Read())
+                        {
+                            for (int i = 0; csv.TryGetField<string>(i, out value); i++)
                             {
-
-                                if (addToFirstRow == true)
+                                if (depEst == Path.Combine(input.Env.RootPath, "UndiscDep", input.SelectedTract, "SelectedResult", "nDepEstMiddle.csv"))
                                 {
-                                    r = t.Rows[0];
 
-                                    addToFirstRow = false;
-                                    r.Cells[0].Paragraphs[0].Append("TractID");
-                                    r.Cells[1].Paragraphs[0].Append("N90");
-                                    r.Cells[2].Paragraphs[0].Append("N50");
-                                    r.Cells[3].Paragraphs[0].Append("N10");
-                                    r.Cells[4].Paragraphs[0].Append("N05");
-                                    r.Cells[5].Paragraphs[0].Append("N01");
-                                    r = t.InsertRow();
-                                    r.Cells[cellNumber].Paragraphs[0].Append(value);
-                                    cellNumber++;
+                                    if (addToFirstRow == true)
+                                    {
+                                        r = t.Rows[0];
+
+                                        addToFirstRow = false;
+                                        r.Cells[0].Paragraphs[0].Append("TractID");
+                                        r.Cells[1].Paragraphs[0].Append("N90");
+                                        r.Cells[2].Paragraphs[0].Append("N50");
+                                        r.Cells[3].Paragraphs[0].Append("N10");
+                                        r.Cells[4].Paragraphs[0].Append("N05");
+                                        r.Cells[5].Paragraphs[0].Append("N01");
+                                        r = t.InsertRow();
+                                        r.Cells[cellNumber].Paragraphs[0].Append(value);
+                                        cellNumber++;
+                                    }
+                                    else
+                                    {
+                                        r = t.Rows[1];
+                                        r.Cells[cellNumber].Paragraphs[0].Append(value);
+                                        cellNumber++;
+                                    }
                                 }
                                 else
                                 {
-                                    r = t.Rows[1];
-                                    r.Cells[cellNumber].Paragraphs[0].Append(value);
-                                    cellNumber++;
-                                }
-                            }
-                            else
-                            {
-                                r = t.Rows[0];
-                                if (addToFirstRow == true)
-                                {
                                     r = t.Rows[0];
-                                    addToFirstRow = false;
-                                    value = value.Replace("Name", "Estimator");
-                                }
-                                else
-                                {
-                                    r = t.InsertRow();
-                                }
-                                string[] cellArray = value.Split(',');
-                                int cellIndex = 0;
-                                for (int k = 0; k < cellArray.Length; k++)
-                                {
-                                    r.Cells[cellIndex].Paragraphs[0].Append(cellArray[k]).ReplaceText("\"", "");
-                                    cellIndex++;
+                                    if (addToFirstRow == true)
+                                    {
+                                        r = t.Rows[0];
+                                        addToFirstRow = false;
+                                        value = value.Replace("Name", "Estimator");
+                                    }
+                                    else
+                                    {
+                                        r = t.InsertRow();
+                                    }
+                                    string[] cellArray = value.Split(',');
+                                    int cellIndex = 0;
+                                    for (int k = 0; k < cellArray.Length; k++)
+                                    {
+                                        r.Cells[cellIndex].Paragraphs[0].Append(cellArray[k]).ReplaceText("\"", "");
+                                        cellIndex++;
+                                    }
                                 }
                             }
                         }
-                    }                    
-                    document.InsertTable(t);  // Insert table into the document.
+                        document.InsertTable(t);  // Insert table into the document.
+                    }
+                    document.InsertParagraph("\r\n");
                 }
-                document.InsertParagraph("\r\n");
             }
-            if (File.Exists(Path.Combine(input.Env.RootPath, "UndiscDep", "SelectedResult", "summary.txt")) && input.IsUndiscDepDone != "No")
+            if (File.Exists(Path.Combine(input.Env.RootPath, "UndiscDep", input.SelectedTract, "SelectedResult", "summary.txt")) && input.IsUndiscDepDone != "No")
             {
                 severalParagraphs = document.InsertParagraph("Table 2. ").Bold();
-                severalParagraphs.Append(File.ReadAllText(Path.Combine(input.Env.RootPath, "UndiscDep", "SelectedResult", "summary.txt")) + "\r\n");
+                severalParagraphs.Append(File.ReadAllText(Path.Combine(input.Env.RootPath, "UndiscDep", input.SelectedTract, "SelectedResult", "summary.txt")) + "\r\n");
             }
-            DirectoryInfo di = new DirectoryInfo(Path.Combine(input.Env.RootPath, "UndiscDep", "SelectedResult"));
-            foreach (FileInfo file in di.GetFiles())
-            {   
-                // The naming of the nDepEst is bad and will be chanded to make it clearer, which file is being read.
-                if (input.IsUndiscDepDone != "No" && file.Name.Contains(".csv") && file.Name != "nDepEst.csv" && file.Name != "nDepEstMiddle.csv" && file.Name != "nDepEstCustom.csv")
+            string file = Path.Combine(input.Env.RootPath, "UndiscDep", input.SelectedTract, "SelectedResult", "TractPmf.csv");
+            if (File.Exists(file) && input.IsUndiscDepDone != "No")
+            {
+                severalParagraphs = document.InsertParagraph("Table 3. ").Bold();
+                severalParagraphs.Append("Number of deposits and associated probability for the estimated pmf");
+                using (TextReader fileReader = File.OpenText(file))
                 {
-                    severalParagraphs = document.InsertParagraph("Table 3. ").Bold();
-                    severalParagraphs.Append("Number of deposits and associated probability for the estimated pmf");
-                    using (TextReader fileReader = File.OpenText(file.FullName))
+                    using (var csv = new CsvReader(fileReader))
                     {
-                        var csv = new CsvReader(fileReader);
                         csv.Configuration.HasHeaderRecord = false;
                         csv.Configuration.Delimiter = ";";
                         var t = document.AddTable(1, 3);
@@ -487,9 +494,9 @@ namespace MapWizard.Tools
                     document.InsertParagraph("\r\n");
                 }
             }
-            if (File.Exists(Path.Combine(input.Env.RootPath, "UndiscDep", "SelectedResult", "plot.jpeg")) && input.IsUndiscDepDone != "No")
+            if (File.Exists(Path.Combine(input.Env.RootPath, "UndiscDep", input.SelectedTract, "SelectedResult", "plot.jpeg")) && input.IsUndiscDepDone != "No")
             {
-                var img = document.AddImage(Path.Combine(input.Env.RootPath, "UndiscDep", "SelectedResult", "plot.jpeg"));
+                var img = document.AddImage(Path.Combine(input.Env.RootPath, "UndiscDep", input.SelectedTract, "SelectedResult", "plot.jpeg"));
                 Picture p = img.CreatePicture(600, 605);
                 paragraph = "\r\n";
                 Paragraph par = document.InsertParagraph(paragraph);
@@ -498,7 +505,7 @@ namespace MapWizard.Tools
 
                 severalParagraphs = document.InsertParagraph("Figure 2. ").Bold();
                 severalParagraphs.Append("A. Negative binomial probability mass function representing the number of undiscovered deposits" +
-                    " in the permissive tract '" + tractID + "'. B. Probability mass function recast as elicitation percentiles (black dots) and" +
+                    " in the permissive tract '" + input.SelectedTract + "'. B. Probability mass function recast as elicitation percentiles (black dots) and" +
                     " compared to the estimated numbers of undiscovered deposits (red circles). The size of a red circle indicates how many" +
                     " assessment team members picked the same number of undiscovered deposits." + "\r\n\r\n");
             }
@@ -510,19 +517,19 @@ namespace MapWizard.Tools
         /// <param name="input">Inputs.</param>
         /// <param name="document">Word document.</param>
         /// <param name="tractID">Selected tractID.</param>
-        private void WriteMonteCarlo(ReportingInputParams input, DocX document, string tractID)
+        private void WriteMonteCarlo(ReportingInputParams input, DocX document)
         {
-            string paragraph = "Estimated total undiscovered resources in '" + tractID + "' permissive tract" + "\r\n";
+            string paragraph = "Estimated total undiscovered resources in '" + input.SelectedTract + "' permissive tract" + "\r\n";
             Paragraph severalParagraphs = null;
             document.InsertParagraph(paragraph).FontSize(14).Bold();
-            if (File.Exists(Path.Combine(input.Env.RootPath, "MCSim", "summary.txt")))
+            if (File.Exists(Path.Combine(input.Env.RootPath, "MCSim", input.SelectedTract, "SelectedResult", "summary.txt")))
             {
                 severalParagraphs = document.InsertParagraph("Table 4. ").Bold();
-                severalParagraphs.Append(File.ReadAllText(Path.Combine(input.Env.RootPath, "MCSim", "summary.txt")) + "\r\n").Font(new Font("Consolas")).FontSize(10);
+                severalParagraphs.Append(File.ReadAllText(Path.Combine(input.Env.RootPath, "MCSim", input.SelectedTract, "SelectedResult", "summary.txt")) + "\r\n").Font(new Font("Consolas")).FontSize(10);
             }
-            if (File.Exists(Path.Combine(input.Env.RootPath, "MCSim", "plot.jpeg")))
+            if (File.Exists(Path.Combine(input.Env.RootPath, "MCSim", input.SelectedTract, "SelectedResult", "plot.jpeg")))
             {
-                var img = document.AddImage(Path.Combine(input.Env.RootPath, "MCSim", "plot.jpeg"));
+                var img = document.AddImage(Path.Combine(input.Env.RootPath, "MCSim", input.SelectedTract, "SelectedResult", "plot.jpeg"));
                 Picture p = img.CreatePicture(600, 605);
                 paragraph = "";
                 Paragraph par = document.InsertParagraph(paragraph);
@@ -531,11 +538,11 @@ namespace MapWizard.Tools
                 severalParagraphs = document.InsertParagraph("Figure 3. ").Bold();
                 severalParagraphs.Append("Univariate, marginal, probability density functions(A) and univariate, marginal, complementary" +
                     " cumulative distribution functions (B) for the total ore and mineral resource tonnages in all " +
-                    "undiscovered deposits within the permissive tract '" + tractID + "'." + "\r\n");
+                    "undiscovered deposits within the permissive tract '" + input.SelectedTract + "'." + "\r\n");
             }
-            if (File.Exists(Path.Combine(input.Env.RootPath, "MCSim", "plotMarginals.jpeg")))
+            if (File.Exists(Path.Combine(input.Env.RootPath, "MCSim", input.SelectedTract, "SelectedResult", "plotMarginals.jpeg")))
             {
-                var img = document.AddImage(Path.Combine(input.Env.RootPath, "MCSim", "plotMarginals.jpeg"));
+                var img = document.AddImage(Path.Combine(input.Env.RootPath, "MCSim", input.SelectedTract, "SelectedResult", "plotMarginals.jpeg"));
                 Picture p = img.CreatePicture(600, 605);
                 paragraph = "";
                 Paragraph par = document.InsertParagraph(paragraph);
@@ -543,76 +550,83 @@ namespace MapWizard.Tools
                 par.Append("\r\n");
                 severalParagraphs = document.InsertParagraph("Figure 4. ").FontSize(10).Bold();
                 severalParagraphs.Append("Univariate and bivariate marginal distributions for the ore and mineral resource tonnages" +
-                    " in all undiscovered deposits within the permissive tract '" + tractID + "'." + "\r\n");
+                    " in all undiscovered deposits within the permissive tract '" + input.SelectedTract + "'." + "\r\n");
             }
         }
 
         /// <summary>
-        /// Writes information from the Monte Carlo tool's files.
+        /// Writes information from the Economic Filter tool's files.
         /// </summary>
         /// <param name="input">Inputs.</param>
         /// <param name="document">Word document.</param>
         /// <param name="tractID">Selected tractID.</param>
-        private void WriteEconomicFilter(ReportingInputParams input, DocX document, string tractID)
+        private void WriteEconomicFilter(ReportingInputParams input, DocX document)
         {
-            string paragraph = "Estimated economic portion of the total undiscovered resources in '" + tractID + "' permissive tract" + "\r\n";
+            string paragraph = "Estimated economic portion of the total undiscovered resources in '" + input.SelectedTract + "' permissive tract" + "\r\n";
             Paragraph severalParagraphs = null;
             document.InsertParagraph(paragraph).FontSize(14).Bold();
-            if (Directory.Exists(Path.Combine(input.Env.RootPath, "EconFilter", "RAEF", "SelectedResult")))
+            if (Directory.Exists(Path.Combine(input.Env.RootPath, "EconFilter", "RAEF", input.SelectedTract, "SelectedResult")))
             {
-                DirectoryInfo di = new DirectoryInfo(Path.Combine(input.Env.RootPath, "EconFilter", "RAEF", "SelectedResult"));
+                DirectoryInfo di = new DirectoryInfo(Path.Combine(input.Env.RootPath, "EconFilter", "RAEF", input.SelectedTract, "SelectedResult"));
                 foreach (FileInfo file in di.GetFiles())
                 {
                     if (input.IsRaefDone == "Yes" && file.Name.Contains("EF_04_Contained_Stats_")) //Path.Combine(input.Env.RootPath, "EconFilter", "RAEF", "SelectedResult", "EF_04_Contained_Stats_C.csv")
                     {
                         severalParagraphs = document.InsertParagraph("Table 5. ").FontSize(10).Bold();
-                        severalParagraphs.Append("Estimated economic portion of the undiscovered resource within the permissive tract '" + tractID + "'." + "\r\n");
+                        severalParagraphs.Append("Estimated economic portion of the undiscovered resource within the permissive tract '" + input.SelectedTract + "'." + "\r\n");
                         paragraph = "";
                         using (TextReader fileReader = File.OpenText(file.FullName)) //Path.Combine(input.Env.RootPath, "EconFilter", "RAEF", "SelectedResult", "EF_04_Contained_Stats_C.csv")
                         {
-                            var csv = new CsvReader(fileReader);
-                            csv.Configuration.HasHeaderRecord = false;
-                            csv.Configuration.BadDataFound = null;
-                            csv.Configuration.Delimiter = ";";
-                            var t = document.AddTable(1, 9);
-                            bool addToFirstRow = true;
-                            while (csv.Read())
+                            using (var csv = new CsvReader(fileReader))
                             {
-                                for (int i = 0; csv.TryGetField<string>(i, out paragraph); i++)
+                                csv.Configuration.HasHeaderRecord = false;
+                                csv.Configuration.BadDataFound = null;
+                                csv.Configuration.Delimiter = ";";
+                                var t = document.AddTable(1, 9);
+                                bool addToFirstRow = true;
+                                while (csv.Read())
                                 {
-                                    string[] cellArray = paragraph.Split(',');
-                                    var r = t.Rows[0];
+                                    for (int i = 0; csv.TryGetField<string>(i, out paragraph); i++)
+                                    {
+                                        string[] cellArray = paragraph.Split(',');
+                                        var r = t.Rows[0];
 
-                                    if (addToFirstRow == true)
-                                    {
-                                        r = t.Rows[0];
-                                        addToFirstRow = false;
+                                        if (addToFirstRow == true)
+                                        {
+                                            r = t.Rows[0];
+                                            addToFirstRow = false;
+                                        }
+                                        else
+                                        {
+                                            r = t.InsertRow();
+                                        }
+                                        int cellIndex = 0;
+                                        // Remove " -chars.
+                                        r.Cells[0].Paragraphs[0].Append(cellArray[0]).ReplaceText("\"", "");
+                                        r.Cells[1].Paragraphs[0].Append(cellArray[6]).ReplaceText("\"", "");
+                                        r.Cells[2].Paragraphs[0].Append(cellArray[7]).ReplaceText("\"", "");
+                                        r.Cells[3].Paragraphs[0].Append(cellArray[11]).ReplaceText("\"", "");
+                                        r.Cells[4].Paragraphs[0].Append(cellArray[15]).ReplaceText("\"", "");
+                                        r.Cells[5].Paragraphs[0].Append(cellArray[16]).ReplaceText("\"", "");
+                                        r.Cells[6].Paragraphs[0].Append(cellArray[1]).ReplaceText("\"", "");
+                                        r.Cells[7].Paragraphs[0].Append(cellArray[17]).ReplaceText("\"", "");
+                                        r.Cells[8].Paragraphs[0].Append(cellArray[18]).ReplaceText("\"", "");
+                                        cellIndex++;
                                     }
-                                    else
-                                    {
-                                        r = t.InsertRow();
-                                    }
-                                    int cellIndex = 0;
-                                    // Remove " -chars.
-                                    r.Cells[0].Paragraphs[0].Append(cellArray[0]).ReplaceText("\"", "");
-                                    r.Cells[1].Paragraphs[0].Append(cellArray[6]).ReplaceText("\"", "");
-                                    r.Cells[2].Paragraphs[0].Append(cellArray[7]).ReplaceText("\"", "");
-                                    r.Cells[3].Paragraphs[0].Append(cellArray[11]).ReplaceText("\"", "");
-                                    r.Cells[4].Paragraphs[0].Append(cellArray[15]).ReplaceText("\"", "");
-                                    r.Cells[5].Paragraphs[0].Append(cellArray[16]).ReplaceText("\"", "");
-                                    r.Cells[6].Paragraphs[0].Append(cellArray[1]).ReplaceText("\"", "");
-                                    r.Cells[7].Paragraphs[0].Append(cellArray[17]).ReplaceText("\"", "");
-                                    r.Cells[8].Paragraphs[0].Append(cellArray[18]).ReplaceText("\"", "");
-                                    cellIndex++;
                                 }
+                                document.InsertTable(t);
                             }
-                            document.InsertTable(t);
                         }
                         document.InsertParagraph("\r\n");
                         paragraph = "The parameters used in the economic filter are given in Appendix 3. " + "\r\n";
                         document.InsertParagraph(paragraph);
                     }
                 }
+            }
+            if (input.IsRaefDone == "No")
+            {
+                paragraph = "Economic filter was not run for the tract. " + "\r\n";
+                document.InsertParagraph(paragraph);
             }
         }
 
@@ -622,154 +636,202 @@ namespace MapWizard.Tools
         /// <param name="input">Inputs.</param>
         /// <param name="document">Word document.</param>
         /// <param name="tractID">Selected tractID.</param>
-        private void WriteInputFiles(ReportingInputParams input, DocX document, string tractID)
+        private void WriteInputFiles(ReportingInputParams input, DocX document)
         {
-            string paragraph = "Criteria for tract delineation" + "\r\n";
+            string paragraph = "Criteria for tract delineation and classification" + "\r\n";
             document.InsertParagraph(paragraph).FontSize(14).Bold();
-            Paragraph severalParagraphs = null;
-            if (File.Exists(input.TractCriteriaFile))
+            string tractCriteriaFolder = Path.Combine(input.Env.RootPath, "TractDelineation", "Tracts", input.SelectedTract);
+            if (File.Exists(Path.Combine(tractCriteriaFolder, "TractExplanation.txt")) || File.Exists(Path.Combine(tractCriteriaFolder, "FuzzyRasterExplanation.txt"))
+                || File.Exists(Path.Combine(tractCriteriaFolder, "WofERasterExplanation.txt")) || File.Exists(Path.Combine(tractCriteriaFolder, "DelineationExplanation.txt"))
+                || File.Exists(Path.Combine(tractCriteriaFolder, "CLRasterExplanation.txt")) || File.Exists(Path.Combine(tractCriteriaFolder, "FuzzyCLRasterExplanation.txt"))
+                || File.Exists(Path.Combine(tractCriteriaFolder, "WofECLRasterExplanation.txt")) || File.Exists(Path.Combine(tractCriteriaFolder, "ClassificationExplanation.txt")))
             {
-                var tableDocument = DocX.Load(input.TractCriteriaFile);
-                List<Table> tableList = tableDocument.Tables;
-                if (DocX.Load(input.TractCriteriaFile) != null)
+                if (File.Exists(Path.Combine(tractCriteriaFolder, "TractExplanation.txt")))
                 {
-                    if (tableList.Count != 0)
-                    {
-                        // Insert all tables of the file into a document.
-                        foreach (var table in tableList)
-                        {
-                            // Changes the font and fontsize for all paragraphs of the table.
-                            foreach (Paragraph paraItem in table.Paragraphs)
-                            {
-                                paraItem.FontSize(9).Font("Calibri");
-                            }
-                            document.InsertTable(table);
-                        }
-                    }
-                    else
-                    {
-                        foreach (var para in DocX.Load(input.TractCriteriaFile).Paragraphs)
-                        {
-                            document.InsertParagraph(para);
-                        }
-                    }
-
+                    paragraph = "Tract explanation:";
+                    document.InsertParagraph(paragraph).FontSize(10);
+                    paragraph = File.ReadAllText(Path.Combine(tractCriteriaFolder, "TractExplanation.txt"));
+                    document.InsertParagraph(paragraph).FontSize(10);
                 }
+                if (File.Exists(Path.Combine(tractCriteriaFolder, "FuzzyRasterExplanation.txt")))
+                {
+                    paragraph = "Fuzzy raster explanation:";
+                    document.InsertParagraph(paragraph).FontSize(10);
+                    paragraph = File.ReadAllText(Path.Combine(tractCriteriaFolder, "FuzzyRasterExplanation.txt"));
+                    document.InsertParagraph(paragraph).FontSize(10);
+                }
+                if (File.Exists(Path.Combine(tractCriteriaFolder, "WofERasterExplanation.txt")))
+                {
+                    paragraph = "WofE raster explanation:";
+                    document.InsertParagraph(paragraph).FontSize(10);
+                    paragraph = File.ReadAllText(Path.Combine(tractCriteriaFolder, "WofERasterExplanation.txt"));
+                    document.InsertParagraph(paragraph).FontSize(10);
+                }
+                if (File.Exists(Path.Combine(tractCriteriaFolder, "DelineationExplanation.txt")))
+                {
+                    paragraph = "Delineation explanation:";
+                    document.InsertParagraph(paragraph).FontSize(10);
+                    paragraph = File.ReadAllText(Path.Combine(tractCriteriaFolder, "DelineationExplanation.txt"));
+                    document.InsertParagraph(paragraph).FontSize(10);
+                }
+                if (File.Exists(Path.Combine(tractCriteriaFolder, "CLRasterExplanation.txt")))
+                {
+                    paragraph = "CL raster explanation:";
+                    document.InsertParagraph(paragraph).FontSize(10);
+                    paragraph = File.ReadAllText(Path.Combine(tractCriteriaFolder, "CLRasterExplanation.txt"));
+                    document.InsertParagraph(paragraph).FontSize(10);
+                }
+                if (File.Exists(Path.Combine(tractCriteriaFolder, "FuzzyCLRasterExplanation.txt")))
+                {
+                    paragraph = "Fuzzy CL raster explanation:";
+                    document.InsertParagraph(paragraph).FontSize(10);
+                    paragraph = File.ReadAllText(Path.Combine(tractCriteriaFolder, "FuzzyCLRasterExplanation.txt"));
+                    document.InsertParagraph(paragraph).FontSize(10);
+                }
+                if (File.Exists(Path.Combine(tractCriteriaFolder, "WofECLRasterExplanation.txt")))
+                {
+                    paragraph = "WofE CL raster explanation:";
+                    document.InsertParagraph(paragraph).FontSize(10);
+                    paragraph = File.ReadAllText(Path.Combine(tractCriteriaFolder, "WofECLRasterExplanation.txt"));
+                    document.InsertParagraph(paragraph).FontSize(10);
+                }
+                if (File.Exists(Path.Combine(tractCriteriaFolder, "ClassificationExplanation.txt")))
+                {
+                    paragraph = "Classification explanation:";
+                    document.InsertParagraph(paragraph).FontSize(10);
+                    paragraph = File.ReadAllText(Path.Combine(tractCriteriaFolder, "ClassificationExplanation.txt"));
+                    document.InsertParagraph(paragraph).FontSize(10);
+                }
+            }
+            else
+            {
+                paragraph = "Tract criteria not documented";
+                document.InsertParagraph(paragraph).FontSize(10);
             }
             document.InsertParagraph("\r\n");
             paragraph = "Known deposits" + "\r\n";
             document.InsertParagraph(paragraph).FontSize(14).Bold();
-            severalParagraphs = document.InsertParagraph("Table 6. ").FontSize(10).Bold();
-            severalParagraphs.Append("Known '" + input.DepositType + "' deposits within the permissive tract '" + tractID + "'." + "\r\n");
+            Paragraph severalParagraphs = document.InsertParagraph("Table 6. ").FontSize(10).Bold();
+            severalParagraphs.Append("Known '" + input.DepositType + "' deposits within the permissive tract '" + input.SelectedTract + "'." + "\r\n");
             if (File.Exists(input.KnownDepositsFile))
             {
-                var tableDocument = DocX.Load(input.KnownDepositsFile);
-                List<Table> tableList = tableDocument.Tables;
-                // Insert all tables of the file into a document.
-                foreach (var table in tableList)
+                using (var tableDocument = DocX.Load(input.KnownDepositsFile))
                 {
-                    // Changes the font size for all paragraphs of the table.
-                    foreach (Paragraph paraItem in table.Paragraphs)
+                    List<Table> tableList = tableDocument.Tables;
+                    // Insert all tables of the file into a document.
+                    foreach (var table in tableList)
                     {
-                        paraItem.FontSize(9);
+                        // Changes the font size for all paragraphs of the table.
+                        foreach (Paragraph paraItem in table.Paragraphs)
+                        {
+                            paraItem.FontSize(9);
+                        }
+                        document.InsertTable(table);
                     }
-                    document.InsertTable(table);
                 }
             }
             document.InsertParagraph("\r\n");
             paragraph = "Prospects, occurences" + "\r\n";
             document.InsertParagraph(paragraph).FontSize(14).Bold();
             severalParagraphs = document.InsertParagraph("Table 7. ").FontSize(10).Bold();
-            severalParagraphs.Append("Known '" + input.DepositType + "' prospects and occurrences within the permissive tract '" + tractID + "'." + "\r\n");
+            severalParagraphs.Append("Known '" + input.DepositType + "' prospects and occurrences within the permissive tract '" + input.SelectedTract + "'." + "\r\n");
             if (File.Exists(input.ProspectsOccurencesFile))
             {
-                var tableDocument = DocX.Load(input.ProspectsOccurencesFile);
-                // Insert all tables of the file into a document.
-                List<Table> tableList = tableDocument.Tables;
-                foreach (var table in tableList)
+                using (var tableDocument = DocX.Load(input.ProspectsOccurencesFile))
                 {
-                    // Changes the font size for all paragraphs of the table.
-                    foreach (Paragraph paraItem in table.Paragraphs)
+                    // Insert all tables of the file into a document.
+                    List<Table> tableList = tableDocument.Tables;
+                    foreach (var table in tableList)
                     {
-                        paraItem.FontSize(9);
+                        // Changes the font size for all paragraphs of the table.
+                        foreach (Paragraph paraItem in table.Paragraphs)
+                        {
+                            paraItem.FontSize(9);
+                        }
+                        document.InsertTable(table);
                     }
-                    document.InsertTable(table);
                 }
             }
             document.InsertParagraph("\r\n");
             paragraph = "Exploration history" + "\r\n";
             document.InsertParagraph(paragraph).FontSize(14).Bold();
             severalParagraphs = document.InsertParagraph("Table 8. ").FontSize(10).Bold();
-            severalParagraphs.Append("Exploration history for the permissive tract '" + tractID + "'." + "\r\n");
+            severalParagraphs.Append("Exploration history for the permissive tract '" + input.SelectedTract + "'." + "\r\n");
             if (File.Exists(input.ExplorationFile))
             {
-                var tableDocument = DocX.Load(input.ExplorationFile);
-                List<Table> tableList = tableDocument.Tables;
-                // Insert all tables of the file into a document.
-                foreach (var table in tableList)
+                using (var tableDocument = DocX.Load(input.ExplorationFile))
                 {
-                    // Changes the font size for all paragraphs of the table.
-                    foreach (Paragraph paraItem in table.Paragraphs)
+                    List<Table> tableList = tableDocument.Tables;
+                    // Insert all tables of the file into a document.
+                    foreach (var table in tableList)
                     {
-                        paraItem.FontSize(9);
+                        // Changes the font size for all paragraphs of the table.
+                        foreach (Paragraph paraItem in table.Paragraphs)
+                        {
+                            paraItem.FontSize(9);
+                        }
+                        document.InsertTable(table);
                     }
-                    document.InsertTable(table);
                 }
             }
             document.InsertParagraph("\r\n");
             paragraph = "Sources of information" + "\r\n";
             document.InsertParagraph(paragraph).FontSize(14).Bold();
             severalParagraphs = document.InsertParagraph("Table 9. ").FontSize(10).Bold();
-            severalParagraphs.Append("Principal sources of information used by the assessment team for the permissive tract '" + tractID + "'." + "\r\n");
+            severalParagraphs.Append("Principal sources of information used by the assessment team for the permissive tract '" + input.SelectedTract + "'." + "\r\n");
             if (File.Exists(input.SourcesFile))
             {
-                var tableDocument = DocX.Load(input.SourcesFile);
-                List<Table> tableList = tableDocument.Tables;
-                // Insert all tables of the file into a document.
-                foreach (var table in tableList)
+                using (var tableDocument = DocX.Load(input.SourcesFile))
                 {
-                    // Changes font size for all paragraphs of the table.
-                    foreach (Paragraph paraItem in table.Paragraphs)
+                    List<Table> tableList = tableDocument.Tables;
+                    // Insert all tables of the file into a document.
+                    foreach (var table in tableList)
                     {
-                        paraItem.FontSize(9);
+                        // Changes font size for all paragraphs of the table.
+                        foreach (Paragraph paraItem in table.Paragraphs)
+                        {
+                            paraItem.FontSize(9);
+                        }
+                        document.InsertTable(table);
                     }
-                    document.InsertTable(table);
                 }
             }
             document.InsertParagraph("\r\n");
             paragraph = "Rationale for the estimate of the number of undiscovered deposits" + "\r\n";
             document.InsertParagraph(paragraph).FontSize(14).Bold();
-            if (File.Exists(Path.Combine(input.Env.RootPath, "UndiscDep", "SelectedResult", "EstRationale.txt")) && input.IsUndiscDepDone != "No")
+            if (File.Exists(Path.Combine(input.Env.RootPath, "UndiscDep", input.SelectedTract, "SelectedResult", "EstRationale.txt")) && input.IsUndiscDepDone != "No")
             {
-                paragraph = File.ReadAllText(Path.Combine(input.Env.RootPath, "UndiscDep", "SelectedResult", "EstRationale.txt")) + "\r\n";
+                paragraph = File.ReadAllText(Path.Combine(input.Env.RootPath, "UndiscDep", input.SelectedTract, "SelectedResult", "EstRationale.txt")) + "\r\n";
                 document.InsertParagraph(paragraph).FontSize(10);
             }
             paragraph = "References" + "\r\n";
             document.InsertParagraph(paragraph).FontSize(14).Bold();
             if (File.Exists(input.ReferencesFile))
             {
-                var tableDocument = DocX.Load(input.ReferencesFile);
-                List<Table> tableList = tableDocument.Tables;
-                if (DocX.Load(input.ReferencesFile) != null)
+                using (var tableDocument = DocX.Load(input.ReferencesFile))
                 {
-                    if (tableList.Count != 0)
+                    List<Table> tableList = tableDocument.Tables;
+                    if (DocX.Load(input.ReferencesFile) != null)
                     {
-                        // Insert all tables of the file into a document.
-                        foreach (var table in tableList)
+                        if (tableList.Count != 0)
                         {
-                            // Changes font and font size for all paragraphs of the table.
-                            foreach (Paragraph paraItem in table.Paragraphs)
+                            // Insert all tables of the file into a document.
+                            foreach (var table in tableList)
                             {
-                                paraItem.FontSize(9).Font("Calibri");
+                                // Changes font and font size for all paragraphs of the table.
+                                foreach (Paragraph paraItem in table.Paragraphs)
+                                {
+                                    paraItem.FontSize(9).Font("Calibri");
+                                }
+                                document.InsertTable(table);
                             }
-                            document.InsertTable(table);
                         }
-                    }
-                    else
-                    {
-                        foreach (var para in DocX.Load(input.ReferencesFile).Paragraphs)
+                        else
                         {
-                            document.InsertParagraph(para);
+                            foreach (var para in DocX.Load(input.ReferencesFile).Paragraphs)
+                            {
+                                document.InsertParagraph(para);
+                            }
                         }
                     }
                 }
@@ -786,28 +848,25 @@ namespace MapWizard.Tools
             string paragraph = "";
             if (input.AddDescriptive == "True" && File.Exists(input.DescModel))
             {
-                document.InsertSectionPageBreak(true);
-                paragraph = "Appendix 1";
+                document.InsertParagraph().InsertPageBreakAfterSelf();
+                paragraph = "Appendix 1" + "\r\n";
                 document.InsertParagraph(paragraph).FontSize(14).Bold();
-                paragraph = "Desciptive model for " + input.DepositType + "\r\n";
+                paragraph = "Desciptive model for " + input.DepositType + "(" + input.DescModelName + ")\r\n";
                 document.InsertParagraph(paragraph).FontSize(14).Bold();
                 if (File.Exists(input.DescModel))
                 {
-                    if (DocX.Load(input.DescModel) != null)
+                    using (var reportDocument = DocX.Load(input.DescModel))
                     {
-                        foreach (var para in DocX.Load(input.DescModel).Paragraphs)
-                        {
-                            document.InsertParagraph(para);
-                        }
+                        document.InsertDocument(reportDocument, true);
                     }
                 }
             }
             if (input.AddGradeTon == "True" && Directory.Exists(input.GTModel))
             {
-                document.InsertSectionPageBreak(true);
-                paragraph = "Appendix 2";
+                document.InsertParagraph().InsertPageBreakAfterSelf();
+                paragraph = "Appendix 2" + "\r\n";
                 document.InsertParagraph(paragraph).FontSize(14).Bold();
-                paragraph = "Grade-tonnage model for " + input.DepositType + "\r\n";
+                paragraph = "Grade-tonnage model for " + input.DepositType + "(" + input.GTModelName + ")\r\n";
                 document.InsertParagraph(paragraph).FontSize(14).Bold();
                 paragraph = Path.Combine(input.GTModel, "grade_summary.txt");
                 if (File.Exists(paragraph))
@@ -824,7 +883,6 @@ namespace MapWizard.Tools
                     Paragraph par = document.InsertParagraph(paragraph);
                     par.AppendPicture(p);
                     par.Append("\r\n");
-
                     paragraph = "Histogram (A) and cumulative distribution function (B) that are calculated from the probability density" +
                         " function representing the grades. In A, the vertical red lines at the plot bottom represent the log-ratios" +
                         " calculated from the grade and tonnage model. In B, the red dots constitute empirical cumulative distribution" +
@@ -854,9 +912,9 @@ namespace MapWizard.Tools
                     document.InsertParagraph(paragraph).FontSize(10);
                 }
             }
-            if (Directory.Exists(Path.Combine(input.Env.RootPath, "EconFilter", "RAEF", "SelectedResult")))
+            if (Directory.Exists(Path.Combine(input.Env.RootPath, "EconFilter", "RAEF", input.SelectedTract, "SelectedResult")))
             {
-                DirectoryInfo di = new DirectoryInfo(Path.Combine(input.Env.RootPath, "EconFilter", "RAEF", "SelectedResult"));
+                DirectoryInfo di = new DirectoryInfo(Path.Combine(input.Env.RootPath, "EconFilter", "RAEF", input.SelectedTract, "SelectedResult"));
                 foreach (FileInfo file in di.GetFiles())
                 {
                     if (input.IsRaefDone == "Yes" && file.Name.Contains("EF_01_Parameters_")) //Path.Combine(input.Env.RootPath, "EconFilter", "RAEF", "SelectedResult", "EF_01_Parameters_C.csv")
@@ -866,42 +924,44 @@ namespace MapWizard.Tools
                         paragraph = "";
                         using (TextReader fileReader = File.OpenText(file.FullName))
                         {
-                            var csv = new CsvReader(fileReader);
-                            csv.Configuration.HasHeaderRecord = false;
-                            csv.Configuration.BadDataFound = null;
-                            csv.Configuration.Delimiter = ";";
-                            var t = document.AddTable(1, 2);
-                            bool addToFirstRow = true;
-
-                            while (csv.Read())
+                            using (var csv = new CsvReader(fileReader))
                             {
-                                // Gets information from CSV file.
-                                for (int i = 0; csv.TryGetField<string>(i, out paragraph); i++)
+                                csv.Configuration.HasHeaderRecord = false;
+                                csv.Configuration.BadDataFound = null;
+                                csv.Configuration.Delimiter = ";";
+                                var t = document.AddTable(1, 2);
+                                bool addToFirstRow = true;
+
+                                while (csv.Read())
                                 {
-                                    char[] valueArray = paragraph.ToArray();
-                                    int j = 0;
-                                    while (valueArray[j] != '"')
+                                    // Gets information from CSV file.
+                                    for (int i = 0; csv.TryGetField<string>(i, out paragraph); i++)
                                     {
-                                        paragraph = paragraph.Remove(0, 1);
-                                        j++;
+                                        char[] valueArray = paragraph.ToArray();
+                                        int j = 0;
+                                        while (valueArray[j] != '"')
+                                        {
+                                            paragraph = paragraph.Remove(0, 1);
+                                            j++;
+                                        }
+                                        string[] cellArray = paragraph.Split(',');
+                                        var r = t.Rows[0];
+                                        if (addToFirstRow == true)
+                                        {
+                                            r = t.Rows[0];
+                                            addToFirstRow = false;
+                                        }
+                                        else
+                                        {
+                                            r = t.InsertRow();
+                                        }
+                                        r.Cells[0].Paragraphs[0].Append(cellArray[0]).ReplaceText("\"", "");
+                                        r.Cells[1].Paragraphs[0].Append(cellArray[1]).ReplaceText("\"", "");
+                                        r.Cells[1].Paragraphs[0].Alignment = Alignment.right;
                                     }
-                                    string[] cellArray = paragraph.Split(',');
-                                    var r = t.Rows[0];
-                                    if (addToFirstRow == true)
-                                    {
-                                        r = t.Rows[0];
-                                        addToFirstRow = false;
-                                    }
-                                    else
-                                    {
-                                        r = t.InsertRow();
-                                    }
-                                    r.Cells[0].Paragraphs[0].Append(cellArray[0]).ReplaceText("\"", "");
-                                    r.Cells[1].Paragraphs[0].Append(cellArray[1]).ReplaceText("\"", "");
-                                    r.Cells[1].Paragraphs[0].Alignment = Alignment.right;
                                 }
+                                document.InsertTable(t);  // Add table into a document.
                             }
-                            document.InsertTable(t);  // Add table into a document.
                         }
                         document.InsertParagraph("\r\n");
                     }

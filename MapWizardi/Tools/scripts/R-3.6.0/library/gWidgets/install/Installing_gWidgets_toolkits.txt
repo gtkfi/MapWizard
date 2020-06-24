@@ -1,0 +1,50 @@
+
+
+Installing gWidgets toolkits
+-----------------------------
+
+
+The gWidgets package provides a programming interface in R for
+creating Graphical User Interfaces (GUIs) within R. The gWidgets
+package interacts with an underlying toolkit package. Currently,
+RGtk2, tcltk, and rJava have some support. In order to use a GUI
+toolkit:
+
+* the appropriate libraries must be installed
+* the appropriate R package must be installed
+* the appropriate gWidgetsXXX package must be installed.
+
+The latter two steps are easy, as the packages all reside on CRAN and
+can be installed through the install.packages command, but successful
+installation requires prior installation of the proper libraries.
+
+The installation of libraries is OS and toolkit specific:
+
+RGtk2: RGtk2 requires a version of the GTK+ libraries 2.8.0 or newer.
+
+* Linux: Most modern versions of linux ship with a the necessasry GTK
+  libraries. 
+* Mac OS X: The R binary works with a disk image of of the GTK
+  libraries provided by Simon Urbanek.
+
+  If you install R from source, then the libraries provided by Fink
+  will work.
+
+* Windows: Binaries are provided at http://gtk-win.sourceforge.net/
+
+tcltk: gWidgetstcltk uses the newer 8.5 version orhigher of tk. This
+       version introduced theming and many new widgets
+
+* Linux: Many versions of Linux come with the 8.4 version. For Ubuntu,
+  the 8.5 versions are available as a pre-built package.
+* Mac OS X: Mac OS X ships with the 8.4 version of tcl/tk. Upgrading
+  is necessary and can be done through fink if one compiles R from source.
+* Windows: This version comes bundled into the windows binary
+
+rJava: 
+
+* Linux: A java run time environment must be installed (JRE)
+* Mac OS X: The java provided with Mac OS X works through the JGR
+  interface to R, but not without this.
+* Windows: As with linux, a JRE must be installed
+

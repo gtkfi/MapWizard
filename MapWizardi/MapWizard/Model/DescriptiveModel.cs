@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using GalaSoft.MvvmLight;
 
 namespace MapWizard.Model
@@ -13,21 +9,213 @@ namespace MapWizard.Model
     /// </summary>
     public class DescriptiveModel : ObservableObject
     {
-        private string textFile;
-        private object runVisibilityTab1;
-        private object runVisibilityTab2;        
+        // Always initialized the same way.
+        private bool isBusy;        
+        private bool tab1UseModelName = false;
+        private bool tab2UseModelName = false;
+        private bool saveToDepositModels = false;
+        private int selectedModelIndex = 0;        
+        private string depositModelsExtension = "";
+        private ObservableCollection<string> modelNames = new ObservableCollection<string>();
+        private ObservableCollection<DescriptiveDataModel> textBoxList = new ObservableCollection<DescriptiveDataModel>();
+        private ObservableCollection<DescriptiveDataModel> newTextBoxList = new ObservableCollection<DescriptiveDataModel>();
+        private ObservableCollection<DescriptiveDataModel> resultTextBoxList = new ObservableCollection<DescriptiveDataModel>();
+        // Not always initialized the same way.
+        private string lastRunDate = "Last Run: Never";
+        private int runStatus = 2;
+        private string textFile = "Select File";
+        private string wordFile = "Select File";
+        private object runVisibilityTab1 = "Collapsed";
+        private object runVisibilityTab2 = "Collapsed";        
         private int selectedTabIndex;
         private string tab1ExtensionFolder;
         private string tab2ExtensionFolder;
-        private object orderButtonVisibility;
+        private object orderButtonVisibility = "Collapsed";
         private string usedMethod;
-        private List<string> fieldList;
-        private List<string> allSubFieldList;
-        private List<string> subFieldList;
-        private List<int> subFieldCountList;
-        private string[] textArray;
-        private string[] subTextArray;
-        private List<int> randomList;
+        private List<string> fieldList = new List<string>();
+        private List<string> allSubFieldList = new List<string>();
+        private List<string> subFieldList = new List<string>();
+        private List<int> subFieldCountList = new List<int>();
+        private string[] textArray = new string[0];
+        private string[] subTextArray = new string[0];
+        private List<int> randomList = new List<int>();
+
+        /// <summary>
+        /// Is busy?
+        /// </summary>
+        /// <returns>Boolean representing the state.</returns>
+        public bool IsBusy
+        {
+            get { return isBusy; }
+            set
+            {
+                if (isBusy == value) return;
+                isBusy = value;
+                RaisePropertyChanged(() => IsBusy);
+            }
+        }
+
+        /// <summary>
+        /// Determines if the model will be saved into a named folder in Edit -tab.
+        /// </summary>
+        /// <returns>Boolean representing the choice.</returns>
+        public bool Tab1UseModelName
+        {
+            get { return tab1UseModelName; }
+            set
+            {
+                if (value == tab1UseModelName) return;
+                tab1UseModelName = value;
+                RaisePropertyChanged("Tab1UseModelName");
+            }
+        }
+
+        /// <summary>
+        /// Determines if the model will be saved into a named folder in New -tab.
+        /// </summary>
+        /// <returns>Boolean representing the choice.</returns>
+        public bool Tab2UseModelName
+        {
+            get { return tab2UseModelName; }
+            set
+            {
+                if (value == tab2UseModelName) return;
+                tab2UseModelName = value;
+                RaisePropertyChanged("Tab2UseModelName");
+            }
+        }
+
+        /// <summary>
+        /// Index of the selected model to get the model's results. Binded in MainWindow.xaml.
+        /// </summary>
+        /// <returns>Index of the selected model.</returns>
+        public int SelectedModelIndex
+        {
+            get { return selectedModelIndex; }
+            set
+            {
+                if (value == selectedModelIndex) return;
+                selectedModelIndex = value;
+                RaisePropertyChanged("SelectedModelIndex");
+            }
+        }
+
+        /// <summary>
+        /// Choice to save model into deposit models folder. Binded in MainWindow.xaml.
+        /// </summary>
+        /// <returns>Boolean representing the choice.</returns>
+        public bool SaveToDepositModels
+        {
+            get { return saveToDepositModels; }
+            set
+            {
+                if (value == saveToDepositModels) return;
+                saveToDepositModels = value;
+                RaisePropertyChanged("SaveToDepositModels");
+            }
+        }
+
+        /// <summary>
+        /// Name of the folder where model will be saved in deposit models folder. Binded in MainWindow.xaml.
+        /// </summary>
+        /// <returns>Name of the extension folder.</returns>
+        public string DepositModelsExtension
+        {
+            get { return depositModelsExtension; }
+            set
+            {
+                if (value == depositModelsExtension) return;
+                depositModelsExtension = value;
+                RaisePropertyChanged("DepositModelsExtension");
+            }
+        }
+
+        /// <summary>
+        /// Collection for all the models. Binded in MainWindow.xaml.
+        /// </summary>
+        /// <returns>Collection containing all models that are saved into different paths.</returns>
+        public ObservableCollection<string> ModelNames
+        {
+            get { return modelNames; }
+            set
+            {
+                if (value == modelNames) return;
+                modelNames = value;
+            }
+
+        }
+
+        /// <summary>
+        /// List for all TextBoxes.
+        /// </summary>
+        /// <returns>Collection of DescriptiveDataModels.</returns>
+        public ObservableCollection<DescriptiveDataModel> TextBoxList
+        {
+            get { return textBoxList; }
+            set
+            {
+                textBoxList = value;
+                RaisePropertyChanged("TextBoxList");
+            }
+        }
+
+        /// <summary>
+        /// List for TextBoxes in New -tab.
+        /// </summary>
+        /// <returns>Collection of DescriptiveDataModels.</returns>
+        public ObservableCollection<DescriptiveDataModel> NewTextBoxList
+        {
+            get { return newTextBoxList; }
+            set
+            {
+                newTextBoxList = value;
+                RaisePropertyChanged("NewTextBoxList");
+            }
+        }
+
+        /// <summary>
+        /// Collection of all TextBoxes for resultview.
+        /// </summary>
+        /// <returns>Collection of DescriptiveDataModels.</returns>
+        public ObservableCollection<DescriptiveDataModel> ResultTextBoxList
+        {
+            get { return resultTextBoxList; }
+            set
+            {
+                resultTextBoxList = value;
+                RaisePropertyChanged("ResultTextBoxList");
+            }
+        }
+
+        /// <summary>
+        /// Check if tool can be executed (not busy.)
+        /// </summary>
+        /// <returns>Integer representing the status.</returns>
+        public int RunStatus
+        {
+            get { return runStatus; }
+            set
+            {
+                if (value == runStatus) return;
+                runStatus = value;
+                RaisePropertyChanged("RunStatus");
+            }
+        }
+
+        /// <summary>
+        /// Date and time of the last run.
+        /// </summary>
+        /// <returns>Run date.</returns>
+        public string LastRunDate
+        {
+            get { return lastRunDate; }
+            set
+            {
+                if (value == lastRunDate) return;
+                lastRunDate = value;
+                RaisePropertyChanged("LastRunDate");
+            }
+        }
 
         /// <summary>
         /// Selected textfile.
@@ -41,7 +229,31 @@ namespace MapWizard.Model
             }
             set
             {
+                if (value == null)
+                {
+                    value = "Select File";
+                }
                 Set<string>(() => this.TextFile, ref textFile, value);
+            }
+        }
+
+        /// <summary>
+        /// Selected Word document file.
+        /// </summary>
+        /// @return Path of the file.
+        public string WordFile
+        {
+            get
+            {
+                return wordFile;
+            }
+            set
+            {
+                if (value == null)
+                {
+                    value = "Select File";
+                }
+                Set<string>(() => this.WordFile, ref wordFile, value);                
             }
         }
 
@@ -57,6 +269,10 @@ namespace MapWizard.Model
             }
             set
             {
+                if (value == null)
+                {
+                    value = "Collapsed";
+                }
                 Set<object>(() => this.RunVisibilityTab1, ref runVisibilityTab1, value);
             }
         }
@@ -73,6 +289,10 @@ namespace MapWizard.Model
             }
             set
             {
+                if (value == null)
+                {
+                    value = "Collapsed";
+                }
                 Set<object>(() => this.RunVisibilityTab2, ref runVisibilityTab2, value);
             }
         }
@@ -137,6 +357,10 @@ namespace MapWizard.Model
             }
             set
             {
+                if (value == null)
+                {
+                    value = "Collapsed";
+                }
                 Set<object>(() => this.OrderButtonVisibility, ref orderButtonVisibility, value);
             }
 
@@ -170,6 +394,10 @@ namespace MapWizard.Model
             }
             set
             {
+                if (value == null)
+                {
+                    value = new List<string>();
+                }
                 Set<List<string>>(() => this.FieldList, ref fieldList, value);
             }
         }
@@ -186,6 +414,10 @@ namespace MapWizard.Model
             }
             set
             {
+                if (value == null)
+                {
+                    value = new List<string>();
+                }
                 Set<List<string>>(() => this.AllSubFieldList, ref allSubFieldList, value);
             }
         }
@@ -202,6 +434,10 @@ namespace MapWizard.Model
             }
             set
             {
+                if (value == null)
+                {
+                    value = new List<string>();
+                }
                 Set<List<string>>(() => this.SubFieldList, ref subFieldList, value);
             }
         }
@@ -218,6 +454,10 @@ namespace MapWizard.Model
             }
             set
             {
+                if (value == null)
+                {
+                    value = new List<int>();
+                }
                 Set<List<int>>(() => this.SubFieldCountList, ref subFieldCountList, value);
             }
         }
@@ -234,6 +474,10 @@ namespace MapWizard.Model
             }
             set
             {
+                if (value == null)
+                {
+                    value = new string[0];
+                }
                 Set<string[]>(() => this.TextArray, ref textArray, value);
             }
         }
@@ -250,6 +494,10 @@ namespace MapWizard.Model
             }
             set
             {
+                if (value == null)
+                {
+                    value = new string[0];
+                }
                 Set<string[]>(() => this.SubTextArray, ref subTextArray, value);
             }
         }
@@ -266,6 +514,10 @@ namespace MapWizard.Model
             }
             set
             {
+                if (value == null)
+                {
+                    value = new List<int>();
+                }
                 Set<List<int>>(() => this.RandomList, ref randomList, value);
             }
         }

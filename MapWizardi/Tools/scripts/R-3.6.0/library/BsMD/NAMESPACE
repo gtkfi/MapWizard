@@ -1,0 +1,12 @@
+useDynLib(BsMD)
+
+import(stats,graphics)
+importFrom("grDevices", "grey")
+
+export("DanielPlot", "LenthPlot", "BsProb","MD") 
+
+S3method(plot, BsProb)
+S3method(print, BsProb)
+S3method(print, MD)
+S3method(summary, BsProb)
+S3method(summary, MD)

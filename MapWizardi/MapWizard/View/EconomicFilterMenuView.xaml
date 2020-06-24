@@ -94,10 +94,10 @@
                     <Rectangle Height="3" Fill="LightGray" Stroke="LightGray" VerticalAlignment="Top" HorizontalAlignment="Left" Width="200" Grid.Row="0" />
                     <local:EconomicFilterView HorizontalAlignment="Left" 
                                               VerticalAlignment="Top" 
-                                              IsEnabled="{Binding IsBusy,Converter={StaticResource ReverseBooleanConverter}}"
+                                              IsEnabled="{Binding Model.IsBusy,Converter={StaticResource ReverseBooleanConverter}}"
                                               DataContext="{Binding Source={StaticResource Locator}, Path=EconomicFilterViewModel}"/>
                     <UniformGrid  Rows="1"   Columns="1">
-                        <mah:ProgressRing  DataContext="{Binding Source={StaticResource Locator}, Path=EconomicFilterViewModel}" IsActive="{Binding IsBusy}" Width="200"/>
+                        <mah:ProgressRing  DataContext="{Binding Source={StaticResource Locator}, Path=EconomicFilterViewModel}" IsActive="{Binding Model.IsBusy}" Width="200"/>
                     </UniformGrid>
                 </Grid>
             </mah:MetroTabItem>
@@ -110,8 +110,8 @@
                     <local:EconomicFilterResultView HorizontalAlignment="Left" VerticalAlignment="Top"/>
                     <Button 
                         HorizontalAlignment="Right" 
-                        VerticalAlignment="Bottom" 
-                        Margin="0,0,20,80"
+                        VerticalAlignment="Top" 
+                        Margin="0,65,20,0"
                         Padding="-10,0,0,0"                          
                         Background="{DynamicResource AccentColorBrush}" 
                         Foreground="White"
@@ -123,7 +123,7 @@
                         <TextBlock FontSize="16" Text=" Select RAEF Result" ToolTip="Select the RAEF run results to be used"></TextBlock>
                     </Button>
                     <UniformGrid  Rows="1" Columns="1">
-                        <mah:ProgressRing  DataContext="{Binding Source={StaticResource Locator}, Path=EconomicFilterViewModel}" IsActive="{Binding IsBusy}" Width="200"/>
+                        <mah:ProgressRing  DataContext="{Binding Source={StaticResource Locator}, Path=EconomicFilterViewModel}" IsActive="{Binding Model.IsBusy}" Width="200"/>
                     </UniformGrid>
                 </Grid>
             </mah:MetroTabItem>

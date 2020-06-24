@@ -1,0 +1,14 @@
+citHeader("To cite sets in publications use:")
+
+bibentry("Article",
+         title = "Generalized and Customizable Sets in {R}",
+         author =
+             c(person("David", "Meyer"),
+               person("Kurt", "Hornik")),
+         journal = "Journal of Statistical Software",
+         year = "2009",
+         volume = "31",
+         number = "2",
+         pages = "1--27",
+         doi = "10.18637/jss.v031.i02"
+         )

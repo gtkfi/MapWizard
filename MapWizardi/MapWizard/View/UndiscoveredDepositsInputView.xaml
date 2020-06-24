@@ -6,8 +6,11 @@
              xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
              xmlns:local="clr-namespace:MapWizard"
              xmlns:service="clr-namespace:MapWizard.Service"
-             x:Class="MapWizard.UndiscoveredDepositsView"
-             mc:Ignorable="d" Height="681" Width="796" DataContext="{Binding Source={StaticResource Locator}, Path=UndiscoveredDepositsViewModel}">
+            xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+            x:Class="MapWizard.UndiscoveredDepositsView"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800"
+             DataContext="{Binding Source={StaticResource Locator}, Path=UndiscoveredDepositsViewModel}">
     <UserControl.Resources>
         <Style x:Key="WrapPanel" TargetType="WrapPanel">
             <Setter Property="HorizontalAlignment" Value="left" />
@@ -27,16 +30,32 @@
             <TabItem.Header >
                 <TextBlock ToolTip="Estimate a negative binomial probability mass function for expert estimates of the number of undiscovered deposits.">Negative binomial</TextBlock>
             </TabItem.Header>
-            <ScrollViewer Margin="0,0,60,0" VerticalScrollBarVisibility="Visible" Height="641" HorizontalScrollBarVisibility="Auto" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
-                <StackPanel Margin="0" MaxWidth="1600">
+            <ScrollViewer Margin="0,0,7,0" VerticalScrollBarVisibility="Visible" HorizontalScrollBarVisibility="Auto" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                <StackPanel Margin="0,0,0,200" MaxWidth="1600">
                     <UniformGrid Rows="1" Columns="1">
                         <WrapPanel HorizontalAlignment="left" VerticalAlignment="Center" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Auto">
                             <TextBlock Text="Estimates for undiscovered deposits" Margin="10" HorizontalAlignment="left" VerticalAlignment="Center"/>
                         </WrapPanel>
                     </UniformGrid>
                     <UniformGrid  HorizontalAlignment="Left" Rows="7" Columns="2" Margin="0,10,0,0" UseLayoutRounding="False" Width="600">
-                        <Label x:Name="labelID" Content="Tract ID:" HorizontalAlignment="Left"/>
-                        <TextBox x:Name="NameTractId" HorizontalAlignment="Left" Height="28" Width="150" Text="{Binding Model.TractId}" Margin="0,5,0,0" ToolTip="ID of the permissive tract under consideration."/>
+                        <!--Label x:Name="labelID" Content="Tract ID:" HorizontalAlignment="Left"/>
+                        <TextBox x:Name="NameTractId" HorizontalAlignment="Left" Height="28" Width="150" Text="{Binding Model.TractId}" Margin="0,5,0,0" ToolTip="ID of the permissive tract under consideration."/-->
+                        <Label x:Name="tractlabel" Content="Tract id:" HorizontalAlignment="Left"/>
+                        <ComboBox Name="cmbx"                 
+                              ItemsSource="{Binding Model.TractIDNames, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"  
+                              Margin="0,0,0,0"
+                              SelectedValue="{Binding Model.SelectedTract, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                              HorizontalAlignment="left"  VerticalAlignment="Center" FontSize="18" Width="150"
+                              ToolTip="Select tract.">
+                            <i:Interaction.Triggers>
+                                <i:EventTrigger EventName="DropDownOpened">
+                                    <i:InvokeCommandAction Command="{Binding FindTractsCommand}" />
+                                </i:EventTrigger>
+                                <i:EventTrigger EventName="SelectionChanged">
+                                    <i:InvokeCommandAction Command="{Binding TractChangedCommand}" />
+                                </i:EventTrigger>
+                            </i:Interaction.Triggers>
+                        </ComboBox>
                         <Label x:Name="label" Content="Name:" HorizontalAlignment="Left"/>
                         <TextBox x:Name="NameTb" HorizontalAlignment="Left" Height="28" Width="150" Text="{Binding Model.EstName}" Margin="0,5,0,0" ToolTip="ID of the expert giving the estimates below. "/>
                         <Label x:Name="label2" Content="Weight:" HorizontalAlignment="Left"/>
@@ -73,15 +92,15 @@
                         <WrapPanel Style="{StaticResource WrapPanel}">
                             <TextBlock Text="Save output in separate folder?" FontSize="18" Margin="10"></TextBlock>
                         </WrapPanel>
-                        <WrapPanel Margin="-85,7,0,0" Style="{StaticResource ValueColumn}" ToolTip="Select whether to save the estimated probability mass function in a separate subfolder.
+                        <WrapPanel Margin="-5,7,0,0" Style="{StaticResource ValueColumn}" ToolTip="Select whether to save the estimated probability mass function in a separate subfolder.
 ">
-                            <RadioButton Name="YesButton" Margin="0,10,10,10" Padding="0" IsChecked="{Binding NegBinomialUseModelName}">Yes</RadioButton>
+                            <RadioButton Name="YesButton" Margin="0,10,10,10" Padding="0" IsChecked="{Binding Model.NegBinomialUseModelName}">Yes</RadioButton>
                             <RadioButton Margin="10,10,10,10" Padding="0" IsChecked="True">No</RadioButton>
                         </WrapPanel>
                     </UniformGrid>
                     <UniformGrid Margin="0,5,0,20" Rows="1" Columns="2" Visibility="{Binding ElementName=YesButton, Path=IsChecked, Converter={StaticResource BoolToVisibilityConverter}}">
                         <WrapPanel />
-                        <WrapPanel Margin="-85,0,0,0" Style="{StaticResource ValueColumn}">
+                        <WrapPanel Margin="-5,0,0,0" Style="{StaticResource ValueColumn}">
                             <TextBox mah:TextBoxHelper.Watermark="Name of subfolder" Text="{Binding Model.NegBinomialExtensionFolder}" MinWidth="120" ToolTip="Name of the subfolder to save the estimated probability mass function."></TextBox>
                         </WrapPanel>
                     </UniformGrid>
@@ -101,11 +120,24 @@
             <TabItem.Header >
                 <TextBlock ToolTip="Estimate a nonparametric empirical probability mass function for expert estimates of the number of undiscovered deposits.">MARK3</TextBlock>
             </TabItem.Header>
-            <ScrollViewer VerticalScrollBarVisibility="Visible" Height="641" HorizontalScrollBarVisibility="Auto" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
-                <StackPanel Margin="0" MaxWidth="1600">
+            <ScrollViewer Margin="0,0,7,0" VerticalScrollBarVisibility="Visible" HorizontalScrollBarVisibility="Auto" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                <StackPanel Margin="0,0,0,200">
                     <UniformGrid HorizontalAlignment="Left" Width="600" Rows="6" Columns="2">
-                        <Label x:Name="labelID3" Content="Tract ID:" HorizontalAlignment="Left"/>
-                        <TextBox x:Name="NameTractId3" HorizontalAlignment="Left" Height="28" Width="150" Text="{Binding Model.TractId}" Margin="0,5,0,0" ToolTip="ID of the permissive tract under consideration."/>
+                        <!--Label x:Name="labelID3" Content="Tract ID:" HorizontalAlignment="Left"/>
+                        <TextBox x:Name="NameTractId3" HorizontalAlignment="Left" Height="28" Width="150" Text="{Binding Model.TractId}" Margin="0,5,0,0" ToolTip="ID of the permissive tract under consideration."/-->
+                        <Label x:Name="tractlabelM3" Content="Tract id:" HorizontalAlignment="Left"/>
+                        <ComboBox Name="cmbxM3"                 
+                              ItemsSource="{Binding Model.TractIDNames, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"  
+                              Margin="0,0,0,0"
+                              SelectedValue="{Binding Model.SelectedTract, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                              HorizontalAlignment="left"  VerticalAlignment="Center" FontSize="18" Width="150"
+                              ToolTip="Select tract.">
+                            <i:Interaction.Triggers>
+                                <i:EventTrigger EventName="SelectionChanged">
+                                    <i:InvokeCommandAction Command="{Binding TractChangedCommand}" />
+                                </i:EventTrigger>
+                            </i:Interaction.Triggers>
+                        </ComboBox>
                         <Label x:Name="mlabel" Content="N 90:" HorizontalAlignment="Left"/>
                         <TextBox x:Name="mN90" HorizontalAlignment="Left" Width="50" Height="28"  Text="{Binding Model.EstN90}" ToolTip="Estimated number of undiscovered deposits at 90% confidence level."/>
                         <Label x:Name="mlabel2" Content="N 50:" HorizontalAlignment="Left"/>
@@ -131,22 +163,23 @@
                         <WrapPanel Style="{StaticResource WrapPanel}">
                             <TextBlock Text="Save output in separate folder?" FontSize="18" Margin="10"></TextBlock>
                         </WrapPanel>
-                        <WrapPanel Margin="-85,7,0,0" Style="{StaticResource ValueColumn}"  ToolTip="Select whether to save the estimated probability mass function in a separate subfolder.">
-                            <RadioButton Name="YesButton2" Margin="0,10,10,10" Padding="0" IsChecked="{Binding Mark3UseModelName}">Yes</RadioButton>
+                        <WrapPanel Margin="-5,7,0,0" Style="{StaticResource ValueColumn}"  ToolTip="Select whether to save the estimated probability mass function in a separate subfolder.">
+                            <RadioButton Name="YesButton2" Margin="0,10,10,10" Padding="0" IsChecked="{Binding Model.Mark3UseModelName}">Yes</RadioButton>
                             <RadioButton Margin="10,10,10,10" Padding="0" IsChecked="True">No</RadioButton>
                         </WrapPanel>
                     </UniformGrid>
                     <UniformGrid Margin="0,5,0,20" Rows="1" Columns="2"  Visibility="{Binding ElementName=YesButton2, Path=IsChecked, Converter={StaticResource BoolToVisibilityConverter}}">
                         <WrapPanel />
-                        <WrapPanel Margin="-85,0,0,0" Style="{StaticResource ValueColumn}">
+                        <WrapPanel Margin="-5,0,0,0" Style="{StaticResource ValueColumn}">
                             <TextBox mah:TextBoxHelper.Watermark="Name of subfolder" Text="{Binding Model.Mark3ExtensionFolder}" MinWidth="120" ToolTip="Name of the subfolder to save the estimated probability mass function."></TextBox>
                         </WrapPanel>
                     </UniformGrid>
-                    <UniformGrid Rows="1" Columns="2" Width="334" HorizontalAlignment="Left">
+                    <UniformGrid Rows="1" Columns="2" Width="334">
                         <Button HorizontalAlignment="Stretch" Padding="-10,0,0,0" Background="{DynamicResource AccentColorBrush}"  
                         VerticalAlignment="Bottom" 
                         Foreground="White" 
                         BorderThickness="0" 
+                                Margin="10" 
                         Width="120" Height="50" 
                         Command="{Binding RunToolCommand}" 
                         DataContext="{Binding Source={StaticResource Locator}, Path=UndiscoveredDepositsViewModel}">
@@ -160,16 +193,29 @@
             <TabItem.Header>
                 <TextBlock ToolTip="Create a custom probability mass function for the number of undiscovered deposits.">Custom</TextBlock>
             </TabItem.Header>
-            <ScrollViewer VerticalScrollBarVisibility="Visible" Height="641" HorizontalScrollBarVisibility="Auto" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
-                <StackPanel Margin="0" MaxWidth="1600">
+            <ScrollViewer Margin="0,0,7,0" VerticalScrollBarVisibility="Visible" HorizontalScrollBarVisibility="Auto" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                <StackPanel Margin="0,0,0,200" MaxWidth="1600">
                     <UniformGrid Rows="1" Columns="1">
                         <WrapPanel HorizontalAlignment="left" VerticalAlignment="Center" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Auto">
                             <TextBlock Text="Custom values for the number of deposits and the corresponding probablility" Margin="10" HorizontalAlignment="left" VerticalAlignment="Center"/>
                         </WrapPanel>
                     </UniformGrid>
                     <UniformGrid  HorizontalAlignment="Left" Rows="6" Columns="2" Margin="0,10,0,0" UseLayoutRounding="False" Width="600">
-                        <Label x:Name="labelID2" Content="Tract ID:" HorizontalAlignment="Left"/>
-                        <TextBox x:Name="NameTractId2" HorizontalAlignment="Left" Height="28" Width="150" Text="{Binding Model.TractId}" Margin="0,5,0,0" ToolTip="ID of the permissive tract under consideration."/>
+                        <!--Label x:Name="labelID2" Content="Tract ID:" HorizontalAlignment="Left"/>
+                        <TextBox x:Name="NameTractId2" HorizontalAlignment="Left" Height="28" Width="150" Text="{Binding Model.TractId}" Margin="0,5,0,0" ToolTip="ID of the permissive tract under consideration."/-->
+                        <Label x:Name="tractlabelCus" Content="Tract id:" HorizontalAlignment="Left"/>
+                        <ComboBox Name="cmbxCus"                 
+                              ItemsSource="{Binding Model.TractIDNames, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"  
+                              Margin="0,0,0,0"
+                              SelectedValue="{Binding Model.SelectedTract, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                              HorizontalAlignment="left"  VerticalAlignment="Center" FontSize="18" Width="150"
+                              ToolTip="Select tracts to include in the report.">
+                            <i:Interaction.Triggers>
+                                <i:EventTrigger EventName="SelectionChanged">
+                                    <i:InvokeCommandAction Command="{Binding TractChangedCommand}" />
+                                </i:EventTrigger>
+                            </i:Interaction.Triggers>
+                        </ComboBox>
                         <Label x:Name="clabel" Content="Number of deposits:" HorizontalAlignment="Left"/>
                         <TextBox x:Name="cNameTb" HorizontalAlignment="Left" Height="28" Width="50" Text="{Binding Model.NDeposits}" Margin="0,5,0,0" ToolTip="Number of undiscovered deposits."/>
                         <Label x:Name="clabel2" Content="Probability:" HorizontalAlignment="Left"/>
@@ -200,7 +246,7 @@
                             <TextBlock Text="Save output in separate folder?" FontSize="18" Margin="10"></TextBlock>
                         </WrapPanel>
                         <WrapPanel Margin="-85,7,0,0" Style="{StaticResource ValueColumn}" ToolTip="Select whether to save the estimated probability mass function in a separate subfolder.">
-                            <RadioButton Name="YesButton3" Margin="0,10,10,10" Padding="0" IsChecked="{Binding CustomUseModelName}">Yes</RadioButton>
+                            <RadioButton Name="YesButton3" Margin="0,10,10,10" Padding="0" IsChecked="{Binding Model.CustomUseModelName}">Yes</RadioButton>
                             <RadioButton Margin="10,10,10,10" Padding="0" IsChecked="True">No</RadioButton>
                         </WrapPanel>
                     </UniformGrid>

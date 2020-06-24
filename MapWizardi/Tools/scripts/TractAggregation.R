@@ -23,7 +23,7 @@
 #install.packages('gWidgets')
 library(gWidgets)
 #install.packages('gWidgetstcltk')
-library(gWidgetstcltk)
+#library(gWidgetstcltk)
 #install.packages("dplyr")
 library(dplyr)
 
@@ -167,7 +167,7 @@ filenameA<<- paste(RID,"Dependent.csv",sep="")
   write.csv(squ3,file=filenameA,row.names=FALSE)
 ###################################################
 
-	filenameA<<- paste(RID,"AggEstSummary.csv",sep="")
+	filenameA<<- paste(RID,"EstSummary.csv",sep="")
   write.csv(squ,file=filenameA,row.names=FALSE)
 	Out1 <<- paste("Output is in",filenameA)
   print(Out1 )
@@ -184,6 +184,7 @@ Sum.fn<-function(da){
  va<-c(as.integer(quantile(da,c(0.10,0.50,0.90,0.95,0.99))),mri,sdri,cvri)
 
  return(va)
+ }
         createCorrFile<-function(dirCp){            
             setwd(dirCP) #user specified directory containing input files.: comes from function params Must contain ListFiles.csv -file to be proper.
             WD <<- getwd()
@@ -241,7 +242,7 @@ runAggregation<-function(testname, wdir,cprobfile, correlationmatrix){
 
 	WD <<- getwd()
 	cat (WD)
-	RID <<- svalue(RID)
+	RID <<- RID#svalue(RID)
 
 		CProbFileName <-cprobfile
 		CPFile00 <<- CProbFileName 

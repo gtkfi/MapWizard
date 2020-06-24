@@ -12,7 +12,16 @@ from arcpy import env
 from arcpy.sa import *
 
 print ("This is the name of the script: ", sys.argv[0])
-
+print ("argv[1]: ", sys.argv[1])
+print ("argv[2]: ", sys.argv[2])
+print ("argv[3]: ", sys.argv[3])
+#print ("argv[4]: ", sys.argv[4])
+print ("argv[5]: ", sys.argv[5])
+print ("argv[6]: ", sys.argv[6])
+print ("argv[7]: ", sys.argv[7])
+print ("argv[8]: ", sys.argv[8])
+print ("argv[9]: ", sys.argv[9])
+print ("argv[10]: ", sys.argv[10])
 #Evidence raster layer
 erl = sys.argv[2]
 #output
@@ -65,7 +74,8 @@ rasterpath = erl
 raster= arcpy.Raster(rasterpath)
 description = arcpy.Describe(raster)  
 cellsize1 = description.children[0].meanCellHeight 
-arcpy.env.cellSize = cellsize1
+#arcpy.env.cellSize = cellsize1
+arcpy.env.cellSize = "MAXOF"
 
 #arcpy.env.mask = sys.argv[5] #"C:\\Users\\hissakai\\Documents\\ArcGIS\\Projects\\MyProject2\\MyProject2.gdb\\RasterT_img1"
 #maski = arcpy.conversion.FeatureClassToFeatureClass(sys.argv[5], out_wrkspace, "mask")

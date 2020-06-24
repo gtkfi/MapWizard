@@ -14,10 +14,13 @@
     <UserControl.Resources>
         <service:ReverseBooleanConverter x:Key="ReverseBooleanConverter" />
         <DataTemplate x:Key="View1Template" DataType="{x:Type localModel:ReportingViewModel}">
-            <local:ReportingSelectionView IsEnabled="{Binding IsBusy,Converter={StaticResource ReverseBooleanConverter}}"/>
+            <local:ReportingSelectionView IsEnabled="{Binding Model.IsBusy,Converter={StaticResource ReverseBooleanConverter}}"/>
         </DataTemplate>
         <DataTemplate x:Key="View2Template" DataType="{x:Type localModel:ReportingViewModel}">
-            <local:ReportingView IsEnabled="{Binding IsBusy,Converter={StaticResource ReverseBooleanConverter}}"/>
+            <local:ReportingView IsEnabled="{Binding Model.IsBusy,Converter={StaticResource ReverseBooleanConverter}}"/>
+        </DataTemplate>
+        <DataTemplate x:Key="View3Template" DataType="{x:Type localModel:ReportingAssesmentViewModel}">
+            <local:ReportingAssesmentInputView IsEnabled="{Binding Model.IsBusy,Converter={StaticResource ReverseBooleanConverter}}"/>
         </DataTemplate>
         <Style x:Key="Tab" TargetType="TextBlock">
             <Setter Property="FontSize" Value="14"/>
@@ -105,6 +108,9 @@
                                     <DataTrigger Binding="{Binding ActiveView, UpdateSourceTrigger=PropertyChanged,Mode=TwoWay}" Value="TractReport">
                                         <Setter Property="ContentTemplate" Value="{StaticResource View2Template}" />
                                     </DataTrigger>
+                                    <DataTrigger Binding="{Binding ActiveView, UpdateSourceTrigger=PropertyChanged,Mode=TwoWay}" Value="AssesmentReport">
+                                        <Setter Property="ContentTemplate" Value="{StaticResource View3Template}" />
+                                    </DataTrigger>
                                     <DataTrigger Binding="{Binding ActiveView, UpdateSourceTrigger=PropertyChanged,Mode=TwoWay}" Value="ReportSelection">
                                         <Setter Property="ContentTemplate" Value="{StaticResource View1Template}" />
                                     </DataTrigger>
@@ -113,7 +119,7 @@
                         </ContentControl.Style>
                     </ContentControl>
                     <UniformGrid  Rows="1" Columns="1">
-                        <mah:ProgressRing DataContext="{Binding Source={StaticResource Locator}, Path=ReportingViewModel}" IsActive="{Binding IsBusy}" Width="200"/>
+                        <mah:ProgressRing DataContext="{Binding Source={StaticResource Locator}, Path=ReportingViewModel}" IsActive="{Binding Model.IsBusy}" Width="200"/>
                     </UniformGrid>
                 </Grid>
             </mah:MetroTabItem>

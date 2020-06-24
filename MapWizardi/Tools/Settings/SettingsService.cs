@@ -4,8 +4,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MapWizard.Tools.Settings
 {
@@ -32,29 +30,7 @@ namespace MapWizard.Tools.Settings
             {
                 //SetupPythonPath();
                 //string pythonPath =  "C:\\Program Files\\ArcGIS\\Pro\\bin\\Python\\envs\\arcgispro-py3\\pythonw.exe";
-                string pythonPath = "C:\\Python27\\ArcGIS10.6\\pythonw.exe";  //Propably needs a better way to get the path.
-                string rPath = SetupRPath();
-                string rootPath = Path.Combine(Path.GetPathRoot(Environment.SystemDirectory), "Temp", "MapWizard");  // This path might be changed in the future.
-                Data = new SettingsDataModel()
-                {
-                    PythonEXEPath = pythonPath,
-                    REXEPath = rPath,
-                    DepModFolderPath = rootPath,
-                    REXEPathDefault = rPath,
-                    PyEXEPathDefault = pythonPath,
-                    DepModFolderPathDefault = rootPath,
-                    DefaultPythonLocation = "true",
-                    CustomPythonLocation = "false",
-                    PyButtonVisibility = "false",
-                    DefaultRLocation = "true",
-                    CustomRLocation = "false",
-                    RButtonVisibility = "false",
-                    DefaultDepModLocation = "true",
-                    CustomDepModLocation = "false",
-                    DepModButtonVisibility = "false",
-                    SelectedProjectName = "",
-                    SelectedProjectPath = ""
-                };
+                SettingsInitialization();
                 SaveSettings(settings_json);
             }
             else
@@ -71,6 +47,7 @@ namespace MapWizard.Tools.Settings
         {
             Data.Save(json_file);
         }
+
         /// <summary>
         /// Load Settings.
         /// </summary>
@@ -80,38 +57,42 @@ namespace MapWizard.Tools.Settings
             try
             {                
                 Data.Load(json_file);
+                // Default paths should always be the same, so they will always be initialized to be same paths.
+                Data.PythonPathDefault = "C:\\Python27\\ArcGIS10.6\\pythonw.exe";  //Propably needs a better way to get the path.                                                                             // rPath = SetupRPath();
+                Data.RPathDefault = Path.Combine(System.AppDomain.CurrentDomain.BaseDirectory, "scripts", "R-3.6.3", "bin", "rscript.exe");
+                Data.DepModelsFolderPathDefault = Path.Combine(Path.GetPathRoot(Environment.SystemDirectory), "Temp", "MapWizard");  // This path might be changed in the future.                
                 //CheckSettingsValidation(); // Will be added or removed in future releases.
                 //Data.Load(json_file);
             }
             catch (Exception ex)
             {
-                string pythonPath = "C:\\Python27\\ArcGIS10.6\\pythonw.exe";
-                string rPath = SetupRPath();
-                string rootPath = Path.Combine(Path.GetPathRoot(Environment.SystemDirectory), "Temp", "MapWizard");
-                Data = new SettingsDataModel()
-                {
-                    PythonEXEPath = pythonPath,
-                    REXEPath = rPath,
-                    DepModFolderPath = rootPath,
-                    REXEPathDefault = rPath,//Elikkä jos tähän sittenkin läntätään se uusi default polku
-                    PyEXEPathDefault = pythonPath,
-                    DepModFolderPathDefault = rootPath,
-                    DefaultPythonLocation = "true",
-                    CustomPythonLocation = "false",
-                    PyButtonVisibility = "false",
-                    DefaultRLocation = "true",
-                    CustomRLocation = "false",
-                    RButtonVisibility = "false",
-                    DefaultDepModLocation = "true",
-                    CustomDepModLocation = "false",
-                    DepModButtonVisibility = "false",
-                    SelectedProjectName = "",
-                    SelectedProjectPath = ""
-                };
+                SettingsInitialization();
                 SaveSettings(json_file);
                 logger.Error(ex, "Error in Model Selection"); // Might need dialog notification.
                 throw;
             }
+        }
+
+        public void SettingsInitialization()
+        {
+            string pythonPath = "C:\\Python27\\ArcGIS10.6\\pythonw.exe";  //Propably needs a better way to get the path.
+            // rPath = SetupRPath();
+            string defaultRPath= Path.Combine(System.AppDomain.CurrentDomain.BaseDirectory, "scripts", "R-3.6.3", "bin", "rscript.exe");
+            string rootPath = Path.Combine(Path.GetPathRoot(Environment.SystemDirectory), "Temp", "MapWizard");  // This path might be changed in the future.
+            Data = new SettingsDataModel()
+            {
+                PythonPathDefault = pythonPath,
+                PythonPathCustom = pythonPath,
+                PythonLocationDefault = "true",
+                RPathDefault = defaultRPath,
+                RPathCustom = defaultRPath,
+                RLocationDefault = "true",
+                DepModelsFolderPathDefault = rootPath,
+                DepModelsFolderPathCustom = rootPath,
+                DepModelsLocationDefault = "true",
+                SelectedProjectName = "",
+                SelectedProjectPath = ""
+            };
         }
         /*  Not used in this version.
                 /// <summary>
@@ -212,8 +193,8 @@ namespace MapWizard.Tools.Settings
                 logger.Trace(ex, "Error in Model Selection");
                 return "";
             }
-
         }
+
         /// <summary>
         /// Python path.
         /// </summary>
@@ -222,28 +203,27 @@ namespace MapWizard.Tools.Settings
         {
             get
             {
-                if (data.DefaultPythonLocation == "True")
+                if (data.PythonLocationDefault == "True")
                 {
-                    return data.PyEXEPathDefault;
+                    return data.PythonPathDefault;
                 }
                 else
                 {
-                    return data.PythonEXEPath;
+                    return data.PythonPathCustom;
                 }
             }
             set
             {
-                if (data.PyEXEPathDefault == value)
+                if (data.PythonPathDefault == value)
                 {
-                    data.DefaultPythonLocation = "True";
-                    data.CustomPythonLocation = "False";
+                    data.PythonLocationDefault = "True";
                     return;
                 }
-                data.DefaultPythonLocation = "False";
-                data.CustomPythonLocation = "True";
-                data.PythonEXEPath = value;
+                data.PythonLocationDefault = "False";
+                data.PythonPathCustom = value;
             }
         }
+
         /// <summary>
         /// R path.
         /// </summary>
@@ -252,28 +232,27 @@ namespace MapWizard.Tools.Settings
         {
             get
             {
-                if (data.DefaultRLocation == "True")
+                if (data.RLocationDefault == "True")
                 {
-                    return data.REXEPathDefault;
+                    return data.RPathDefault;
                 }
                 else
                 {
-                    return data.REXEPath;
+                    return data.RPathCustom;
                 }
             }
             set
             {
-                if (data.REXEPathDefault == value)
+                if (data.RPathDefault == value)
                 {
-                    data.DefaultRLocation = "True";
-                    data.CustomRLocation = "False";
+                    data.RLocationDefault = "True";
                     return;
                 }
-                data.DefaultRLocation = "False";
-                data.CustomRLocation = "True";
-                data.REXEPath = value;
+                data.RLocationDefault = "False";
+                data.RPathCustom = value;
             }
         }
+
         /// <summary>
         /// Root path.
         /// </summary>
@@ -301,28 +280,27 @@ namespace MapWizard.Tools.Settings
         {
             get
             {
-                if (data.DefaultDepModLocation == "True")
+                if (data.DepModelsLocationDefault == "True")
                 {
-                    return data.DepModFolderPathDefault;
+                    return data.DepModelsFolderPathDefault;
                 }
                 else
                 {
-                    return data.DepModFolderPath;
+                    return data.DepModelsFolderPathCustom;
                 }
             }
             set
             {
-                if (data.DepModFolderPathDefault == value)
+                if (data.DepModelsFolderPathDefault == value)
                 {
-                    data.DefaultDepModLocation = "True";
-                    data.CustomDepModLocation = "False";
+                    data.DepModelsLocationDefault = "True";
                     return;
                 }
-                data.DefaultDepModLocation = "False";
-                data.CustomDepModLocation = "True";
-                data.DepModFolderPath = value;
+                data.DepModelsLocationDefault = "False";
+                data.DepModelsFolderPathCustom = value;
             }
         }
+
         /// <summary>
         /// Add project's path to registry.
         /// </summary>

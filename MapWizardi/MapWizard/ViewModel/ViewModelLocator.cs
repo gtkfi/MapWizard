@@ -33,10 +33,10 @@ namespace MapWizard.ViewModel
             CommonServiceLocator.ServiceLocator.SetLocatorProvider(() => SimpleIoc.Default);
             SimpleIoc.Default.Unregister<ILogger>(); 
             SimpleIoc.Default.Register<ILogger>(() => LogManager.GetCurrentClassLogger());
-            SimpleIoc.Default.Register<MainViewModel>();
-            SimpleIoc.Default.Register<SettingsViewModel>();
-            SimpleIoc.Default.Register<IDialogService, DialogService>();
             SimpleIoc.Default.Register<ISettingsService, SettingsService>();
+            SimpleIoc.Default.Register<SettingsViewModel>();
+            SimpleIoc.Default.Register<MainViewModel>();
+            SimpleIoc.Default.Register<IDialogService, DialogService>(); 
             SimpleIoc.Default.Register<TabViewModel>();
         }
 
@@ -222,6 +222,22 @@ namespace MapWizard.ViewModel
         }
 
         /// <summary>
+        /// ReportingAssesmentViewModel.
+        /// </summary>
+        /// @return ReportingViewModel.
+        public ReportingAssesmentViewModel ReportingAssesmentViewModel
+        {
+            get
+            {
+                if (!SimpleIoc.Default.IsRegistered<ReportingAssesmentViewModel>())
+                {
+                    return null;
+                }
+                return CommonServiceLocator.ServiceLocator.Current.GetInstance<ReportingAssesmentViewModel>();
+            }
+        }
+
+        /// <summary>
         /// Unregister and then register all the tools. Settings will not be cleared.
         /// </summary>
         public void ClearTools()
@@ -235,6 +251,7 @@ namespace MapWizard.ViewModel
             SimpleIoc.Default.Unregister<DescriptiveViewModel>();
             SimpleIoc.Default.Unregister<TractAggregationViewModel>();
             SimpleIoc.Default.Unregister<ReportingViewModel>();
+            SimpleIoc.Default.Unregister<ReportingAssesmentViewModel>();
             SimpleIoc.Default.Unregister<TabViewModel>();
 
             SimpleIoc.Default.Register<GradeTonnageViewModel>();
@@ -246,6 +263,7 @@ namespace MapWizard.ViewModel
             SimpleIoc.Default.Register<DescriptiveViewModel>();
             SimpleIoc.Default.Register<TractAggregationViewModel>();
             SimpleIoc.Default.Register<ReportingViewModel>();
+            SimpleIoc.Default.Register<ReportingAssesmentViewModel>();
             SimpleIoc.Default.Register<TabViewModel>();           
         }
     }

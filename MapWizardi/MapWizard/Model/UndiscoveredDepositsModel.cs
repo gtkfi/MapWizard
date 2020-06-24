@@ -1,4 +1,5 @@
 ﻿using GalaSoft.MvvmLight;
+using System.Collections.ObjectModel;
 
 namespace MapWizard.Model
 {
@@ -7,7 +8,17 @@ namespace MapWizard.Model
     /// </summary>
     public class UndiscoveredDepositsModel : ObservableObject
     {
-        private string depositsCsvString;
+        // Always initialized the same way.
+        private bool isBusy;
+        private bool negBinomialUseModelName = false;
+        private bool mark3UseModelName = false;
+        private bool customUseModelName = false;
+        private int selectedModelIndex = 0;
+        private ObservableCollection<string> modelNames = new ObservableCollection<string>();
+        // Not always initialized the same way.
+        private string lastRunDate = "Last Run: Never";
+        private int runStatus = 2;
+        private string depositsCsvString = "Name,Weight,N90,N50,N10";
         private string customFunctionCsvString;
         private string estName;
         private string estWeight;
@@ -26,20 +37,125 @@ namespace MapWizard.Model
         private string customEstimateRationale;
         private string mark3EstimateRationale;
         private int selectedTabIndex;
+        private ObservableCollection<string> tractIDNames = new ObservableCollection<string>();
+        private string selectedTract;
 
         /// <summary>
-        /// Defines which tab is selected.
+        /// Is busy?
         /// </summary>
-        /// @return Tab index.
-        public int SelectedTabIndex
+        /// <returns>Boolean representing the state.</returns>
+        public bool IsBusy
         {
-            get
-            {
-                return selectedTabIndex;
-            }
+            get { return isBusy; }
             set
             {
-                selectedTabIndex = value;
+                if (isBusy == value) return;
+                isBusy = value;
+                RaisePropertyChanged(() => IsBusy);
+            }
+        }
+
+        /// <summary>
+        /// Whether to use a name for Neg. Binomial model.
+        /// </summary>
+        /// @return Boolean representing the choice.
+        public bool NegBinomialUseModelName
+        {
+            get { return negBinomialUseModelName; }
+            set
+            {
+                if (value == negBinomialUseModelName) return;
+                negBinomialUseModelName = value;
+                RaisePropertyChanged("NegBinomialUseModelName");
+            }
+        }
+
+        /// <summary>
+        ///  Whether to use a name for Mark3 model.
+        /// </summary>
+        /// @return Boolean representing the choice.
+        public bool Mark3UseModelName
+        {
+            get { return mark3UseModelName; }
+            set
+            {
+                if (value == mark3UseModelName) return;
+                mark3UseModelName = value;
+                RaisePropertyChanged("Mark3UseModelName");
+            }
+        }
+
+        /// <summary>
+        /// Whether to use a name for Custom model
+        /// </summary>
+        /// @return Boolean representing the choice.
+        public bool CustomUseModelName
+        {
+            get { return customUseModelName; }
+            set
+            {
+                if (value == customUseModelName) return;
+                customUseModelName = value;
+                RaisePropertyChanged("CustomUseModelName");
+            }
+        }
+
+        /// <summary>
+        /// Public property for index of selected model, for View to bind to.
+        /// </summary>
+        /// @return Collection of model names.
+        public int SelectedModelIndex
+        {
+            get { return selectedModelIndex; }
+            set
+            {
+                if (value == selectedModelIndex) return;
+                selectedModelIndex = value;
+                RaisePropertyChanged("SelectedModelIndex");
+            }
+        }
+
+        /// <summary>
+        /// Collection containing names of previously ran models for model selection.
+        /// </summary>
+        /// @return Collection of model names.
+        public ObservableCollection<string> ModelNames
+        {
+            get { return modelNames; }
+            set
+            {
+                if (value == modelNames) return;
+                modelNames = value;
+            }
+        }
+
+        /// <summary>
+        /// Whether last run has been succesful, failed or the tool has not been run yet on this project.
+        /// </summary>
+        /// <returns>Integer representing the status.</returns>
+        public int RunStatus
+        {
+            get { return runStatus; }
+            set
+            {
+                if (value == runStatus) return;
+                runStatus = value;
+                RaisePropertyChanged("RunStatus");
+            }
+        }
+
+        /// <summary>
+        /// Date of last run.
+        /// </summary>
+        /// <returns>Date.</returns>
+        public string LastRunDate
+        {
+            get { return lastRunDate; }
+            set
+            {
+                if (value == lastRunDate) return;
+                lastRunDate = value;
+                RaisePropertyChanged("LastRunDate");
             }
         }
 
@@ -55,6 +171,10 @@ namespace MapWizard.Model
             }
             set
             {
+                if(value == null)
+                {
+                    value = "Name,Weight,N90,N50,N10";
+                }
                 Set<string>(() => this.DepositsCsvString, ref depositsCsvString, value);
             }
         }
@@ -328,6 +448,58 @@ namespace MapWizard.Model
             set
             {
                 Set<string>(() => this.CustomEstimateRationale, ref customEstimateRationale, value);
+            }
+        }
+
+        /// <summary>
+        /// Defines which tab is selected.
+        /// </summary>
+        /// @return Tab index.
+        public int SelectedTabIndex
+        {
+            get
+            {
+                return selectedTabIndex;
+            }
+            set
+            {
+                selectedTabIndex = value;
+            }
+        }
+
+        /// <summary>
+        /// TractID collection.
+        /// </summary>
+        /// @return TractID collection.
+        public ObservableCollection<string> TractIDNames
+        {
+            get
+            {
+                return tractIDNames;
+            }
+            set
+            {
+                if (value == null)
+                {
+                    value = new ObservableCollection<string>();
+                }
+                Set<ObservableCollection<string>>(() => this.TractIDNames, ref tractIDNames, value);
+            }
+        }
+
+        /// <summary>
+        /// Selected index of TractID Collection.
+        /// </summary>
+        /// @return Index.
+        public string SelectedTract
+        {
+            get
+            {
+                return selectedTract;
+            }
+            set
+            {
+                Set<string>(() => this.SelectedTract, ref selectedTract, value);
             }
         }
     }

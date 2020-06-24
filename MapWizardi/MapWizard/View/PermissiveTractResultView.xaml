@@ -10,7 +10,7 @@
              DataContext="{Binding Source={StaticResource Locator}, Path=PermissiveTractViewModel}">
     <StackPanel Margin="40" HorizontalAlignment="Stretch">
         <TabControl HorizontalAlignment="Stretch" SelectedIndex="{Binding TabIndex}">
-            <TabItem Header="Prospectivity raster" HorizontalAlignment="Stretch">
+            <!--TabItem Header="Prospectivity raster" HorizontalAlignment="Stretch">
 
                 <ScrollViewer Margin="0, 40, 0, 40" MaxHeight="700" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" HorizontalAlignment="Left" VerticalAlignment="Top">
 
@@ -21,7 +21,7 @@
                     </UniformGrid>
 
                 </ScrollViewer>
-            </TabItem>
+            </-->
             <TabItem Header="Delineation process" HorizontalAlignment="Stretch">
 
                 <ScrollViewer Margin="0, 40, 0, 40" MaxHeight="700" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" HorizontalAlignment="Left" VerticalAlignment="Top">

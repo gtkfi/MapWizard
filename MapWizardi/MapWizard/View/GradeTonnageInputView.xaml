@@ -55,7 +55,7 @@
                 </ComboBox>
             </WrapPanel>
         </UniformGrid>
-        <UniformGrid Rows="1" Columns="2" IsEnabled="{Binding SelectedIndex, Converter={StaticResource SelectedIndexToBooleanConverter}}">
+        <UniformGrid Rows="1" Columns="2" IsEnabled="{Binding Model.SelectedIndex, Converter={StaticResource SelectedIndexToBooleanConverter}}">
             <WrapPanel Style="{StaticResource WrapPanel}">
                 <TextBlock Text="Select tools to be executed" Margin="10" HorizontalAlignment="left" VerticalAlignment="Center"/>
             </WrapPanel>
@@ -64,7 +64,7 @@
                 <CheckBox Name="tonnagecheckbox" IsChecked="{Binding Model.RunTonnage}" Content="Tonnage" Margin="0,5,0,0"/>
             </WrapPanel>
         </UniformGrid>
-        <UniformGrid  Rows="1" Columns="2" IsEnabled="{Binding SelectedIndex, Converter={StaticResource SelectedIndexToBooleanConverter}}">
+        <UniformGrid  Rows="1" Columns="2" IsEnabled="{Binding Model.SelectedIndex, Converter={StaticResource SelectedIndexToBooleanConverter}}">
             <WrapPanel Style="{StaticResource WrapPanel}">
                 <TextBlock HorizontalAlignment="left" VerticalAlignment="Center" Text="Seed" Margin="10" />
             </WrapPanel>
@@ -72,23 +72,23 @@
                 <TextBox Text="{Binding Model.Seed}" FontSize="20" HorizontalAlignment="Left" VerticalAlignment="Center" Width="120" ToolTip="Seed for random number generator."/>
             </WrapPanel>
         </UniformGrid>
-        <UniformGrid  Rows="1" Columns="2" IsEnabled="{Binding SelectedIndex, Converter={StaticResource SelectedIndexToBooleanConverter}}">
+        <UniformGrid  Rows="1" Columns="2" IsEnabled="{Binding Model.SelectedIndex, Converter={StaticResource SelectedIndexToBooleanConverter}}">
             <WrapPanel Style="{StaticResource WrapPanel}">
                 <TextBlock HorizontalAlignment="left" VerticalAlignment="Center" Text="Pdf type" Margin="10" />
             </WrapPanel>
             <WrapPanel Style="{StaticResource ValueColumn}">
-                <ComboBox ItemsSource="{Binding PdfTypes}" SelectedItem="{Binding Model.PdfType}"  SelectedIndex="0" HorizontalAlignment="left"  VerticalAlignment="Center" FontSize="18" Width="120" ToolTip="Type of the probability density function to be estimated (normal, kernel)."/>
+                <ComboBox ItemsSource="{Binding Model.PdfTypes}" SelectedItem="{Binding Model.PdfType}"  SelectedIndex="0" HorizontalAlignment="left"  VerticalAlignment="Center" FontSize="18" Width="120" ToolTip="Type of the probability density function to be estimated (normal, kernel)."/>
             </WrapPanel>
         </UniformGrid>
-        <UniformGrid  Rows="1" Columns="2" IsEnabled="{Binding SelectedIndex, Converter={StaticResource SelectedIndexToBooleanConverter}}">
+        <UniformGrid  Rows="1" Columns="2" IsEnabled="{Binding Model.SelectedIndex, Converter={StaticResource SelectedIndexToBooleanConverter}}">
             <WrapPanel Style="{StaticResource WrapPanel}">
                 <TextBlock HorizontalAlignment="left"  VerticalAlignment="Center" Text="Truncated" Margin="10" />
             </WrapPanel>
             <WrapPanel Style="{StaticResource ValueColumn}">
-                <ComboBox ItemsSource="{Binding Truncated}" SelectedItem="{Binding Model.IsTruncated}" SelectedIndex="0"  HorizontalAlignment="left"  VerticalAlignment="Center" FontSize="18" Width="120" ToolTip="Select whether the estimated probability density function is truncated at the lowest and highest values in the dataset."/>
+                <ComboBox ItemsSource="{Binding Model.Truncated}" SelectedItem="{Binding Model.IsTruncated}" SelectedIndex="0"  HorizontalAlignment="left"  VerticalAlignment="Center" FontSize="18" Width="120" ToolTip="Select whether the estimated probability density function is truncated at the lowest and highest values in the dataset."/>
             </WrapPanel>
         </UniformGrid>
-        <UniformGrid  Rows="1" Columns="2" IsEnabled="{Binding SelectedIndex, Converter={StaticResource SelectedIndexToBooleanConverter}}">
+        <UniformGrid  Rows="1" Columns="2" IsEnabled="{Binding Model.SelectedIndex, Converter={StaticResource SelectedIndexToBooleanConverter}}">
             <WrapPanel Style="{StaticResource WrapPanel}">
                 <TextBlock HorizontalAlignment="left"  VerticalAlignment="Center" Text="Random samples" Margin="10" />
             </WrapPanel>
@@ -96,22 +96,22 @@
                 <TextBox Text="{Binding Model.RandomSampleCount}" FontSize="18" HorizontalAlignment="left"  VerticalAlignment="Center" Width="120"  ToolTip="Number of random samples used to estimate the probability density functions."/>
             </WrapPanel>
         </UniformGrid>
-        <UniformGrid Rows="1" Columns="2" IsEnabled="{Binding SelectedIndex, Converter={StaticResource SelectedIndexToBooleanConverter}}">
+        <UniformGrid Rows="1" Columns="2" IsEnabled="{Binding Model.SelectedIndex, Converter={StaticResource SelectedIndexToBooleanConverter}}">
             <WrapPanel Style="{StaticResource WrapPanel}">
                 <TextBlock Text="Save output in separate folder?" Margin="10"></TextBlock>
             </WrapPanel>
             <WrapPanel Style="{StaticResource ValueColumn}" ToolTip="Select whether to save the estimated probability density functions in a separate subfolder.">
-                <RadioButton Name="YesButton" Margin="0,10,10,10" Padding="0" IsChecked="{Binding UseModelName}">Yes</RadioButton>
+                <RadioButton Name="YesButton" Margin="0,10,10,10" Padding="0" IsChecked="{Binding Model.UseModelName}">Yes</RadioButton>
                 <RadioButton Margin="10,0,0,0" Padding="0" IsChecked="True">No</RadioButton>
             </WrapPanel>
         </UniformGrid>
-        <UniformGrid Margin="0,5,0,20" Rows="1" Columns="2" IsEnabled="{Binding SelectedIndex, Converter={StaticResource SelectedIndexToBooleanConverter}}" Visibility="{Binding ElementName=YesButton, Path=IsChecked, Converter={StaticResource BoolToVisibilityConverter}}">
+        <UniformGrid Margin="0,5,0,20" Rows="1" Columns="2" IsEnabled="{Binding Model.SelectedIndex, Converter={StaticResource SelectedIndexToBooleanConverter}}" Visibility="{Binding ElementName=YesButton, Path=IsChecked, Converter={StaticResource BoolToVisibilityConverter}}">
             <WrapPanel></WrapPanel>
             <WrapPanel Style="{StaticResource ValueColumn}">
                 <TextBox mah:TextBoxHelper.Watermark="Subfolder name" Text="{Binding Model.ExtensionFolder}" MinWidth="120" ToolTip="Name of the subfolder to save the estimated probability density functions."></TextBox>
             </WrapPanel>
         </UniformGrid>
-        <UniformGrid Rows="1" Columns="2" IsEnabled="{Binding SelectedIndex, Converter={StaticResource SelectedIndexToBooleanConverter}}">
+        <UniformGrid Rows="1" Columns="2" IsEnabled="{Binding Model.SelectedIndex, Converter={StaticResource SelectedIndexToBooleanConverter}}">
             <WrapPanel></WrapPanel>
             <WrapPanel Margin="10">
                 <Button Padding="-10,0,0,0"  

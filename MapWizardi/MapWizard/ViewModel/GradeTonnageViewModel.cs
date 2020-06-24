@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Threading.Tasks;
-using System.Collections.ObjectModel;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.CommandWpf;
 using MapWizard.Model;
@@ -15,6 +14,8 @@ using System.Windows;
 using MahApps.Metro.Controls;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using System.Diagnostics;
+using System.Text;
 
 namespace MapWizard.ViewModel
 {
@@ -38,16 +39,6 @@ namespace MapWizard.ViewModel
         private GradeTonnageModel model;
         private GradeTonnageResultModel result;
         private ViewModelLocator viewModelLocator;
-        private bool isBusy;
-        private bool useModelName;
-        private int selectedIndex;
-        private int runStatus;  // 0=error, 1=success, 2=not run yet.
-        private ObservableCollection<string> modelNames;
-        private string lastRunDate;
-        private int selectedModelIndex;
-        private bool saveToDepositModels;
-        private string depositModelsExtension;
-        private bool noFolderNameGiven;
 
         /// <summary>
         /// Initializes a new instance of the GradeTonnageViewModel class.
@@ -60,14 +51,6 @@ namespace MapWizard.ViewModel
             this.logger = logger;
             this.dialogService = dialogService;
             this.settingsService = settingsService;
-            lastRunDate = "Last Run: Never";
-            runStatus = 2;
-            modelNames = new ObservableCollection<string>();
-            selectedModelIndex = 0;
-            depositModelsExtension = "";
-            saveToDepositModels = false;
-            noFolderNameGiven = false;
-            useModelName = false;
             var GTFolder = Path.Combine(settingsService.RootPath, "GTModel");
             var GTDirInfo = new DirectoryInfo(GTFolder);
             if (!Directory.Exists(GTFolder))
@@ -80,6 +63,8 @@ namespace MapWizard.ViewModel
             SelectFolderCommand = new RelayCommand(SelectFolder, CanRunTool);
             SelectModelCommand = new RelayCommand(SelectResult, CanRunTool);
             ShowModelDialog = new RelayCommand(OpenModelDialog, CanRunTool);
+            OpenGradePlotCommand = new RelayCommand(OpenGradePlot, CanRunTool);
+            OpenTonnagePlotCommand = new RelayCommand(OpenTonnagePlot, CanRunTool);
             viewModelLocator = new ViewModelLocator();
             result = new GradeTonnageResultModel();
             GradeTonnageInputParams inputParams = new GradeTonnageInputParams();
@@ -110,40 +95,17 @@ namespace MapWizard.ViewModel
                         ModelType = inputParams.ModelType
                     };
                 }
-                catch(Exception ex)
+                catch (Exception ex)
                 {
-                    Model = new GradeTonnageModel
-                    {
-                        CSVPath = "Select Data",
-                        Seed = 1,
-                        PdfType = "Normal",
-                        IsTruncated = "FALSE",
-                        MinDepositCount = 30,
-                        RandomSampleCount = 1000000,
-                        RunGrade = "false",
-                        RunTonnage = "false",
-                        ExtensionFolder = "",
-                        ModelType = "GT"
-                    };
+                    Model = new GradeTonnageModel();
                     logger.Error(ex, "Failed to read json file");
                     dialogService.ShowNotification("Couldn't load Grade Tonnage tool's inputs correctly.", "Error");
+                    viewModelLocator.SettingsViewModel.WriteLogText("Couldn't load Grade Tonnage tool's inputs correctly.", "Error");
                 }
             }
             else
             {
-                Model = new GradeTonnageModel
-                {
-                    CSVPath = "Select Data",
-                    Seed = 1,
-                    PdfType = "Normal",
-                    IsTruncated = "FALSE",
-                    MinDepositCount = 30,
-                    RandomSampleCount = 1000000,
-                    RunGrade = "false",
-                    RunTonnage = "false",
-                    ExtensionFolder = "",
-                    ModelType = "GT"
-                };
+                Model = new GradeTonnageModel();
             }
             if (Directory.GetFiles(selectedProjectFolder).Length != 0)
             {
@@ -153,7 +115,7 @@ namespace MapWizard.ViewModel
             var lastRunFile = Path.Combine(projectFolder, "GradeTonnage_last_run.lastrun");
             if (File.Exists(lastRunFile))
             {
-                LastRunDate = "Last Run: " + (new FileInfo(lastRunFile)).LastWriteTime.ToString();
+                Model.LastRunDate = "Last Run: " + (new FileInfo(lastRunFile)).LastWriteTime.ToString();
             }
         }
 
@@ -194,16 +156,16 @@ namespace MapWizard.ViewModel
         public RelayCommand SelectFolderCommand { get; }
 
         /// <summary>
-        /// Pdf types.
+        /// Open grade plot command.
         /// </summary>
-        /// @return Pdf type collection.
-        public ObservableCollection<string> PdfTypes { get; } = new ObservableCollection<string>() { "normal", "kde" };
+        /// @return Command.
+        public RelayCommand OpenGradePlotCommand { get; }
 
         /// <summary>
-        /// Is truncated?
+        /// Open tonnage plot command.
         /// </summary>
-        /// @return Truncation collection.
-        public ObservableCollection<string> Truncated { get; } = new ObservableCollection<string>() { "FALSE", "TRUE" };
+        /// @return Command.
+        public RelayCommand OpenTonnagePlotCommand { get; }
 
         /// <summary>
         /// Model for GradeTonnage.
@@ -240,23 +202,6 @@ namespace MapWizard.ViewModel
         }
 
         /// <summary>
-        /// Is busy?
-        /// </summary>
-        /// @return Boolean representing the state.
-        public bool IsBusy
-        {
-            get { return isBusy; }
-            set
-            {
-                if (isBusy == value) return;
-                isBusy = value;
-                RaisePropertyChanged(() => IsBusy);
-                RunToolCommand.RaiseCanExecuteChanged();
-                SelectFileCommand.RaiseCanExecuteChanged();
-            }
-        }
-
-        /// <summary>
         /// Run GradeTonnage with user input.
         /// </summary>
         private async void RunTool()
@@ -264,7 +209,7 @@ namespace MapWizard.ViewModel
             logger.Info("-->{0}", this.GetType().Name);
             // 1. Collect input parameters
             string rootFolder = settingsService.RootPath;
-            if (UseModelName == false)
+            if (Model.UseModelName == false)
             {
                 Model.ExtensionFolder = "";
             }
@@ -301,7 +246,7 @@ namespace MapWizard.ViewModel
             );
             // 2. Execute tool
             GradeTonnageResult tonnageResult = default(GradeTonnageResult);
-            IsBusy = true;
+            Model.IsBusy = true;
             try
             {
                 await Task.Run(() =>
@@ -335,25 +280,27 @@ namespace MapWizard.ViewModel
                     Result.GradePdf = tonnageResult.GradePdf;
                 });
                 var modelFolder = Path.Combine(inputParams.Env.RootPath, "GTModel", Model.ExtensionFolder);
-                if (!ModelNames.Contains(modelFolder))
+                if (!Model.ModelNames.Contains(modelFolder))
                 {
-                    ModelNames.Add(modelFolder);
+                    Model.ModelNames.Add(modelFolder);
                 }
                 string lastRunFile = Path.Combine(Path.Combine(inputParams.Env.RootPath, "GTModel", "GradeTonnage_last_run.lastrun"));
-                File.Create(lastRunFile);
-                dialogService.ShowNotification("GradeTonnageTool completed successfully", "Success");
-                LastRunDate = "Last Run: " + DateTime.Now.ToString("g");
-                RunStatus = 1;
+                File.Create(lastRunFile).Close();
+                dialogService.ShowNotification("GradeTonnageTool completed successfully.", "Success");
+                viewModelLocator.SettingsViewModel.WriteLogText("GradeTonnageTool completed successfully", "Success");
+                Model.LastRunDate = "Last Run: " + DateTime.Now.ToString("g");
+                Model.RunStatus = 1;
             }
             catch (Exception ex)
             {
                 logger.Error(ex, "Failed to execute REngine() script");
-                dialogService.ShowNotification("Run failed. Check output for details\r\n- Are all input parameters correct?\r\n- Are all input files valid? \r\n- Are all input and output files closed?", "Error"); //Tää on vähän tymä. voihan sen exceptioninki tähän koittaa tunkea, en tiä vaan miltä näyttäs ilman formatointia. joka tapauksessa tää on liian laaja ja geneerinen yms. voihan tähänki laittaa tietty mekaniikan että jos klikkaa sitä viestiä niin avaa koko messagen???? oisko pikkasen hyvä.
-                RunStatus = 0;
+                dialogService.ShowNotification("Run failed. Check output for details.\r\n- Are all input parameters correct?\r\n- Are all input files valid? \r\n- Are all input and output files closed?", "Error");
+                viewModelLocator.SettingsViewModel.WriteLogText("Grade Tonnage tool run failed. Check output for details.\r\n- Are all input parameters correct?\r\n- Are all input files valid? \r\n- Are all input and output files closed?", "Error");
+                Model.RunStatus = 0;
             }
             finally
             {
-                IsBusy = false;
+                Model.IsBusy = false;
             }
             logger.Info("<--{0} completed", this.GetType().Name);
         }
@@ -365,7 +312,7 @@ namespace MapWizard.ViewModel
         {
             try
             {
-                string csvFile = dialogService.OpenFileDialog("", "CSV files|*.csv;", true, true);
+                string csvFile = dialogService.OpenFileDialog("", "CSV files|*.csv;", true, true, settingsService.RootPath);
                 if (!string.IsNullOrEmpty(csvFile))
                 {
                     model.CSVPath = csvFile;
@@ -376,11 +323,11 @@ namespace MapWizard.ViewModel
             catch (Exception ex)
             {
                 logger.Error(ex, "Failed to show OpenFileDialog");
-                dialogService.ShowNotification("Failed to select input file", "Error");
+                dialogService.ShowNotification("Failed to select input file.", "Error");
             }
             finally
             {
-                SelectedIndex = 0;  // This is used to disable inputs depending on input type.
+                Model.SelectedIndex = 0;  // This is used to disable inputs depending on input type.
                 Result.TonnageSummary = "";
                 Result.TonnagePdf = "";
                 result.TonnagePlot = "";
@@ -397,7 +344,7 @@ namespace MapWizard.ViewModel
         {
             try
             {
-                string csvFile = dialogService.OpenFileDialog("", "CSV files|*.csv;", true, true);
+                string csvFile = dialogService.OpenFileDialog("", "CSV files|*.csv;", true, true, settingsService.RootPath);
                 if (!string.IsNullOrEmpty(csvFile))
                 {
                     model.CSVPath = csvFile;
@@ -414,7 +361,7 @@ namespace MapWizard.ViewModel
             }
             finally
             {
-                SelectedIndex = 1;  // These are used to disable inputs depending on input type.
+                Model.SelectedIndex = 1;  // These are used to disable inputs depending on input type.
                 Result.TonnageSummary = "";
                 Result.TonnagePdf = "";
                 result.TonnagePlot = "";
@@ -465,15 +412,61 @@ namespace MapWizard.ViewModel
                     {
                         File.Copy(Path.Combine(folder, fi3.Name), Path.Combine(gtRootPath, fi3.Name));
                     }
-                    if (!ModelNames.Contains(gtRootPath))
-                        ModelNames.Add(gtRootPath);
+                    if (!Model.ModelNames.Contains(gtRootPath))
+                        Model.ModelNames.Add(gtRootPath);
                 }
-                SelectedIndex = 2; // This is used to disable input controls on GradeTonnageInputView, depending on input type.         
+                Model.SelectedIndex = 2; // This is used to disable input controls on GradeTonnageInputView, depending on input type.         
             }
             catch (Exception ex)
             {
                 logger.Error(ex, "Failed to show FolderBrowserDialog");
-                dialogService.ShowNotification("Failed to select existing model", "Error");
+                dialogService.ShowNotification("Error in folder selection.", "Error");
+            }
+        }
+
+        /// <summary>
+        /// Open grade image.
+        /// </summary>
+        private void OpenGradePlot()
+        {
+            try
+            {
+                bool openFile = dialogService.MessageBoxDialog();
+                if (openFile == true)
+                {
+                    if (File.Exists(Result.GradePlot))
+                    {
+                        Process.Start(Result.GradePlot);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                logger.Error(ex, "Failed to open imagefile");
+                dialogService.ShowNotification("Failed to open imagefile.", "Error");
+            }
+        }
+
+        /// <summary>
+        /// Open tonnage image.
+        /// </summary>
+        private void OpenTonnagePlot()
+        {
+            try
+            {
+                bool openFile = dialogService.MessageBoxDialog();
+                if (openFile == true)
+                {
+                    if (File.Exists(Result.TonnagePlot))
+                    {
+                        Process.Start(Result.TonnagePlot);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                logger.Error(ex, "Failed to open imagefile");
+                dialogService.ShowNotification("Failed to open imagefile.", "Error");
             }
         }
 
@@ -482,130 +475,111 @@ namespace MapWizard.ViewModel
         /// </summary>
         private void SelectResult()
         {
-            if (ModelNames.Count > 0)
+            if (Model.ModelNames.Count <= 0 || Model.DepositModelsExtension.Length == 0)
             {
-                if (SaveToDepositModels == true && DepositModelsExtension.Length == 0)
+                dialogService.ShowNotification("Either the model was not selected or it was not given a name. ", "Error");
+                viewModelLocator.SettingsViewModel.WriteLogText("Either the model was not selected or it was not given a name.", "Error");
+                return;
+            }
+            try
+            {
+                var modelDirPath = Model.ModelNames[Model.SelectedModelIndex];
+                var modelDirInfo = new DirectoryInfo(Model.ModelNames[Model.SelectedModelIndex]);
+                var selectedProjectFolder = Path.Combine(settingsService.RootPath, "GTModel", "SelectedResult");
+                if (modelDirPath == selectedProjectFolder)
                 {
-                    NoFolderNameGiven = true;
+                    dialogService.ShowNotification("SelectedResult folder cannot be selected. ", "Error");
                     return;
                 }
-                try
+                if (!Directory.Exists(selectedProjectFolder))
                 {
-                    var modelDirPath = ModelNames[SelectedModelIndex];
-                    var modelDirInfo = new DirectoryInfo(ModelNames[SelectedModelIndex]);
-                    var gtRootPath = Path.Combine(settingsService.RootPath, "GTModel", "SelectedResult");
-                    viewModelLocator.ReportingViewModel.GTModelPath = gtRootPath;
-                    viewModelLocator.ReportingViewModel.GTModelName = Path.GetFileName(modelDirPath);
+                    Directory.CreateDirectory(selectedProjectFolder);
+                }
+                DirectoryInfo dir = new DirectoryInfo(selectedProjectFolder);
+                // Deletes all files and directories before adding new files.
+                foreach (FileInfo file in dir.GetFiles())
+                {
+                    file.Delete();
+                }
+                foreach (DirectoryInfo direk in dir.GetDirectories())
+                {
+                    direk.Delete(true);
+                }
+                // Get files from selected model root folder and add them into SelectedResult folder.
+                foreach (FileInfo file2 in modelDirInfo.GetFiles()) 
+                {
+                    var destPath = Path.Combine(selectedProjectFolder, file2.Name);
+                    var sourcePath = Path.Combine(modelDirPath, file2.Name);
+                    if (File.Exists(destPath))
+                    {
+                        File.Delete(destPath);
+                    }
+                    File.Copy(sourcePath, destPath);
+                    if (Model.SaveToDepositModels == true)
+                    {
+                        var depositPath = Path.Combine(settingsService.DepositModelsPath, "DepositModels", "GradeTonnage", Model.DepositModelsExtension);
+                        Directory.CreateDirectory(depositPath);
+                        destPath = Path.Combine(depositPath, file2.Name);
+                        var depositDirInfo = new DirectoryInfo(depositPath);
+                        if (File.Exists(destPath))
+                        {
+                            File.Delete(destPath);
+                        }
+                        File.Copy(sourcePath, destPath);
+                    }
+                }
+                string modelNameFile = Path.Combine(selectedProjectFolder, "GTModelName.txt");
+                File.Create(modelNameFile).Close();
+                using (StreamWriter writeStream = new StreamWriter(new FileStream(modelNameFile, FileMode.Open, FileAccess.ReadWrite), Encoding.Default))
+                {
+                    writeStream.Write(Model.DepositModelsExtension);
+                }
+                // Get parameters of the selected project.
+                GradeTonnageInputParams inputParams = new GradeTonnageInputParams();
+                string param_json = Path.Combine(selectedProjectFolder, "GradeTonnage_input_params.json");
+                // Check if result files were moved into SelectedResult folder.
+                if (File.Exists(param_json))
+                {
+                    inputParams.Load(param_json);
+                    Model.CSVPath = inputParams.CSVPath;
+                    Model.IsTruncated = inputParams.IsTruncated;
+                    Model.PdfType = inputParams.PDFType;
+                    Model.MinDepositCount = Convert.ToInt32(inputParams.MinDepositCount);
+                    Model.RandomSampleCount = Convert.ToInt32(inputParams.RandomSampleCount);
+                    Model.Seed = Convert.ToInt32(inputParams.Seed);
+                    Model.Folder = inputParams.Folder;
+                    Model.ExtensionFolder = inputParams.ExtensionFolder;
+                    Model.RunGrade = inputParams.RunGrade;
+                    Model.RunTonnage = inputParams.RunTonnage;
+                    Model.ModelType = inputParams.ModelType;
+                }
+                // Update info to the Reporting tool.
+                if((File.Exists(Path.Combine(selectedProjectFolder, "grade_summary.txt")) && File.Exists(Path.Combine(selectedProjectFolder, "grade_plot.jpeg")))
+                    || (File.Exists(Path.Combine(selectedProjectFolder, "tonnage_summary.txt")) && File.Exists(Path.Combine(selectedProjectFolder, "tonnage_plot.jpeg"))))
+                {
+                    viewModelLocator.ReportingViewModel.Model.GTModelPath = selectedProjectFolder;
+                    viewModelLocator.ReportingViewModel.Model.GTModelName = Model.DepositModelsExtension;
                     viewModelLocator.ReportingViewModel.SaveInputs();
-                    if (!Directory.Exists(gtRootPath))
-                    {
-                        Directory.CreateDirectory(gtRootPath);
-                    }
-                    if (modelDirPath != gtRootPath)
-                    {
-                        DirectoryInfo dir = new DirectoryInfo(gtRootPath);
-                        foreach (FileInfo file in dir.GetFiles())
-                        {
-                            file.Delete();
-                        }
-                        foreach (DirectoryInfo direk in dir.GetDirectories())
-                        {
-                            direk.Delete(true);
-                        }
-                        foreach (FileInfo file2 in modelDirInfo.GetFiles()) // Select files from selected model root folder.
-                        {
-                            var destPath = Path.Combine(gtRootPath, file2.Name);
-                            var sourcePath = Path.Combine(modelDirPath, file2.Name);
-                            if (File.Exists(destPath))
-                            {
-                                File.Delete(destPath);
-                            }
-                            File.Copy(sourcePath, destPath);
-                            if (SaveToDepositModels == true)
-                            {
-                                var depositPath = Path.Combine(settingsService.DepositModelsPath, "DepositModels", "GradeTonnage", DepositModelsExtension);
-                                Directory.CreateDirectory(depositPath);
-                                destPath = Path.Combine(depositPath, file2.Name);
-                                var depositDirInfo = new DirectoryInfo(depositPath);
-                                if (File.Exists(destPath))
-                                {
-                                    File.Delete(destPath);
-                                }
-                                File.Copy(sourcePath, destPath);
-                            }
-                        }
-                    }
-                    else
-                    {
-                        if (SaveToDepositModels == true)
-                        {
-
-                            foreach (FileInfo file in modelDirInfo.GetFiles())  // Select files from selected model root folder.
-                            {
-                                var sourcePath = Path.Combine(modelDirPath, file.Name);
-                                var depositPath = Path.Combine(settingsService.DepositModelsPath, "DepositModels", "GradeTonnage", DepositModelsExtension);
-                                Directory.CreateDirectory(depositPath);
-                                var destPath = Path.Combine(depositPath, file.Name);
-                                var depositDirInfo = new DirectoryInfo(depositPath);
-                                if (File.Exists(destPath))
-                                {
-                                    File.Delete(destPath);
-                                }
-                                File.Copy(sourcePath, destPath);
-                            }
-                            foreach (DirectoryInfo di in modelDirInfo.GetDirectories())
-                            {
-                                var newDirPath = Path.Combine(gtRootPath, di.Name);
-                                string sourcePath;
-                                string destPath;
-                                DirectoryInfo newDirInfo = new DirectoryInfo(newDirPath);
-                                Directory.CreateDirectory(Path.Combine(settingsService.DepositModelsPath, "DepositModels", "GradeTonnage", DepositModelsExtension, di.Name));
-                                foreach (FileInfo file2 in di.GetFiles())
-                                {
-                                    sourcePath = Path.Combine(modelDirPath, di.Name, file2.Name);
-                                    destPath = Path.Combine(settingsService.DepositModelsPath, "DepositModels", "GradeTonnage", DepositModelsExtension, di.Name, file2.Name);
-                                    File.Copy(sourcePath, destPath);
-                                }
-                            }
-                        }
-                    }
-                    GradeTonnageInputParams inputParams = new GradeTonnageInputParams();
-                    string selectedProjectFolder = Path.Combine(settingsService.RootPath, "GTModel", "SelectedResult");
-                    if (!Directory.Exists(selectedProjectFolder))
-                    {
-                        Directory.CreateDirectory(selectedProjectFolder);
-                    }
-                    string param_json = Path.Combine(selectedProjectFolder, "GradeTonnage_input_params.json");
-
-                    if (File.Exists(param_json))
-                    {
-                        inputParams.Load(param_json);
-
-                        Model.CSVPath = inputParams.CSVPath;
-                        Model.IsTruncated = inputParams.IsTruncated;
-                        Model.PdfType = inputParams.PDFType;
-                        Model.MinDepositCount = Convert.ToInt32(inputParams.MinDepositCount);
-                        Model.RandomSampleCount = Convert.ToInt32(inputParams.RandomSampleCount);
-                        Model.Seed = Convert.ToInt32(inputParams.Seed);
-                        Model.Folder = inputParams.Folder;
-                        Model.ExtensionFolder = inputParams.ExtensionFolder;
-                        Model.RunGrade = inputParams.RunGrade;
-                        Model.RunTonnage = inputParams.RunTonnage;
-                        Model.ModelType = inputParams.ModelType;
-                    }
-                    dialogService.ShowNotification("Model selected successfully", "Success");
+                    viewModelLocator.ReportingAssesmentViewModel.Model.GTModelPath = selectedProjectFolder;
+                    viewModelLocator.ReportingAssesmentViewModel.Model.GTModelName = Model.DepositModelsExtension;
+                    viewModelLocator.ReportingAssesmentViewModel.SaveInputs();
                 }
-                catch (Exception ex)
-                {
-                    logger.Trace(ex, "Error in Model Selection");
-                    dialogService.ShowNotification("Failed to select model", "Error");
-                }
-                NoFolderNameGiven = false;
-                var metroWindow = (Application.Current.MainWindow as MetroWindow);
-                var dialog = metroWindow.GetCurrentDialogAsync<BaseMetroDialog>();
-                metroWindow.HideMetroDialogAsync(dialog.Result);
-                LoadResults();
+                Model.DepositModelsExtension = "";
+                Model.SaveToDepositModels = false;
+                dialogService.ShowNotification("Model selected successfully.", "Success");
+                viewModelLocator.SettingsViewModel.WriteLogText("Grade Tonnage model selected successfully.", "Success");
             }
+            catch (Exception ex)
+            {
+                // TAGGED: Initialize new model?
+                logger.Trace(ex, "Error in Model Selection");
+                dialogService.ShowNotification("Failed to select model.", "Error");
+                viewModelLocator.SettingsViewModel.WriteLogText("Failed to select model in Grade Tonnage tool.", "Error");
+            }
+            var metroWindow = (Application.Current.MainWindow as MetroWindow);
+            var dialog = metroWindow.GetCurrentDialogAsync<BaseMetroDialog>();
+            metroWindow.HideMetroDialogAsync(dialog.Result);
+            LoadResults();
         }
 
         /// <summary>
@@ -623,7 +597,7 @@ namespace MapWizard.ViewModel
                     {
                         if (file.Name == "GradeTonnage_input_params.json")
                         {
-                            modelNames.Add(model.FullName);
+                            Model.ModelNames.Add(model.FullName);
                         }
                     }
                 }
@@ -632,7 +606,7 @@ namespace MapWizard.ViewModel
             {
                 if (file.Name == "GradeTonnage_input_params.json")
                 {
-                    modelNames.Add(projectFolderInfo.FullName);
+                    Model.ModelNames.Add(projectFolderInfo.FullName);
                 }
             }
         }
@@ -643,109 +617,7 @@ namespace MapWizard.ViewModel
         /// @return Boolean representing the state.
         private bool CanRunTool()
         {
-            return !IsBusy;
-        }
-
-        /// <summary>
-        /// Date of last run
-        /// </summary>
-        /// @return Date.
-        public string LastRunDate
-        {
-            get { return lastRunDate; }
-            set
-            {
-                if (value == lastRunDate) return;
-                lastRunDate = value;
-                RaisePropertyChanged("LastRunDate");
-            }
-        }
-
-        /// <summary>
-        /// Whether last run has been succesful, failed or the tool has not been run yet on this project.
-        /// </summary>
-        /// @return Integer representing the status.
-        public int RunStatus
-        {
-            get { return runStatus; }
-            set
-            {
-                if (value == runStatus) return;
-                runStatus = value;
-                RaisePropertyChanged("RunStatus");
-            }
-        }
-
-        /// <summary>
-        /// Public index for View to bind to.
-        /// </summary>
-        /// @return Integer representing the tab.
-        public int SelectedIndex
-        {
-            get { return selectedIndex; }
-            set
-            {
-                if (value == selectedIndex) return;
-                selectedIndex = value;
-                RaisePropertyChanged("SelectedIndex");
-            }
-        }
-
-        /// <summary>
-        /// Public Model names property
-        /// </summary>
-        /// @return Collection of models.
-        public ObservableCollection<string> ModelNames
-        {
-            get { return modelNames; }
-            set
-            {
-                if (value == modelNames) return;
-                modelNames = value;
-            }
-        }
-
-        /// <summary>
-        /// Public index for View to bind to
-        /// </summary>
-        /// @return Integer representing the selected model.
-        public int SelectedModelIndex
-        {
-            get { return selectedModelIndex; }
-            set
-            {
-                if (value == selectedModelIndex) return;
-                selectedModelIndex = value;
-                RaisePropertyChanged("SelectedModelIndex");
-            }
-        }
-
-        /// <summary>
-        /// Extension folder for Deposit model.
-        /// </summary>
-        /// @return Extendion folder name.
-        public string DepositModelsExtension
-        {
-            get { return depositModelsExtension; }
-            set
-            {
-                if (value == depositModelsExtension) return;
-                depositModelsExtension = value;
-            }
-        }
-
-        /// <summary>
-        /// Whether to save to deposit models
-        /// </summary>
-        /// @return Boolean representing the choice.
-        public bool SaveToDepositModels
-        {
-            get { return saveToDepositModels; }
-            set
-            {
-                if (value == saveToDepositModels) return;
-                saveToDepositModels = value;
-            }
+            return !Model.IsBusy;
         }
 
         /// <summary>
@@ -758,43 +630,13 @@ namespace MapWizard.ViewModel
         }
 
         /// <summary>
-        /// Boolean representing whether folder name has been given or not.
-        /// </summary>
-        /// @return Boolean representing the choice.
-        public bool NoFolderNameGiven
-        {
-            get { return noFolderNameGiven; }
-            set
-            {
-                if (value == noFolderNameGiven) return;
-                noFolderNameGiven = value;
-                RaisePropertyChanged("NoFolderNameGiven");
-            }
-        }
-
-        /// <summary>
-        /// Boolean representing whether to use model name or not.
-        /// </summary>
-        /// @return Boolean representing the choice.
-        public bool UseModelName
-        {
-            get { return useModelName; }
-            set
-            {
-                if (value == useModelName) return;
-                useModelName = value;
-                RaisePropertyChanged("UseModelName");
-            }
-        }
-
-        /// <summary>
         /// Method to create bitmap from image. Prevents file locks from binding in XAML.
         /// </summary>
         /// <param name="source">Path for bitmap.</param>
         /// <returns>Bitmap.</returns>
         private ImageSource BitmapFromUri(string source)
         {
-            if(source == null)
+            if (source == null)
             {
                 return null;  // No picture for either grade or tonnage so no error.
             }
@@ -829,7 +671,7 @@ namespace MapWizard.ViewModel
             var GTGradeSummary = Path.Combine(GTFolder, "grade_summary.txt");
             var GTTonnageSummary = Path.Combine(GTFolder, "tonnage_summary.txt");
             var GTTonnagePlot = Path.Combine(GTFolder, "tonnage_plot.jpeg");
-            RunStatus = 1;  // Set status to error if any of the files is not found.
+            Model.RunStatus = 1;  // Set status to error if any of the files is not found.
             try
             {
                 if (File.Exists(GTGradeSummary))
@@ -841,7 +683,7 @@ namespace MapWizard.ViewModel
                     Result.GradeSummary = null;
                     if (Model.RunGrade == "True")
                     {
-                        RunStatus = 0;
+                        Model.RunStatus = 0;
                     }
                 }
                 if (File.Exists(GTGradePdf))
@@ -853,7 +695,7 @@ namespace MapWizard.ViewModel
                     Result.GradePdf = null;
                     if (Model.RunGrade == "True")
                     {
-                        RunStatus = 0;
+                        Model.RunStatus = 0;
                     }
                 }
                 if (File.Exists(GTGradePlot))
@@ -867,7 +709,7 @@ namespace MapWizard.ViewModel
                     Result.GradePlotBitMap = null;
                     if (Model.RunGrade == "True")
                     {
-                        RunStatus = 0;
+                        Model.RunStatus = 0;
                     }
                 }
                 if (File.Exists(GTTonnagePlot))
@@ -881,7 +723,7 @@ namespace MapWizard.ViewModel
                     Result.TonnagePlotBitMap = null;
                     if (Model.RunTonnage == "True")
                     {
-                        RunStatus = 0;
+                        Model.RunStatus = 0;
                     }
                 }
                 if (File.Exists(GTTonnagePdf))
@@ -893,7 +735,7 @@ namespace MapWizard.ViewModel
                     Result.TonnagePdf = null;
                     if (Model.RunTonnage == "True")
                     {
-                        RunStatus = 0;
+                        Model.RunStatus = 0;
                     }
                 }
                 if (File.Exists(GTTonnageSummary))
@@ -905,14 +747,15 @@ namespace MapWizard.ViewModel
                     Result.TonnageSummary = null;
                     if (Model.RunTonnage == "True")
                     {
-                        RunStatus = 0;
+                        Model.RunStatus = 0;
                     }
                 }
             }
             catch (Exception ex)
             {
                 logger.Error(ex + " Could not load results files");
-                dialogService.ShowNotification("Failed to load Grade Tonnage tool's result files", "Error");
+                dialogService.ShowNotification("Failed to load Grade Tonnage tool's result files.", "Error");
+                viewModelLocator.SettingsViewModel.WriteLogText("Failed to load Grade Tonnage tool's result files.", "Error");
             }
         }
     }

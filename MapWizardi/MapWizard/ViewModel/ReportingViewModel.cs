@@ -6,7 +6,6 @@ using MapWizard.Tools;
 using MapWizard.Tools.Settings;
 using NLog;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.IO;
@@ -34,9 +33,8 @@ namespace MapWizard.ViewModel
         private readonly ISettingsService settingsService;
         private string activeView;
         private ReportingModel model;
-        private bool isBusy;
-        private string lastRunDate;
-        private int runStatus;
+        private ViewModelLocator viewModelLocator;
+
 
         /// <summary>
         /// Initialize new instance of ReportingViewModel class.
@@ -49,20 +47,20 @@ namespace MapWizard.ViewModel
             this.logger = logger;
             this.dialogService = dialogService;
             this.settingsService = settingsService;
-            lastRunDate = "Last Run: Never";
-            runStatus = 2;
+            viewModelLocator = new ViewModelLocator();
             RunToolCommand = new RelayCommand(RunTool, CanRunTool);
             GoToTractReportCommand = new RelayCommand(GoToTractReport, CanChangeView);
             GoToReportSelectionCommand = new RelayCommand(GoToReportSelection, CanChangeView);
+            CheckTractFilesCommand = new RelayCommand(CheckFiles, CanRunTool);
+            FindTractsCommand = new RelayCommand(FindTractIDs, CanRunTool);
             SelectTractImageFileCommand = new RelayCommand(SelectTractImageFile, CanRunTool);
-            SelectTractCriteriaFileCommand = new RelayCommand(SelectTractCriteriaFile, CanRunTool);
             SelectKnownDepositsFileCommand = new RelayCommand(SelectKnownDepositsFile, CanRunTool);
             SelectProspectsOccurencesFileCommand = new RelayCommand(SelectProspectsOccurencesFile, CanRunTool);
             SelectExplorationFileCommand = new RelayCommand(SelectExplorationFile, CanRunTool);
             SelectSourcesFileCommand = new RelayCommand(SelectSourcesFile, CanRunTool);
             SelectReferencesFileCommand = new RelayCommand(SelectReferencesFile, CanRunTool);
             ReportingInputParams inputParams = new ReportingInputParams();
-            string outputFolder = Path.Combine(settingsService.RootPath, "TractReport");
+            string outputFolder = Path.Combine(settingsService.RootPath, "Reporting");
             if (!Directory.Exists(outputFolder))
             {
                 Directory.CreateDirectory(outputFolder);
@@ -75,14 +73,13 @@ namespace MapWizard.ViewModel
                     inputParams.Load(param_json);
                     Model = new ReportingModel
                     {
-                        TractCriteriaFile = inputParams.TractCriteriaFile,
                         TractImageFile = inputParams.TractImageFile,
                         KnownDepositsFile = inputParams.KnownDepositsFile,
                         ProspectsOccurencesFile = inputParams.ProspectsOccurencesFile,
                         ExplorationFile = inputParams.ExplorationFile,
                         SourcesFile = inputParams.SourcesFile,
                         ReferencesFile = inputParams.ReferencesFile,
-                        SelectedTractIndex = inputParams.SelectedTractIndex,
+                        SelectedTract = inputParams.SelectedTract,
                         Authors = inputParams.Authors,
                         Country = inputParams.Country,
                         DescModelPath = inputParams.DescModel,
@@ -101,16 +98,15 @@ namespace MapWizard.ViewModel
                         IsScreenerDone = inputParams.IsScreenerDone,
                         IsUndiscDepDone = inputParams.IsUndiscDepDone
                     };
-                    FindTractIDs();  // Gets the tractID names from PermissiveTractTool's Delineation folder.
-                    CheckFiles();  // Check which of the needed files for creating a report exist.                   
-                    RunStatus = 0;
-                    DirectoryInfo dir = new DirectoryInfo(outputFolder);
-                    // Check if the tool have ever been correctly ran before.
-                    foreach (FileInfo file in dir.GetFiles())
+                    FindTractIDs();  // Gets the tractID names from PermissiveTractTool's Tracts folder.
+                    CheckFiles();  // Check which of the needed files for creating a report exist.                                       
+                    if (Model.SelectedTract != null) // Check if the tool have ever been correctly ran before.
                     {
-                        if (file.Name.Contains("TractReport") && file.Name.Contains("docx"))  // If reporting file exist then the tool have been ran.
+                        //Model.RunStatus = 0; Remove this?
+                        string docOutputFile = Path.Combine(outputFolder, Model.SelectedTract, "TractReport" + Model.SelectedTract + ".docx");
+                        if (File.Exists(docOutputFile))// If reporting file exist then the tool have been ran.
                         {
-                            RunStatus = 1;
+                            Model.RunStatus = 1;
                         }
                     }
                     SaveInputs();  // Save inputs to tract_report_input_params.json file. This might be not needed(?).
@@ -118,71 +114,26 @@ namespace MapWizard.ViewModel
                 catch (Exception ex)
                 {
                     // If something goes wrong then the tool will be initialized to have default parameters.
-                    Model = new ReportingModel
-                    {
-                        TractIDNames = new ObservableCollection<string>(),
-                        TractCriteriaFile = "Choose Word file",
-                        TractImageFile = "Choose image file",
-                        KnownDepositsFile = "Choose Word file",
-                        ProspectsOccurencesFile = "Choose Word file",
-                        ExplorationFile = "Choose Word file",
-                        SourcesFile = "Choose Word file",
-                        ReferencesFile = "Choose Word file",
-                        DescModelPath = "-",
-                        DescModelName = "-",
-                        GTModelPath = "-",
-                        GTModelName = "-",
-                        AddDescriptive = false,
-                        AddGradeTon = false,
-                        EnableDescCheck = false,
-                        EnableGTCheck = false,
-                        IsRaefDone = "No",
-                        IsScreenerDone = "No",
-                        IsUndiscDepDone = "No"
-                    };
+                    Model = new ReportingModel();
                     logger.Error(ex, "Failed to read json file");
-                    dialogService.ShowNotification("Couldn't load Reporting tool's inputs correctly.", "Error");
+                    dialogService.ShowNotification("Couldn't load Reporting tool's inputs correctly. Inputs were initialized to default values.", "Error");
+                    viewModelLocator.SettingsViewModel.WriteLogText("Couldn't load Reporting tool's inputs correctly. Inputs were initialized to default values.", "Error");
                 }
             }
             else
             {
-                Model = new ReportingModel
-                {
-                    TractIDNames = new ObservableCollection<string>(),
-                    TractCriteriaFile = "Choose Word file",
-                    TractImageFile = "Choose image file",
-                    KnownDepositsFile = "Choose Word file",
-                    ProspectsOccurencesFile = "Choose Word file",
-                    ExplorationFile = "Choose Word file",
-                    SourcesFile = "Choose Word file",
-                    ReferencesFile = "Choose Word file",
-                    DescModelPath = "-",
-                    DescModelName = "-",
-                    GTModelPath = "-",
-                    GTModelName = "-",
-                    AddDescriptive = false,
-                    AddGradeTon = false,
-                    EnableDescCheck = false,
-                    EnableGTCheck = false,
-                    IsRaefDone = "No",
-                    IsScreenerDone = "No",
-                    IsUndiscDepDone = "No"
-                };
-                FindTractIDs(); // Gets the tractID names from PermissiveTractTool's Delineation folder.
+                Model = new ReportingModel();
+                FindTractIDs(); // Gets the tractID names from PermissiveTractTool's Trats folder.
             }
             // Check if the DepositType have been given correctly for the project.
             if (settingsService.Data.DepositType != null)
             {
                 Model.DepositType = settingsService.Data.DepositType;
             }
-            else
-            {
-                Model.DepositType = "-";
-            }
-            var lastRunFile = Path.Combine(settingsService.RootPath, "TractReport", "tract_report_last_run.lastrun");
+            var lastRunFile = Path.Combine(settingsService.RootPath, "Reporting", "tract_report_last_run.lastrun");
             if (File.Exists(lastRunFile))
             {
-                LastRunDate = "Last Run: " + (new FileInfo(lastRunFile)).LastWriteTime.ToString();
+                Model.LastRunDate = "Last Run: " + (new FileInfo(lastRunFile)).LastWriteTime.ToString();
             }
         }
 
@@ -205,10 +156,16 @@ namespace MapWizard.ViewModel
         public RelayCommand GoToReportSelectionCommand { get; }
 
         /// <summary>
-        /// Command for tract criteria file selection.
+        /// Command for getting trsct specific files.
         /// </summary>
         /// @return Command.
-        public RelayCommand SelectTractCriteriaFileCommand { get; }
+        public RelayCommand CheckTractFilesCommand { get; }
+
+        /// <summary>
+        /// Command for getting tracts.
+        /// </summary>
+        /// @return Command.
+        public RelayCommand FindTractsCommand { get; }
 
         /// <summary>
         /// Command for tract image file selection.
@@ -253,7 +210,7 @@ namespace MapWizard.ViewModel
         public RelayCommand ClearAllFieldsCommand { get; }
 
         /// <summary>
-        /// Switch to Tract Report or Summary Report.
+        /// Switch to Tract Report.
         /// </summary>
         /// <returns>ActiveView.</returns>
         public string ActiveView
@@ -270,7 +227,7 @@ namespace MapWizard.ViewModel
         /// <summary>
         /// Model for TractReport.
         /// </summary>
-        /// <returns>TractReportModel.</returns>
+        /// <returns>ReportingModel.</returns>
         public ReportingModel Model
         {
             get
@@ -281,143 +238,6 @@ namespace MapWizard.ViewModel
             {
                 model = value;
                 RaisePropertyChanged("Model");
-            }
-        }
-
-        /// <summary>
-        /// Name of the selected Descriptive model.
-        /// </summary>
-        /// <returns>Descriptive model's name.</returns>
-        public string DescModelName
-        {
-            get
-            {
-                return Model.DescModelName;
-            }
-            set
-            {
-                Model.DescModelName = value;
-                RaisePropertyChanged("DescModelName");
-                Model.EnableDescCheck = true;
-            }
-        }
-
-        /// <summary>
-        /// Name of the selected Grade-Tonnage model.
-        /// </summary>
-        /// <returns>Grade-Tonnage model's name.</returns>
-        public string GTModelName
-        {
-            get
-            {
-                return Model.GTModelName;
-            }
-            set
-            {
-                Model.GTModelName = value;
-                RaisePropertyChanged("GTModelName");
-                Model.EnableGTCheck = true;
-            }
-        }
-
-        /// <summary>
-        /// Descriptive model path.
-        /// </summary>
-        /// <returns>Path to Descrptive model.</returns>
-        public string DescModelPath
-        {
-            get
-            {
-                return Model.DescModelPath;
-            }
-            set
-            {
-                Model.DescModelPath = value;
-                RaisePropertyChanged("DescModel");
-            }
-        }
-        /// <summary>
-        /// Grade-Tonnage model path.
-        /// </summary>
-        /// <returns>Path to Grade-Tonnage model.</returns>
-        public string GTModelPath
-        {
-            get
-            {
-                return Model.GTModelPath;
-            }
-            set
-            {
-                Model.GTModelPath = value;
-                RaisePropertyChanged("GTModel");
-            }
-        }
-
-        /// <summary>
-        /// Defines if all the files for the report are in SelectResult folder.
-        /// </summary>
-        /// <returns>Yes or No string.</returns>
-        public string IsUndiscDepDone
-        {
-            get
-            {
-                return Model.IsUndiscDepDone;
-            }
-            set
-            {
-                Model.IsUndiscDepDone = value;
-                RaisePropertyChanged("IsUndiscDepDone");
-            }
-        }
-
-        /// <summary>
-        /// Defines if all the files for the report are in SelectResult folder.
-        /// </summary>
-        /// <returns>Yes or No string.</returns>
-        public string IsRaefDone
-        {
-            get
-            {
-                return Model.IsRaefDone;
-            }
-            set
-            {
-                Model.IsRaefDone = value;
-                RaisePropertyChanged("IsRaefDone");
-            }
-        }
-
-        /// <summary>
-        /// Defines if all the files for the report are in SelectResult folder.
-        /// </summary>
-        /// <returns>Yes or No string.</returns>
-        public string IsScreenerDone
-        {
-            get
-            {
-                return Model.IsScreenerDone;
-            }
-            set
-            {
-                Model.IsScreenerDone = value;
-                RaisePropertyChanged("IsScreenerDone");
-            }
-        }
-
-        /// <summary>
-        /// Deposit type.
-        /// </summary>
-        /// <returns>Project's DepositType.</returns>
-        public string DepositType
-        {
-            get
-            {
-                return Model.DepositType;
-            }
-            set
-            {
-                Model.DepositType = value;
-                RaisePropertyChanged("DepositType");
             }
         }
 
@@ -433,7 +253,7 @@ namespace MapWizard.ViewModel
                 ReportingInputParams input = new ReportingInputParams
                 {
                     TractIDNames = Model.TractIDNames,
-                    SelectedTractIndex = Model.SelectedTractIndex,
+                    SelectedTract = Model.SelectedTract,
                     Authors = Model.Authors,
                     Country = Model.Country,
                     DepositType = Model.DepositType,
@@ -445,7 +265,6 @@ namespace MapWizard.ViewModel
                     AddGradeTon = Model.AddGradeTon.ToString(),
                     EnableDescCheck = Model.EnableDescCheck.ToString(),
                     EnableGTCheck = Model.EnableGTCheck.ToString(),
-                    TractCriteriaFile = Model.TractCriteriaFile,
                     TractImageFile = Model.TractImageFile,
                     KnownDepositsFile = Model.KnownDepositsFile,
                     ProspectsOccurencesFile = Model.ProspectsOccurencesFile,
@@ -472,27 +291,33 @@ namespace MapWizard.ViewModel
                 }
                 // 2. Execute tool
                 ReportingResult ddResult = default(ReportingResult);
-                IsBusy = true;
+                Model.IsBusy = true;
                 await Task.Run(() =>
                 {
                     ReportingTool tool = new ReportingTool();
+                    logger.Info("calling ReportingTool.Execute(inputParams)");
                     ddResult = tool.Execute(input) as ReportingResult;
+                    logger.Trace("ReportingResult:\n" +
+              "\tOutputFile: '{0}'",
+              ddResult.OutputDocument);
                 });
-                var lastRunFile = Path.Combine(settingsService.RootPath, "TractReport", "tract_report_last_run.lastrun");
-                File.Create(lastRunFile);
+                var lastRunFile = Path.Combine(settingsService.RootPath, "Reporting", "tract_report_last_run.lastrun");
+                File.Create(lastRunFile).Close();
                 dialogService.ShowNotification("Reporting tool completed successfully", "Success");
-                LastRunDate = "Last Run: " + DateTime.Now.ToString("g");
-                RunStatus = 1;
+                viewModelLocator.SettingsViewModel.WriteLogText("Reporting tool completed successfully.", "Success");
+                Model.LastRunDate = "Last Run: " + DateTime.Now.ToString("g");
+                Model.RunStatus = 1;
             }
             catch (Exception ex)
             {
                 logger.Error(ex, "Failed to build documentation file");
                 dialogService.ShowNotification("Run failed. Check output for details\r\n- Are all input parameters correct?\r\n- Are all input files valid? \r\n- Are all input and output files closed?", "Error");
-                RunStatus = 0;
+                viewModelLocator.SettingsViewModel.WriteLogText("Reporting tool run failed. Check output for details\r\n- Are all input parameters correct?\r\n- Are all input files valid? \r\n- Are all input and output files closed?", "Error");
+                Model.RunStatus = 0;
             }
             finally
             {
-                IsBusy = false;
+                Model.IsBusy = false;
             }
             logger.Info("<--{0} completed", this.GetType().Name);
         }
@@ -520,6 +345,8 @@ namespace MapWizard.ViewModel
         {
             ReportingInputParams input = new ReportingInputParams
             {
+                TractIDNames = Model.TractIDNames,
+                SelectedTract = Model.SelectedTract,
                 Authors = Model.Authors,
                 Country = Model.Country,
                 DepositType = Model.DepositType,
@@ -531,22 +358,21 @@ namespace MapWizard.ViewModel
                 AddGradeTon = Model.AddGradeTon.ToString(),
                 EnableDescCheck = Model.EnableDescCheck.ToString(),
                 EnableGTCheck = Model.EnableGTCheck.ToString(),
-                AsDate = Model.AsDate,
-                AsDepth = Model.AsDepth,
-                AsLeader = Model.AsLeader,
-                AsTeamMembers = Model.AsTeamMembers,
-                TractCriteriaFile = Model.TractCriteriaFile,
                 TractImageFile = Model.TractImageFile,
                 KnownDepositsFile = Model.KnownDepositsFile,
                 ProspectsOccurencesFile = Model.ProspectsOccurencesFile,
                 ExplorationFile = Model.ExplorationFile,
                 SourcesFile = Model.SourcesFile,
                 ReferencesFile = Model.ReferencesFile,
+                AsDate = Model.AsDate,
+                AsDepth = Model.AsDepth,
+                AsLeader = Model.AsLeader,
+                AsTeamMembers = Model.AsTeamMembers,
                 IsUndiscDepDone = Model.IsUndiscDepDone,
                 IsRaefDone = Model.IsRaefDone,
                 IsScreenerDone = Model.IsScreenerDone
             };
-            string outputFolder = Path.Combine(input.Env.RootPath, "TractReport");
+            string outputFolder = Path.Combine(input.Env.RootPath, "Reporting");
             if (!Directory.Exists(outputFolder))
             {
                 Directory.CreateDirectory(outputFolder);
@@ -560,18 +386,21 @@ namespace MapWizard.ViewModel
         public void FindTractIDs()
         {
             Model.TractIDNames = new ObservableCollection<string>();
-            string tractRootPath = Path.Combine(settingsService.RootPath, "TractDelineation", "Delineation");
+            string tractRootPath = Path.Combine(settingsService.RootPath, "TractDelineation", "Tracts");
             if (Directory.Exists(tractRootPath))
             {
                 DirectoryInfo di = new DirectoryInfo(tractRootPath);
                 foreach (DirectoryInfo dir in di.GetDirectories())
                 {
-                    Model.TractIDNames.Add(dir.Name);  // Get TractID by getting the name of the directory.
+                    if (!dir.Name.StartsWith("AGG"))
+                    {
+                        Model.TractIDNames.Add(dir.Name);  // Get TractID by getting the name of the directory.
+                    }
                 }
             }
             else
             {
-                Directory.CreateDirectory(Path.Combine(settingsService.RootPath, "TractDelineation", "Delineation"));
+                Directory.CreateDirectory(Path.Combine(settingsService.RootPath, "TractDelineation", "Tracts"));
             }
         }
 
@@ -580,62 +409,99 @@ namespace MapWizard.ViewModel
         /// </summary>
         public void CheckFiles()
         {
-            string descResult = Path.Combine(settingsService.RootPath, "DescModel", "SelectedResult", Path.GetFileName(model.DescModelPath));
+            //string descResult = Path.Combine(settingsService.RootPath, "DescModel", "SelectedResult", Path.GetFileName(model.DescModelPath));
+            string descResult = Path.Combine(settingsService.RootPath, "DescModel", "SelectedResult", "DescModelName.txt");
+            string[] fileName = null;
             // Checks if the result file for Descriptive model tool exists.
-            if (!File.Exists(descResult))
+            if (File.Exists(descResult))
+            {
+                fileName = File.ReadAllText(descResult).Split(',');
+            }
+            if (fileName != null && fileName.Length == 2)
+            {
+                Model.DescModelName = fileName[0];
+                Model.DescModelPath = fileName[1];
+                Model.EnableDescCheck = true;
+            }
+            else
             {
                 Model.DescModelPath = "-";
                 Model.DescModelName = "-";
                 Model.AddDescriptive = false;
                 Model.EnableDescCheck = false;  // Makes sure that the file that doesn't exist cannot be added to document.
             }
-            string gtResult = Path.Combine(settingsService.RootPath, "GTModel", "SelectedResult", "GradeTonnage_input_params.json");
             // Checks if the result file for Grade Tonnage tool exists.
-            if (!File.Exists(gtResult))
+            string gtResult = Path.Combine(settingsService.RootPath, "DescModel", "SelectedResult", "GTModelName.txt");
+            var gtResultFolder = Path.Combine(settingsService.RootPath, "GTModel", "SelectedResult"); // if (File.Exists(gtResult) && Model.GTModelName != "-")
+            if (File.Exists(gtResult))
+            {
+                Model.GTModelPath = gtResultFolder;
+                Model.GTModelName = File.ReadAllText(gtResult);
+            }
+            if ((File.Exists(Path.Combine(gtResultFolder, "grade_summary.txt")) && File.Exists(Path.Combine(gtResultFolder, "grade_plot.jpeg")))
+                 || (File.Exists(Path.Combine(gtResultFolder, "tonnage_summary.txt")) && File.Exists(Path.Combine(gtResultFolder, "tonnage_plot.jpeg"))))
+            {
+                Model.EnableGTCheck = true;
+            }
+            else
             {
                 Model.GTModelPath = "-";
                 Model.GTModelName = "-";
                 Model.AddGradeTon = false;
                 Model.EnableGTCheck = false;  // Makes sure that the file that doesn't exist cannot be added to document. 
             }
-            // The following if conditions are not good ways to check the existence of the files. nDepEst -files and other files in the folder need beter names for this.
-            if (File.Exists(Path.Combine(settingsService.RootPath, "UndiscDep", "SelectedResult", "nDepEst.csv")))
+            if (Model.GTModelName == "-")  // This is to make sure that information has been received correctly.
             {
-                Model.IsUndiscDepDone = "Yes (NegativeBinomial)";
+                Model.GTModelPath = "-";
+                Model.GTModelName = "-";
+                Model.AddGradeTon = false;
+                Model.EnableGTCheck = false;  // Makes sure that the file that doesn't exist cannot be added to document. 
             }
-            else if (File.Exists(Path.Combine(settingsService.RootPath, "UndiscDep", "SelectedResult", "nDepEstMiddle.csv")))
+            if (Model.SelectedTract != null)
             {
-                Model.IsUndiscDepDone = "Yes (MARK3)";
-            }
-            else if (File.Exists(Path.Combine(settingsService.RootPath, "UndiscDep", "SelectedResult", "nDepEstCustom.csv")))
-            {
-                Model.IsUndiscDepDone = "Yes (Custom)";
-            }
-            else
-            {
-                Model.IsUndiscDepDone = "No";
-            }
-            Model.IsRaefDone = "No";   //         
-            if (Directory.Exists(Path.Combine(settingsService.RootPath, "EconFilter", "RAEF", "SelectedResult")))
-            {
-                bool EF01_File_Exists = false;
-                bool EF04_File_Exists = false;
-                DirectoryInfo di = new DirectoryInfo(Path.Combine(settingsService.RootPath, "EconFilter", "RAEF", "SelectedResult"));
-                foreach (FileInfo file in di.GetFiles())
+                Model.IsUndiscDepDone = "No";  // If files don't exist then value will be 'No'.
+                string undiscResultFolder = Path.Combine(settingsService.RootPath, "UndiscDep", Model.SelectedTract, "SelectedResult");
+                string summary = Path.Combine(undiscResultFolder, "summary.txt");
+                string plot = Path.Combine(undiscResultFolder, "plot.jpeg");
+                string estRationale = Path.Combine(undiscResultFolder, "EstRationale.txt");
+                if (File.Exists(summary) && File.Exists(plot) && File.Exists(estRationale))
                 {
-                    if (file.Name.Contains("EF_01_Parameters_"))
+                    if (File.Exists(Path.Combine(undiscResultFolder, "nDepEst.csv")))
                     {
-                        EF01_File_Exists = true;
+                        Model.IsUndiscDepDone = "Yes (NegativeBinomial)";
                     }
-                    if (file.Name.Contains("EF_04_Contained_Stats_"))
+                    else if (File.Exists(Path.Combine(undiscResultFolder, "nDepEstMiddle.csv")))
                     {
-                        EF04_File_Exists = true;
+                        Model.IsUndiscDepDone = "Yes (MARK3)";
+                    }
+                    else if (File.Exists(Path.Combine(undiscResultFolder, "nDepEstCustom.csv")))
+                    {
+                        Model.IsUndiscDepDone = "Yes (Custom)";
                     }
                 }
-                // If both files exist, then Raef have been ran. If not 'IsRaefDone' gets a value 'No'.
-                if (EF01_File_Exists == true && EF04_File_Exists == true)
+                Model.IsRaefDone = "No";  // If files don't exist then value will be 'No'.
+                string raefResultFolder = Path.Combine(settingsService.RootPath, "EconFilter", "RAEF", Model.SelectedTract, "SelectedResult");
+                if (Directory.Exists(raefResultFolder))
                 {
-                    Model.IsRaefDone = "Yes";
+                    bool EF01_File_Exists = false;
+                    bool EF04_File_Exists = false;
+                    DirectoryInfo di = new DirectoryInfo(raefResultFolder);
+                    foreach (FileInfo file in di.GetFiles())
+                    {
+                        if (file.Name.Contains("EF_01_Parameters_"))
+                        {
+                            EF01_File_Exists = true;
+                        }
+                        if (file.Name.Contains("EF_04_Contained_Stats_"))
+                        {
+                            EF04_File_Exists = true;
+                        }
+                    }
+                    // If both files exist, then Raef have been ran. If not 'IsRaefDone' gets a value 'No'.
+                    if (EF01_File_Exists == true && EF04_File_Exists == true)
+                    {
+                        Model.IsRaefDone = "Yes";
+                    }
                 }
             }
         }
@@ -644,45 +510,14 @@ namespace MapWizard.ViewModel
         /// Check if the file is valid.
         /// </summary>
         /// <param name="textFile">TextFile for validation.</param>
-        /// <returns>Boolean representing the file's validation.</returns>
-        private bool IsFileValid(string textFile)
+        private void IsFileValid(string textFile)
         {
-            var outputDocument = DocX.Create("");
-            var document = DocX.Load(textFile);
-            List<Table> tableList = document.Tables;
-            // If all tables can be inserted to test file correctly then it means that the file is valid.
-            foreach (var table in tableList)
+            using (var outputDocument = DocX.Create(""))
             {
-                outputDocument.InsertTable(table);
-            }
-            // Textfiles without tables wont't be accepted.
-            if (tableList.Count == 0)
-            {
-                dialogService.ShowNotification("File was not valid", "Error");
-                return false;
-            }
-            return true;
-        }
-
-        /// <summary>
-        /// Select file from filesystem.
-        /// </summary>
-        private void SelectTractCriteriaFile()
-        {
-            try
-            {
-                string textFile = dialogService.OpenFileDialog("", "Word Document|*.docx", true, true);
-                if (!string.IsNullOrEmpty(textFile))
+                using (var inputDocument = DocX.Load(textFile))
                 {
-                    var document = DocX.Load(textFile);
-                    string documentText = document.Text;
-                    Model.TractCriteriaFile = textFile;
+                    outputDocument.InsertDocument(inputDocument, true);
                 }
-            }
-            catch (Exception ex)
-            {
-                logger.Error(ex, "Failed to show OpenFileDialog");
-                dialogService.ShowNotification("Failed to show OpenFileDialog, file might not be valid", "Error");
             }
         }
 
@@ -693,7 +528,7 @@ namespace MapWizard.ViewModel
         {
             try
             {
-                string textFile = dialogService.OpenFileDialog("", "JPG|*.jpg;*.jpeg|PNG|*.png|TIFF|*.tif;*.tiff", true, true);
+                string textFile = dialogService.OpenFileDialog("", "JPG|*.jpg;*.jpeg|PNG|*.png|TIFF|*.tif;*.tiff", true, true, settingsService.RootPath);
                 if (!string.IsNullOrEmpty(textFile))
                 {
                     Model.TractImageFile = textFile;
@@ -701,8 +536,8 @@ namespace MapWizard.ViewModel
             }
             catch (Exception ex)
             {
-                logger.Error(ex, "Failed to show OpenFileDialog");
-                dialogService.ShowNotification("Failed to show OpenFileDialog, file might not be valid", "Error");
+                logger.Error(ex, "Failed to select file.");
+                dialogService.ShowNotification("Failed to select file, file might not be valid", "Error");
             }
         }
 
@@ -713,21 +548,17 @@ namespace MapWizard.ViewModel
         {
             try
             {
-                string textFile = dialogService.OpenFileDialog("", "Word Document|*.docx", true, true);
+                string textFile = dialogService.OpenFileDialog("", "Word Document|*.docx", true, true, settingsService.RootPath);
                 if (!string.IsNullOrEmpty(textFile))
                 {
                     IsFileValid(textFile);
-                    bool validation = IsFileValid(textFile);
-                    if (validation == true)  // TAGGED: == false?
-                    {
-                        Model.KnownDepositsFile = textFile;
-                    }
+                    Model.KnownDepositsFile = textFile;
                 }
             }
             catch (Exception ex)
             {
-                logger.Error(ex, "Failed to show OpenFileDialog");
-                dialogService.ShowNotification("Failed to show OpenFileDialog, file might not be valid", "Error");
+                logger.Error(ex, "Failed to select file.");
+                dialogService.ShowNotification("Failed to select file, file might not be valid", "Error");
             }
         }
 
@@ -738,21 +569,17 @@ namespace MapWizard.ViewModel
         {
             try
             {
-                string textFile = dialogService.OpenFileDialog("", "Word Document|*.docx", true, true);
+                string textFile = dialogService.OpenFileDialog("", "Word Document|*.docx", true, true, settingsService.RootPath);
                 if (!string.IsNullOrEmpty(textFile))
                 {
                     IsFileValid(textFile);
-                    bool validation = IsFileValid(textFile);
-                    if (validation == true)
-                    {
-                        Model.ProspectsOccurencesFile = textFile;
-                    }
+                    Model.ProspectsOccurencesFile = textFile;
                 }
             }
             catch (Exception ex)
             {
-                logger.Error(ex, "Failed to show OpenFileDialog");
-                dialogService.ShowNotification("Failed to show OpenFileDialog, file might not be valid", "Error");
+                logger.Error(ex, "Failed to select file.");
+                dialogService.ShowNotification("Failed to select file, file might not be valid", "Error");
             }
         }
 
@@ -763,20 +590,17 @@ namespace MapWizard.ViewModel
         {
             try
             {
-                string textFile = dialogService.OpenFileDialog("", "Word Document|*.docx", true, true);
+                string textFile = dialogService.OpenFileDialog("", "Word Document|*.docx", true, true, settingsService.RootPath);
                 if (!string.IsNullOrEmpty(textFile))
                 {
-                    bool validation = IsFileValid(textFile);
-                    if (validation == true)
-                    {
-                        Model.ExplorationFile = textFile;
-                    }
+                    IsFileValid(textFile);
+                    Model.ExplorationFile = textFile;
                 }
             }
             catch (Exception ex)
             {
-                logger.Error(ex, "Failed to show OpenFileDialog");
-                dialogService.ShowNotification("Failed to show OpenFileDialog, file might not be valid", "Error");
+                logger.Error(ex, "Failed to select file.");
+                dialogService.ShowNotification("Failed to select file, file might not be valid", "Error");
             }
         }
 
@@ -787,20 +611,17 @@ namespace MapWizard.ViewModel
         {
             try
             {
-                string textFile = dialogService.OpenFileDialog("", "Word Document|*.docx", true, true);
+                string textFile = dialogService.OpenFileDialog("", "Word Document|*.docx", true, true, settingsService.RootPath);
                 if (!string.IsNullOrEmpty(textFile))
                 {
-                    bool validation = IsFileValid(textFile);
-                    if (validation == true)
-                    {
-                        Model.SourcesFile = textFile;
-                    }
+                    IsFileValid(textFile);
+                    Model.SourcesFile = textFile;
                 }
             }
             catch (Exception ex)
             {
-                logger.Error(ex, "Failed to show OpenFileDialog");
-                dialogService.ShowNotification("Failed to show OpenFileDialog, file might not be valid", "Error");
+                logger.Error(ex, "Failed to select file.");
+                dialogService.ShowNotification("Failed to select file, file might not be valid", "Error");
             }
         }
 
@@ -811,38 +632,20 @@ namespace MapWizard.ViewModel
         {
             try
             {
-                string textFile = dialogService.OpenFileDialog("", "Word Document|*.docx", true, true);
+                string textFile = dialogService.OpenFileDialog("", "Word Document|*.docx", true, true, settingsService.RootPath);
                 if (!string.IsNullOrEmpty(textFile))
                 {
-                    var document = DocX.Load(textFile); 
-                    string documentText = document.Text;
-                    if (documentText != "")
+                    using (var document = DocX.Load(textFile))
                     {
+                        IsFileValid(textFile);
                         Model.ReferencesFile = textFile;
                     }
                 }
             }
             catch (Exception ex)
             {
-                logger.Error(ex, "Failed to show OpenFileDialog, file might not be valid");
-                dialogService.ShowNotification("Failed to show OpenFileDialog, file might not be valid", "Error");
-            }
-        }
-
-        /// <summary>
-        /// Is busy?
-        /// </summary>
-        /// <returns>Boolean representing the state.</returns>
-        public bool IsBusy
-        {
-            get { return isBusy; }
-            set
-            {
-                if (isBusy == value) return;
-                isBusy = value;
-                RaisePropertyChanged(() => IsBusy);
-                RaisePropertyChanged();
-                RunToolCommand.RaiseCanExecuteChanged();
+                logger.Error(ex, "Failed to select file.");
+                dialogService.ShowNotification("Failed to select file, file might not be valid", "Error");
             }
         }
 
@@ -852,7 +655,7 @@ namespace MapWizard.ViewModel
         /// <returns>Boolean representing the state.</returns>
         private bool CanRunTool()
         {
-            return !IsBusy;
+            return !Model.IsBusy;
         }
 
         /// <summary>
@@ -861,37 +664,7 @@ namespace MapWizard.ViewModel
         /// <returns>Boolean representing the state.</returns>
         private bool CanChangeView()
         {
-            return !IsBusy;
-        }
-
-        /// <summary>
-        /// Status for the tool that shows if the tool ran correctly last time.
-        /// </summary>
-        /// <returns>Integer representing the status.</returns>
-        public int RunStatus
-        {
-            get { return runStatus; }
-            set
-            {
-                if (value == runStatus) return;
-                runStatus = value;
-                RaisePropertyChanged();
-            }
-        }
-
-        /// <summary>
-        /// Gets the last run time of the tool.
-        /// </summary>
-        /// <returns>Date and time of the last run.</returns>
-        public string LastRunDate
-        {
-            get { return lastRunDate; }
-            set
-            {
-                if (value == lastRunDate) return;
-                lastRunDate = value;
-                RaisePropertyChanged();
-            }
+            return !Model.IsBusy;
         }
     }
 }

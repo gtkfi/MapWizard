@@ -50,8 +50,7 @@
       <HintPath>..\packages\Newtonsoft.Json.11.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="NLog, Version=4.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c, processorArchitecture=MSIL">
-      <HintPath>..\packages\NLog.4.5.9\lib\net45\NLog.dll</HintPath>
-      <Private>True</Private>
+      <HintPath>..\packages\NLog.4.7.0\lib\net45\NLog.dll</HintPath>
     </Reference>
     <Reference Include="PresentationFramework" />
     <Reference Include="RDotNet, Version=1.7.0.0, Culture=neutral, processorArchitecture=MSIL">
@@ -99,6 +98,7 @@
     <Compile Include="ParameterBase.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="MonteCarloSimulationTool.cs" />
+    <Compile Include="ReportingAssesmentTool.cs" />
     <Compile Include="Settings\ISettingsService.cs" />
     <Compile Include="Settings\SettingsDataModel.cs" />
     <Compile Include="Settings\SettingsService.cs" />
@@ -16245,9 +16245,16 @@
     <Content Include="scripts\R-3.6.0\Tcl\lib\Tktable2.11\tktable.py" />
     <Content Include="scripts\R-3.6.0\Tcl\lib\Tktable2.11\Tktable211.dll" />
     <Content Include="scripts\R-3.6.0\unins000.exe" />
+    <Content Include="scripts\R-3.6.3_base.exe" />
+    <Content Include="scripts\R-3.6.3_lib1.exe" />
+    <Content Include="scripts\R-3.6.3_lib2.exe" />
+    <Content Include="scripts\R-3.6.3_lib3.exe" />
     <Content Include="scripts\WofeCreateMask.pyw">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <None Include="NLog.xsd">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="packages.config" />
     <Content Include="scripts\ArcSDMToolbox\arcsdm\acterbergchengci.py">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
@@ -16477,6 +16484,22 @@
     <None Include="scripts\ArcSDMToolbox\arcsdm\__init__.pyc">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <Content Include="scripts\DepositDensity\General_data.csv">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="scripts\DepositDensity\PodiformCr_data.csv">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="scripts\DepositDensity\VMS_data.csv">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="scripts\DepositDensity\PorphyryCu_data.csv">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="scripts\mask_polygon_wrapper.R">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <None Include="scripts\installR.bat" />
     <None Include="scripts\MonteCarloSimulation\oMeta.rds">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
@@ -24065,6 +24088,9 @@
     <None Include="scripts\R-3.6.0\tests\utf8-regex.R" />
     <None Include="scripts\R-3.6.0\tests\WinUnicode.dat" />
     <None Include="scripts\R-3.6.0\unins000.dat" />
+    <None Include="scripts\RaefEmpModel.r">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="scripts\RAEF\Documentation\BatchFileTemplate.xlsx">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
@@ -24330,6 +24356,12 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="scripts\rasterproc_classify_wrapper.r">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <None Include="scripts\RAEF_Read_CV_And_MRR.R">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <Content Include="scripts\rasterproc_wrapper_polygon.r">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <None Include="scripts\UndiscoveredDeposits\example.csv">

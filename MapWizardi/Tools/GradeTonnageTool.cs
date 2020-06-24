@@ -214,7 +214,6 @@ namespace MapWizard.Tools
                     {
                         f.Delete();
                     }
-
                 }
             }
             catch (Exception ex)
@@ -223,20 +222,16 @@ namespace MapWizard.Tools
                 throw new Exception("Could not initialize project folder: ", ex);
             }
             input.Save(Path.Combine(gradeProject, "GradeTonnage_input_params.json"));
-
-
             if (input.RunGrade == "True")  //Run grade
             {
                 try
                 {
                     string inputFileDest = Path.Combine(gradeProject, "GT_InputFile.csv");
                     File.Copy(input.CSVPath, Path.Combine(gradeProject, "GT_InputFile.csv"), true);
-
                     gradeProject = Path.Combine(inputParams.Env.RootPath, "GTModel", input.ExtensionFolder);
                     var info = new ProcessStartInfo();
                     info.FileName = rScriptExecutablePath;
                     string rProjectPath = gradeProject.Replace("\\", "/");
-
                     info.Arguments = "\"" + rGradePath + "\" \"" + input.CSVPath + "\" " + input.Seed + " " + input.PDFType + " " + input.IsTruncated + " " + input.MinDepositCount + " " + input.RandomSampleCount + " \"" + gradeProject + "\" \"" + workingDir + "\"";
 
                     info.RedirectStandardInput = false;
@@ -245,7 +240,6 @@ namespace MapWizard.Tools
                     info.UseShellExecute = false;
                     info.CreateNoWindow = true;
                     info.WorkingDirectory = path + "scripts/";
-
                     using (var proc = new Process())
                     {
                         proc.StartInfo = info;
@@ -289,7 +283,6 @@ namespace MapWizard.Tools
                     }
                     string inputFileDest = Path.Combine(tonnageProject, "GT_InputFile.csv");
                     File.Copy(input.CSVPath, Path.Combine(tonnageProject, "GT_InputFile.csv"), true);
-
                     string rProjectPath = tonnageProject.Replace("\\", "/");
                     info.Arguments = "\"" + rTonnagePath + "\" \"" + input.CSVPath + "\" " + input.Seed + " " + input.PDFType + " " + input.IsTruncated + " " + input.MinDepositCount + " " + input.RandomSampleCount + " \"" + tonnageProject + "\" \"" + workingDir + "\"";
 
@@ -349,6 +342,5 @@ namespace MapWizard.Tools
             }
             return result;
         }
-
     }
 }

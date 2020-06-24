@@ -85,8 +85,7 @@
       <HintPath>..\packages\MahApps.Metro.1.6.5\lib\net45\MahApps.Metro.dll</HintPath>
     </Reference>
     <Reference Include="NLog, Version=4.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c, processorArchitecture=MSIL">
-      <HintPath>..\packages\NLog.4.5.9\lib\net45\NLog.dll</HintPath>
-      <Private>True</Private>
+      <HintPath>..\packages\NLog.4.7.0\lib\net45\NLog.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
@@ -141,16 +140,23 @@
     <Compile Include="Model\PermissiveTractResultModel.cs" />
     <Compile Include="Model\GradeTonnageResultModel.cs" />
     <Compile Include="Model\MonteCarloSimulationModel.cs" />
+    <Compile Include="Model\ReportingAssesmentModel.cs" />
     <Compile Include="Model\SettingsModel.cs" />
+    <Compile Include="Model\TractAggregationDataModel.cs" />
     <Compile Include="Model\TractAggregationModel.cs" />
     <Compile Include="Model\TractAggregationResultModel.cs" />
     <Compile Include="Model\ReportingModel.cs" />
     <Compile Include="Model\UndiscoveredDepositsModel.cs" />
     <Compile Include="Model\UndiscoveredDepositsResultModel.cs" />
+    <Compile Include="Service\BoolToCollapsedVisibilityConverter.cs" />
     <Compile Include="Service\BoolToVisibilityConverter.cs" />
     <Compile Include="Service\DialogService.cs" />
+    <Compile Include="Service\DoubleGridLengthConverter.cs" />
     <Compile Include="Service\FilePathToBitmapConverter.cs" />
     <Compile Include="Service\FilePathToFileNameConverter.cs" />
+    <Compile Include="Service\MathConverter.cs" />
+    <Compile Include="Service\RaefBooleanToDaysOfOperationConverter.cs" />
+    <Compile Include="Service\RaefDepthIntToVisibilityConverter.cs" />
     <Compile Include="Service\ReverseBooleanConverter.cs" />
     <Compile Include="Service\SelectedIndexToBooleanConverter.cs" />
     <Compile Include="Service\IDialogService.cs" />
@@ -163,6 +169,7 @@
     <Compile Include="ViewModel\MyInterTabClient.cs" />
     <Compile Include="ViewModel\PermissiveTractViewModel.cs" />
     <Compile Include="ViewModel\MonteCarloSimulationViewModel.cs" />
+    <Compile Include="ViewModel\ReportingAssesmentViewModel.cs" />
     <Compile Include="ViewModel\ReportingViewModel.cs" />
     <Compile Include="ViewModel\SettingsViewModel.cs" />
     <Compile Include="ViewModel\TabContent.cs" />
@@ -209,6 +216,9 @@
     </Compile>
     <Compile Include="View\EconomicFilterMenuView.xaml.cs">
       <DependentUpon>EconomicFilterMenuView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\ReportingAssesmentInputView.xaml.cs">
+      <DependentUpon>ReportingAssesmentInputView.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\ReportingSelectionView.xaml.cs">
       <DependentUpon>ReportingSelectionView.xaml</DependentUpon>
@@ -325,6 +335,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="View\ReportingAssesmentInputView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="View\ReportingSelectionView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -428,6 +442,7 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <Resource Include="Resources\images\GTK_logo.png" />
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
@@ -459,8 +474,9 @@
     <Resource Include="Resources\fontawesome\otfs\Font Awesome 5 Free-Solid-900.otf">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>
-    <Resource Include="Font Awesome 5 Free-Regular-400.otf" />
-    <Resource Include="Font Awesome 5 Free-Solid-900.otf" />
+    <Content Include="NLog.config">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <None Include="NLog.xsd">
       <SubType>Designer</SubType>
     </None>
@@ -484,7 +500,6 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\images\eit_logo.png" />
-    <Resource Include="Resources\images\GTK_logo.jpg" />
     <Resource Include="Resources\fontawesome\LICENSE.txt" />
     <Content Include="Resources\fontawesome\svgs\brands\500px.svg" />
     <Content Include="Resources\fontawesome\svgs\brands\accessible-icon.svg" />

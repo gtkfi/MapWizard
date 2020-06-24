@@ -102,9 +102,48 @@
     <TabControl HorizontalAlignment="Stretch" SelectedIndex="{Binding CurrentModel.SelectedTabIndex}" Margin="0,0,0,0">
         <TabItem>
             <TabItem.Header>
-                <TextBlock ToolTip="Read in a text file containing the descriptive model">File</TextBlock>
+                <TextBlock ToolTip="Read in a Word file containing the descriptive model">Word document</TextBlock>
             </TabItem.Header>
-            <ScrollViewer  VerticalScrollBarVisibility="Visible" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+            <ScrollViewer Margin="0,0,6,0" VerticalScrollBarVisibility="Visible" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                <StackPanel Margin="0,20,0,132" HorizontalAlignment="Left" Grid.ColumnSpan="3">
+                    <UniformGrid Rows="1" Columns="2" HorizontalAlignment="Left">
+                        <WrapPanel Style="{StaticResource WrapPanel}" Width="300">
+                            <TextBlock Text="Select Word document file:"  Margin="10,80,10,10" HorizontalAlignment="left" VerticalAlignment="Center"/>
+                        </WrapPanel>
+                        <WrapPanel Margin=" 00,80,0,0" HorizontalAlignment="Left">
+                            <Button  FontSize="18" Content="{Binding CurrentModel.WordFile, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Width="200" 
+                                     FontWeight="Normal" mah:ButtonHelper.PreserveTextCase="True" Background="LightGray" BorderBrush="Black" Margin="0,0,0,0" HorizontalAlignment="Left" VerticalAlignment="Center" 
+                                     DataContext="{Binding DescriptiveViewModel, Source={StaticResource Locator}}" Command="{Binding SelectWordCommand}" IsDefault="True"
+                                     ToolTip="Select the text file containing the descriptive model.">
+                            </Button>
+                        </WrapPanel>
+                    </UniformGrid>
+                    <UniformGrid Rows="1" Columns="2" HorizontalAlignment="Left">
+                        <WrapPanel Style="{StaticResource WrapPanel}" Width="300">
+                            <TextBlock Text="Selected file will not be shown in Result -tab and is automatically selected as a result for the Reporting tool." TextWrapping="Wrap"  Margin="10,30,10,10" HorizontalAlignment="left" VerticalAlignment="Center"/>
+                        </WrapPanel>
+                        <WrapPanel Margin=" 00,30,0,0" HorizontalAlignment="Left">
+                            <Button Padding="-10,0,0,0"
+                                        Margin="10,10,10,10"
+                                        VerticalAlignment="Top" 
+                                        Background="{DynamicResource AccentColorBrush}" 
+                                        Foreground="White"
+                                        BorderThickness="0" 
+                                        Width="120" Height="50"                         
+                                        Command="{Binding RunToolCommand}" 
+                                        ToolTip="Run the tool to save the descriptive model">
+                                <TextBlock FontSize="16" Text="Run Tool" />
+                            </Button>
+                        </WrapPanel>
+                    </UniformGrid>   
+                </StackPanel>
+            </ScrollViewer>
+        </TabItem>
+        <TabItem>
+            <TabItem.Header>
+                <TextBlock ToolTip="Read in a text file containing the descriptive model">Text file</TextBlock>
+            </TabItem.Header>
+            <ScrollViewer Margin="0,0,6,-4" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Visible" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
                 <StackPanel Margin="0,20,0,132" HorizontalAlignment="Left" Grid.ColumnSpan="3">
                     <UniformGrid Rows="1" Columns="2">
                         <TextBlock Text="Field char: #"   Margin="10" HorizontalAlignment="left" VerticalAlignment="Center"/>
@@ -117,7 +156,7 @@
                             <TextBlock Text="Select text file:"  Margin="10" HorizontalAlignment="left" VerticalAlignment="Center"/>
                         </WrapPanel>
                         <WrapPanel Margin=" 00,0,0,0" HorizontalAlignment="Left">
-                            <Button  FontSize="18" Content="{Binding TextFile, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Width="200" 
+                            <Button  FontSize="18" Content="{Binding CurrentModel.TextFile, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Width="200" 
                                      FontWeight="Normal" mah:ButtonHelper.PreserveTextCase="True" Background="LightGray" BorderBrush="Black" Margin="0,0,0,0" HorizontalAlignment="Left" VerticalAlignment="Center" 
                                      DataContext="{Binding DescriptiveViewModel, Source={StaticResource Locator}}" Command="{Binding SelectFileCommand}" IsDefault="True"
                                      ToolTip="Select the text file containing the descriptive model.">
@@ -130,7 +169,7 @@
                                 <TextBlock Text="Save output in separate folder?" Margin="10"></TextBlock>
                             </WrapPanel>
                             <WrapPanel Margin="10,7,0,0" Style="{StaticResource WrapPanel}" ToolTip="Select whether to save the descriptive model in a separate subfolder of the &lt;ProjectRoot&gt;/DescModel/ folder">
-                                <RadioButton Name="YesButton" Margin="0,10,10,10" Padding="0" IsChecked="{Binding Tab1UseModelName}">Yes</RadioButton>
+                                <RadioButton Name="YesButton" Margin="0,10,10,10" Padding="0" IsChecked="{Binding CurrentModel.Tab1UseModelName}">Yes</RadioButton>
                                 <RadioButton Margin="10,10,10,10" Padding="0" IsChecked="True">No</RadioButton>
                             </WrapPanel>
                         </UniformGrid>
@@ -152,15 +191,14 @@
                                         Width="120" Height="50"                         
                                         Command="{Binding RunToolCommand}" 
                                         ToolTip="Run the tool to save the descriptive model">
-                                    <TextBlock FontSize="16" Text="Run Tool" >
-                                    </TextBlock>
+                                    <TextBlock FontSize="16" Text="Run Tool" />
                                 </Button>
                             </WrapPanel>
                             <WrapPanel Style="{StaticResource ValueColumn}">
                             </WrapPanel>
                         </UniformGrid>
                     </StackPanel>
-                    <ItemsControl x:Name="TextItems" ItemsSource="{Binding Path=TextBoxList, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                    <ItemsControl x:Name="TextItems" ItemsSource="{Binding Path=CurrentModel.TextBoxList, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
                         <ItemsControl.ItemsPanel>
                             <ItemsPanelTemplate>
                                 <StackPanel x:Name="sPanel" Margin="0 0 0 0"  HorizontalAlignment="Left" CanVerticallyScroll="True" />
@@ -192,7 +230,7 @@
             <TabItem.Header>
                 <TextBlock ToolTip="Create a new descriptive model">New</TextBlock>
             </TabItem.Header>
-            <ScrollViewer  VerticalScrollBarVisibility="Visible" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+            <ScrollViewer Margin="0,0,6,-4" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Visible" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
                 <StackPanel Margin="0,20,0,132" HorizontalAlignment="Left" Grid.ColumnSpan="3">
                     <StackPanel Visibility="{Binding CurrentModel.RunVisibilityTab2}">
                         <UniformGrid Rows="1" Columns="2" HorizontalAlignment="Left">
@@ -200,7 +238,7 @@
                                 <TextBlock Text="Save output in separate folder?" Margin="10"></TextBlock>
                             </WrapPanel>
                             <WrapPanel Margin="10,7,0,0" Style="{StaticResource ValueColumn}" ToolTip="Select whether to save the created model in a new subfolder">
-                                <RadioButton Name="YesButton2" Margin="0,10,10,10" Padding="0" IsChecked="{Binding Tab2UseModelName}">Yes</RadioButton>
+                                <RadioButton Name="YesButton2" Margin="0,10,10,10" Padding="0" IsChecked="{Binding CurrentModel.Tab2UseModelName}">Yes</RadioButton>
                                 <RadioButton Margin="10,10,10,10" Padding="0" IsChecked="True">No</RadioButton>
                             </WrapPanel>
                         </UniformGrid>
@@ -255,7 +293,7 @@
                         ToolTip="Add a field in the new descriptive model">
                         <TextBlock FontSize="16" Text="+ Add New Field"/>
                     </Button>
-                    <ItemsControl x:Name="Items" ItemsSource="{Binding Path=NewTextBoxList, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                    <ItemsControl x:Name="Items" ItemsSource="{Binding Path=CurrentModel.NewTextBoxList, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
                         <ItemsControl.ItemsPanel>
                             <ItemsPanelTemplate>
                                 <StackPanel Margin="0 0 0 0" HorizontalAlignment="Left" CanVerticallyScroll="True" />
@@ -274,19 +312,20 @@
                                                 <RowDefinition/>
                                             </Grid.RowDefinitions>
                                             <Grid.ColumnDefinitions>
-                                                <ColumnDefinition x:Name="Column" Width="745" MaxWidth="{Binding ElementName=Root, Path=ActualWidth}"/>
+                                                <ColumnDefinition x:Name="Column" Width="925"/>
                                             </Grid.ColumnDefinitions>
                                             <TextBlock Grid.Row="0" Margin="0,10,0,0" Text="Field:"/>
                                             <TextBox Grid.Row="1" x:Name="Field" Width="300" Text="{Binding NewFieldText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Left" ToolTip="You can edit the contents  of the fields prior to saving"/>
                                             <TextBlock Grid.Row="2" Margin="6,6,16,6" Text="Field related info (SubField char: ¤):"/>
                                             <TextBox Grid.Row="3"
                                                  Grid.Column="0"
-                                                 Margin="6,0,0,0"
+                                                 Margin="10,0,0,0"
                                                      Padding="0,0,0,0"
                                                  Height="400"
                                                      Width="731"
                                                  VerticalScrollBarVisibility="Auto"
                                                  HorizontalScrollBarVisibility="Auto"
+                                                     HorizontalAlignment="Left"
                                                  Text="{Binding NewInfoText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                                      TextWrapping="Wrap"
                                                     FontFamily="Calibri"
@@ -304,7 +343,7 @@
                                                     BorderThickness="0" 
                                                     Width="150" Height="50" 
                                                     Command="{Binding ElementName=Items,  Path=DataContext.DeleteTBoxCommand}"
-                                                    CommandParameter="{Binding ElementName=Items,  Path=DataContext.Model.NewFieldId}">
+                                                    CommandParameter="{Binding NewFieldId}">
                                                     <TextBlock FontSize="16" Text="-  Delete This Field"/>
                                                 </Button>
                                             </WrapPanel>
@@ -319,7 +358,7 @@
                                                     BorderThickness="0" 
                                                     Width="150" Height="50" 
                                                     Command="{Binding ElementName=Items,  Path=DataContext.AddTBoxCommand}"
-                                                    CommandParameter="{Binding ElementName=Items,  Path=DataContext.Model.NewFieldId}">
+                                                    CommandParameter="{Binding NewFieldId}">
                                         <TextBlock FontSize="16" Text="+ Add New Field"/>
                                     </Button>
                                 </StackPanel>

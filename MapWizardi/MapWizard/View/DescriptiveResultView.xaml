@@ -8,7 +8,7 @@
                   DataContext = "{Binding Source={StaticResource Locator}, Path=DescriptiveViewModel}" >
     <UserControl.Resources>
         <DataTemplate x:Key="EditedFile">
-            <ItemsControl x:Name="Items" ItemsSource="{Binding Path=ResultTextBoxList, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Width="250" HorizontalAlignment="Left">
+            <ItemsControl x:Name="Items" ItemsSource="{Binding Path=CurrentModel.ResultTextBoxList, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Width="250" HorizontalAlignment="Left">
                 <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>
                         <StackPanel HorizontalAlignment="Left"/>
@@ -52,7 +52,7 @@
             </ItemsControl>
         </DataTemplate>
         <DataTemplate x:Key="NewFile">
-            <ItemsControl x:Name="Items" ItemsSource="{Binding Path=ResultTextBoxList, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Width="250" HorizontalAlignment="Left">
+            <ItemsControl x:Name="Items" ItemsSource="{Binding Path=CurrentModel.ResultTextBoxList, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Width="250" HorizontalAlignment="Left">
                 <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>
                         <StackPanel HorizontalAlignment="Left"/>
@@ -111,10 +111,10 @@
                     <ContentControl.Style>
                         <Style TargetType="ContentControl">
                             <Style.Triggers>
-                                <DataTrigger Binding="{Binding UsedMethod}" Value="EditedFile">
+                                <DataTrigger Binding="{Binding CurrentModel.UsedMethod}" Value="EditedFile">
                                     <Setter Property="ContentTemplate" Value="{StaticResource EditedFile}" />
                                 </DataTrigger>
-                                <DataTrigger Binding="{Binding UsedMethod}" Value="NewFile">
+                                <DataTrigger Binding="{Binding CurrentModel.UsedMethod}" Value="NewFile">
                                     <Setter Property="ContentTemplate" Value="{StaticResource NewFile}" />
                                 </DataTrigger>
                             </Style.Triggers>
@@ -123,7 +123,7 @@
                 </ContentControl>
             </ScrollViewer>
         </StackPanel>
-        <ScrollViewer Margin="5,30,10,10"  Grid.Column="1"  VerticalScrollBarVisibility="Visible" HorizontalScrollBarVisibility="Visible" HorizontalAlignment="Left" VerticalAlignment="Top">
+        <ScrollViewer Margin="5,50,10,10"  Grid.Column="1"  VerticalScrollBarVisibility="Visible" HorizontalScrollBarVisibility="Visible" HorizontalAlignment="Left" VerticalAlignment="Top">
             <TextBlock Name="textBlock2" Text="{Binding Model.ResultText}" Margin="30,20,0,0" >
             </TextBlock>
         </ScrollViewer>

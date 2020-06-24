@@ -16,6 +16,9 @@ using MahApps.Metro.Controls;
 using MahApps.Metro.Controls.Dialogs;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using System.Text;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace MapWizard.ViewModel
 {
@@ -30,18 +33,6 @@ namespace MapWizard.ViewModel
         private EconomicFilterModel model;
         private EconomicFilterResultModel result;
         private ViewModelLocator viewModelLocator;
-        private bool isBusy;
-        private ObservableCollection<string> metals;
-        private ObservableCollection<string> raefModelNames;
-        private ObservableCollection<string> screenerModelNames;
-        private int tabIndex;
-        private bool raefUseModelName;
-        private bool screenerUseModelName;
-        private int raefSelectedModelIndex;
-        private int screenerSelectedModelIndex;
-        private bool noFolderNameGiven;
-        private string lastRunDate;
-        private int runStatus;
 
         /// <summary>
         /// Initializes a new instance of the EconomicFilterViewModel class.
@@ -54,30 +45,25 @@ namespace MapWizard.ViewModel
             this.logger = logger;
             this.dialogService = dialogService;
             this.settingsService = settingsService;
-            lastRunDate = "Last Run: Never";
-            runStatus = 2;
-            tabIndex = 0;
-            noFolderNameGiven = false;
-            raefUseModelName = false;
-            screenerUseModelName = false;
-            raefSelectedModelIndex = 0;
-            raefSelectedModelIndex = 0;
-            raefModelNames = new ObservableCollection<string>();
-            screenerModelNames = new ObservableCollection<string>();
             viewModelLocator = new ViewModelLocator();
             result = new EconomicFilterResultModel();
             RunToolCommand = new RelayCommand(RunTool, CanRunTool);
             SelectMCSimResultCommand = new RelayCommand(SelectMCSimResult, CanRunTool);
+            TractChangedCommand = new RelayCommand(TractChanged, CanRunTool);
+            FindTractsCommand = new RelayCommand(FindTractIDs, CanRunTool);
             OpenEcoTonnagesStatFileCommand = new RelayCommand(OpenEcoTonnagesStatFile, CanRunTool);
             OpenEcoTonnagesResultFileCommand = new RelayCommand(OpenEcoTonnagesResultFile, CanRunTool);
             SelectRaefPackageFolderCommand = new RelayCommand(SelectRAEFPackageFolder, CanRunTool);
-            SelectRaefPresetFileCommand = new RelayCommand(SelectRAEFPresetFile, CanRunTool);
+            SelectRaefPresetFileCommand = new RelayCommand(SelectRAEFPresetFile, CanRunTool);//TÄSSÄ OLI SelectRAEFPresetFile. muuta takas.
             ShowRaefResultsCommand = new RelayCommand(ShowRaefResults, CanRunTool);
             SelectRaefEconFilterFileCommand = new RelayCommand(SelectRaefEconFilterFile, CanRunTool);
             RaefShowModelDialog = new RelayCommand(RaefOpenModelDialog, CanRunTool);
             ScreenerShowModelDialog = new RelayCommand(ScreenerOpenModelDialog, CanRunTool);
             RaefSelectModelCommand = new RelayCommand(RaefSelectResult, CanRunTool);
             ScreenerSelectModelCommand = new RelayCommand(ScreenerSelectResult, CanRunTool);
+            SelectGTMFileCommand = new RelayCommand(SelectGTMFile, CanRunTool);
+            OpenScreenerHistogramCommand = new RelayCommand(OpenScreenerHistogram, CanRunTool);
+            OpenScreenerPlotCommand = new RelayCommand(OpenScreenerPlot, CanRunTool);
             EconomicFilterInputParams inputParams = new EconomicFilterInputParams();
             string projectFolder = Path.Combine(settingsService.RootPath, "EconFilter");
             if (!Directory.Exists(projectFolder))
@@ -85,14 +71,6 @@ namespace MapWizard.ViewModel
                 Directory.CreateDirectory(projectFolder);
             }
             string param_json = Path.Combine(projectFolder, "economic_filter_input_params.json");
-            Model = new EconomicFilterModel
-            {
-                MonteCarloResultTable = "",
-                RaefPresetFile = "Choose file",
-                RaefEconFilterFile = "Choose file",
-                RaefExtensionFolder = "",
-                ScreenerExtensionFolder = ""
-            };
             if (File.Exists(param_json))
             {
                 try
@@ -102,77 +80,70 @@ namespace MapWizard.ViewModel
                     {
                         //MonteCarloResultTable = inputParams.MCResults // Screener not in use in beta version, include this later.
                     };
-                    if (String.IsNullOrEmpty(Model.MonteCarloResultTable))
+                    //MetalIds = setMetalIds(); Screener not in use in beta version, include this later.
+                    Model = new EconomicFilterModel
                     {
-                        Model.MonteCarloResultTable = "Please select monte Carlo simulation result table";
-                        MetalIds = null;
-                    }
-                    else
-                    {
-                        //MetalIds = setMetalIds(); Screener not in use in beta version, include this later.
-                        Model = new EconomicFilterModel
-                        {
-                            MonteCarloResultTable = inputParams.MCResults,
-                            SelectedMetal = inputParams.Metal,
-                            SelectedMetalIndex = inputParams.MetalIndex,
-                            PerType = inputParams.perType,
-                            PerCent = inputParams.percentage,
-                            ScreenerExtensionFolder = inputParams.ScreenerExtensionFolder,
-                            RaefPresetFile = inputParams.RaefPresetFile,
-                            RaefEconFilterFile = inputParams.RaefEconFilterFile
-                        };
-                    }
+                        MonteCarloResultTable = inputParams.MCResults,
+                        SelectedMetal = inputParams.Metal,
+                        SelectedMetalIndex = inputParams.MetalIndex,
+                        PerType = inputParams.perType,
+                        PerCent = inputParams.percentage,
+                        SelectedTract = inputParams.TractID,
+                        ScreenerExtensionFolder = inputParams.ScreenerExtensionFolder,  // TAGGED: Raef extension folder?
+                        RaefPresetFile = inputParams.RaefPresetFile,
+                        RaefEconFilterFile = inputParams.RaefEconFilterFile,
+                        RaefRunName = inputParams.RaefRunName
+                    };
                 }
                 catch (Exception ex)
                 {
+                    Model = new EconomicFilterModel();
                     logger.Error(ex, "Failed to read json file");
-                    dialogService.ShowNotification("Couldn't load Economic Filter tool's inputs correctly.", "Error");
+                    dialogService.ShowNotification("Couldn't load Economic Filter tool's inputs correctly. Inputs were initialized to default values.", "Error");
+                    viewModelLocator.SettingsViewModel.WriteLogText("Couldn't load Economic Filter tool's inputs correctly. Inputs were initialized to default values.", "Error");
                 }
             }
-            if (String.IsNullOrEmpty(Model.MonteCarloResultTable))
+            else
             {
-                Model.MonteCarloResultTable = "Please select monte Carlo simulation result table";
-                MetalIds = null;
-            }
-            if (String.IsNullOrEmpty(Model.RaefPresetFile))
-            {
-                Model.RaefPresetFile = "Choose file";
-            }
-            if (String.IsNullOrEmpty(Model.RaefEconFilterFile))
-            {
-                Model.RaefEconFilterFile = "Choose file";
+                Model = new EconomicFilterModel();
             }
             //LoadScreenerResults();
-            if (Directory.Exists(Path.Combine(projectFolder, "RAEF", "SelectedResult")))
+            FindTractIDs();
+            LoadRaefResults();  // Load last run.
+            if (Model.SelectedTract != null)
             {
-                if (Directory.GetFiles(Path.Combine(projectFolder, "RAEF", "SelectedResult")).Length != 0)
+                projectFolder = Path.Combine(projectFolder, "RAEF", Model.SelectedTract);
+                if (Directory.Exists(projectFolder))
                 {
-                    LoadRaefResults();  // Load last run.
+                    Model.RaefModelNames.Clear();
+                    FindRaefModelnames(projectFolder);  // Find saved results.
                 }
-            }
-            if (Directory.Exists(Path.Combine(projectFolder, "RAEF")))
-            {
-                FindRaefModelnames(projectFolder);  // Find saved results.
             }
             //FindScreenerModelNames
             var lastRunFile = Path.Combine(settingsService.RootPath, "EconFilter", "economic_filter_last_run.lastrun");
             if (File.Exists(lastRunFile))
             {
-                LastRunDate = "Last Run: " + (new FileInfo(lastRunFile)).LastWriteTime.ToString();
+                Model.LastRunDate = "Last Run: " + (new FileInfo(lastRunFile)).LastWriteTime.ToString();
             }
         }
-
-        /// <summary>
-        /// PerTypes.
-        /// </summary>
-        /// @return PerTypes.
-        public ObservableCollection<string> PerTypes { get; } = new ObservableCollection<string>() { "Count %", "Metal %" };
 
         /// <summary>
         /// Run tool command.
         /// </summary>
         /// @return Command.
         public RelayCommand RunToolCommand { get; }
+
+        /// <summary>
+        /// Tract change command.
+        /// </summary>
+        /// @return Command.
+        public RelayCommand TractChangedCommand { get; }
+
+        /// <summary>
+        /// Command for getting tracts.
+        /// </summary>
+        /// @return Command.
+        public RelayCommand FindTractsCommand { get; }
 
         /// <summary>
         /// Show results command.
@@ -239,23 +210,40 @@ namespace MapWizard.ViewModel
         /// </summary>
         /// @return Command.
         public RelayCommand ScreenerSelectModelCommand { get; }
+        public RelayCommand SelectGTMFileCommand { get; }
+
+        /// <summary>
+        /// Open histogram command.
+        /// </summary>
+        /// @return Command.
+        public RelayCommand OpenScreenerHistogramCommand { get; }
+
+        /// <summary>
+        /// Open plot command.
+        /// </summary>
+        /// @return Command.
+        public RelayCommand OpenScreenerPlotCommand { get; }
 
         /// <summary>
         /// Run tool with user input.
         /// </summary>
         private async void RunTool()
         {
+            //TODO: laita tää myös kattoo onko kyseessä sreeneri...
+            if (Model.UseRaefInputParams == true && Model.TabIndex != 1 && Model.RaefEmpiricalModel == false)
+                Model.RaefPresetFile = WriteCsvFile(); //empirical checki tehään sitten tool puolella
+
             logger.Info("-->{0}", this.GetType().Name);
-            if (TabIndex == 1)
+            if (Model.TabIndex == 1)
             {
                 int selectedMetalIndex = GetMetalIndex(Model.SelectedMetal);
                 Model.SelectedMetalIndex = selectedMetalIndex.ToString();
             }
-            if (RaefUseModelName == false)
+            if (Model.RaefUseModelName == false)
             {
                 Model.RaefExtensionFolder = "";
             }
-            if (ScreenerUseModelName == false)
+            if (Model.ScreenerUseModelName == false)
             {
                 Model.ScreenerExtensionFolder = "";
             }
@@ -268,16 +256,21 @@ namespace MapWizard.ViewModel
                 MetalsToCalculate = Model.MetalsToCalculate,
                 perType = Model.PerType,
                 percentage = Model.PerCent,
-                ModelIndex = TabIndex.ToString(),
+                ModelIndex = Model.TabIndex.ToString(),
                 RaefPackageFolder = Model.RaefPackageFolder,
+                TractID = Model.SelectedTract,
                 RaefExtensionFolder = Model.RaefExtensionFolder,
                 ScreenerExtensionFolder = Model.ScreenerExtensionFolder,
                 RaefPresetFile = Model.RaefPresetFile,
-                RaefEconFilterFile = Model.RaefEconFilterFile
+                RaefEconFilterFile = Model.RaefEconFilterFile,
+                RaefEmpiricalModel = Model.RaefEmpiricalModel.ToString(),
+                RaefGtmFile = Model.RaefGTMFile,
+                RaefRunName = Model.RaefRunName
+                //voi tähän tuleekin sitten aika paljon lisää tavaraa... :)
             };
             // 2. Execute tool
             EconomicFilterResult ddResult = default(EconomicFilterResult);
-            IsBusy = true;
+            Model.IsBusy = true;
             try
             {
                 await Task.Run(() =>
@@ -293,28 +286,30 @@ namespace MapWizard.ViewModel
                     if (ddResult.EcoTonHistogram != null)
                         Result.ScreenerHistogramBitMap = BitmapFromUri(ddResult.EcoTonHistogram);
                 });
-                var raefModelFolder = Path.Combine(input.Env.RootPath, "EconFilter", "RAEF", Model.RaefExtensionFolder);
-                if (!RaefModelNames.Contains(raefModelFolder))
-                    RaefModelNames.Add(raefModelFolder);
-                var screenerModelFolder = Path.Combine(input.Env.RootPath, "EconFilter", "Screener", Model.ScreenerExtensionFolder);
-                if (!ScreenerModelNames.Contains(screenerModelFolder))
-                    ScreenerModelNames.Add(screenerModelFolder);
+                var raefModelFolder = Path.Combine(input.Env.RootPath, "EconFilter", "RAEF", Model.SelectedTract);
+                Model.RaefModelNames.Clear();
+                FindRaefModelnames(raefModelFolder);  // Find saved results.
+                //var screenerModelFolder = Path.Combine(input.Env.RootPath, "EconFilter", "Screener", Model.ScreenerExtensionFolder);
+                //if (!Model.ScreenerModelNames.Contains(screenerModelFolder))
+                //    Model.ScreenerModelNames.Add(screenerModelFolder);
 
                 string lastRunFile = Path.Combine(Path.Combine(settingsService.RootPath, "EconFilter", "economic_filter_last_run.lastrun"));
-                File.Create(lastRunFile);
+                File.Create(lastRunFile).Close();
                 dialogService.ShowNotification("Economic Filter tool completed successfully", "Success");
-                LastRunDate = "Last Run: " + DateTime.Now.ToString("g");
-                RunStatus = 1;
+                viewModelLocator.SettingsViewModel.WriteLogText("Economic Filter tool completed successfully", "Success");
+                Model.LastRunDate = "Last Run: " + DateTime.Now.ToString("g");
+                Model.RunStatus = 1;
             }
             catch (Exception ex)
             {
                 logger.Error(ex, "Failed to execute REngine() script");
-                dialogService.ShowNotification("Run failed. Check output for details", "Error");
-                RunStatus = 0;
+                dialogService.ShowNotification("Run failed. Check output for details.\r\n- Are all input parameters correct?\r\n- Are all input files valid? \r\n- Are all input and output files closed?", "Error");
+                viewModelLocator.SettingsViewModel.WriteLogText("Economic Filter tool run failed. Check output for details.\r\n- Are all input parameters correct?\r\n- Are all input files valid? \r\n- Are all input and output files closed?", "Error");
+                Model.RunStatus = 0;
             }
             finally
             {
-                IsBusy = false;
+                Model.IsBusy = false;
             }
             logger.Info("<--{0} completed", this.GetType().Name);
         }
@@ -324,76 +319,87 @@ namespace MapWizard.ViewModel
         /// </summary>
         private void RaefSelectResult()
         {
-            if (RaefModelNames.Count > 0)
+            if (Model.RaefModelNames.Count <= 0)
             {
-
-                try
-                {
-                    var modelDirPath = RaefModelNames[RaefSelectedModelIndex];
-                    var modelDirInfo = new DirectoryInfo(RaefModelNames[RaefSelectedModelIndex]);
-                    var efRootPath = Path.Combine(settingsService.RootPath, "EconFilter", "RAEF", "SelectedResult");
-                    viewModelLocator.ReportingViewModel.IsRaefDone = "Yes";
-                    viewModelLocator.ReportingViewModel.SaveInputs();
-                    if (!Directory.Exists(efRootPath))
-                    {
-                        Directory.CreateDirectory(efRootPath);
-                    }
-
-                    // If selected model folder is not raef root
-                    if (modelDirPath != efRootPath)
-                    {  
-                        DirectoryInfo dir = new DirectoryInfo(efRootPath);
-                        foreach (FileInfo file in dir.GetFiles())
-                        {
-                            file.Delete();
-                        }
-                        foreach (DirectoryInfo direk in dir.GetDirectories())
-                        {
-                            direk.Delete(true);
-                        }
-                        foreach (FileInfo file2 in modelDirInfo.GetFiles()) // Select files from selected model root folder.
-                        {
-                            var destPath = Path.Combine(efRootPath, file2.Name);
-                            var sourcePath = Path.Combine(modelDirPath, file2.Name);
-                            if (File.Exists(destPath))
-                            {
-                                File.Delete(destPath);
-                            }
-                            File.Copy(sourcePath, destPath); // Copy files to new Root folder.
-                        }
-                    }
-                    EconomicFilterInputParams inputParams = new EconomicFilterInputParams();
-                    string selectedProjectFolder = Path.Combine(settingsService.RootPath, "EconFilter", "RAEF", "SelectedResult");
-                    string param_json = Path.Combine(selectedProjectFolder, "economic_filter_input_params.json");
-                    if (File.Exists(param_json))
-                    {
-                        inputParams.Load(param_json);
-
-                        Model.MonteCarloResultTable = inputParams.MCResults;
-                        Model.RaefPresetFile = inputParams.RaefPresetFile;
-                        Model.RaefEconFilterFile = inputParams.RaefEconFilterFile;
-                        Model.RaefExtensionFolder = inputParams.RaefExtensionFolder;
-                        Model.RaefPackageFolder = inputParams.RaefPackageFolder;
-                        Model.SelectedMetal = inputParams.Metal;
-                        Model.SelectedMetalIndex = inputParams.MetalIndex;
-                        Model.MetalsToCalculate = inputParams.MetalsToCalculate;
-                        Model.PerType = inputParams.perType;
-                        Model.PerCent = inputParams.percentage;
-                        TabIndex = Convert.ToInt32(inputParams.ModelIndex);
-                        Model.ScreenerExtensionFolder = inputParams.ScreenerExtensionFolder;
-                    }
-                    LoadRaefResults();
-                }
-                catch (Exception ex)
-                {
-                    logger.Trace(ex, "Error in Model Selection:");
-                    dialogService.ShowNotification("Run failed. Check output for details\r\n- Are all input parameters correct?\r\n- Are all input files valid? \r\n- Are all input and output files closed?", "Error");
-                }
-                NoFolderNameGiven = false;
-                    var metroWindow = (Application.Current.MainWindow as MetroWindow);
-                    var dialog = metroWindow.GetCurrentDialogAsync<BaseMetroDialog>();
-                    metroWindow.HideMetroDialogAsync(dialog.Result);
+                dialogService.ShowNotification("There are no results to select.", "Error");
+                viewModelLocator.SettingsViewModel.WriteLogText("There are no results to select.", "Error");
+                return;
             }
+            try
+            {
+                var modelDirPath = Model.RaefModelNames[Model.RaefSelectedModelIndex];
+                var modelDirInfo = new DirectoryInfo(Model.RaefModelNames[Model.RaefSelectedModelIndex]);
+                var selectedProjectFolder = Path.Combine(settingsService.RootPath, "EconFilter", "RAEF", Model.SelectedTract, "SelectedResult");
+                // If selected model folder is not raef root
+                if (modelDirPath == selectedProjectFolder)
+                {
+                    dialogService.ShowNotification("SelectedResult folder cannot be selected. ", "Error");
+                    return;
+                }
+                if (!Directory.Exists(selectedProjectFolder))
+                {
+                    Directory.CreateDirectory(selectedProjectFolder);
+                }
+                DirectoryInfo dir = new DirectoryInfo(selectedProjectFolder);
+                foreach (FileInfo file in dir.GetFiles())
+                {
+                    file.Delete();
+                }
+                foreach (DirectoryInfo direk in dir.GetDirectories())
+                {
+                    direk.Delete(true);
+                }
+                foreach (FileInfo file2 in modelDirInfo.GetFiles()) // Select files from selected model root folder.
+                {
+                    var destPath = Path.Combine(selectedProjectFolder, file2.Name);
+                    var sourcePath = Path.Combine(modelDirPath, file2.Name);
+                    File.Copy(sourcePath, destPath); // Copy files to new Root folder.
+                }
+                EconomicFilterInputParams inputParams = new EconomicFilterInputParams();
+                string param_json = Path.Combine(selectedProjectFolder, "economic_filter_input_params.json");
+                if (File.Exists(param_json))
+                {
+                    inputParams.Load(param_json);
+                    Model.MonteCarloResultTable = inputParams.MCResults;
+                    Model.RaefPresetFile = inputParams.RaefPresetFile;
+                    Model.RaefEconFilterFile = inputParams.RaefEconFilterFile;
+                    Model.RaefExtensionFolder = inputParams.RaefExtensionFolder;
+                    Model.RaefPackageFolder = inputParams.RaefPackageFolder;
+                    Model.SelectedMetal = inputParams.Metal;
+                    Model.SelectedMetalIndex = inputParams.MetalIndex;
+                    Model.MetalsToCalculate = inputParams.MetalsToCalculate;
+                    Model.PerType = inputParams.perType;
+                    Model.PerCent = inputParams.percentage;
+                    Model.TabIndex = Convert.ToInt32(inputParams.ModelIndex);
+                    Model.SelectedTract = inputParams.TractID;
+                    Model.ScreenerExtensionFolder = inputParams.ScreenerExtensionFolder;
+                    File.Copy(param_json, Path.Combine(settingsService.RootPath, "EconFilter", "undiscovered_deposits_input_params.json"), true);
+                }
+                if (Model.SelectedTract.StartsWith("AGG"))
+                {
+                    viewModelLocator.ReportingAssesmentViewModel.Model.SelectedTractCombination = Model.SelectedTract;
+                    viewModelLocator.ReportingAssesmentViewModel.CheckFiles();
+                    viewModelLocator.ReportingAssesmentViewModel.SaveInputs();
+                }
+                else
+                {
+                    viewModelLocator.ReportingViewModel.Model.SelectedTract = Model.SelectedTract;
+                    viewModelLocator.ReportingViewModel.CheckFiles();
+                    viewModelLocator.ReportingViewModel.SaveInputs();
+                }                                                
+                dialogService.ShowNotification("Raef result selected successfully", "Success");
+                viewModelLocator.SettingsViewModel.WriteLogText("Raef result selected successfully in Economic Filter tool.", "Success");
+            }
+            catch (Exception ex)
+            {
+                logger.Trace(ex, "Error in result Selection:");
+                dialogService.ShowNotification("Failed to select Raef result.", "Error");
+                viewModelLocator.SettingsViewModel.WriteLogText("Failed to select Raef result in Economic filter tool.", "Error");
+            }
+            var metroWindow = (Application.Current.MainWindow as MetroWindow);
+            var dialog = metroWindow.GetCurrentDialogAsync<BaseMetroDialog>();
+            metroWindow.HideMetroDialogAsync(dialog.Result);
+            LoadRaefResults();
         }
 
         /// <summary>
@@ -401,19 +407,19 @@ namespace MapWizard.ViewModel
         /// </summary>
         private void ScreenerSelectResult()
         {
-            if (ScreenerModelNames.Count > 0)
+            if (Model.ScreenerModelNames.Count > 0)
             {
                 try
-                {  
-                    var modelDirPath = ScreenerModelNames[ScreenerSelectedModelIndex];
-                    var modelDirInfo = new DirectoryInfo(ScreenerModelNames[ScreenerSelectedModelIndex]);
+                {
+                    var modelDirPath = Model.ScreenerModelNames[Model.ScreenerSelectedModelIndex];
+                    var modelDirInfo = new DirectoryInfo(Model.ScreenerModelNames[Model.ScreenerSelectedModelIndex]);
                     var efRootPath = Path.Combine(settingsService.RootPath, "EconFilter", Model.ScreenerExtensionFolder, "SelectedResult");
                     if (!Directory.Exists(efRootPath))
                     {
                         Directory.CreateDirectory(efRootPath);
                     }
                     if (modelDirPath != efRootPath)
-                    {  
+                    {
                         DirectoryInfo dir = new DirectoryInfo(efRootPath);
                         foreach (FileInfo file in dir.GetFiles())
                         {
@@ -434,16 +440,18 @@ namespace MapWizard.ViewModel
                             File.Copy(sourcePath, destPath); // Copy files to new Root folder.
                         }
                     }
+                    dialogService.ShowNotification("Screener result selected successfully", "Success");
+                    viewModelLocator.SettingsViewModel.WriteLogText("Screener result selected successfully in Economic Filter tool.", "Success");
                 }
                 catch (Exception ex)
                 {
-                    logger.Trace(ex, "Error in Model Selection:");
-
+                    logger.Trace(ex, "Error in result Selection:");
+                    dialogService.ShowNotification("Failed to select Screener result.", "Error");
+                    viewModelLocator.SettingsViewModel.WriteLogText("Failed to select Screener result in Economic filter tool.", "Error");
                 }
-                NoFolderNameGiven = false;
-                    var metroWindow = (Application.Current.MainWindow as MetroWindow);
-                    var dialog = metroWindow.GetCurrentDialogAsync<BaseMetroDialog>();
-                    metroWindow.HideMetroDialogAsync(dialog.Result);
+                var metroWindow = (Application.Current.MainWindow as MetroWindow);
+                var dialog = metroWindow.GetCurrentDialogAsync<BaseMetroDialog>();
+                metroWindow.HideMetroDialogAsync(dialog.Result);
             }
         }
 
@@ -454,11 +462,11 @@ namespace MapWizard.ViewModel
         {
             try
             {
-                string objectFile = dialogService.OpenFileDialog(Path.Combine(settingsService.RootPath, "MCSim"), "", true, true);
+                string objectFile = dialogService.OpenFileDialog(Path.Combine(settingsService.RootPath, "MCSim"), "", true, true, settingsService.RootPath);
                 if (!string.IsNullOrEmpty(objectFile))
                 {
                     Model.MonteCarloResultTable = objectFile.Replace("\\", "/");
-                    MetalIds = SetMetalIds();
+                    Model.MetalIds = SetMetalIds();
                 }
             }
             catch (Exception ex)
@@ -468,7 +476,44 @@ namespace MapWizard.ViewModel
             finally
             {
             }
+        }
 
+        /// <summary>
+        /// Get TractIDs.
+        /// </summary>
+        public void FindTractIDs()
+        {
+            Model.TractIDNames = new ObservableCollection<string>();
+            string tractRootPath = Path.Combine(settingsService.RootPath, "TractDelineation", "Tracts");
+            if (Directory.Exists(tractRootPath))
+            {
+                DirectoryInfo di = new DirectoryInfo(tractRootPath);
+                foreach (DirectoryInfo dir in di.GetDirectories())
+                {
+                    Model.TractIDNames.Add(dir.Name);  // Get TractID by getting the name of the directory.
+                }
+            }
+            else
+            {
+                Directory.CreateDirectory(Path.Combine(settingsService.RootPath, "TractDelineation", "Tracts"));
+            }
+        }
+
+        /// <summary>
+        /// Update which tract is chosen and get the tract spesific results.
+        /// </summary>
+        private void TractChanged()
+        {
+            if (Model.SelectedTract != null)
+            {
+                string projectFolder = Path.Combine(settingsService.RootPath, "EconFilter");
+                projectFolder = Path.Combine(projectFolder, "RAEF", Model.SelectedTract);
+                if (Directory.Exists(projectFolder))
+                {
+                    Model.RaefModelNames.Clear();
+                    FindRaefModelnames(projectFolder);  // Find saved results.
+                }
+            }
         }
 
         /// <summary>
@@ -489,7 +534,7 @@ namespace MapWizard.ViewModel
                     var line = reader.ReadLine();
                     // Read nextline -> get data.
                     var values = line.Split(',');
-                    Model.MetalsToCalculate = null; 
+                    Model.MetalsToCalculate = null;
                     for (int i = 0; i < values.Length; i++)
                     {
                         if (values[i] == selected)
@@ -512,43 +557,13 @@ namespace MapWizard.ViewModel
         }
 
         /// <summary>
-        /// Public property for RAEF model names.
-        /// </summary>
-        /// @return Collection of Raef run names.
-        public ObservableCollection<string> RaefModelNames
-        {
-            get { return raefModelNames; }
-            set
-            {
-                if (value == raefModelNames) return;
-                raefModelNames = value;
-            }
-
-        }
-
-        /// <summary>
-        /// Public property for screener model names
-        /// </summary>
-        /// @return Collection of Raef run names.
-        public ObservableCollection<string> ScreenerModelNames
-        {
-            get { return screenerModelNames; }
-            set
-            {
-                if (value == screenerModelNames) return;
-                screenerModelNames = value;
-            }
-
-        }
-
-        /// <summary>
         /// Method to open dialog and saving its result for RAEF preset file.
         /// </summary>
         public void SelectRAEFPresetFile()
         {
             try
             {
-                string csvFile = dialogService.OpenFileDialog("", "CSV files|*.csv;", true, true);
+                string csvFile = dialogService.OpenFileDialog("", "CSV files|*.csv;", true, true, settingsService.RootPath);
                 if (!string.IsNullOrEmpty(csvFile))
                 {
                     Model.RaefPresetFile = csvFile.Replace("\\", "/");
@@ -557,6 +572,7 @@ namespace MapWizard.ViewModel
             catch (Exception ex)
             {
                 logger.Error(ex, "Failed to show OpenFileDialog");
+                dialogService.ShowNotification("Failed to open csv file. Check output for details.", "Error");
             }
         }
 
@@ -567,7 +583,7 @@ namespace MapWizard.ViewModel
         {
             try
             {
-                string csvFile = dialogService.OpenFileDialog("", "CSV files|*.csv;", true, true);
+                string csvFile = dialogService.OpenFileDialog("", "CSV files|*.csv;", true, true, settingsService.RootPath);
                 if (!string.IsNullOrEmpty(csvFile))
                 {
                     Model.RaefEconFilterFile = csvFile.Replace("\\", "/");
@@ -576,6 +592,7 @@ namespace MapWizard.ViewModel
             catch (Exception ex)
             {
                 logger.Error(ex, "Failed to show OpenFileDialog");
+                dialogService.ShowNotification("Failed to open csv file. Check output for details.", "Error");
             }
         }
 
@@ -595,6 +612,7 @@ namespace MapWizard.ViewModel
             catch (Exception ex)
             {
                 logger.Error(ex, "Failed to Show OpenFolderDialog");
+                dialogService.ShowNotification("Failed to open input file. Check output for details.", "Error");
             }
         }
 
@@ -634,7 +652,8 @@ namespace MapWizard.ViewModel
                 catch (Exception ex)
                 {
                     logger.Error(ex, "Error in reading table:" + ex);
-                    dialogService.ShowNotification("Error in reading table. Check output for details. ", "Error");
+                    dialogService.ShowNotification("Error in reading table. Check output for details.", "Error");
+                    viewModelLocator.SettingsViewModel.WriteLogText("Error reading table in Economic Filter tool. Check output for details.", "Error");
                     //throw new Exception("Error in reading table: "+ex);
                     return new ObservableCollection<string>() { " - " }; ;
                 }
@@ -651,7 +670,6 @@ namespace MapWizard.ViewModel
             var EcoTonnageStats = Path.Combine(projectFolder, "eco_tonnage_stat.csv"); //Correct path?
             var EcoTonHistogram = Path.Combine(projectFolder, "eco_ton_histogram.jpeg");
             var ResultPlot = Path.Combine(projectFolder, "result_plot.jpeg");
-
             try
             {
                 if (File.Exists(EcoTonnage))
@@ -677,11 +695,12 @@ namespace MapWizard.ViewModel
                 }
                 else
                     Result.ResultPlot = null;
-
             }
             catch (Exception ex)
             {
                 logger.Error(ex + " Could not load results files");
+                dialogService.ShowNotification("Failed to load Economic Filter tool's Screener result files.", "Error");
+                viewModelLocator.SettingsViewModel.WriteLogText("Failed to load Economic Filter tool's Screener result files.", "Error");
             }
         }
 
@@ -690,35 +709,41 @@ namespace MapWizard.ViewModel
         /// </summary>
         private void LoadRaefResults()
         {
-            var projectFolder = Path.Combine(settingsService.RootPath, "EconFilter", "RAEF", "SelectedResult");
-            bool EF1Exists = false;
-            bool EF4Exists = false;
-            RunStatus = 0;
-            try 
+            // This makes sure that tool doesn't throw an error when it's not run.
+            if (Model.SelectedTract != null)
             {
-                if (Directory.Exists(projectFolder))
+                try
                 {
-                    DirectoryInfo di = new DirectoryInfo(projectFolder);
-                    foreach (FileInfo file in di.GetFiles())
+                    var projectFolder = Path.Combine(settingsService.RootPath, "EconFilter", "RAEF", Model.SelectedTract, "SelectedResult");
+                    bool EF1Exists = false;
+                    bool EF4Exists = false;                    
+                    if (Directory.Exists(projectFolder))
                     {
-                        if (file.Name.Contains("EF_01_Parameters_"))
+                        Model.RunStatus = 0;
+                        DirectoryInfo di = new DirectoryInfo(projectFolder);
+                        foreach (FileInfo file in di.GetFiles())
                         {
-                            EF1Exists = true;
+                            if (file.Name.Contains("EF_01_Parameters_"))
+                            {
+                                EF1Exists = true;
+                            }
+                            if (file.Name.Contains("EF_04_Contained_Stats_")) //File.Exists(Path.Combine(input.Env.RootPath, "EconFilter", "RAEF", "SelectedResult", "EF_04_Contained_Stats_C.csv"))
+                            {
+                                EF4Exists = true;
+                            }
                         }
-                        if (file.Name.Contains("EF_04_Contained_Stats_")) //File.Exists(Path.Combine(input.Env.RootPath, "EconFilter", "RAEF", "SelectedResult", "EF_04_Contained_Stats_C.csv"))
+                        if (EF1Exists == true && EF4Exists == true)
                         {
-                            EF4Exists = true;
+                            Model.RunStatus = 1;
                         }
-                    }
-                    if (EF1Exists == true && EF4Exists == true)
-                    {
-                        RunStatus = 1;
                     }
                 }
-            }
-            catch (Exception ex)
-            {
-                logger.Error(ex + " Could not load results files");
+                catch (Exception ex)
+                {
+                    logger.Error(ex + " Could not load results files");
+                    dialogService.ShowNotification("Failed to load Economic Filter tool's Raef result files.", "Error");
+                    viewModelLocator.SettingsViewModel.WriteLogText("Failed to load Economic Filter tool's Raef result files.", "Error");
+                }
             }
         }
 
@@ -728,8 +753,9 @@ namespace MapWizard.ViewModel
         /// <param name="projectFolder">Models's folder.</param>
         private void FindRaefModelnames(string projectFolder)
         {
-            string raefProjectFolder = Path.Combine(projectFolder, "RAEF");
-            DirectoryInfo raefFolderInfo = new DirectoryInfo(raefProjectFolder);
+            //string raefProjectFolder = Path.Combine(projectFolder, "RAEF");
+            //DirectoryInfo raefFolderInfo = new DirectoryInfo(raefProjectFolder);
+            DirectoryInfo raefFolderInfo = new DirectoryInfo(projectFolder);
             foreach (DirectoryInfo result in raefFolderInfo.GetDirectories())
             {
                 if (result.Name != "SelectedResult")
@@ -738,17 +764,17 @@ namespace MapWizard.ViewModel
                     {
                         if (file.Name == "economic_filter_input_params.json")
                         {
-                            raefModelNames.Add(result.FullName);
+                            Model.RaefModelNames.Add(result.FullName);
                         }
                     }
                 }
             }
             // Goes also through the main folder.
-            foreach (FileInfo file in raefFolderInfo.GetFiles()) 
+            foreach (FileInfo file in raefFolderInfo.GetFiles())
             {
                 if (file.Name == "economic_filter_input_params.json")
                 {
-                    raefModelNames.Add(raefFolderInfo.FullName);
+                    Model.RaefModelNames.Add(raefFolderInfo.FullName);
                 }
             }
         }
@@ -759,7 +785,7 @@ namespace MapWizard.ViewModel
         /// <returns> Boolean representing whether tool can be run</returns>
         private bool CanRunTool()
         {
-            return !IsBusy;
+            return !Model.IsBusy;
         }
 
         /// <summary>
@@ -794,6 +820,7 @@ namespace MapWizard.ViewModel
             catch (Exception ex)
             {
                 logger.Error(ex + " CSV file not found.");
+                dialogService.ShowNotification(" CSV file not found.", "Error");
             }
         }
 
@@ -809,6 +836,53 @@ namespace MapWizard.ViewModel
             catch (Exception ex)
             {
                 logger.Error(ex + "CSV file not found.");
+                dialogService.ShowNotification(" CSV file not found.", "Error");
+            }
+        }
+
+        /// <summary>
+        /// Open histogram image file.
+        /// </summary>
+        private void OpenScreenerHistogram()
+        {
+            try
+            {
+                bool openFile = dialogService.MessageBoxDialog();
+                if (openFile == true)
+                {
+                    if (File.Exists(Result.EcoTonHistrogram))
+                    {
+                        Process.Start(Result.EcoTonHistrogram);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                logger.Error(ex, "Failed to open imagefile");
+                dialogService.ShowNotification("Failed to open imagefile.", "Error");
+            }
+        }
+
+        /// <summary>
+        /// Open image file.
+        /// </summary>
+        private void OpenScreenerPlot()
+        {
+            try
+            {
+                bool openFile = dialogService.MessageBoxDialog();
+                if (openFile == true)
+                {
+                    if (File.Exists(Result.ResultPlot))
+                    {
+                        Process.Start(Result.ResultPlot);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                logger.Error(ex, "Failed to open imagefile");
+                dialogService.ShowNotification("Failed to open imagefile.", "Error");
             }
         }
 
@@ -823,14 +897,209 @@ namespace MapWizard.ViewModel
                 {
                     Model.RaefExtensionFolder = "";
                 }
-                if (Directory.Exists(Path.Combine(settingsService.RootPath, "EconFilter", "RAEF", model.RaefExtensionFolder)))
+                if (Directory.Exists(Path.Combine(settingsService.RootPath, "EconFilter", "RAEF", Model.SelectedTract, Model.RaefExtensionFolder)))
                 {
-                    Process.Start(Path.Combine(settingsService.RootPath, "EconFilter", "RAEF", model.RaefExtensionFolder));
+                    Process.Start(Path.Combine(settingsService.RootPath, "EconFilter", "RAEF", Model.SelectedTract, Model.RaefExtensionFolder));
                 }
             }
             catch (Exception ex)
             {
                 logger.Error(ex + "Failed to open results folder.");
+                dialogService.ShowNotification("Failed to open results folder.", "Error");
+            }
+        }
+
+        private void SelectGTMFile()
+        {
+            try
+            {
+                string csvFile = dialogService.OpenFileDialog("", "CSV files|*.csv;", true, true, settingsService.RootPath);
+                if (!string.IsNullOrEmpty(csvFile))
+                {
+                    Model.RaefGTMFile = csvFile.Replace("\\", "/");//onko se GTM file? no se tulee selviämään.
+                }
+            }
+            catch (Exception ex)
+            {
+                logger.Error(ex, "Failed to show OpenFileDialog");
+                dialogService.ShowNotification("Failed to open csv file. Check output for details.", "Error");
+            }
+        }
+
+        private string WriteCsvFile()
+        {
+            try
+            {
+                //before your loop
+                var csv = new StringBuilder();
+
+                //in your loop
+                //var first = reader[0].ToString();
+                //var second = image.ToString();
+                //Suggestion made by KyleMit
+                //var newLine = string.Format("{0},{1}", first, second);
+                //csv.AppendLine(
+                int maxDepth = Math.Max(Model.RaefMax1, Math.Max(Model.RaefMax2, Math.Max(Model.RaefMax3, Model.RaefMax4))); ;//c# math max on tymä eikä ota enempää kuin 2 kerralla, siksi tää hölmö ketju. joku linQ max ois myös olemassa ja vois toki olla ihan pelkkä > komparisooni mutta olkoon nyt näin.
+
+                switch (Model.RaefDepositType)
+                { //check spelling for cases!
+                    case "Flat-bedded/stratiform":
+                        if (maxDepth < 61)
+                            Model.RaefMineMethod = "Open pit";
+                        else
+                            Model.RaefMineMethod = "Room-and-pillar";
+                        break;
+                    case "Ore body massive / disseminated":
+                        if (maxDepth < 61)
+                            Model.RaefMineMethod = "Open pit";
+                        else
+                            Model.RaefMineMethod = "Block caving";
+                        break;
+                    case "Vein deposit / steep":
+                        Model.RaefMineMethod = "Vertical crater retreat";
+                        break;
+
+                    default:
+                        break;
+                }
+
+                EconomicFilterTool tool = new EconomicFilterTool(); //muokkaa tätä. tyhmää että tässä tehdään kokonainen econ. filter tooli. mieti pitäisikö tämä ehkä kuitenkin ympätä osaksi Toolia tämä CSV:n luontikin? voisi olla parempi ratkaisu.
+                string output = tool.RaefGetCVandMRR(Model.RaefEconFilterFile, settingsService.RPath);
+                List<string> CVandMRRList = output.Split(',').ToList();
+                //output //parsi tästä lista.
+                // ja sit listasta CountN*2 kappaletta noihin CSV:n vikoihin slotteihin, ja avot!
+                //after your loop
+                string envChoice1 = (Model.RaefEnvChoice1.ToLower() == "true") ? "Tailings Pond and Dam" : "NA";
+                string liner = (Model.RaefLiner.ToLower() == "true") ? "Liner" : "NA";
+
+                //File.WriteAllText(filePath, csv.ToString());
+                //RS1 << -rbind(date2, time2, SimFile, WD, TN1, NumCat, Min1, Max1, Per1, Min2, Max2, Per2, Min3, Max3, Per3, Min4, Max4, Per4, DTy, minetypes, MillChoice[1], MillChoice[2], dpy, ECh[1], ECh[2], MSC, IRR, CCIF, OCIF, TA1, UDName1, KC1, KC2, KO1, KO2, MCho1, MCho2, MCho3, MCho4, MCho5, MCho6)
+
+
+                //Model.RaefMineMethod
+                //Model.RaefDepositType
+
+                //Tää mine method pitää nyt päätellä tässä vaiheessa.
+                //• Flat-bedded/stratiform deposits • Open pit (depth < 61meters [m]) • Room-and-pillar (depth > 61m) 
+
+                //• Massive/disseminated deposits • Open pit (depth < 61m) • Block caving (depth > 61m) 
+                //• Vein/steep deposits • Vertical crater retreat (the only mine option for vein/ steep deposits) 
+                csv.AppendLine(",A,B");
+                csv.AppendLine("1,Date," + "" + DateTime.Now + "");//Thu Dec 13 2018 formaatissa, liekö väliä.
+                csv.AppendLine("2,Time," + "" + DateTime.Now + "");////11:19:30 AM  formaatissa. nää pitäs eritellä tosta koko datetime hässäkästä.
+                csv.AppendLine("3,Econ Filter File," + "" + Model.RaefEconFilterFile + "");
+                csv.AppendLine("4,Working Directory," + Path.Combine(settingsService.RootPath, "EconFilter", "RAEF", Model.SelectedTract, Model.RaefExtensionFolder).Replace("\\", "/"));
+                csv.AppendLine("5,Run Name," + "" + Model.RaefRunName + "");
+                csv.AppendLine("6,Number of Depth Intervals," + "" + Model.RaefDepthIntervals + "");
+                csv.AppendLine("7,Min1," + "" + Model.RaefMin1 + "");
+                csv.AppendLine("8,Max1," + "" + Model.RaefMax1 + "");
+                csv.AppendLine("9,Per1," + "" + Model.RaefFract1 + "");
+                csv.AppendLine("10,Min2," + "" + Model.RaefMin2 + "");
+                csv.AppendLine("11,Max2," + "" + Model.RaefMax2 + "");
+                csv.AppendLine("12,Per2," + "" + Model.RaefFract2 + "");
+                csv.AppendLine("13,Min3," + "" + Model.RaefMin3 + "");
+                csv.AppendLine("14,Max3," + "" + Model.RaefMax3 + "");
+                csv.AppendLine("15,Per3," + "" + Model.RaefFract3 + "");
+                csv.AppendLine("16,Min4," + "" + Model.RaefMin4 + "");
+                csv.AppendLine("17,Max4," + "" + Model.RaefMax4 + "");
+                csv.AppendLine("18,Per4," + "" + Model.RaefFract4 + "");
+                csv.AppendLine("19,Deposit Type," + "" + Model.RaefDepositType + "");
+                csv.AppendLine("20,Mine Method," + "" + Model.RaefMineMethod + "");//Mine Method is based on depth to the top of the deposit, if depth >= 61m: Block Caving, if depth < 61m: Open Pit"
+                csv.AppendLine("21,Mill Type 1 ," + "" + Model.RaefMillType1 + "");// 3 - Product Flotation"
+                csv.AppendLine("22,Mill Type 2 ," + "" + Model.RaefMillType2 + ""); //NA
+                csv.AppendLine("23,Days of Operation," + "" + Model.RaefDaysOfOperation + "");// "350"
+                csv.AppendLine("24,Environment Choice 1 ," + "" + envChoice1 + "");//"Tailings Pond and Dam" //nämä booleista fixuiksi. converter? joo. hyi mutta joo.
+                csv.AppendLine("25,Liner?," + "" + liner + ""); //"Liner"
+                csv.AppendLine("26,MSC," + "" + Model.RaefMarshallSwiftCost + "");//"1.26"
+                csv.AppendLine("27,Investment Rate of Return," + "" + Model.RaefInvestmentRateOfReturn + "");// "0.15"
+                csv.AppendLine("28,Cap Cost Inflation Factor," + "" + Model.RaefCapitalCostInflationFactor + "");// "1"
+                csv.AppendLine("29,Operating Cost Inflation Factor," + "" + Model.RaefOperatingCostInflationFactor + "");// "1"
+                csv.AppendLine("30,Area," + "" + Model.RaefArea + "");// "1000000"
+                csv.AppendLine("31,User Define Mill Name (if applicable)," + "" + Model.RaefMillName + "");// "NONE"
+                csv.AppendLine("32,User Define: Mill Capital Cost Constant," + "" + Model.RaefMillCapitalConstant + "");// "0"
+                csv.AppendLine("33,User Define: Mill Capital Cost Power log," + "" + Model.RaefMillCapitalLog + "");// "0"
+                csv.AppendLine("34,User Define: Mill Operating Cost Constant," + "" + Model.RaefMillOperatingCostConstant + "");// "0"
+                csv.AppendLine("35,User Define: Mill Operating Cost Power log," + "" + Model.RaefMillOperatingCostLog + "");// "0"
+                csv.AppendLine("36,Custom_Mill_Option1," + "" + Model.RaefCustomMillOption1 + "");// "No set custom mill option for commodity #1"
+                csv.AppendLine("37,Custom_Mill_Option2," + "" + Model.RaefCustomMillOption2 + "");// "No set custom mill option for commodity #2"
+                csv.AppendLine("38,Custom_Mill_Option3," + "" + Model.RaefCustomMillOption3 + "");// "No set custom mill option for commodity #3"
+                csv.AppendLine("39,Custom_Mill_Option4," + "" + Model.RaefCustomMillOption4 + "");// "No set custom mill option for commodity #4"
+                csv.AppendLine("40,Custom_Mill_Option5," + "" + Model.RaefCustomMillOption5 + "");// "No set custom mill option for commodity #5"
+                csv.AppendLine("41,Custom_Mill_Option6," + "" + Model.RaefCustomMillOption6 + "");// "No set custom mill option for commodity #6"
+                int csvIndex = 42;
+                for (int i = 0; i < 4; i++)
+                {
+                    csv.AppendLine((csvIndex + "," + CVandMRRList[i * 4] + "," + CVandMRRList[i * 4 + 2]).Replace(" ", "").Replace("\"", ""));
+                    csvIndex++;
+                    csv.AppendLine((csvIndex + "," + CVandMRRList[i * 4 + 1] + "," + CVandMRRList[i * 4 + 3]).Replace(" ", "").Replace("\"", "").Replace("NULL", ""));
+                    csvIndex++;
+                    //CVandMRRList
+                }
+                //csv.AppendLine(",\"A\",\"B\"");
+                //csv.AppendLine("1,\"Date\"," + "\"" + DateTime.Now + "\"");//\"Thu Dec 13 2018\" formaatissa, liekö väliä.
+                //csv.AppendLine("2,\"Time\"," + "\"" + DateTime.Now + "\"");////\"11:19:30 AM \" formaatissa. nää pitäs eritellä tosta koko datetime hässäkästä.
+                //csv.AppendLine("3,\"Econ Filter File\"," + "\"" + Model.RaefEconFilterFile + "\"");
+                //csv.AppendLine("4,\"Working Directory\",");
+                //csv.AppendLine("5,\"Run Name\"," + "\"" + Model.RaefRunName + "\"");
+                //csv.AppendLine("6,\"Number of Depth Intervals\"," + "\"" + Model.RaefDepthIntervals + "\"");
+                //csv.AppendLine("7,\"Min1\"," + "\"" + Model.RaefMin1 + "\"");
+                //csv.AppendLine("8,\"Max1\"," + "\"" + Model.RaefMax1 + "\"");
+                //csv.AppendLine("9,\"Per1\"," + "\"" + Model.RaefFract1 + "\"");
+                //csv.AppendLine("10,\"Min2\"," + "\"" + Model.RaefMin2 + "\"");
+                //csv.AppendLine("11,\"Max2\"," + "\"" + Model.RaefMax2 + "\"");
+                //csv.AppendLine("12,\"Per2\"," + "\"" + Model.RaefFract2 + "\"");
+                //csv.AppendLine("13,\"Min3\"," + "\"" + Model.RaefMin3 + "\"");
+                //csv.AppendLine("14,\"Max3\"," + "\"" + Model.RaefMax3 + "\"");
+                //csv.AppendLine("15,\"Per3\"," + "\"" + Model.RaefFract3 + "\"");
+                //csv.AppendLine("16,\"Min4\"," + "\"" + Model.RaefMin4 + "\"");
+                //csv.AppendLine("17,\"Max4\"," + "\"" + Model.RaefMax4 + "\"");
+                //csv.AppendLine("18,\"Per4\"," + "\"" + Model.RaefFract4 + "\"");
+                //csv.AppendLine("19,\"Deposit Type\"," + "\"" + Model.RaefDepositType + "\"");
+                //csv.AppendLine("20,\"Mine Method\"," + "\"" + Model.RaefMineMethod + "\"");//Mine Method is based on depth to the top of the deposit, if depth >= 61m: Block Caving, if depth < 61m: Open Pit"
+                //csv.AppendLine("21,\"Mill Type 1 \"," + "\"" + Model.RaefMillType1 + "\"");// 3 - Product Flotation"
+                //csv.AppendLine("22,\"Mill Type 2 \"," + "\"" + Model.RaefMillType2 + "\""); //NA
+                //csv.AppendLine("23,\"Days of Operation\"," + "\"" + Model.RaefDaysOfOperation + "\"");// "350"
+                //csv.AppendLine("24,\"Environment Choice 1 \"," + "\"" + Model.RaefEnvChoice1 + "\"");//"Tailings Pond and Dam"
+                //csv.AppendLine("25,\"Liner?\"," + "\"" + Model.RaefLiner + "\""); //"Liner"
+                //csv.AppendLine("26,\"MSC\"," + "\"" + Model.RaefMarshallSwiftCost + "\"");//"1.26"
+                //csv.AppendLine("27,\"Investment Rate of Return\"," + "\"" + Model.RaefInvestmentRateOfReturn + "\"");// "0.15"
+                //csv.AppendLine("28,\"Cap Cost Inflation Factor\"," + "\"" + Model.RaefCapitalCostInflationFactor + "\"");// "1"
+                //csv.AppendLine("29,\"Operating Cost Inflation Factor\"," + "\"" + Model.RaefOperatingCostInflationFactor + "\"");// "1"
+                //csv.AppendLine("30,\"Area\","+"\""+Model.RaefArea + "\"");// "1000000"
+                //csv.AppendLine("31,\"User Define Mill Name (if applicable)\"," + "\"" + Model.RaefMillName + "\"");// "NONE"
+                //csv.AppendLine("32,\"User Define: Mill Capital Cost Constant\"," + "\"" + Model.RaefMillCapitalConstant + "\"");// "0"
+                //csv.AppendLine("33,\"User Define: Mill Capital Cost Power log\"," + "\"" + Model.RaefMillCapitalLog + "\"");// "0"
+                //csv.AppendLine("34,\"User Define: Mill Operating Cost Constant\"," + "\"" + Model.RaefMillOperatingCostConstant + "\"");// "0"
+                //csv.AppendLine("35,\"User Define: Mill Operating Cost Power log\"," + "\"" + Model.RaefMillOperatingCostLog + "\"");// "0"
+                //csv.AppendLine("36,\"Custom_Mill_Option1\"," + "\"" + Model.RaefCustomMillOption1 + "\"");// "No set custom mill option for commodity #1"
+                //csv.AppendLine("37,\"Custom_Mill_Option2\"," + "\"" + Model.RaefCustomMillOption2 + "\"");// "No set custom mill option for commodity #2"
+                //csv.AppendLine("38,\"Custom_Mill_Option3\"," + "\"" + Model.RaefCustomMillOption3 + "\"");// "No set custom mill option for commodity #3"
+                //csv.AppendLine("39,\"Custom_Mill_Option4\"," + "\"" + Model.RaefCustomMillOption4 + "\"");// "No set custom mill option for commodity #4"
+                //csv.AppendLine("40,\"Custom_Mill_Option5\"," + "\"" + Model.RaefCustomMillOption5 + "\"");// "No set custom mill option for commodity #5"
+                //csv.AppendLine("41,\"Custom_Mill_Option6\"," + "\"" + Model.RaefCustomMillOption6 + "\"");// "No set custom mill option for commodity #6"
+                ////foreach(string s in CVandMRRList)
+                //{
+                //    csv.AppendLine("41,\"Custom_Mill_Option6\"," + "\"" + Model.RaefCustomMillOption6 + "\"");
+                //}
+                string filePath = Path.Combine(settingsService.RootPath, "EconFilter", "RaefTest.csv");
+                File.WriteAllText(filePath, csv.ToString());//Tästä kovakoodit pois! johonki result folderiin kirjota tuo mihink kuuluuki.
+                return filePath;
+                //csv.AppendLine("42,\"CV_Cu", "3813.958"
+                //csv.AppendLine("43,\"MRR_Cu", "0.91"
+                //csv.AppendLine("44,\"CV_Mo", "23567.174"
+                //csv.AppendLine("45,\"MRR_Mo", "0.63"
+                //csv.AppendLine("46,\"CV_Au", "16557636.25"
+                //csv.AppendLine("47,\"MRR_Au", "0.76"
+                //csv.AppendLine("48,\"CV_Ag", "257849.015"
+                //csv.AppendLine("49,\"MRR_Ag", "0.8"
+
+                //rownames(RS1) < -c("Date", "Time", "Econ Filter File", "Working Directory", "Run Name", "Number of Depth Intervals", "Min1", "Max1", "Per1", "Min2", "Max2", "Per2", "Min3", "Max3", "Per3", "Min4", "Max4", "Per4", "Deposit Type", "Mine Method", "Mill Type 1 ", "Mill Type 2 ", "Days of Operation", "Environment Choice 1 ", "Liner?", "MSC", "Investment Rate of Return", "Cap Cost Inflation Factor", "Operating Cost Inflation Factor", "Area", "User Define Mill Name (if applicable)", "User Define: Mill Capital Cost Constant", "User Define: Mill Capital Cost Power log", "User Define: Mill Operating Cost Constant", "User Define: Mill Operating Cost Power log", "Custom_Mill_Option1", "Custom_Mill_Option2", "Custom_Mill_Option3", "Custom_Mill_Option4", "Custom_Mill_Option5", "Custom_Mill_Option6")
+            }catch(Exception ex) {
+                //WHAT. mihin ne mun lisäämät poikkeukset on menny. no ok
+                logger.Trace(ex, "Error in creating input file:");
+                dialogService.ShowNotification("Failed to write input file. Check output for details.", "Error");
+                //sais lopettaa tähän. muuta niin.
+                return "";
             }
         }
 
@@ -857,21 +1126,6 @@ namespace MapWizard.ViewModel
             {
                 logger.Error(ex, "Failed to create BitMap from imagefile.");
                 throw;
-            }
-        }
-
-        /// <summary>
-        /// Public tabindex property for the View to bind to.
-        /// </summary>
-        /// @return Bitmap.
-        public int TabIndex
-        {
-            get { return tabIndex; }
-            set
-            {
-                if (value == tabIndex) return;
-                tabIndex = value;
-                RaisePropertyChanged("TabIndex");
             }
         }
 
@@ -906,144 +1160,6 @@ namespace MapWizard.ViewModel
             {
                 result = value;
                 RaisePropertyChanged("EconomicFilterResultModel");
-            }
-        }
-
-        /// <summary>
-        /// Public property for Screener metal Ids
-        /// </summary>
-        /// @return ID collection.
-        public ObservableCollection<string> MetalIds
-        {
-            get
-            {
-                return metals;
-            }
-            set
-            {
-                metals = value;
-                RaisePropertyChanged("MetalIds");
-            }
-        }
-
-        /// <summary>
-        /// Is busy?
-        /// </summary>
-        /// @return Boolean representing the state.
-        public bool IsBusy
-        {
-            get { return isBusy; }
-            set
-            {
-                if (isBusy == value) return;
-                isBusy = value;
-                RaisePropertyChanged(() => IsBusy);
-                RunToolCommand.RaiseCanExecuteChanged();
-            }
-        }
-
-        /// <summary>
-        /// Public property for whether Raef should use model name
-        /// </summary>
-        /// @return Boolean representing the choice.
-        public bool RaefUseModelName
-        {
-            get { return raefUseModelName; }
-            set
-            {
-                if (value == raefUseModelName) return;
-                raefUseModelName = value;
-                RaisePropertyChanged("RaefUseModelName");
-            }
-        }
-
-        /// <summary>
-        /// Public property for whether Screener should use model name
-        /// </summary>
-        /// @return Boolean representing the choice.
-        public bool ScreenerUseModelName
-        {
-            get { return screenerUseModelName; }
-            set
-            {
-                if (value == screenerUseModelName) return;
-                screenerUseModelName = value;
-                RaisePropertyChanged("ScreenerUseModelName");
-            }
-        }
-
-        /// <summary>
-        /// Whether last run has been succesful, failed or the tool has not been run yet on this project.
-        /// </summary>
-        /// @return Integer representing the status.
-        public int RunStatus
-        {
-            get { return runStatus; }
-            set
-            {
-                if (value == runStatus) return;
-                runStatus = value;
-                RaisePropertyChanged("RunStatus");
-            }
-        }
-
-        /// <summary>
-        /// Date of last run.
-        /// </summary>
-        /// @return Boolean representing the state.
-        public string LastRunDate
-        {
-            get { return lastRunDate; }
-            set
-            {
-                if (value == lastRunDate) return;
-                lastRunDate = value;
-                RaisePropertyChanged("LastRunDate");
-            }
-        }
-
-        /// <summary>
-        /// Determines if the folder name id given.
-        /// </summary>
-        /// @return Boolean representing the choice.
-        public bool NoFolderNameGiven
-        {
-            get { return noFolderNameGiven; }
-            set
-            {
-                if (value == noFolderNameGiven) return;
-                noFolderNameGiven = value;
-                RaisePropertyChanged("NoFolderNameGiven");
-            }
-        }
-
-        /// <summary>
-        /// Public property indicating the selected RAEF model index, for the view to bind to.
-        /// </summary>
-        /// @return Boolean representing the choice.
-        public int RaefSelectedModelIndex
-        {
-            get { return raefSelectedModelIndex; }
-            set
-            {
-                if (value == raefSelectedModelIndex) return;
-                raefSelectedModelIndex = value;
-                RaisePropertyChanged("RaefSelectedModelIndex");
-            }
-        }
-
-        /// <summary>
-        ///  Public property indicating the selected screener model index, for the view to bind to.
-        /// </summary>
-        /// @return Boolean representing the choice.
-        public int ScreenerSelectedModelIndex
-        {
-            get { return screenerSelectedModelIndex; }
-            set
-            {
-                if (value == screenerSelectedModelIndex) return;
-                screenerSelectedModelIndex = value;
-                RaisePropertyChanged("ScreenerSelectedModelIndex");
             }
         }
     }

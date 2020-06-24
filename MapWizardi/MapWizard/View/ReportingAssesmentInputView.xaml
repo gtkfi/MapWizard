@@ -1,0 +1,217 @@
+﻿<UserControl x:Class="MapWizard.View.ReportingAssesmentInputView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
+             xmlns:service="clr-namespace:MapWizard.Service"
+             xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800"
+             DataContext="{Binding Source={StaticResource Locator}, Path=ReportingAssesmentViewModel}">
+    <UserControl.Resources>
+        <service:FilePathToFileNameConverter x:Key="FilePathToFileNameConverter" />
+        <Style x:Key="WrapPanel" TargetType="WrapPanel">
+            <Setter Property="HorizontalAlignment" Value="left" />
+            <Setter Property="VerticalAlignment" Value="center"></Setter>
+        </Style>
+        <Style x:Key="ValueColumn" TargetType="WrapPanel">
+            <Setter Property="Margin" Value="10,05,0,05"></Setter>
+        </Style>
+        </UserControl.Resources>
+        <ScrollViewer Margin="0,0,10,0" VerticalScrollBarVisibility="Visible" HorizontalScrollBarVisibility="Auto" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+        <StackPanel Margin="0,20,0,200" HorizontalAlignment="Left" Grid.ColumnSpan="3">
+            <UniformGrid Rows="1" Columns="2">
+                <WrapPanel Style="{StaticResource WrapPanel}">
+                    <Button Padding="-10,0,0,0"
+                            Margin="10,0,0,0"
+                            VerticalAlignment="Bottom" 
+                            Background="{DynamicResource AccentColorBrush}" 
+                            Foreground="White"
+                            BorderThickness="0"
+                            Width="220" Height="50" 
+                            DataContext="{Binding Source={StaticResource Locator}, Path=ReportingViewModel}"
+                            Command="{Binding GoToReportSelectionCommand}">
+                        <TextBlock FontSize="16" Text="Back to Report Selection" ></TextBlock>
+                    </Button>
+                </WrapPanel>
+            </UniformGrid>
+            <UniformGrid Rows="1" Columns="2">
+                <WrapPanel Style="{StaticResource WrapPanel}">
+                    <TextBlock Text="Title of the assessment report:" Margin="10,20,0,0" HorizontalAlignment="left" VerticalAlignment="Center"/>
+                </WrapPanel>
+                <WrapPanel Style="{StaticResource ValueColumn}">
+                    <TextBox Text="{Binding Model.AssesmentTitle}" Margin="0,20,0,0" Width="250" HorizontalAlignment="left" VerticalAlignment="Center" HorizontalScrollBarVisibility="Auto" ToolTip="Country of assessment."/>
+                </WrapPanel>
+            </UniformGrid>
+            <UniformGrid Rows="1" Columns="2">
+                <WrapPanel Style="{StaticResource WrapPanel}">
+                    <TextBlock Text="Combination of tracts to include:" Margin="10" TextWrapping="Wrap" HorizontalAlignment="left" VerticalAlignment="Center"/>
+                </WrapPanel>
+                <WrapPanel Style="{StaticResource ValueColumn}">
+                    <ComboBox Name="cmbx"    
+                              ItemsSource="{Binding Model.CombinedTracts, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"  
+                              SelectedValue="{Binding Model.SelectedTractCombination, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                              Width="160"
+                              Margin="0,6,0,0"  
+                              ToolTip="Select tracts to include in the report.">
+                        <i:Interaction.Triggers>
+                            <i:EventTrigger EventName="DropDownOpened">
+                                <i:InvokeCommandAction Command="{Binding FindCombinedTractsCommand}" />
+                            </i:EventTrigger>
+                            <i:EventTrigger EventName="SelectionChanged">
+                                <i:InvokeCommandAction Command="{Binding CheckTractFilesCommand}" />
+                            </i:EventTrigger>
+                        </i:Interaction.Triggers>
+                    </ComboBox>
+                </WrapPanel>
+            </UniformGrid>
+            <UniformGrid Rows="1" Columns="2">
+                <WrapPanel Style="{StaticResource WrapPanel}">
+                    <TextBlock Text="Author list:" Margin="10" HorizontalAlignment="left" VerticalAlignment="Center"/>
+                </WrapPanel>
+                <WrapPanel Style="{StaticResource ValueColumn}">
+                    <TextBox Text="{Binding Model.Authors}"  Height="87" AcceptsReturn="True" TextWrapping="Wrap" Width="250" Margin="0,29,0,10" HorizontalAlignment="left" VerticalAlignment="Center" VerticalScrollBarVisibility="Auto" ToolTip="Tract report authors."/>
+                </WrapPanel>
+            </UniformGrid>
+            <UniformGrid Rows="1" Columns="2">
+                <WrapPanel Style="{StaticResource WrapPanel}">
+                    <TextBlock Text="Country:" Margin="10" HorizontalAlignment="left" VerticalAlignment="Center"/>
+                </WrapPanel>
+                <WrapPanel Style="{StaticResource ValueColumn}">
+                    <TextBox Text="{Binding Model.Country}"  Width="250" HorizontalAlignment="left" VerticalAlignment="Center" HorizontalScrollBarVisibility="Auto" ToolTip="Country of assessment."/>
+                </WrapPanel>
+            </UniformGrid>
+            <UniformGrid Rows="1" Columns="2">
+                <WrapPanel Style="{StaticResource WrapPanel}">
+                    <TextBlock Text="Assesment Date:" Margin="10" TextWrapping="Wrap" HorizontalAlignment="left" VerticalAlignment="Center"/>
+                </WrapPanel>
+                <WrapPanel Style="{StaticResource ValueColumn}">
+                    <TextBox Text="{Binding Model.AsDate}"  Width="250" HorizontalAlignment="left" VerticalAlignment="Center" HorizontalScrollBarVisibility="Auto" ToolTip="Date of assessment report."/>
+                </WrapPanel>
+            </UniformGrid>
+            <UniformGrid Rows="1" Columns="2">
+                <WrapPanel Style="{StaticResource WrapPanel}">
+                    <TextBlock Text="Assesment Depth:" Margin="10" TextWrapping="Wrap" HorizontalAlignment="left" VerticalAlignment="Center"/>
+                </WrapPanel>
+                <WrapPanel Style="{StaticResource ValueColumn}">
+                    <TextBox Text="{Binding Model.AsDepth}"  Width="250" HorizontalAlignment="left" VerticalAlignment="Center" HorizontalScrollBarVisibility="Auto" ToolTip="Depth of assessment."/>
+                </WrapPanel>
+            </UniformGrid>
+            <UniformGrid Rows="1" Columns="2">
+                <WrapPanel Style="{StaticResource WrapPanel}">
+                    <TextBlock Text="Assesment Team Leader:" Margin="10" TextWrapping="Wrap" HorizontalAlignment="left" VerticalAlignment="Center"/>
+                </WrapPanel>
+                <WrapPanel Style="{StaticResource ValueColumn}">
+                    <TextBox Text="{Binding Model.AsLeader}"  Width="250" HorizontalAlignment="left" VerticalAlignment="Center" HorizontalScrollBarVisibility="Auto" ToolTip="Leader of the assessment team responsible for the report"/>
+                </WrapPanel>
+            </UniformGrid>
+            <UniformGrid Rows="1" Columns="2">
+                <WrapPanel Style="{StaticResource WrapPanel}">
+                    <TextBlock Text="Assesment Team Member List:" Margin="10" TextWrapping="Wrap" HorizontalAlignment="left" VerticalAlignment="Center"/>
+                </WrapPanel>
+                <WrapPanel Style="{StaticResource ValueColumn}">
+                    <TextBox Text="{Binding Model.AsTeamMembers}" Height="57" Width="250" Margin="0,10,10,10" AcceptsReturn="True" TextWrapping="Wrap" HorizontalAlignment="left" VerticalAlignment="Center"  VerticalScrollBarVisibility="Auto" ToolTip="List of other assessment team members."/>
+                </WrapPanel>
+            </UniformGrid>
+            <UniformGrid Rows="1" Columns="2" Margin="0,22,0,2">
+                <WrapPanel Style="{StaticResource WrapPanel}">
+                    <TextBlock Text="Image file showing location of tracts:" Margin="10" TextWrapping="Wrap" HorizontalAlignment="left" VerticalAlignment="Center"/>
+                </WrapPanel>
+                <WrapPanel Style="{StaticResource ValueColumn}" MaxHeight="50" HorizontalAlignment="left" VerticalAlignment="Center" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Auto">
+                    <Button  FontSize="18" Content="{Binding Model.TractImageFile, Converter={StaticResource FilePathToFileNameConverter}}" FontWeight="Normal" mah:ButtonHelper.PreserveTextCase="True" Background="LightGray" BorderBrush="Black"
+                         HorizontalAlignment="Left" VerticalAlignment="Center"  DataContext="{Binding ReportingAssesmentViewModel, Source={StaticResource Locator}}" Command="{Binding SelectTractImageFileCommand}" IsDefault="True">
+                    </Button>
+                </WrapPanel>
+            </UniformGrid>
+            <UniformGrid Margin="0,15,0,0" Rows="1" Columns="2">
+                <WrapPanel Style="{StaticResource WrapPanel}">
+                    <TextBlock Text="Undiscovered deposits pmf:" TextWrapping="Wrap" Margin="10" HorizontalAlignment="left" VerticalAlignment="Center"/>
+                </WrapPanel>
+                <WrapPanel Style="{StaticResource ValueColumn}">
+                    <TextBlock Text="{Binding Model.IsUndiscDepDone}" Margin="75,10,0,10" TextWrapping="Wrap" HorizontalAlignment="left" VerticalAlignment="Center"/>
+                </WrapPanel>
+            </UniformGrid>
+            <UniformGrid Rows="1" Columns="2">
+                <WrapPanel Style="{StaticResource WrapPanel}">
+                    <TextBlock Text="Include Descriptive model as Appendix?" TextWrapping="Wrap"  Margin="10,10,-75,10" HorizontalAlignment="left" VerticalAlignment="Center"/>
+                </WrapPanel>
+                <WrapPanel Style="{StaticResource ValueColumn}" >
+                    <TextBlock DataContext="{Binding Source={StaticResource Locator}, Path=ReportingAssesmentViewModel}" Text="{Binding Model.DescModelName, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" Margin="75,10,0,10" HorizontalAlignment="left" VerticalAlignment="Center"/>
+                </WrapPanel>
+            </UniformGrid>
+            <UniformGrid Rows="1" Columns="2">
+                <WrapPanel Style="{StaticResource WrapPanel}">
+                </WrapPanel>
+                <WrapPanel Style="{StaticResource ValueColumn}">
+                    <CheckBox Name="descriptivecheckbox" IsChecked="{Binding Model.AddDescriptive}" Content="Add this to report?" Margin="70,5,10,0" IsEnabled="{Binding Model.EnableDescCheck}"/>
+                </WrapPanel>
+            </UniformGrid>
+            <UniformGrid Rows="1" Columns="2">
+                <WrapPanel Style="{StaticResource WrapPanel}">
+                    <TextBlock Text="Include Grade-Tonnage model as Appendix?" TextWrapping="Wrap"  Margin="10,10,-75,10" HorizontalAlignment="left" VerticalAlignment="Center"/>
+                </WrapPanel>
+                <WrapPanel Style="{StaticResource ValueColumn}">
+                    <TextBlock DataContext="{Binding Source={StaticResource Locator}, Path=ReportingAssesmentViewModel}" Text="{Binding Model.GTModelName, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" Margin="75,10,0,10" HorizontalAlignment="left" VerticalAlignment="Center"/>
+                </WrapPanel>
+            </UniformGrid>
+            <UniformGrid Rows="1" Columns="2">
+                <WrapPanel Style="{StaticResource WrapPanel}">
+                </WrapPanel>
+                <WrapPanel Style="{StaticResource ValueColumn}">
+                    <CheckBox Name="gradecheckbox" IsChecked="{Binding Model.AddGradeTon}" Content="Add this to report?" Margin="70,5,10,0" IsEnabled="{Binding Model.EnableGTCheck}"/>
+                </WrapPanel>
+            </UniformGrid>
+            <UniformGrid Rows="1" Columns="2" Margin="0,25,0,0">
+                <WrapPanel Style="{StaticResource WrapPanel}">
+                    <TextBlock Text="Include RAEF economic filter additional output as Appendix?" TextWrapping="Wrap"  Margin="10,10,-75,10" HorizontalAlignment="left" VerticalAlignment="Center"/>
+                </WrapPanel>
+                <WrapPanel Style="{StaticResource ValueColumn}">
+                    <CheckBox Name="raefcheckbox" IsChecked="{Binding Model.AddRaef}" Content="Add this to report?" Margin="70,10,10,0" IsEnabled="{Binding Model.EnableRaefCheck}"/>
+                </WrapPanel>
+            </UniformGrid>
+            <UniformGrid Rows="1" Columns="2" Margin="0,20,0,0">
+                <WrapPanel Style="{StaticResource WrapPanel}">
+                    <TextBlock Text="Include individual tract reports as Appendix?" TextWrapping="Wrap" />
+                </WrapPanel>
+                <WrapPanel Style="{StaticResource ValueColumn}">
+                    <ComboBox Name="comboBox"                 
+                              ItemsSource="{Binding Model.TractIDCollection, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"  
+                              Margin="0,5,0,0"
+                              VerticalAlignment="Center" FontSize="18" Width="150"
+                              ToolTip="Only the tracts that have the tract report created are selectable."
+                              ScrollViewer.VerticalScrollBarVisibility="Auto"
+                              MaxDropDownHeight="180">
+                        <i:Interaction.Triggers>
+                            <i:EventTrigger EventName="DropDownOpened">
+                                <i:InvokeCommandAction Command="{Binding FindTractsCommand}" />
+                            </i:EventTrigger>
+                            </i:Interaction.Triggers>
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate>
+                                <CheckBox 
+                Content="{Binding TractName}"
+                IsChecked="{Binding IsTractChosen}" />
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
+                    </ComboBox>
+                </WrapPanel>
+            </UniformGrid>
+            <UniformGrid Rows="1" Columns="2">
+                <WrapPanel></WrapPanel>
+                <WrapPanel Margin="10,30,10,100">
+                    <Button Padding="-10,0,0,0"
+                        VerticalAlignment="Bottom" 
+                        Background="{DynamicResource AccentColorBrush}" 
+                        Foreground="White"
+                        BorderThickness="0" 
+                        Width="120" Height="50" 
+                        Command="{Binding RunToolCommand}" 
+                        DataContext="{Binding Source={StaticResource Locator}, Path=ReportingAssesmentViewModel}">
+                        <TextBlock FontSize="16" Text="Run Tool" ></TextBlock>
+                    </Button>
+                </WrapPanel>
+            </UniformGrid>
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>

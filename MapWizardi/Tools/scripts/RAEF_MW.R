@@ -12,7 +12,7 @@
 #######################################################################
 
 library(gWidgets)
-library(gWidgetstcltk)
+#library(gWidgetstcltk)
 library(dplyr)
 library(reshape)
 library(evaluate)
@@ -21,7 +21,7 @@ LaunchWithPresetParameters<<-function(presetFile,workingDir, simFile)
 	{
 	PreSetFile <<- presetFile
 	InputParTab <<- read.csv(file=PreSetFile, header=TRUE, sep=",")
-	View(InputParTab)
+	#View(InputParTab)
 
 #######################################################################
 ## Set default values

@@ -1,0 +1,16 @@
+useDynLib("ZVCV", .registration=TRUE)
+
+import(glmnet)
+import(abind)
+import(partitions)
+importFrom(mvtnorm,"rmvnorm")
+importFrom("Rcpp", "evalCpp")
+importFrom("stats", "coef", "lm", "uniroot")
+
+export("zvcv",
+"getX",
+"logsumexp",
+"Expand_Temperatures",
+"evidence_CTI",
+"evidence_SMC"
+)

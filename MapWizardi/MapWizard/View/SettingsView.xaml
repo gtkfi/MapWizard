@@ -11,6 +11,7 @@
         <Grid.Resources>
             <service:FilePathToFileNameConverter x:Key="FilePathToFileNameConverter" />
             <BooleanToVisibilityConverter x:Key="converter"/>
+            <service:ReverseBooleanConverter x:Key="ReverseBooleanConverter"/>
         </Grid.Resources>
         <TabControl TabStripPlacement="Left">
             <TabItem Header="File Paths">
@@ -20,56 +21,54 @@
                 <Border BorderBrush="White" BorderThickness="1" Margin="35,0,-5,-5">
                     <StackPanel  Background="#343533">
                         <Label FontWeight="Bold" FontSize="18" Margin="15,10">Python Path</Label>
-                        <RadioButton GroupName="Py_Group" Margin="15,10"  IsChecked="{Binding PyDefaultIsChecked, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" >
+                        <RadioButton GroupName="Py_Group" Margin="15,10"  IsChecked="{Binding Model.PythonLocationDefault, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" >
                             <WrapPanel>
                                 <TextBlock Text="Default:" FontSize="14" Margin="5,5,5,5"/>
-                                <TextBlock FontSize="14" Text="{Binding Model.PyEXEPathDefault, Mode=TwoWay}" Margin="5,5,5,5"/>
+                                <TextBlock FontSize="14" Text="{Binding Model.PythonPathDefault, Mode=TwoWay}" Margin="5,5,5,5" TextWrapping="Wrap" />
                             </WrapPanel>
                         </RadioButton>
-                        <RadioButton GroupName="Py_Group" Margin="15,10"  IsChecked="{Binding PyCustomIsChecked, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}">
+                        <RadioButton GroupName="Py_Group" Margin="15,10"  IsChecked="{Binding Model.PythonLocationDefault, Converter={StaticResource ReverseBooleanConverter}, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}">
                             <WrapPanel>
                                 <TextBlock Text="Custom" FontSize="14" Margin="5,10,5,10"/>
                                 <Button  
                                     FontSize="14" 
-                                    Content="{Binding CustomPythonPath, Mode=TwoWay}"  
+                                    Content="{Binding Model.PythonPathCustom, Mode=TwoWay}"  
                                     Width="200" 
                                     BorderBrush="Black"
                                     Margin="0" 
                                     HorizontalAlignment="Left" 
                                     VerticalAlignment="Center"                                       
                                     Command="{Binding SelectPythonFileCommand}" 
-                                    IsDefault="True" Visibility="{Binding Path=PyButtonVisibility, Converter={StaticResource converter}, Mode=TwoWay}">
+                                    IsDefault="True" Visibility="{Binding Path=Model.PythonButtonVisibility, Converter={StaticResource converter}, Mode=TwoWay}">
                                     <Button.ToolTip>
-                                        <TextBlock Text="{Binding CustomPythonPath, Mode=TwoWay}"></TextBlock>
+                                        <TextBlock Text="{Binding Model.PythonPathCustom, Mode=TwoWay}"></TextBlock>
                                     </Button.ToolTip>
                                 </Button>
                             </WrapPanel>
                         </RadioButton>
                         <Separator Width="325" Margin="0,35,0,35"></Separator>
                         <Label Margin="15,10" FontWeight="Bold" FontSize="18">R Path</Label>
-                        <RadioButton GroupName="R_Group" Margin="15,10"  IsChecked="{Binding RDefaultIsChecked, Mode=TwoWay}">
+                        <RadioButton GroupName="R_Group" Margin="15,10"  IsChecked="{Binding Model.RLocationDefault, Mode=TwoWay}">
                             <WrapPanel>
                                 <TextBlock Text="Default:" FontSize="14" Margin="5,5,5,5"/>
-                                <TextBlock FontSize="14" Text="{Binding Model.REXEPathDefault}" Margin="5,5,5,5"/>
+                                <TextBlock FontSize="14" Text="{Binding Model.RPathDefault}" Margin="5,5,5,5" TextWrapping="Wrap"/>
                             </WrapPanel>
                         </RadioButton>
-                        <RadioButton GroupName="R_Group" Margin="15,10"  IsChecked="{Binding RCustomIsChecked, Mode=TwoWay}">
+                        <RadioButton GroupName="R_Group" Margin="15,10"  IsChecked="{Binding Model.RLocationDefault, Converter={StaticResource ReverseBooleanConverter}, Mode=TwoWay}">
                             <WrapPanel>
                                 <TextBlock Text="Custom" FontSize="14" Margin="5,5,5,5"/>
                                 <Button  FontSize="14" 
-                                         Content="{Binding CustomRPath, Mode=TwoWay}"  
+                                         Content="{Binding Model.RPathCustom, Mode=TwoWay}"  
                                          Width="200" 
-                                         Margin="0" HorizontalAlignment="Left" VerticalAlignment="Center" 
-                                          
+                                         Margin="0" HorizontalAlignment="Left" VerticalAlignment="Center"                                           
                                          Command="{Binding SelectRFileCommand}" 
                                          IsDefault="True" 
-                                         Visibility="{Binding Path=RButtonVisibility, Converter={StaticResource converter}, Mode=TwoWay}">
+                                         Visibility="{Binding Path=Model.RButtonVisibility, Converter={StaticResource converter}, Mode=TwoWay}">
                                     <Button.ToolTip>
-                                        <TextBlock Text="{Binding CustomRPath, Mode=TwoWay}"></TextBlock>
+                                        <TextBlock Text="{Binding Model.RPathCustom, Mode=TwoWay}"></TextBlock>
                                     </Button.ToolTip>
                                 </Button>
                             </WrapPanel>
-
                         </RadioButton>
                         <Button
                         DataContext="{Binding Path=SettingsViewModel, Source={StaticResource Locator}}"    
@@ -92,31 +91,29 @@
                 <Border BorderBrush="White" BorderThickness="1" Margin="35,0,-5,-5">
                     <StackPanel  Background="#343533">
                         <Label Margin="15,10" FontWeight="Bold" FontSize="18">Root Path for Deposit Models</Label>
-                        <RadioButton GroupName="DepMod_Group" Margin="15,10"  IsChecked="{Binding DepModDefaultIsChecked, Mode=TwoWay}">
+                        <RadioButton GroupName="DepMod_Group" Margin="15,10"  IsChecked="{Binding Model.DepModelsLocationDefault, Mode=TwoWay}">
                             <WrapPanel>
                                 <TextBlock Text="Default:" FontSize="14" Margin="5,5,5,5"/>
-                                <TextBlock FontSize="14" Text="{Binding Model.DepModFolderPathDefault}" Margin="5,5,5,5"/>
+                                <TextBlock FontSize="14" Text="{Binding Model.DepModelsFolderPathDefault}" Margin="5,5,5,5" TextWrapping="Wrap" />
                             </WrapPanel>
                         </RadioButton>
-                        <RadioButton GroupName="DepMod_Group" Margin="15,10"  IsChecked="{Binding DepModCustomIsChecked, Mode=TwoWay}">
+                        <RadioButton GroupName="DepMod_Group" Margin="15,10"  IsChecked="{Binding Model.DepModelsLocationDefault, Converter={StaticResource ReverseBooleanConverter}, Mode=TwoWay}">
                             <WrapPanel>
                                 <TextBlock Text="Custom" FontSize="14" Margin="5,5,5,5"/>
                                 <Button  FontSize="14" 
-                                         Content="{Binding Model.DepModFolderPath, Mode=TwoWay}"  
+                                         Content="{Binding Model.DepModelsFolderPathCustom, Mode=TwoWay}"  
                                          Width="200" 
-                                         Margin="0" HorizontalAlignment="Left" VerticalAlignment="Center" 
-                                         
+                                         Margin="0" HorizontalAlignment="Left" VerticalAlignment="Center"                                          
                                          Command="{Binding SelectDepModFolderCommand}" 
                                          IsDefault="True" 
-                                         Visibility="{Binding Path=DepModButtonVisibility, Converter={StaticResource converter}, Mode=TwoWay}">
+                                         Visibility="{Binding Path=Model.DepModelsButtonVisibility, Converter={StaticResource converter}, Mode=TwoWay}">
                                     <Button.ToolTip>
-                                        <TextBlock Text="{Binding CustomDepModPath}"></TextBlock>
+                                        <TextBlock Text="{Binding Model.DepModelsFolderPathCustom}"></TextBlock>
                                     </Button.ToolTip>
                                 </Button>
                             </WrapPanel>
                         </RadioButton>
-                        <Button
-                           
+                        <Button                           
                         Command="{Binding SaveSettingsCommand}"    
                         Margin="15,55"  
                         HorizontalAlignment="Left" 
@@ -138,11 +135,11 @@
                         <Label Margin="15,10" FontWeight="Bold" FontSize="18">Name of the Deposit Type</Label>
                         <WrapPanel Margin="15,10" >
                             <TextBlock Text="Current Project:" Margin="5,5,5,5"/>
-                            <TextBlock Text="{Binding ProjectName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Margin="5,5,5,5"/>
+                            <TextBlock Text="{Binding Model.ProjectName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Margin="5,5,5,5" TextWrapping="Wrap"/>
                         </WrapPanel>
                         <WrapPanel Margin="15,10" >
                             <TextBlock Margin="5,5,5,5" Text="Deposit Type:" />
-                            <TextBox  Margin="5,5,5,5" Text="{Binding DepositType}" Visibility="{Binding DepositTypeVisibility, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                            <TextBox  Margin="5,5,5,5" Text="{Binding Model.DepositType}" Visibility="{Binding Model.DepositTypeVisibility, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                         </WrapPanel>
                         <Button
                         DataContext="{Binding Path=SettingsViewModel, Source={StaticResource Locator}}"    

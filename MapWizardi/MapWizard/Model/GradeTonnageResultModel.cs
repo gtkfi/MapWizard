@@ -38,7 +38,7 @@ namespace MapWizard.Model
         /// <summary>
         /// Tonnage plot BitMap.
         /// </summary>
-        /// @return ImageSource
+        /// @return ImageSource.
         public ImageSource TonnagePlotBitMap
         {
             get

@@ -82,12 +82,18 @@ poly_clean<-function(inPolyShp,minarea,outPolyShpP,outPolyShpF,outStatTxt,outDis
   polyg<-shapefile(inPolyShp)
   disa_polyg<-disaggregate(polyg)
   poly_areas<-area(disa_polyg)
-  small_p<-which(poly_areas<minarea)
-  disa_polyg<-disa_polyg[-small_p,]
-  disa_polyg<-fill_holes(disa_polyg,100000)
+  if (minarea>min(poly_areas)) {
+    small_p<-which(poly_areas<minarea)
+    disa_polyg<-disa_polyg[-small_p,]
+  }
+  disa_polyg<-fill_holes(disa_polyg,minarea)
   if (file.exists(paste(dirname(outPolyShpP),"/",outPolyShpF,".shp",sep=""))) file.remove(paste(dirname(outPolyShpP),"/",outPolyShpF,".shp",sep=""))
   writeOGR(disa_polyg,dsn=outPolyShpP,layer=outPolyShpF,driver="ESRI Shapefile",verbose=TRUE)
-# Compute area statistics of the cleaned polygons, write output stat file and genereate stat plots
+  pdf(paste(dirname(outPolyShpP),"/",outPolyShpF,".pdf",sep=""))
+  plot(disa_polyg)
+  header <-paste("Minimum area",toString(minarea / 1000000),"km2")
+  mtext(header)
+  # Compute area statistics of the cleaned polygons, write output stat file and genereate stat plots
   poly_areas<-area(disa_polyg)
   ar_stat<-c(min(poly_areas),median(poly_areas),mean(poly_areas),max(poly_areas),sd(poly_areas),quantile(poly_areas,prob=c(0.1,0.25,0.5,0.75,0.9)))
   names(ar_stat)<-c("Min","Median","Mean","Max","SD","Q0.1","Q0.25","Q0.5","Q0.75","Q0.9")

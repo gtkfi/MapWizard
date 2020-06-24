@@ -6,163 +6,93 @@
     public class SettingsDataModel : ParameterBase
     {
         /// <summary>
+        /// Default Python path.
+        /// </summary>
+        /// @return Path.
+        public string PythonPathDefault
+        {
+            get { return GetValue<string>("PythonPathDefault"); }
+            set { Add<string>("PythonPathDefault", value); }
+        }
+
+        /// <summary>
         /// Path to .exe file for Python.
         /// </summary>
         /// @return Path.
-        public string PythonEXEPath
+        public string PythonPathCustom
         {
-            get { return GetValue<string>("PythonEXEPath"); }
-            set { Add<string>("PythonEXEPath", value); }
+            get { return GetValue<string>("PythonPathCustom"); }
+            set { Add<string>("PythonPathCustom", value); }
         }
 
         /// <summary>
-        /// Path to .exe file for R.
+        /// "Default" radio button.
         /// </summary>
         /// @return Path.
-        public string REXEPath
+        public string PythonLocationDefault
         {
-            get { return GetValue<string>("REXEPath"); }
-            set { Add<string>("REXEPath", value); }
-        }
-
-        /// <summary>
-        /// Path to root folder.
-        /// </summary>
-        /// @return Path.
-        public string RootFolderPath
-        {
-            get { return GetValue<string>("RootFolderPath"); }
-            set { Add<string>("RootFolderPath", value); }
-        }
-
-        /// <summary>
-        /// Path to Deposit Models folder.
-        /// </summary>
-        /// @return Path.
-        public string DepModFolderPath
-        {
-            get { return GetValue<string>("DepModFolderPath"); }
-            set { Add<string>("DepModFolderPath", value); }
+            get { return GetValue<string>("PythonLocationDefault"); }
+            set { Add<string>("PythonLocationDefault", value); }
         }
 
         /// <summary>
         /// Default R path.
         /// </summary>
         /// @return Path.
-        public string REXEPathDefault
+        public string RPathDefault
         {
-            get { return GetValue<string>("REXEPathdefault"); }
-            set { Add<string>("REXEPathdefault", value); }
+            get { return GetValue<string>("RPathDefault"); }
+            set { Add<string>("RPathDefault", value); }
         }
 
         /// <summary>
-        /// Default Python path.
+        /// Path to .exe file for R.
         /// </summary>
         /// @return Path.
-        public string PyEXEPathDefault
+        public string RPathCustom
         {
-            get { return GetValue<string>("PyEXEPathDefault"); }
-            set { Add<string>("PyEXEPathDefault", value); }
-        }
-
-        /// <summary>
-        /// Default Deposit Models Folder Path.
-        /// </summary>
-        /// @return Path.
-        public string DepModFolderPathDefault
-        {
-            get { return GetValue<string>("DepModFolderPathDefault"); }
-            set { Add<string>("DepModFolderPathDefault", value); }
-        }
-
-        /// <summary>
-        /// "Default" radio button.
-        /// </summary>
-        /// @return Path.
-        public string DefaultPythonLocation
-        {
-            get { return GetValue<string>("DefaultPythonLocation"); }
-            set { Add<string>("DefaultPythonLocation", value); }
+            get { return GetValue<string>("RPathCustom"); }
+            set { Add<string>("RPathCustom", value); }
         }
 
         /// <summary>
         /// "Custom" radio button.
         /// </summary>
         /// @return Path.
-        public string CustomPythonLocation
-        {
-            get { return GetValue<string>("CustomPythonLocation"); }
-            set { Add<string>("CustomPythonLocation", value); }
-        }
-
-        /// <summary>
-        /// Visibility for custom Python path button.
-        /// </summary>
-        /// @return Visibility value.
-        public string PyButtonVisibility
-        {
-            get { return GetValue<string>("PyButtonVisibility"); }
-            set { Add<string>("PyButtonVisibility", value); }
-        }
-
-        /// <summary>
-        /// "Custom" radio button.
-        /// </summary>
-        /// @return Path.
-        public string DefaultRLocation
+        public string RLocationDefault
         {
             get { return GetValue<string>("DefaultRLocation"); }
             set { Add<string>("DefaultRLocation", value); }
         }
 
         /// <summary>
+        /// Default Deposit Models Folder Path.
+        /// </summary>
+        /// @return Path.
+        public string DepModelsFolderPathDefault
+        {
+            get { return GetValue<string>("DepModelsFolderPathDefault"); }
+            set { Add<string>("DepModelsFolderPathDefault", value); }
+        }
+
+        /// <summary>
+        /// Path to Deposit Models folder.
+        /// </summary>
+        /// @return Path.
+        public string DepModelsFolderPathCustom
+        {
+            get { return GetValue<string>("DepModelsFolderPathCustom"); }
+            set { Add<string>("DepModelsFolderPathCustom", value); }
+        }
+
+        /// <summary>
         /// "Default" radio button.
         /// </summary>
         /// @return Path.
-        public string CustomRLocation
+        public string DepModelsLocationDefault
         {
-            get { return GetValue<string>("CustomRLocation"); }
-            set { Add<string>("CustomRLocation", value); }
-        }
-
-        /// <summary>
-        /// Visibility for custom R path button.
-        /// </summary>
-        /// @return Visibility value.
-        public string RButtonVisibility
-        {
-            get { return GetValue<string>("RButtonVisibility"); }
-            set { Add<string>("RButtonVisibility", value); }
-        }
-
-        /// <summary>
-        /// "Default" radio button.
-        /// </summary>
-        /// @return Path.
-        public string DefaultDepModLocation
-        {
-            get { return GetValue<string>("DefaultDepModLocation"); }
-            set { Add<string>("DefaultDepModLocation", value); }
-        }
-
-        /// <summary>
-        /// "Custom" radio button.
-        /// </summary>
-        /// @return Path.
-        public string CustomDepModLocation
-        {
-            get { return GetValue<string>("CustomDepModLocation"); }
-            set { Add<string>("CustomDepModLocation", value); }
-        }
-
-        /// <summary>
-        /// Visibility for custom Deposit Models path button.
-        /// </summary>
-        /// @return Visibility value.
-        public string DepModButtonVisibility
-        {
-            get { return GetValue<string>("DepModButtonVisibility"); }
-            set { Add<string>("DepModButtonVisibility", value); }
+            get { return GetValue<string>("DepModelsLocationDefault"); }
+            set { Add<string>("DepModelsLocationDefault", value); }
         }
 
         /// <summary>
@@ -193,6 +123,16 @@
         {
             get { return GetValue<string>("DepositType"); }
             set { Add<string>("DepositType", value); }
+        }
+        
+        /// <summary>
+        /// Path to root folder.
+        /// </summary>
+        /// @return Path.
+        public string RootFolderPath
+        {
+            get { return GetValue<string>("RootFolderPath"); }
+            set { Add<string>("RootFolderPath", value); }
         }
     }
 }

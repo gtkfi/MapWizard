@@ -1,12 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
-using System.ServiceModel.Channels;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.Win32;
 using NLog;
 
 namespace MapWizard.Tools
@@ -20,7 +14,7 @@ namespace MapWizard.Tools
         /// <summary>
         /// CSV file for negative binomial.
         /// </summary>
-        public string depositsNegativeCSV
+        public string DepositsNegativeCSV
         {
             get { return GetValue<string>("depositsNegativeCSV"); }
             set { Add<string>("depositsNegativeCSV", value); }
@@ -28,7 +22,7 @@ namespace MapWizard.Tools
         /// <summary>
         /// CSV file for Custom run.
         /// </summary>
-        public string depositsCustomCSV
+        public string DepositsCustomCSV
         {
             get { return GetValue<string>("depositsCustomCSV"); }
             set { Add<string>("depositsCustomCSV", value); }
@@ -36,7 +30,7 @@ namespace MapWizard.Tools
         /// <summary>
         /// Rationale for estimations.
         /// </summary>
-        public string estRationaleTXT
+        public string EstRationaleTXT
         {
             get { return GetValue<string>("estRationaleTXT"); }
             set { Add<string>("estRationaleTXT", value); }
@@ -44,7 +38,7 @@ namespace MapWizard.Tools
         /// <summary>
         /// Rationale for Mark3 estimations.
         /// </summary>
-        public string mark3EstRationaleTXT
+        public string Mark3EstRationaleTXT
         {
             get { return GetValue<string>("mark3EstRationaleTXT"); }
             set { Add<string>("mark3EstRationaleTXT", value); }
@@ -52,7 +46,7 @@ namespace MapWizard.Tools
         /// <summary>
         /// Rationale for custom run estimations.
         /// </summary>
-        public string customEstRationaleTXT
+        public string CustomEstRationaleTXT
         {
             get { return GetValue<string>("customEstRationaleTXT"); }
             set { Add<string>("customEstRationaleTXT", value); }
@@ -60,7 +54,7 @@ namespace MapWizard.Tools
         /// <summary>
         /// Method of evaluation (Custom, middle/MARK3, negative binomial).
         /// </summary>
-        public string method
+        public string Method
         {
             get { return GetValue<string>("method"); }
             set { Add<string>("method", value); }
@@ -138,7 +132,6 @@ namespace MapWizard.Tools
             get { return GetValue<string>("CustomExtensionFolder"); }
             set { Add<string>("CustomExtensionFolder", value); }
         }
-
     }
 
     /// <summary>
@@ -183,7 +176,6 @@ namespace MapWizard.Tools
             get { return GetValue<string>("estRationaleTXT"); }
             set { Add<string>("estRationaleTXT", value); }
         }
-
     }
 
     /// <summary>
@@ -200,22 +192,21 @@ namespace MapWizard.Tools
         /// <returns>Result as UndiscoveredDepositsResult</returns>
         public ToolResult Execute(ToolParameters inputParams)
         {
+            var input = inputParams as UndiscoveredDepositsInputParams;
             UndiscoveredDepositsResult result = new UndiscoveredDepositsResult();
             string usedMethod = "";
             string pathToCsv = "";
             string pathToTxt = "";
-            string projectFolder = Path.Combine(inputParams.Env.RootPath, "UndiscDep");
-
+            string undiscDepFolder = Path.Combine(inputParams.Env.RootPath, "UndiscDep");
+            string projectFolder = Path.Combine(undiscDepFolder, input.TractID);
             if (!Directory.Exists(projectFolder))
             {
                 Directory.CreateDirectory(projectFolder);
             }
-
-            var input = inputParams as UndiscoveredDepositsInputParams;
             //Create estimation based on input data and method
             try
             {
-                if (input.method == "Negative")
+                if (input.Method == "Negative")
                 {
                     projectFolder = Path.Combine(projectFolder, "NegativeBinomial", input.NegBinomialExtensionFolder);
                     if (!Directory.Exists(projectFolder))
@@ -230,14 +221,13 @@ namespace MapWizard.Tools
                             file.Delete();
                         }
                     }
-                    input.Save(Path.Combine(projectFolder, "undiscovered_deposits_input_params.json"));
                     usedMethod = "NegBinomial";
                     pathToCsv = projectFolder + @"\nDepEst.csv";
-                    CreateEstimationCsv(pathToCsv, input.depositsNegativeCSV);
+                    CreateEstimationCsv(pathToCsv, input.DepositsNegativeCSV);
                     pathToTxt = projectFolder + @"\EstRationale.txt";
-                    CreateRationaleTxt(pathToTxt, input.estRationaleTXT);
+                    CreateRationaleTxt(pathToTxt, input.EstRationaleTXT);
                 }
-                else if (input.method == "Custom")
+                else if (input.Method == "Custom")
                 {
                     projectFolder = Path.Combine(projectFolder, "Custom", input.CustomExtensionFolder);
                     if (!Directory.Exists(projectFolder))
@@ -252,14 +242,13 @@ namespace MapWizard.Tools
                             file.Delete();
                         }
                     }
-                    input.Save(Path.Combine(projectFolder, "undiscovered_deposits_input_params.json"));
                     usedMethod = "CustomMark4";
                     pathToCsv = projectFolder + @"\nDepEstCustom.csv";
-                    CreateEstimationCsv(pathToCsv, input.depositsCustomCSV);
+                    CreateEstimationCsv(pathToCsv, input.DepositsCustomCSV);
                     pathToTxt = projectFolder + @"\EstRationale.txt";
-                    CreateRationaleTxt(pathToTxt, input.customEstRationaleTXT);
+                    CreateRationaleTxt(pathToTxt, input.CustomEstRationaleTXT);
                 }
-                else if (input.method == "Middle")
+                else if (input.Method == "Middle")
                 {
                     projectFolder = Path.Combine(projectFolder, "MARK3", input.Mark3ExtensionFolder);
                     if (!Directory.Exists(projectFolder))
@@ -274,31 +263,26 @@ namespace MapWizard.Tools
                             file.Delete();
                         }
                     }
-                    input.Save(Path.Combine(projectFolder, "undiscovered_deposits_input_params.json"));
                     usedMethod = "CustomMark3";
                     pathToCsv = projectFolder + @"\nDepEstMiddle.csv";
                     string customEstimations = "";// "N90,N50,N10,N5,N1\n";
                     customEstimations += input.N90 + "\n" + input.N50 + "\n" + input.N10 + "\n" + input.N5 + "\n" + input.N1 + "\n";
                     CreateEstimationCsv(pathToCsv, customEstimations);
                     pathToTxt = projectFolder + @"\EstRationale.txt";
-                    CreateRationaleTxt(pathToTxt, input.mark3EstRationaleTXT);
+                    CreateRationaleTxt(pathToTxt, input.Mark3EstRationaleTXT);
                 }
             }
             catch (Exception ex)
             {
                 throw new Exception("Failed to create estimation: " + ex);
             }
+            input.Save(Path.Combine(undiscDepFolder, "undiscovered_deposits_input_params.json"));
             try
             {
                 var path = System.AppDomain.CurrentDomain.BaseDirectory.Replace(@"\", @"/");
-
                 var rCodeFilePath = path + "scripts/UndiscoveredDepositsWrapper.R";
-
                 string rScriptExecutablePath = inputParams.Env.RPath;
-
                 string procResult = string.Empty;
-
-
                 var info = new ProcessStartInfo();
                 info.FileName = rScriptExecutablePath;
 
@@ -306,7 +290,8 @@ namespace MapWizard.Tools
                 string tmpSummary = Path.Combine(projectFolder, "summary.txt");
                 string describ = "describ";
                 string tractName = new DirectoryInfo(projectFolder).Name;
-                string outputCsv = Path.Combine(projectFolder, tractName + input.TractID + ".csv");
+                //string outputCsv = Path.Combine(projectFolder, tractName + input.TractID + ".csv");
+                string outputCsv = Path.Combine(projectFolder, "TractPmf.csv");
                 string tract = input.TractID;
 
                 info.Arguments = "\"" + rCodeFilePath + "\" \"" + usedMethod + "\" \"" + pathToCsv + "\" \"" + tmpSummary + "\" \"" + describ + "\" \"" + projectFolder + "\" \"" + outputCsv + "\" \"" + tract;
@@ -321,17 +306,19 @@ namespace MapWizard.Tools
                 {
                     proc.StartInfo = info;
                     proc.Start();
-                    StreamReader errorReader = proc.StandardError;
-                    StreamReader myStreamReader = proc.StandardOutput;
-                    string errors = errorReader.ReadToEnd();
-                    string stream = myStreamReader.ReadToEnd();
-                    procResult = proc.StandardOutput.ReadToEnd();
-                    proc.Close();
-                    logger.Error("Errors:" + errors);
-                    if (errors.Length > 1 && errors.ToLower().Contains("error"))  //Don't throw exception over warnings or empty error message.
+                    using (StreamReader errorReader = proc.StandardError)
                     {
-                        logger.Error(errors);
-                        throw new Exception("R script execution failed. Check log file for details");
+                        //StreamReader myStreamReader = proc.StandardOutput; TAGGED: no usage?
+                        string errors = errorReader.ReadToEnd();
+                        //string stream = myStreamReader.ReadToEnd(); TAGGED: no usage?
+                        procResult = proc.StandardOutput.ReadToEnd();
+                        proc.Close();
+                        logger.Error("Errors:" + errors);
+                        if (errors.Length > 1 && errors.ToLower().Contains("error"))  //Don't throw exception over warnings or empty error message.
+                        {
+                            logger.Error(errors);
+                            throw new Exception("R script execution failed. Check log file for details");
+                        }
                     }
                     result.Summary = File.ReadAllText(Path.Combine(projectFolder, "summary.txt"));
                     result.PlotImage = Path.Combine(projectFolder, "plot.jpeg");
@@ -346,10 +333,17 @@ namespace MapWizard.Tools
             return result;
         }
 
+        /// <summary>
+        /// Create Estimation CSV.
+        /// </summary>
         private void CreateEstimationCsv(string pathToCsv, string depositsEstimations)
         {
             File.WriteAllText(pathToCsv, depositsEstimations);
         }
+
+        /// <summary>
+        /// Create estimate rationale textfile.
+        /// </summary>
         private void CreateRationaleTxt(string pathToTXT, string estimatedRationale)
         {
             File.WriteAllText(pathToTXT, estimatedRationale);

@@ -2,6 +2,8 @@
 using MahApps.Metro.Controls.Dialogs;
 using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Windows;
 using System.Windows.Forms;
 using ToastNotifications;
 using ToastNotifications.Core;
@@ -27,9 +29,14 @@ namespace MapWizard.Service
         /// <param name="filter">Filter.</param>
         /// <param name="checkFileExists">Check if file exists.</param>
         /// <param name="checkPathExists">Check if path exists.</param>
+        /// <param name="rootPath">Root path of the project.</param>
         /// <returns>Open file dialog.</returns>
-        public string OpenFileDialog(string initialPath = "", string filter = "", bool checkFileExists = true, bool checkPathExists = true)
+        public string OpenFileDialog(string initialPath = "", string filter = "", bool checkFileExists = true, bool checkPathExists = true, string rootPath="")
         {
+            if (!Directory.Exists(initialPath))
+            {
+                initialPath = rootPath;
+            }
             OpenFileDialog openFileDialog = new OpenFileDialog()
             {
                 InitialDirectory = initialPath,
@@ -51,8 +58,12 @@ namespace MapWizard.Service
         /// <param name="checkFileExists">Check if files exists.</param>
         /// <param name="checkPathExists">Check if path exists.</param>
         /// <returns>Open files dialog.</returns>
-        public List<string> OpenFilesDialog(string initialPath = "", string filter = "", bool checkFileExists = true, bool checkPathExists = true)
+        public List<string> OpenFilesDialog(string initialPath = "", string filter = "", bool checkFileExists = true, bool checkPathExists = true, string rootPath = "")
         {
+            if (!Directory.Exists(initialPath))
+            {
+                initialPath = rootPath;
+            }
             OpenFileDialog openFileDialog = new OpenFileDialog()
             {
                 InitialDirectory = initialPath,
@@ -96,33 +107,25 @@ namespace MapWizard.Service
             }
             return default(string);
         }
+
         /// <summary>
-        /// Save file dialog.
+        /// Choose OK or cancel the choice.
         /// </summary>
-        /// <param name="initialPath">Initial path.</param>
-        /// <param name="filter">Filter.</param>
-        /// <param name="checkFileExists">Check if files exists.</param>
-        /// <param name="checkPathExists">Check if path exists.</param>
-        /// <returns>Save file dialog.</returns>
-        public string SaveFileDialog(string initialPath = "", string filter = "", bool checkFileExists = false, bool checkPathExists = true)
+        /// <returns>True or false based on choice.</returns>
+        public bool MessageBoxDialog()
         {
-            SaveFileDialog saveFileDialog = new SaveFileDialog()
+            string messageBoxText = "Do you want to open the image file?";
+            string caption = "Confirmation";
+            MessageBoxButton button = MessageBoxButton.OKCancel;
+            MessageBoxImage icon = MessageBoxImage.Question;
+            MessageBoxResult result = System.Windows.MessageBox.Show(messageBoxText, caption, button, icon);
+            if (result == MessageBoxResult.OK)
             {
-                InitialDirectory = initialPath,
-                Filter = filter,
-                CheckFileExists = checkFileExists,
-                CheckPathExists = checkPathExists,
-
-            };
-
-            if (saveFileDialog.ShowDialog() == DialogResult.OK)
-            {
-                saveFileDialog.FileName = saveFileDialog.FileName;
-                return saveFileDialog.FileName;
+                return true;
             }
-            return default(string);
+            return false;
         }
-     
+
         /// <summary>
         /// Show ToastNotification on UI.
         /// </summary>
@@ -152,7 +155,7 @@ namespace MapWizard.Service
             _notifier = new Notifier(cfg =>
             {
                 cfg.PositionProvider = new WindowPositionProvider(parentWindow: Application.Current.MainWindow, corner: Corner.TopLeft, offsetX: 350, offsetY: notificationYCoordinate);
-                cfg.LifetimeSupervisor = new TimeAndCountBasedLifetimeSupervisor(notificationLifetime: TimeSpan.FromSeconds(10), maximumNotificationCount: MaximumNotificationCount.FromCount(1));
+                cfg.LifetimeSupervisor = new TimeAndCountBasedLifetimeSupervisor(notificationLifetime: TimeSpan.FromSeconds(5), maximumNotificationCount: MaximumNotificationCount.FromCount(1));
                 cfg.Dispatcher = Application.Current.Dispatcher;
                 cfg.DisplayOptions.TopMost = false;
                 cfg.DisplayOptions.Width = 350;
@@ -186,7 +189,25 @@ namespace MapWizard.Service
             };
             var metroWindow = (Application.Current.MainWindow as MetroWindow);
             MessageDialogResult result = await metroWindow.ShowMessageAsync("", "", MessageDialogStyle.Affirmative, mySettings);
-
         }
+
+        /// <summary>
+        /// Choose OK or cancel the choice.
+        /// </summary>
+        /// <returns>True or false based on choice.</returns>
+        public bool ConfirmationDialog(string message)
+        {
+            string messageBoxText = message;
+            string caption = "Confirmation";
+            MessageBoxButton button = MessageBoxButton.OKCancel;
+            MessageBoxImage icon = MessageBoxImage.Question;
+            MessageBoxResult result = System.Windows.MessageBox.Show(messageBoxText, caption, button, icon);
+            if (result == MessageBoxResult.OK)
+            {
+                return true;
+            }
+            return false;
+        }
+
     }
 }

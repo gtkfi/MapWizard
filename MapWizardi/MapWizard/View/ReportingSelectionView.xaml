@@ -9,26 +9,25 @@
     <Grid>
         <Button Padding="-10,0,0,0"
                 Margin="0,0,0,80"
-                        VerticalAlignment="Center" 
-                        Background="{DynamicResource AccentColorBrush}" 
-                        Foreground="White"
-                        BorderThickness="0" 
-                        Width="160" Height="50" 
-                        Command="{Binding GoToTractReportCommand}" 
-                        DataContext="{Binding Source={StaticResource Locator}, Path=ReportingViewModel}">
+                VerticalAlignment="Center" 
+                Background="{DynamicResource AccentColorBrush}" 
+                Foreground="White"
+                BorderThickness="0" 
+                Width="160" Height="50" 
+                Command="{Binding GoToTractReportCommand}" 
+                DataContext="{Binding Source={StaticResource Locator}, Path=ReportingViewModel}">
             <TextBlock FontSize="16" Text="Tract Report" ToolTip="Generate a tract report"></TextBlock>
         </Button>
         <Button Padding="-10,0,0,0"
                 Margin="0,80,0,0"
-                        VerticalAlignment="Center" 
-                        Background="{DynamicResource AccentColorBrush}" 
-                        Foreground="White"
-                        BorderThickness="0" 
-                        Width="160" Height="50" 
-                        IsEnabled="False"
-                        Command="{Binding GoToTractReportCommand}" 
-                        DataContext="{Binding Source={StaticResource Locator}, Path=ReportingViewModel}">
-            <TextBlock FontSize="16" Text="Summary Report" ></TextBlock>
+                VerticalAlignment="Center" 
+                Background="{DynamicResource AccentColorBrush}" 
+                Foreground="White"
+                BorderThickness="0" 
+                Width="160" Height="50"                         
+                DataContext="{Binding Source={StaticResource Locator}, Path=ReportingAssesmentViewModel}"
+                Command="{Binding GoToAssesmentReportCommand}" >
+            <TextBlock FontSize="16" Text="Assesment Report" ></TextBlock>
         </Button>
     </Grid>
 </UserControl>

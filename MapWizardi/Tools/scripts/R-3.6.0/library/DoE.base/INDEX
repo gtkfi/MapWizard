@@ -1,0 +1,68 @@
+DoE.base-package        Full factorials, orthogonal arrays and base
+                        utilities for DoE packages
+GRind                   Functions for calculating generalized
+                        resolution, average R-squared values and
+                        squared canonical correlations, and for
+                        checking design regularity
+ICFTs                   Function for calculating interaction
+                        contribution frequency tables
+SN                      Function for the signal-to-noise ratio 10 *
+                        log10(mean^2/var)
+VSGFS                   VSGFS: an experiment using an optimized
+                        orthogonal array in 72 runs
+[.design                Methods for class design objects
+add.response            Function to add response values to an
+                        experimental design
+block.catlg3            Catalogues for blocking full factorial 2-level
+                        and 3-level designs, and lists of generating
+                        columns for regular 2- and 3-level designs.
+contr.FrF2              Contrasts for orthogonal Fractional Factorial
+                        2-level designs
+corrPlot                Function to Visualize Correlations Between
+                        Model Matrix Columns for an Experimental Design
+cross.design            Function to cross several designs
+design                  Class design and its accessor functions
+expansive.replace       Expansive replacement for two orthogonal arrays
+export.design           Function for exporting a design object
+fac.design              Function for full factorial designs
+factorize.factor        Factorize integer numbers and factors
+formula.design          Function to change the default formula for a
+                        data frame of class design to involve the
+                        correct factors with the desired effects and
+                        responses
+genChild                Internal utility functions to support automatic
+                        creation of child arrays from entries of the
+                        data frame oacat
+generalized.word.length
+                        Functions for calculating the generalized word
+                        length pattern, projection frequency tables or
+                        optimizing column selection within an array
+getblock                Functions to extract a block factor from a
+                        class design object or to rerandomize a class
+                        design object
+halfnormal              Creation of half normal effects plots and
+                        numeric methods for significance assessment
+iscube                  Functions to isolate cube points from 2-level
+                        fractional factorial design with center and /
+                        or star points
+lm                      lm and aov methods for class design objects
+lowerbound_AR           Function to Calculate a Lower Bound for A_R and
+                        Internal Auxiliary Functions
+oa.design               Function for accessing orthogonal arrays
+oa_feasible             Function to Check Whether an Array of Specified
+                        Strength Might Exist
+oacat                   Data Frames That List Available Orthogonal
+                        Arrays
+param.design            Function to generate Taguchi style parameter
+                        designs
+planor2design           Convert matrix, data frame or object of class
+                        planordesign to object of class design
+plot.design             Plotting class design objects
+print.oa                Function to Print oa Objects with a Lot of
+                        Added Info
+qua.design              Function to switch between qualitative and
+                        quantitative factors and different contrast
+                        settings
+reptowide               Reshape designs with repeated measurements
+show.oas                Function to display list of available
+                        orthogonal arrays

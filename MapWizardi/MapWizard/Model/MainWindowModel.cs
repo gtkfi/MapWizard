@@ -6,7 +6,9 @@ namespace MapWizard.Model
     /// MainWindowModel
     /// </summary>
     public class MainWindowModel : ObservableObject
-    {                
+    {
+        private bool isBusy = false;
+        private int selectedTabIndex;
         private string depositType;
         private string projectLocation;
         private string newProjectName;
@@ -22,6 +24,36 @@ namespace MapWizard.Model
         private string project4Path;
         private string project5Path;
         private string dialogContentSource;
+
+        /// <summary>
+        /// Assess whether the program is busy.
+        /// </summary>
+        /// <returns>Boolean representing the state.</returns>
+        public bool IsBusy
+        {
+            get { return isBusy; }
+            set
+            {
+                if (isBusy == value) return;
+                isBusy = value;
+                RaisePropertyChanged(() => IsBusy);
+            }
+        }
+
+        /// <summary>
+        /// Get and set current Tab index.
+        /// </summary>
+        /// <returns>Index of selected tab.</returns>
+        public int SelectedTabIndex
+        {
+            get { return selectedTabIndex; }
+            set
+            {
+                if (value == selectedTabIndex) return;
+                selectedTabIndex = value;
+                RaisePropertyChanged("SelectedTabIndex");
+            }
+        }
 
         /// <summary>
         /// Deposit type.

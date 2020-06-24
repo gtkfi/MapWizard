@@ -8,34 +8,83 @@ namespace MapWizard.Model
     /// </summary>
     public class ReportingModel : ObservableObject
     {
-        private string descModelPath;
-        private string gtModelPath;
-        private string descModelName;
-        private string gtModelName;
-        private bool addDescriptive;
-        private bool addGradeTon;
-        private bool enableDescCheck;
-        private bool enableGTCheck;
+        // Always initialized the same way.
+        private bool isBusy;
+        // Not always initialized the same way.
+        private string lastRunDate = "Last Run: Never";
+        private int runStatus = 2;
+        private string descModelPath = "-";
+        private string gtModelPath = "-";
+        private string descModelName = "-";
+        private string gtModelName = "-";
+        private bool addDescriptive = false;
+        private bool addGradeTon = false;
+        private bool enableDescCheck = false;
+        private bool enableGTCheck = false;
         private string estimateRationale;
-        private string isUndiscDepDone;
-        private string isRaefDone;
-        private string isScreenerDone;
-        private string depositType;
-        private string tractCriteriaFile;
-        private string tractImageFile;
-        private string knownDepositsFile;
-        private string prospectsOccurencesFile;
-        private string explorationFile;
-        private string sourcesFile;
-        private string referencesFile;
-        private ObservableCollection<string> tractIDNames;
-        private string selectedTractIndex;
+        private string isUndiscDepDone = "No";
+        private string isRaefDone = "No";
+        private string isScreenerDone = "No";
+        private string depositType = "-";
+        private string tractImageFile = "Choose image file";
+        private string knownDepositsFile = "Choose Word file";
+        private string prospectsOccurencesFile = "Choose Word file";
+        private string explorationFile = "Choose Word file";
+        private string sourcesFile = "Choose Word file";
+        private string referencesFile = "Choose Word file";
+        private ObservableCollection<string> tractIDNames = new ObservableCollection<string>();
+        private string selectedTract;
         private string authors;
         private string country;
         private string asDate;
         private string asDepth;
         private string asLeader;
         private string asTeamMembers;
+
+        /// <summary>
+        /// Is busy?
+        /// </summary>
+        /// <returns>Boolean representing the state.</returns>
+        public bool IsBusy
+        {
+            get { return isBusy; }
+            set
+            {
+                if (isBusy == value) return;
+                isBusy = value;
+                RaisePropertyChanged(() => IsBusy);
+            }
+        }
+
+        /// <summary>
+        /// Status for the tool that shows if the tool ran correctly last time.
+        /// </summary>
+        /// <returns>Integer representing the status.</returns>
+        public int RunStatus
+        {
+            get { return runStatus; }
+            set
+            {
+                if (value == runStatus) return;
+                runStatus = value;
+                RaisePropertyChanged();
+            }
+        }
+
+        /// <summary>
+        /// Gets the last run time of the tool.
+        /// </summary>
+        /// <returns>Date and time of the last run.</returns>
+        public string LastRunDate
+        {
+            get { return lastRunDate; }
+            set
+            {
+                if (value == lastRunDate) return;
+                lastRunDate = value;
+                RaisePropertyChanged();
+            }
+        }
 
         /// <summary>
         /// Chosen model from Descriptive tool.
@@ -49,6 +98,10 @@ namespace MapWizard.Model
             }
             set
             {
+                if (value == null)
+                {
+                    value = "-";
+                }
                 Set<string>(() => this.DescModelPath, ref descModelPath, value);
             }
         }
@@ -65,6 +118,10 @@ namespace MapWizard.Model
             }
             set
             {
+                if (value == null)
+                {
+                    value = "-";
+                }
                 Set<string>(() => this.GTModelPath, ref gtModelPath, value);
             }
         }
@@ -81,6 +138,15 @@ namespace MapWizard.Model
             }
             set
             {
+                if (value == null)
+                {
+                    value = "-";
+                    EnableDescCheck = false;
+                }
+                else
+                {
+                    EnableDescCheck = true;
+                }
                 Set<string>(() => this.DescModelName, ref descModelName, value);
             }
         }
@@ -97,6 +163,15 @@ namespace MapWizard.Model
             }
             set
             {
+                if (value == null)
+                {
+                    value = "-";
+                    EnableGTCheck = false;
+                }
+                else
+                {
+                    EnableGTCheck = true;
+                }
                 Set<string>(() => this.GTModelName, ref gtModelName, value);
             }
         }
@@ -193,6 +268,10 @@ namespace MapWizard.Model
             }
             set
             {
+                if (value == null)
+                {
+                    value = "No";
+                }
                 Set<string>(() => this.IsUndiscDepDone, ref isUndiscDepDone, value);
             }
         }
@@ -209,6 +288,10 @@ namespace MapWizard.Model
             }
             set
             {
+                if (value == null)
+                {
+                    value = "No";
+                }
                 Set<string>(() => this.IsRaefDone, ref isRaefDone, value);
             }
         }
@@ -225,6 +308,10 @@ namespace MapWizard.Model
             }
             set
             {
+                if (value == null)
+                {
+                    value = "No";
+                }
                 Set<string>(() => this.IsScreenerDone, ref isScreenerDone, value);
             }
         }
@@ -241,23 +328,11 @@ namespace MapWizard.Model
             }
             set
             {
+                if (value == null)
+                {
+                    value = "-";
+                }
                 Set<string>(() => this.DepositType, ref depositType, value);
-            }
-        }
-
-        /// <summary>
-        /// Tract criteria file.
-        /// </summary>
-        /// @return Tract criteria file.
-        public string TractCriteriaFile
-        {
-            get
-            {
-                return tractCriteriaFile;
-            }
-            set
-            {
-                Set<string>(() => this.TractCriteriaFile, ref tractCriteriaFile, value);
             }
         }
 
@@ -273,6 +348,10 @@ namespace MapWizard.Model
             }
             set
             {
+                if (value == null)
+                {
+                    value = "Choose image file";
+                }
                 Set<string>(() => this.TractImageFile, ref tractImageFile, value);
             }
         }
@@ -289,6 +368,10 @@ namespace MapWizard.Model
             }
             set
             {
+                if (value == null)
+                {
+                    value = "Choose Word file";
+                }
                 Set<string>(() => this.KnownDepositsFile, ref knownDepositsFile, value);
             }
         }
@@ -305,6 +388,10 @@ namespace MapWizard.Model
             }
             set
             {
+                if (value == null)
+                {
+                    value = "Choose Word file";
+                }
                 Set<string>(() => this.ProspectsOccurencesFile, ref prospectsOccurencesFile, value);
             }
         }
@@ -337,6 +424,10 @@ namespace MapWizard.Model
             }
             set
             {
+                if (value == null)
+                {
+                    value = "Choose Word file";
+                }
                 Set<string>(() => this.SourcesFile, ref sourcesFile, value);
             }
         }
@@ -353,6 +444,10 @@ namespace MapWizard.Model
             }
             set
             {
+                if (value == null)
+                {
+                    value = "Choose Word file";
+                }
                 Set<string>(() => this.ReferencesFile, ref referencesFile, value);
             }
         }
@@ -369,23 +464,27 @@ namespace MapWizard.Model
             }
             set
             {
+                if (value == null)
+                {
+                    value = new ObservableCollection<string>();
+                }
                 Set<ObservableCollection<string>>(() => this.TractIDNames, ref tractIDNames, value);
             }
         }
 
         /// <summary>
-        /// Selected index of TractID Collection.
+        /// Selected tract from TractID Collection.
         /// </summary>
         /// @return Index.
-        public string SelectedTractIndex
+        public string SelectedTract
         {
             get
             {
-                return selectedTractIndex;
+                return selectedTract;
             }
             set
             {
-                Set<string>(() => this.SelectedTractIndex, ref selectedTractIndex, value);
+                Set<string>(() => this.SelectedTract, ref selectedTract, value);
             }
         }
 

@@ -1,0 +1,16 @@
+Package: scatterplot3d
+Version: 0.3-41
+Date: 2018-02-13
+Title: 3D Scatter Plot
+Author: Uwe Ligges <ligges@statistik.tu-dortmund.de>, Martin Maechler, Sarah Schnackenberg
+Maintainer: Uwe Ligges <ligges@statistik.tu-dortmund.de>
+Description: Plots a three dimensional (3D) point cloud.
+Depends: R (>= 2.7.0)
+License: GPL-2
+Encoding: latin1
+Imports: grDevices, graphics, stats
+NeedsCompilation: no
+Packaged: 2018-03-13 16:41:55 UTC; ligges
+Repository: CRAN
+Date/Publication: 2018-03-14 14:01:37 UTC
+Built: R 3.6.0; ; 2019-05-28 20:45:41 UTC; windows

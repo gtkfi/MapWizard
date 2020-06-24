@@ -1,0 +1,6 @@
+## export all names other than those starting with a dot
+
+export(conf.design, conf.set, direct.sum, factorize, join, primes, rjoin)
+
+S3method(factorize, default)
+S3method(factorize, factor)

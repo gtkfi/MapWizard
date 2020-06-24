@@ -97,9 +97,9 @@
                 </TabItem.Header>
                 <Grid>
                     <Rectangle Height="3" Fill="LightGray" Stroke="LightGray" VerticalAlignment="Top" HorizontalAlignment="Left" Width="200" Grid.Row="0" />
-                    <local:DepositDensityView VerticalAlignment="Top" HorizontalAlignment="Left" DataContext="{Binding Source={StaticResource Locator}, Path=DepositDensityViewModel}" IsEnabled="{Binding IsBusy,Converter={StaticResource ReverseBooleanConverter}}"/>
+                    <local:DepositDensityView VerticalAlignment="Top" HorizontalAlignment="Left" DataContext="{Binding Source={StaticResource Locator}, Path=DepositDensityViewModel}" IsEnabled="{Binding Model.IsBusy,Converter={StaticResource ReverseBooleanConverter}}"/>
                     <UniformGrid  Rows="1" Columns="1">
-                        <mah:ProgressRing DataContext="{Binding Source={StaticResource Locator}, Path=DepositDensityViewModel}" IsActive="{Binding IsBusy}" Width ="200"/>
+                        <mah:ProgressRing DataContext="{Binding Source={StaticResource Locator}, Path=DepositDensityViewModel}" IsActive="{Binding Model.IsBusy}" Width ="200"/>
                     </UniformGrid>
                 </Grid>
             </mah:MetroTabItem>
@@ -111,7 +111,7 @@
                     <Rectangle Height="3" Fill="LightGray" Stroke="LightGray" VerticalAlignment="Top" HorizontalAlignment="Left" Width="200" Grid.Row="0" />
                     <local:DepositDensityResultView VerticalAlignment="Top" HorizontalAlignment="Left"/>
                     <UniformGrid Grid.Row="0" Rows="1" Columns="1">
-                        <mah:ProgressRing DataContext="{Binding Source={StaticResource Locator}, Path=DepositDensityViewModel}" IsActive="{Binding IsBusy}" Width ="200"/>
+                        <mah:ProgressRing DataContext="{Binding Source={StaticResource Locator}, Path=DepositDensityViewModel}" IsActive="{Binding Model.IsBusy}" Width ="200"/>
                     </UniformGrid>
                 </Grid>
             </mah:MetroTabItem>

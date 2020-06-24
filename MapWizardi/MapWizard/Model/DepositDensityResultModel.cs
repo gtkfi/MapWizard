@@ -1,4 +1,5 @@
 ﻿using GalaSoft.MvvmLight;
+using System.Windows.Media;
 
 namespace MapWizard.Model
 {
@@ -11,6 +12,7 @@ namespace MapWizard.Model
         private string n50;
         private string n90;
         private string plotImagePath;
+        private ImageSource plotImageBitMap;
         private string model;
         private string mTonnage;
         private string tArea;
@@ -140,6 +142,22 @@ namespace MapWizard.Model
             set
             {
                 Set<string>(() => this.PlotImagePath, ref plotImagePath, value);
+            }
+        }
+
+        /// <summary>
+        /// Plot image BitMap.
+        /// </summary>
+        /// @return ImageSource.
+        public ImageSource PlotImageBitMap
+        {
+            get
+            {
+                return plotImageBitMap;
+            }
+            set
+            {
+                Set<ImageSource>(() => this.PlotImageBitMap, ref plotImageBitMap, value);
             }
         }
 

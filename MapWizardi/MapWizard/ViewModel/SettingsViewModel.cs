@@ -6,6 +6,8 @@ using NLog;
 using MapWizard.Tools.Settings;
 using MapWizard.Service;
 using System.IO;
+using System.Reflection;
+
 namespace MapWizard.ViewModel
 {
     /// <summary>
@@ -34,28 +36,64 @@ namespace MapWizard.ViewModel
             SelectRFileCommand = new RelayCommand(SelectRFile);
             SelectDepModFolderCommand = new RelayCommand(SelectDepModFolder);
             SaveSettingsCommand = new RelayCommand(SaveToJson);
+            ShowLogCommand = new RelayCommand(ShowLog);
             viewModelLocator = new ViewModelLocator();
             // Load the data from settings.json file.
-            model = new SettingsModel
+            try
             {
-                PythonEXEPath = settingsService.Data.PythonEXEPath,
-                REXEPath = settingsService.Data.REXEPath,
-                DepModFolderPath = settingsService.Data.DepModFolderPath,
-                REXEPathDefault = settingsService.Data.REXEPathDefault,
-                PyEXEPathDefault = settingsService.Data.PyEXEPathDefault,
-                DepModFolderPathDefault = settingsService.Data.DepModFolderPathDefault,
-                DefaultPythonLocation = settingsService.Data.DefaultPythonLocation,
-                CustomPythonLocation = settingsService.Data.CustomPythonLocation,
-                PyButtonVisibility = settingsService.Data.PyButtonVisibility,
-                DefaultRLocation = settingsService.Data.DefaultRLocation,
-                CustomRLocation = settingsService.Data.CustomRLocation,
-                RButtonVisibility = settingsService.Data.RButtonVisibility,
-                DefaultDepModLocation = settingsService.Data.DefaultDepModLocation,
-                CustomDepModLocation = settingsService.Data.CustomDepModLocation,
-                DepModButtonVisibility = settingsService.Data.DepModButtonVisibility,
-                ProjectName = "-"
-            };
-            DepositTypeVisibility = "Collapsed";
+                Model = new SettingsModel
+                {
+                    PythonPathDefault = settingsService.Data.PythonPathDefault,
+                    PythonPathCustom = settingsService.Data.PythonPathCustom,
+                    PythonLocationDefault = bool.Parse(settingsService.Data.PythonLocationDefault),
+                    RPathDefault = settingsService.Data.RPathDefault,
+                    RPathCustom = settingsService.Data.RPathCustom,
+                    RLocationDefault = bool.Parse(settingsService.Data.RLocationDefault),
+                    DepModelsFolderPathDefault = settingsService.Data.DepModelsFolderPathDefault,
+                    DepModelsFolderPathCustom = settingsService.Data.DepModelsFolderPathCustom,
+                    DepModelsLocationDefault = bool.Parse(settingsService.Data.DepModelsLocationDefault),
+                    ProjectName = "-",
+                    NewProjectName = "",
+                    DepositTypeVisibility = "Collapsed"
+                };
+                PropertyInfo[] settingProperties = Model.GetType().GetProperties();
+                // Goes through all the settings and check if any of them are null.
+                foreach (PropertyInfo prop in settingProperties)
+                {
+                    object modelObject = Model;
+                    if (prop.GetValue(modelObject) == null)
+                    {
+                        if (prop.Name != "DepositType")
+                        {
+                            throw new Exception();
+                        }                        
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                this.settingsService.SettingsInitialization();
+                string settings_json = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData), "MapWizard", "settings.json");
+                this.settingsService.SaveSettings(settings_json);
+                Model = new SettingsModel
+                {
+                    PythonPathDefault = settingsService.Data.PythonPathDefault,
+                    PythonPathCustom = settingsService.Data.PythonPathCustom,
+                    PythonLocationDefault = bool.Parse(settingsService.Data.PythonLocationDefault),
+                    RPathDefault = settingsService.Data.RPathDefault,
+                    RPathCustom = settingsService.Data.RPathCustom,
+                    RLocationDefault = bool.Parse(settingsService.Data.RLocationDefault),
+                    DepModelsFolderPathDefault = settingsService.Data.DepModelsFolderPathDefault,
+                    DepModelsFolderPathCustom = settingsService.Data.DepModelsFolderPathCustom,
+                    DepModelsLocationDefault = bool.Parse(settingsService.Data.DepModelsLocationDefault),
+                    ProjectName = "-",
+                    NewProjectName = "",
+                    DepositTypeVisibility = "Collapsed"
+                };
+                logger.Error(ex, "Error when loading settings.");
+                WriteLogText("Error when loading settings. Settings were initialized to default values.", "Error");
+                //this.dialogService.ShowNotification("Error when loading settings.", "Error");  //TAGGED: Throw error when trying to show notification because the view is not initialized. Better solution for this.
+            }
         }
 
         /// <summary>
@@ -80,6 +118,11 @@ namespace MapWizard.ViewModel
         /// </summary>
         /// @return Command.
         public RelayCommand SaveSettingsCommand { get; }
+        /// <summary>
+        /// Show or hide log command.
+        /// </summary>
+        /// @return Command.
+        public RelayCommand ShowLogCommand { get; }
 
         /// <summary>
         ///Model for SettingsModel.
@@ -99,301 +142,22 @@ namespace MapWizard.ViewModel
         }
 
         /// <summary>
-        /// Custom Python Path.
-        /// </summary>
-        /// @return Path.
-        public string CustomPythonPath
-        {
-            get
-            {
-                return model.PythonEXEPath;
-            }
-            set
-            {
-                if (model.PythonEXEPath == value) return;
-                model.PythonEXEPath = value.ToString();
-                RaisePropertyChanged("CustomPythonPath");
-            }
-        }
-
-        /// <summary>
-        /// Custom R Path.
-        /// </summary>
-        /// @return Path.
-        public string CustomRPath
-        {
-            get
-            {
-                return model.REXEPath;
-            }
-            set
-            {
-                if (model.REXEPath == value) return;
-                model.REXEPath = value.ToString();
-                RaisePropertyChanged("CustomRPath");
-            }
-        }
-
-        /// <summary>
-        ///Custom Root Path.
-        /// </summary>
-        /// @return Path.
-        public string ProjectRootPath
-        {
-            get
-            {
-                return model.RootFolderPath;
-            }
-            set
-            {
-                if (model.RootFolderPath == value) return;
-                model.RootFolderPath = value.ToString();
-                RaisePropertyChanged("CustomRootPath");
-            }
-        }
-
-        /// <summary>
-        ///Custom Deposit Models Path.
-        /// </summary>
-        /// @return Path.
-        public string CustomDepModPath
-        {
-            get
-            {
-                return model.DepModFolderPath;
-            }
-            set
-            {
-                if (model.DepModFolderPath == value) return;
-                model.DepModFolderPath = value.ToString();
-                RaisePropertyChanged("CustomDepModPath");
-            }
-        }
-
-        /// <summary>
-        /// When default for Python is checked.
-        /// </summary>
-        /// @return Boolean representing the choice.
-        public bool PyDefaultIsChecked
-        {
-            get
-            {
-                return bool.Parse(model.DefaultPythonLocation);
-            }
-            set
-            {
-                if (bool.Parse(model.DefaultPythonLocation) == value) return;
-                model.DefaultPythonLocation = value.ToString();
-                RaisePropertyChanged("PyDefaultIsChecked");
-                PyButtonVisibility = true;
-            }
-        }
-
-        /// <summary>
-        /// When custom for Python is checked.
-        /// </summary>
-        /// @return Boolean representing the choice.
-        public bool PyCustomIsChecked
-        {
-            get
-            {
-                return bool.Parse(model.CustomPythonLocation);
-            }
-            set
-            {
-                if (bool.Parse(model.CustomPythonLocation) == value) return;
-                model.CustomPythonLocation = value.ToString();
-                RaisePropertyChanged("PyCustomIsChecked");
-                PyButtonVisibility = false;
-            }
-        }
-
-        /// <summary>
-        /// Changes button visibility.
-        /// </summary>
-        /// @return Boolean representing the change.
-        public bool PyButtonVisibility
-        {
-            get { return bool.Parse(model.PyButtonVisibility); }
-
-            set
-            {
-                model.PyButtonVisibility = value.ToString();
-                RaisePropertyChanged("PyButtonVisibility");
-            }
-        }
-
-        /// <summary>
-        /// When default for R is checked.
-        /// </summary>
-        /// @return Boolean representing the choice.
-        public bool RDefaultIsChecked
-        {
-            get
-            {
-                return bool.Parse(model.DefaultRLocation);
-            }
-            set
-            {
-                if (bool.Parse(model.DefaultRLocation) == value) return;
-                model.DefaultRLocation = value.ToString();
-                RaisePropertyChanged("RDefaultIsChecked");
-                RButtonVisibility = true;
-            }
-        }
-
-        /// <summary>
-        /// When custom for R is checked.
-        /// </summary>
-        /// @return Boolean representing the choice.
-        public bool RCustomIsChecked
-        {
-            get
-            {
-                return bool.Parse(model.CustomRLocation);
-            }
-            set
-            {
-                if (bool.Parse(model.CustomRLocation) == value) return;
-                model.CustomRLocation = value.ToString();
-                RaisePropertyChanged("RCustomIsChecked");
-                RButtonVisibility = false;
-            }
-        }
-
-        /// <summary>
-        /// Changes button visibility.
-        /// </summary>
-        /// @return Boolean representing the change.
-        public bool RButtonVisibility
-        {
-            get { return bool.Parse(model.RButtonVisibility); }
-
-            set
-            {
-                model.RButtonVisibility = value.ToString();
-                RaisePropertyChanged("RButtonVisibility");
-            }
-        }
-
-        /// <summary>
-        /// When default for Deposit Models is checked.
-        /// </summary>
-        /// @return Boolean representing the choice.
-        public bool DepModDefaultIsChecked
-        {
-            get
-            {
-                return bool.Parse(model.DefaultDepModLocation);
-            }
-            set
-            {
-                if (bool.Parse(model.DefaultDepModLocation) == value) return;
-                model.DefaultDepModLocation = value.ToString();
-                RaisePropertyChanged("DepModDefaultIsChecked");
-                DepModButtonVisibility = true;
-            }
-        }
-
-        /// <summary>
-        /// When custom for Deposit Models is checked.
-        /// </summary>
-        /// @return Boolean representing the choice.
-        public bool DepModCustomIsChecked
-        {
-            get
-            {
-                return bool.Parse(model.CustomDepModLocation);
-            }
-            set
-            {
-                if (bool.Parse(model.CustomDepModLocation) == value) return;
-                model.CustomDepModLocation = value.ToString();
-                RaisePropertyChanged("DepModCustomIsChecked");
-                DepModButtonVisibility = false;
-            }
-        }
-
-        /// <summary>
-        /// Changes button visibility.
-        /// </summary>
-        /// @return Boolean representing the change.
-        public bool DepModButtonVisibility
-        {
-            get { return bool.Parse(model.DepModButtonVisibility); }
-
-            set
-            {
-                model.DepModButtonVisibility = value.ToString();
-                RaisePropertyChanged("DepModButtonVisibility");
-            }
-        }
-
-        /// <summary>
-        /// Deposit Type visibility.
-        /// </summary>
-        /// @return Object representing the visibility.
-        public object DepositTypeVisibility
-        {
-            get { return model.DepositTypeVisibility; }
-
-            set
-            {
-                model.DepositTypeVisibility = value;
-                RaisePropertyChanged("DepositTypeVisibility");
-            }
-        }
-
-        /// <summary>
-        /// Name of the current project.
-        /// </summary>
-        /// @return Project name.
-        public string ProjectName
-        {
-            get { return model.ProjectName; }
-
-            set
-            {
-                model.ProjectName = value;
-                RaisePropertyChanged("ProjectName");
-            }
-        }
-
-        /// <summary>
-        /// Deposit Type name.
-        /// </summary>
-        /// @return Deposit Type name.
-        public string DepositType
-        {
-            get { return model.DepositType; }
-
-            set
-            {
-                model.DepositType = value;
-                RaisePropertyChanged("DepositType");
-            }
-        }
-
-        /// <summary>
         ///Update settings when project is opened in MainViewModel.
         /// </summary>
         public void UpdateSettings(string depositType)
         {
-            CustomPythonPath = settingsService.Data.PythonEXEPath;
-            CustomRPath = settingsService.Data.REXEPath;
-            CustomDepModPath = settingsService.Data.DepModFolderPath;
-            PyDefaultIsChecked = bool.Parse(settingsService.Data.DefaultPythonLocation);
-            PyCustomIsChecked = bool.Parse(settingsService.Data.CustomPythonLocation);
-            PyButtonVisibility = bool.Parse(settingsService.Data.PyButtonVisibility);
-            RDefaultIsChecked = bool.Parse(settingsService.Data.DefaultRLocation);
-            RCustomIsChecked = bool.Parse(settingsService.Data.CustomRLocation);
-            RButtonVisibility = bool.Parse(settingsService.Data.RButtonVisibility);
-            DepModDefaultIsChecked = bool.Parse(settingsService.Data.DefaultDepModLocation);
-            DepModCustomIsChecked = bool.Parse(settingsService.Data.CustomDepModLocation);
-            DepModButtonVisibility = bool.Parse(settingsService.Data.DepModButtonVisibility);
-            DepositTypeVisibility = "Visible";
-            ProjectName = Path.GetFileName(settingsService.Data.RootFolderPath);
-            DepositType = depositType;
+            Model.PythonPathDefault = settingsService.Data.PythonPathDefault;
+            Model.PythonPathCustom = settingsService.Data.PythonPathCustom;
+            Model.PythonLocationDefault = bool.Parse(settingsService.Data.PythonLocationDefault);
+            Model.RPathDefault = settingsService.Data.RPathDefault;
+            Model.RPathCustom = settingsService.Data.RPathCustom;
+            Model.RLocationDefault = bool.Parse(settingsService.Data.RLocationDefault);
+            Model.DepModelsFolderPathDefault = settingsService.Data.DepModelsFolderPathDefault;
+            Model.DepModelsFolderPathCustom = settingsService.Data.DepModelsFolderPathCustom;
+            Model.DepModelsLocationDefault = bool.Parse(settingsService.Data.DepModelsLocationDefault);
+            Model.DepositTypeVisibility = "Visible";
+            Model.ProjectName = Path.GetFileName(settingsService.Data.RootFolderPath);
+            Model.DepositType = depositType;
         }
 
         /// <summary>
@@ -401,14 +165,14 @@ namespace MapWizard.ViewModel
         /// </summary>
         public void SaveToJson()
         {
-            string rootDirectory = settingsService.Data.RootFolderPath; 
+            string rootDirectory = settingsService.Data.RootFolderPath;
             string MAPWfile = "";
             try
             {
                 if (Directory.Exists(rootDirectory))
                 {
                     MAPWfile = Path.Combine(rootDirectory, Path.GetFileName(rootDirectory) + ".MAPW");
-                    if ((Path.GetFileName(rootDirectory) == ProjectName) && (DepositTypeVisibility.ToString() == "Visible"))
+                    if ((Path.GetFileName(rootDirectory) == Model.ProjectName) && (Model.DepositTypeVisibility.ToString() == "Visible"))
                     {
                         settingsService.Data = new SettingsDataModel()
                         {
@@ -420,21 +184,15 @@ namespace MapWizard.ViewModel
                 }
                 settingsService.Data = new SettingsDataModel()
                 {
-                    PythonEXEPath = model.PythonEXEPath,
-                    REXEPath = model.REXEPath,
-                    DepModFolderPath = model.DepModFolderPath,
-                    REXEPathDefault = model.REXEPathDefault,
-                    PyEXEPathDefault = model.PyEXEPathDefault,
-                    DepModFolderPathDefault = model.DepModFolderPathDefault,
-                    DefaultPythonLocation = model.DefaultPythonLocation,
-                    CustomPythonLocation = model.CustomPythonLocation,
-                    PyButtonVisibility = model.PyButtonVisibility,
-                    DefaultRLocation = model.DefaultRLocation,
-                    CustomRLocation = model.CustomRLocation,
-                    RButtonVisibility = model.RButtonVisibility,
-                    DefaultDepModLocation = model.DefaultDepModLocation,
-                    CustomDepModLocation = model.CustomDepModLocation,
-                    DepModButtonVisibility = model.DepModButtonVisibility,
+                    PythonPathDefault = Model.PythonPathDefault,
+                    PythonPathCustom = Model.PythonPathCustom,
+                    PythonLocationDefault = Model.PythonLocationDefault.ToString(),
+                    RPathDefault = Model.RPathDefault,
+                    RPathCustom = Model.RPathCustom,
+                    RLocationDefault = Model.RLocationDefault.ToString(),
+                    DepModelsFolderPathDefault = Model.DepModelsFolderPathDefault,
+                    DepModelsFolderPathCustom = Model.DepModelsFolderPathCustom,
+                    DepModelsLocationDefault = Model.DepModelsLocationDefault.ToString()
                 };
                 string SettingsDirectory = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData), "MapWizard");
                 if (!Directory.Exists(SettingsDirectory))
@@ -446,16 +204,18 @@ namespace MapWizard.ViewModel
                 {
                     settingsService.Data.RootFolderPath = Path.GetDirectoryName(MAPWfile);
                     settingsService.Data.DepositType = Model.DepositType;
-                    viewModelLocator.ReportingViewModel.DepositType = Model.DepositType;
+                    viewModelLocator.ReportingViewModel.Model.DepositType = Model.DepositType;
                     viewModelLocator.ReportingViewModel.SaveInputs();
                 }
                 settingsService.SaveSettings(json_file);  // Save rest of the information into settings.json.
                 dialogService.ShowNotification("Settings saved.", "Success");
+                WriteLogText("Settings saved.", "Success");
             }
             catch (Exception ex)
             {
                 logger.Error(ex, "Failed to save settings to file.");
                 dialogService.ShowNotification("Failed to save settings to file.", "Error");
+                WriteLogText("Failed to save settings to file.", "Error");
             }
         }
 
@@ -466,10 +226,10 @@ namespace MapWizard.ViewModel
         {
             try
             {
-                string exeFile = dialogService.OpenFileDialog("", "EXE files|*.exe;", true, true);
+                string exeFile = dialogService.OpenFileDialog("", "EXE files|*.exe;", true, true, settingsService.RootPath);
                 if (!string.IsNullOrEmpty(exeFile))
                 {
-                    model.PythonEXEPath = exeFile;
+                    Model.PythonPathCustom = exeFile;
                 }
             }
             catch (Exception ex)
@@ -486,10 +246,10 @@ namespace MapWizard.ViewModel
         {
             try
             {
-                string exeFile = dialogService.OpenFileDialog("", "EXE files|*.exe;", true, true);
+                string exeFile = dialogService.OpenFileDialog("", "EXE files|*.exe;", true, true, settingsService.RootPath);
                 if (!string.IsNullOrEmpty(exeFile))
                 {
-                    model.REXEPath = exeFile;
+                    Model.RPathCustom = exeFile;
                 }
             }
             catch (Exception ex)
@@ -509,13 +269,43 @@ namespace MapWizard.ViewModel
                 string depModFolder = dialogService.SelectFolderDialog("c:\\", Environment.SpecialFolder.MyComputer);
                 if (!string.IsNullOrEmpty(depModFolder))
                 {
-                    model.DepModFolderPath = depModFolder;
+                    Model.DepModelsFolderPathCustom = depModFolder;
                 }
             }
             catch (Exception ex)
             {
                 logger.Error(ex, "Failed to show FolderBrowserDialog");
                 dialogService.ShowNotification("Failed to show FolderBrowserDialog.", "Error");
+            }
+        }
+
+        /// <summary>
+        /// Writes text for the log in user interface.
+        /// </summary>  
+        public void WriteLogText(string logText, string logType)
+        {
+            if (logType == "Error")
+            {
+                Model.LogText = DateTime.Now.ToString("HH:mm") + " --> ERROR: " + logText + "\r\n" + Model.LogText;
+            }
+            else
+            {
+                Model.LogText = DateTime.Now.ToString("HH:mm") + " --> " + logText + "\r\n" + Model.LogText;
+            }
+        }
+
+        /// <summary>
+        /// Shows or hides log.
+        /// </summary>  
+        public void ShowLog()
+        {
+            if (Model.LogTitle=="Hide log")
+            {
+                Model.LogHeight = 0;
+            }
+            else
+            {
+                Model.LogHeight = 1000;  // Maximum height is Window's height/3 
             }
         }
     }

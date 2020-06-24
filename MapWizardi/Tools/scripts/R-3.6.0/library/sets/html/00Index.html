@@ -1,0 +1,639 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head><title>R: Sets, Generalized Sets, Customizable Sets and Intervals</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+<h1> Sets, Generalized Sets, Customizable Sets and Intervals
+<img class="toplogo" src="../../../doc/html/Rlogo.svg" alt="[R logo]" />
+</h1>
+<hr/>
+<div style="text-align: center;">
+<a href="../../../doc/html/packages.html"><img class="arrow" src="../../../doc/html/left.jpg" alt="[Up]" /></a>
+<a href="../../../doc/html/index.html"><img class="arrow" src="../../../doc/html/up.jpg" alt="[Top]" /></a>
+</div><h2>Documentation for package &lsquo;sets&rsquo; version 1.0-18</h2>
+
+<ul><li><a href="../DESCRIPTION">DESCRIPTION file</a>.</li>
+<li><a href="../doc/index.html">User guides, package vignettes and other documentation.</a></li>
+<li><a href="../NEWS">Package NEWS</a>.</li>
+</ul>
+
+<h2>Help Pages</h2>
+
+
+<p style="text-align: center;">
+<a href="#A">A</a>
+<a href="#B">B</a>
+<a href="#C">C</a>
+<a href="#E">E</a>
+<a href="#F">F</a>
+<a href="#G">G</a>
+<a href="#I">I</a>
+<a href="#L">L</a>
+<a href="#M">M</a>
+<a href="#N">N</a>
+<a href="#P">P</a>
+<a href="#R">R</a>
+<a href="#S">S</a>
+<a href="#T">T</a>
+<a href="#misc">misc</a>
+</p>
+
+
+<h2><a name="A">-- A --</a></h2>
+
+<table width="100%">
+<tr><td style="width: 25%;"><a href="interval.html">as.character.interval</a></td>
+<td>Intervals</td></tr>
+<tr><td style="width: 25%;"><a href="cset.html">as.cset</a></td>
+<td>Customizable sets</td></tr>
+<tr><td style="width: 25%;"><a href="interval.html">as.double.interval</a></td>
+<td>Intervals</td></tr>
+<tr><td style="width: 25%;"><a href="gset.html">as.gset</a></td>
+<td>Generalized sets</td></tr>
+<tr><td style="width: 25%;"><a href="interval.html">as.interval</a></td>
+<td>Intervals</td></tr>
+<tr><td style="width: 25%;"><a href="interval.html">as.interval.default</a></td>
+<td>Intervals</td></tr>
+<tr><td style="width: 25%;"><a href="interval.html">as.interval.interval</a></td>
+<td>Intervals</td></tr>
+<tr><td style="width: 25%;"><a href="interval.html">as.interval.list</a></td>
+<td>Intervals</td></tr>
+<tr><td style="width: 25%;"><a href="interval.html">as.interval.NULL</a></td>
+<td>Intervals</td></tr>
+<tr><td style="width: 25%;"><a href="interval.html">as.interval.numeric</a></td>
+<td>Intervals</td></tr>
+<tr><td style="width: 25%;"><a href="interval.html">as.interval.set</a></td>
+<td>Intervals</td></tr>
+<tr><td style="width: 25%;"><a href="interval.html">as.interval.tuple</a></td>
+<td>Intervals</td></tr>
+<tr><td style="width: 25%;"><a href="interval.html">as.list.interval</a></td>
+<td>Intervals</td></tr>
+<tr><td style="width: 25%;"><a href="set.html">as.set</a></td>
+<td>Sets</td></tr>
+<tr><td style="width: 25%;"><a href="tuple.html">as.tuple</a></td>
+<td>Tuples</td></tr>
+</table>
+
+<h2><a name="B">-- B --</a></h2>
+
+<table width="100%">
+<tr><td style="width: 25%;"><a href="closure.html">binary_closure</a></td>
+<td>Closure and reduction</td></tr>
+<tr><td style="width: 25%;"><a href="closure.html">binary_reduction</a></td>
+<td>Closure and reduction</td></tr>
+</table>
+
+<h2><a name="C">-- C --</a></h2>
+
+<table width="100%">
+<tr><td style="width: 25%;"><a href="canonicalizeSetMapping.html">canonicalize_set_and_mapping</a></td>
+<td>Canonicalize set and mapping</td></tr>
+<tr><td style="width: 25%;"><a href="fuzzyfuns.html">charfun_generator</a></td>
+<td>Fuzzy membership functions</td></tr>
+<tr><td style="width: 25%;"><a href="closure.html">closure</a></td>
+<td>Closure and reduction</td></tr>
+<tr><td style="width: 25%;"><a href="closure.html">closure.set</a></td>
+<td>Closure and reduction</td></tr>
+<tr><td style="width: 25%;"><a href="cset.html">cset</a></td>
+<td>Customizable sets</td></tr>
+<tr><td style="width: 25%;"><a href="cset.html">cset_bound</a></td>
+<td>Customizable sets</td></tr>
+<tr><td style="width: 25%;"><a href="cset.html">cset_cardinality</a></td>
+<td>Customizable sets</td></tr>
+<tr><td style="width: 25%;"><a href="cset.html">cset_cartesian</a></td>
+<td>Customizable sets</td></tr>
+<tr><td style="width: 25%;"><a href="cset.html">cset_charfun</a></td>
+<td>Customizable sets</td></tr>
+<tr><td style="width: 25%;"><a href="cset.html">cset_combn</a></td>
+<td>Customizable sets</td></tr>
+<tr><td style="width: 25%;"><a href="cset.html">cset_complement</a></td>
+<td>Customizable sets</td></tr>
+<tr><td style="width: 25%;"><a href="cset.html">cset_concentrate</a></td>
+<td>Customizable sets</td></tr>
+<tr><td style="width: 25%;"><a href="cset.html">cset_contains_element</a></td>
+<td>Customizable sets</td></tr>
+<tr><td style="width: 25%;"><a href="cset.html">cset_core</a></td>
+<td>Customizable sets</td></tr>
+<tr><td style="width: 25%;"><a href="cset.html">cset_defuzzify</a></td>
+<td>Customizable sets</td></tr>
+<tr><td style="width: 25%;"><a href="cset.html">cset_difference</a></td>
+<td>Customizable sets</td></tr>
+<tr><td style="width: 25%;"><a href="cset.html">cset_dilate</a></td>
+<td>Customizable sets</td></tr>
+<tr><td style="width: 25%;"><a href="similarity.html">cset_dissimilarity</a></td>
+<td>Similarity and Dissimilarity Functions</td></tr>
+<tr><td style="width: 25%;"><a href="cset.html">cset_has_missings</a></td>
+<td>Customizable sets</td></tr>
+<tr><td style="width: 25%;"><a href="cset.html">cset_height</a></td>
+<td>Customizable sets</td></tr>
+<tr><td style="width: 25%;"><a href="cset.html">cset_intersection</a></td>
+<td>Customizable sets</td></tr>
+<tr><td style="width: 25%;"><a href="cset.html">cset_is_crisp</a></td>
+<td>Customizable sets</td></tr>
+<tr><td style="width: 25%;"><a href="cset.html">cset_is_empty</a></td>
+<td>Customizable sets</td></tr>
+<tr><td style="width: 25%;"><a href="cset.html">cset_is_equal</a></td>
+<td>Customizable sets</td></tr>
+<tr><td style="width: 25%;"><a href="cset.html">cset_is_fuzzy_multiset</a></td>
+<td>Customizable sets</td></tr>
+<tr><td style="width: 25%;"><a href="cset.html">cset_is_fuzzy_set</a></td>
+<td>Customizable sets</td></tr>
+<tr><td style="width: 25%;"><a href="cset.html">cset_is_multiset</a></td>
+<td>Customizable sets</td></tr>
+<tr><td style="width: 25%;"><a href="cset.html">cset_is_proper_subset</a></td>
+<td>Customizable sets</td></tr>
+<tr><td style="width: 25%;"><a href="cset.html">cset_is_set</a></td>
+<td>Customizable sets</td></tr>
+<tr><td style="width: 25%;"><a href="cset.html">cset_is_set_or_fuzzy_set</a></td>
+<td>Customizable sets</td></tr>
+<tr><td style="width: 25%;"><a href="cset.html">cset_is_set_or_multiset</a></td>
+<td>Customizable sets</td></tr>
+<tr><td style="width: 25%;"><a href="cset.html">cset_is_subset</a></td>
+<td>Customizable sets</td></tr>
+<tr><td style="width: 25%;"><a href="cset.html">cset_matchfun</a></td>
+<td>Customizable sets</td></tr>
+<tr><td style="width: 25%;"><a href="cset.html">cset_matchfun&lt;-</a></td>
+<td>Customizable sets</td></tr>
+<tr><td style="width: 25%;"><a href="cset.html">cset_mean</a></td>
+<td>Customizable sets</td></tr>
+<tr><td style="width: 25%;"><a href="cset.html">cset_memberships</a></td>
+<td>Customizable sets</td></tr>
+<tr><td style="width: 25%;"><a href="cset.html">cset_normalize</a></td>
+<td>Customizable sets</td></tr>
+<tr><td style="width: 25%;"><a href="cset.html">cset_orderfun</a></td>
+<td>Customizable sets</td></tr>
+<tr><td style="width: 25%;"><a href="cset.html">cset_orderfun&lt;-</a></td>
+<td>Customizable sets</td></tr>
+<tr><td style="width: 25%;"><a href="outer.html">cset_outer</a></td>
+<td>Outer Product of Sets (Tuples)</td></tr>
+<tr><td style="width: 25%;"><a href="cset.html">cset_peak</a></td>
+<td>Customizable sets</td></tr>
+<tr><td style="width: 25%;"><a href="cset.html">cset_power</a></td>
+<td>Customizable sets</td></tr>
+<tr><td style="width: 25%;"><a href="cset.html">cset_product</a></td>
+<td>Customizable sets</td></tr>
+<tr><td style="width: 25%;"><a href="similarity.html">cset_similarity</a></td>
+<td>Similarity and Dissimilarity Functions</td></tr>
+<tr><td style="width: 25%;"><a href="cset.html">cset_sum</a></td>
+<td>Customizable sets</td></tr>
+<tr><td style="width: 25%;"><a href="cset.html">cset_support</a></td>
+<td>Customizable sets</td></tr>
+<tr><td style="width: 25%;"><a href="cset.html">cset_symdiff</a></td>
+<td>Customizable sets</td></tr>
+<tr><td style="width: 25%;"><a href="cset.html">cset_transform_memberships</a></td>
+<td>Customizable sets</td></tr>
+<tr><td style="width: 25%;"><a href="cset.html">cset_union</a></td>
+<td>Customizable sets</td></tr>
+<tr><td style="width: 25%;"><a href="cset.html">cset_universe</a></td>
+<td>Customizable sets</td></tr>
+<tr><td style="width: 25%;"><a href="cset.html">cut.cset</a></td>
+<td>Customizable sets</td></tr>
+<tr><td style="width: 25%;"><a href="gset.html">cut.gset</a></td>
+<td>Generalized sets</td></tr>
+</table>
+
+<h2><a name="E">-- E --</a></h2>
+
+<table width="100%">
+<tr><td style="width: 25%;"><a href="gset.html">e</a></td>
+<td>Generalized sets</td></tr>
+</table>
+
+<h2><a name="F">-- F --</a></h2>
+
+<table width="100%">
+<tr><td style="width: 25%;"><a href="fuzzyfuns.html">fuzzy_bell</a></td>
+<td>Fuzzy membership functions</td></tr>
+<tr><td style="width: 25%;"><a href="fuzzyfuns.html">fuzzy_bell_gset</a></td>
+<td>Fuzzy membership functions</td></tr>
+<tr><td style="width: 25%;"><a href="fuzzyfuns.html">fuzzy_cone</a></td>
+<td>Fuzzy membership functions</td></tr>
+<tr><td style="width: 25%;"><a href="fuzzyfuns.html">fuzzy_cone_gset</a></td>
+<td>Fuzzy membership functions</td></tr>
+<tr><td style="width: 25%;"><a href="fuzzydocs.html">fuzzy_docs</a></td>
+<td>Documents on Fuzzy Theory</td></tr>
+<tr><td style="width: 25%;"><a href="fuzzyinference.html">fuzzy_inference</a></td>
+<td>Fuzzy inference</td></tr>
+<tr><td style="width: 25%;"><a href="fuzzy.html">fuzzy_logic</a></td>
+<td>Fuzzy logic</td></tr>
+<tr><td style="width: 25%;"><a href="fuzzyfuns.html">fuzzy_normal</a></td>
+<td>Fuzzy membership functions</td></tr>
+<tr><td style="width: 25%;"><a href="fuzzyfuns.html">fuzzy_normal_gset</a></td>
+<td>Fuzzy membership functions</td></tr>
+<tr><td style="width: 25%;"><a href="fuzzyinference.html">fuzzy_partition</a></td>
+<td>Fuzzy inference</td></tr>
+<tr><td style="width: 25%;"><a href="fuzzyfuns.html">fuzzy_pi3</a></td>
+<td>Fuzzy membership functions</td></tr>
+<tr><td style="width: 25%;"><a href="fuzzyfuns.html">fuzzy_pi3_gset</a></td>
+<td>Fuzzy membership functions</td></tr>
+<tr><td style="width: 25%;"><a href="fuzzyfuns.html">fuzzy_pi4</a></td>
+<td>Fuzzy membership functions</td></tr>
+<tr><td style="width: 25%;"><a href="fuzzyfuns.html">fuzzy_pi4_gset</a></td>
+<td>Fuzzy membership functions</td></tr>
+<tr><td style="width: 25%;"><a href="fuzzyinference.html">fuzzy_rule</a></td>
+<td>Fuzzy inference</td></tr>
+<tr><td style="width: 25%;"><a href="fuzzyfuns.html">fuzzy_sigmoid</a></td>
+<td>Fuzzy membership functions</td></tr>
+<tr><td style="width: 25%;"><a href="fuzzyfuns.html">fuzzy_sigmoid_gset</a></td>
+<td>Fuzzy membership functions</td></tr>
+<tr><td style="width: 25%;"><a href="fuzzyinference.html">fuzzy_system</a></td>
+<td>Fuzzy inference</td></tr>
+<tr><td style="width: 25%;"><a href="fuzzyfuns.html">fuzzy_trapezoid</a></td>
+<td>Fuzzy membership functions</td></tr>
+<tr><td style="width: 25%;"><a href="fuzzyfuns.html">fuzzy_trapezoid_gset</a></td>
+<td>Fuzzy membership functions</td></tr>
+<tr><td style="width: 25%;"><a href="fuzzyfuns.html">fuzzy_triangular</a></td>
+<td>Fuzzy membership functions</td></tr>
+<tr><td style="width: 25%;"><a href="fuzzyfuns.html">fuzzy_triangular_gset</a></td>
+<td>Fuzzy membership functions</td></tr>
+<tr><td style="width: 25%;"><a href="fuzzyfuns.html">fuzzy_tuple</a></td>
+<td>Fuzzy membership functions</td></tr>
+<tr><td style="width: 25%;"><a href="fuzzyfuns.html">fuzzy_two_normals</a></td>
+<td>Fuzzy membership functions</td></tr>
+<tr><td style="width: 25%;"><a href="fuzzyfuns.html">fuzzy_two_normals_gset</a></td>
+<td>Fuzzy membership functions</td></tr>
+<tr><td style="width: 25%;"><a href="fuzzyinference.html">fuzzy_variable</a></td>
+<td>Fuzzy inference</td></tr>
+</table>
+
+<h2><a name="G">-- G --</a></h2>
+
+<table width="100%">
+<tr><td style="width: 25%;"><a href="gset.html">gset</a></td>
+<td>Generalized sets</td></tr>
+<tr><td style="width: 25%;"><a href="gset.html">gset_bound</a></td>
+<td>Generalized sets</td></tr>
+<tr><td style="width: 25%;"><a href="gset.html">gset_cardinality</a></td>
+<td>Generalized sets</td></tr>
+<tr><td style="width: 25%;"><a href="gset.html">gset_cartesian</a></td>
+<td>Generalized sets</td></tr>
+<tr><td style="width: 25%;"><a href="gset.html">gset_charfun</a></td>
+<td>Generalized sets</td></tr>
+<tr><td style="width: 25%;"><a href="gset.html">gset_combn</a></td>
+<td>Generalized sets</td></tr>
+<tr><td style="width: 25%;"><a href="gset.html">gset_complement</a></td>
+<td>Generalized sets</td></tr>
+<tr><td style="width: 25%;"><a href="gset.html">gset_concentrate</a></td>
+<td>Generalized sets</td></tr>
+<tr><td style="width: 25%;"><a href="gset.html">gset_contains_element</a></td>
+<td>Generalized sets</td></tr>
+<tr><td style="width: 25%;"><a href="gset.html">gset_core</a></td>
+<td>Generalized sets</td></tr>
+<tr><td style="width: 25%;"><a href="gset.html">gset_defuzzify</a></td>
+<td>Generalized sets</td></tr>
+<tr><td style="width: 25%;"><a href="gset.html">gset_difference</a></td>
+<td>Generalized sets</td></tr>
+<tr><td style="width: 25%;"><a href="gset.html">gset_dilate</a></td>
+<td>Generalized sets</td></tr>
+<tr><td style="width: 25%;"><a href="similarity.html">gset_dissimilarity</a></td>
+<td>Similarity and Dissimilarity Functions</td></tr>
+<tr><td style="width: 25%;"><a href="gset.html">gset_has_missings</a></td>
+<td>Generalized sets</td></tr>
+<tr><td style="width: 25%;"><a href="gset.html">gset_height</a></td>
+<td>Generalized sets</td></tr>
+<tr><td style="width: 25%;"><a href="gset.html">gset_intersection</a></td>
+<td>Generalized sets</td></tr>
+<tr><td style="width: 25%;"><a href="gset.html">gset_is_crisp</a></td>
+<td>Generalized sets</td></tr>
+<tr><td style="width: 25%;"><a href="gset.html">gset_is_empty</a></td>
+<td>Generalized sets</td></tr>
+<tr><td style="width: 25%;"><a href="gset.html">gset_is_equal</a></td>
+<td>Generalized sets</td></tr>
+<tr><td style="width: 25%;"><a href="gset.html">gset_is_fuzzy_multiset</a></td>
+<td>Generalized sets</td></tr>
+<tr><td style="width: 25%;"><a href="gset.html">gset_is_fuzzy_set</a></td>
+<td>Generalized sets</td></tr>
+<tr><td style="width: 25%;"><a href="gset.html">gset_is_multiset</a></td>
+<td>Generalized sets</td></tr>
+<tr><td style="width: 25%;"><a href="gset.html">gset_is_proper_subset</a></td>
+<td>Generalized sets</td></tr>
+<tr><td style="width: 25%;"><a href="gset.html">gset_is_set</a></td>
+<td>Generalized sets</td></tr>
+<tr><td style="width: 25%;"><a href="gset.html">gset_is_set_or_fuzzy_set</a></td>
+<td>Generalized sets</td></tr>
+<tr><td style="width: 25%;"><a href="gset.html">gset_is_set_or_multiset</a></td>
+<td>Generalized sets</td></tr>
+<tr><td style="width: 25%;"><a href="gset.html">gset_is_subset</a></td>
+<td>Generalized sets</td></tr>
+<tr><td style="width: 25%;"><a href="gset.html">gset_mean</a></td>
+<td>Generalized sets</td></tr>
+<tr><td style="width: 25%;"><a href="gset.html">gset_memberships</a></td>
+<td>Generalized sets</td></tr>
+<tr><td style="width: 25%;"><a href="gset.html">gset_normalize</a></td>
+<td>Generalized sets</td></tr>
+<tr><td style="width: 25%;"><a href="outer.html">gset_outer</a></td>
+<td>Outer Product of Sets (Tuples)</td></tr>
+<tr><td style="width: 25%;"><a href="gset.html">gset_peak</a></td>
+<td>Generalized sets</td></tr>
+<tr><td style="width: 25%;"><a href="gset.html">gset_power</a></td>
+<td>Generalized sets</td></tr>
+<tr><td style="width: 25%;"><a href="gset.html">gset_product</a></td>
+<td>Generalized sets</td></tr>
+<tr><td style="width: 25%;"><a href="similarity.html">gset_similarity</a></td>
+<td>Similarity and Dissimilarity Functions</td></tr>
+<tr><td style="width: 25%;"><a href="gset.html">gset_sum</a></td>
+<td>Generalized sets</td></tr>
+<tr><td style="width: 25%;"><a href="gset.html">gset_support</a></td>
+<td>Generalized sets</td></tr>
+<tr><td style="width: 25%;"><a href="gset.html">gset_symdiff</a></td>
+<td>Generalized sets</td></tr>
+<tr><td style="width: 25%;"><a href="gset.html">gset_transform_memberships</a></td>
+<td>Generalized sets</td></tr>
+<tr><td style="width: 25%;"><a href="gset.html">gset_union</a></td>
+<td>Generalized sets</td></tr>
+<tr><td style="width: 25%;"><a href="gset.html">gset_universe</a></td>
+<td>Generalized sets</td></tr>
+</table>
+
+<h2><a name="I">-- I --</a></h2>
+
+<table width="100%">
+<tr><td style="width: 25%;"><a href="interval.html">integers</a></td>
+<td>Intervals</td></tr>
+<tr><td style="width: 25%;"><a href="interval.html">integers2reals</a></td>
+<td>Intervals</td></tr>
+<tr><td style="width: 25%;"><a href="interval.html">interval</a></td>
+<td>Intervals</td></tr>
+<tr><td style="width: 25%;"><a href="interval.html">interval_complement</a></td>
+<td>Intervals</td></tr>
+<tr><td style="width: 25%;"><a href="interval.html">interval_contains_element</a></td>
+<td>Intervals</td></tr>
+<tr><td style="width: 25%;"><a href="interval.html">interval_difference</a></td>
+<td>Intervals</td></tr>
+<tr><td style="width: 25%;"><a href="interval.html">interval_division</a></td>
+<td>Intervals</td></tr>
+<tr><td style="width: 25%;"><a href="interval.html">interval_domain</a></td>
+<td>Intervals</td></tr>
+<tr><td style="width: 25%;"><a href="interval.html">interval_intersection</a></td>
+<td>Intervals</td></tr>
+<tr><td style="width: 25%;"><a href="interval.html">interval_is_bounded</a></td>
+<td>Intervals</td></tr>
+<tr><td style="width: 25%;"><a href="interval.html">interval_is_closed</a></td>
+<td>Intervals</td></tr>
+<tr><td style="width: 25%;"><a href="interval.html">interval_is_countable</a></td>
+<td>Intervals</td></tr>
+<tr><td style="width: 25%;"><a href="interval.html">interval_is_degenerate</a></td>
+<td>Intervals</td></tr>
+<tr><td style="width: 25%;"><a href="interval.html">interval_is_empty</a></td>
+<td>Intervals</td></tr>
+<tr><td style="width: 25%;"><a href="interval.html">interval_is_equal</a></td>
+<td>Intervals</td></tr>
+<tr><td style="width: 25%;"><a href="interval.html">interval_is_finite</a></td>
+<td>Intervals</td></tr>
+<tr><td style="width: 25%;"><a href="interval.html">interval_is_greater_than</a></td>
+<td>Intervals</td></tr>
+<tr><td style="width: 25%;"><a href="interval.html">interval_is_greater_than_or_equal</a></td>
+<td>Intervals</td></tr>
+<tr><td style="width: 25%;"><a href="interval.html">interval_is_half_bounded</a></td>
+<td>Intervals</td></tr>
+<tr><td style="width: 25%;"><a href="interval.html">interval_is_left_bounded</a></td>
+<td>Intervals</td></tr>
+<tr><td style="width: 25%;"><a href="interval.html">interval_is_left_closed</a></td>
+<td>Intervals</td></tr>
+<tr><td style="width: 25%;"><a href="interval.html">interval_is_left_open</a></td>
+<td>Intervals</td></tr>
+<tr><td style="width: 25%;"><a href="interval.html">interval_is_left_unbounded</a></td>
+<td>Intervals</td></tr>
+<tr><td style="width: 25%;"><a href="interval.html">interval_is_less_than</a></td>
+<td>Intervals</td></tr>
+<tr><td style="width: 25%;"><a href="interval.html">interval_is_less_than_or_equal</a></td>
+<td>Intervals</td></tr>
+<tr><td style="width: 25%;"><a href="interval.html">interval_is_proper</a></td>
+<td>Intervals</td></tr>
+<tr><td style="width: 25%;"><a href="interval.html">interval_is_proper_subinterval</a></td>
+<td>Intervals</td></tr>
+<tr><td style="width: 25%;"><a href="interval.html">interval_is_right_bounded</a></td>
+<td>Intervals</td></tr>
+<tr><td style="width: 25%;"><a href="interval.html">interval_is_right_closed</a></td>
+<td>Intervals</td></tr>
+<tr><td style="width: 25%;"><a href="interval.html">interval_is_right_open</a></td>
+<td>Intervals</td></tr>
+<tr><td style="width: 25%;"><a href="interval.html">interval_is_right_unbounded</a></td>
+<td>Intervals</td></tr>
+<tr><td style="width: 25%;"><a href="interval.html">interval_is_subinterval</a></td>
+<td>Intervals</td></tr>
+<tr><td style="width: 25%;"><a href="interval.html">interval_is_unbounded</a></td>
+<td>Intervals</td></tr>
+<tr><td style="width: 25%;"><a href="interval.html">interval_is_uncountable</a></td>
+<td>Intervals</td></tr>
+<tr><td style="width: 25%;"><a href="interval.html">interval_measure</a></td>
+<td>Intervals</td></tr>
+<tr><td style="width: 25%;"><a href="interval.html">interval_power</a></td>
+<td>Intervals</td></tr>
+<tr><td style="width: 25%;"><a href="interval.html">interval_product</a></td>
+<td>Intervals</td></tr>
+<tr><td style="width: 25%;"><a href="interval.html">interval_sum</a></td>
+<td>Intervals</td></tr>
+<tr><td style="width: 25%;"><a href="interval.html">interval_symdiff</a></td>
+<td>Intervals</td></tr>
+<tr><td style="width: 25%;"><a href="interval.html">interval_union</a></td>
+<td>Intervals</td></tr>
+<tr><td style="width: 25%;"><a href="fuzzyfuns.html">is.charfun_generator</a></td>
+<td>Fuzzy membership functions</td></tr>
+<tr><td style="width: 25%;"><a href="cset.html">is.cset</a></td>
+<td>Customizable sets</td></tr>
+<tr><td style="width: 25%;"><a href="gset.html">is.gset</a></td>
+<td>Generalized sets</td></tr>
+<tr><td style="width: 25%;"><a href="interval.html">is.interval</a></td>
+<td>Intervals</td></tr>
+<tr><td style="width: 25%;"><a href="set.html">is.set</a></td>
+<td>Sets</td></tr>
+<tr><td style="width: 25%;"><a href="tuple.html">is.tuple</a></td>
+<td>Tuples</td></tr>
+<tr><td style="width: 25%;"><a href="gset.html">is_element</a></td>
+<td>Generalized sets</td></tr>
+</table>
+
+<h2><a name="L">-- L --</a></h2>
+
+<table width="100%">
+<tr><td style="width: 25%;"><a href="labels.html">LABEL</a></td>
+<td>Labels from objects</td></tr>
+<tr><td style="width: 25%;"><a href="labels.html">LABEL.character</a></td>
+<td>Labels from objects</td></tr>
+<tr><td style="width: 25%;"><a href="labels.html">LABELS</a></td>
+<td>Labels from objects</td></tr>
+<tr><td style="width: 25%;"><a href="cset.html">length.cset</a></td>
+<td>Customizable sets</td></tr>
+<tr><td style="width: 25%;"><a href="gset.html">length.gset</a></td>
+<td>Generalized sets</td></tr>
+<tr><td style="width: 25%;"><a href="set.html">length.set</a></td>
+<td>Sets</td></tr>
+<tr><td style="width: 25%;"><a href="cset.html">lengths.cset</a></td>
+<td>Customizable sets</td></tr>
+<tr><td style="width: 25%;"><a href="gset.html">lengths.gset</a></td>
+<td>Generalized sets</td></tr>
+<tr><td style="width: 25%;"><a href="set.html">lengths.set</a></td>
+<td>Sets</td></tr>
+<tr><td style="width: 25%;"><a href="plot.html">lines.charfun_generator</a></td>
+<td>Plot functions for generalized sets</td></tr>
+<tr><td style="width: 25%;"><a href="plot.html">lines.cset</a></td>
+<td>Plot functions for generalized sets</td></tr>
+<tr><td style="width: 25%;"><a href="plot.html">lines.gset</a></td>
+<td>Plot functions for generalized sets</td></tr>
+<tr><td style="width: 25%;"><a href="plot.html">lines.set</a></td>
+<td>Plot functions for generalized sets</td></tr>
+<tr><td style="width: 25%;"><a href="plot.html">lines.tuple</a></td>
+<td>Plot functions for generalized sets</td></tr>
+</table>
+
+<h2><a name="M">-- M --</a></h2>
+
+<table width="100%">
+<tr><td style="width: 25%;"><a href="set.html">make_set_with_order</a></td>
+<td>Sets</td></tr>
+<tr><td style="width: 25%;"><a href="cset.html">matchfun</a></td>
+<td>Customizable sets</td></tr>
+<tr><td style="width: 25%;"><a href="interval.html">max.interval</a></td>
+<td>Intervals</td></tr>
+<tr><td style="width: 25%;"><a href="cset.html">mean.cset</a></td>
+<td>Customizable sets</td></tr>
+<tr><td style="width: 25%;"><a href="gset.html">mean.gset</a></td>
+<td>Generalized sets</td></tr>
+<tr><td style="width: 25%;"><a href="interval.html">mean.interval</a></td>
+<td>Intervals</td></tr>
+<tr><td style="width: 25%;"><a href="cset.html">median.cset</a></td>
+<td>Customizable sets</td></tr>
+<tr><td style="width: 25%;"><a href="gset.html">median.gset</a></td>
+<td>Generalized sets</td></tr>
+<tr><td style="width: 25%;"><a href="interval.html">min.interval</a></td>
+<td>Intervals</td></tr>
+</table>
+
+<h2><a name="N">-- N --</a></h2>
+
+<table width="100%">
+<tr><td style="width: 25%;"><a href="interval.html">naturals</a></td>
+<td>Intervals</td></tr>
+<tr><td style="width: 25%;"><a href="interval.html">naturals0</a></td>
+<td>Intervals</td></tr>
+</table>
+
+<h2><a name="P">-- P --</a></h2>
+
+<table width="100%">
+<tr><td style="width: 25%;"><a href="tuple.html">pair</a></td>
+<td>Tuples</td></tr>
+<tr><td style="width: 25%;"><a href="plot.html">plot.charfun_generator</a></td>
+<td>Plot functions for generalized sets</td></tr>
+<tr><td style="width: 25%;"><a href="plot.html">plot.cset</a></td>
+<td>Plot functions for generalized sets</td></tr>
+<tr><td style="width: 25%;"><a href="plot.html">plot.gset</a></td>
+<td>Plot functions for generalized sets</td></tr>
+<tr><td style="width: 25%;"><a href="plot.html">plot.set</a></td>
+<td>Plot functions for generalized sets</td></tr>
+<tr><td style="width: 25%;"><a href="plot.html">plot.tuple</a></td>
+<td>Plot functions for generalized sets</td></tr>
+<tr><td style="width: 25%;"><a href="interval.html">prod.interval</a></td>
+<td>Intervals</td></tr>
+</table>
+
+<h2><a name="R">-- R --</a></h2>
+
+<table width="100%">
+<tr><td style="width: 25%;"><a href="interval.html">range.interval</a></td>
+<td>Intervals</td></tr>
+<tr><td style="width: 25%;"><a href="interval.html">reals</a></td>
+<td>Intervals</td></tr>
+<tr><td style="width: 25%;"><a href="interval.html">reals2integers</a></td>
+<td>Intervals</td></tr>
+<tr><td style="width: 25%;"><a href="closure.html">reduction</a></td>
+<td>Closure and reduction</td></tr>
+<tr><td style="width: 25%;"><a href="closure.html">reduction.set</a></td>
+<td>Closure and reduction</td></tr>
+</table>
+
+<h2><a name="S">-- S --</a></h2>
+
+<table width="100%">
+<tr><td style="width: 25%;"><a href="set.html">set</a></td>
+<td>Sets</td></tr>
+<tr><td style="width: 25%;"><a href="options.html">sets_options</a></td>
+<td>Options for the 'sets' package</td></tr>
+<tr><td style="width: 25%;"><a href="set.html">set_cardinality</a></td>
+<td>Sets</td></tr>
+<tr><td style="width: 25%;"><a href="set.html">set_cartesian</a></td>
+<td>Sets</td></tr>
+<tr><td style="width: 25%;"><a href="set.html">set_combn</a></td>
+<td>Sets</td></tr>
+<tr><td style="width: 25%;"><a href="set.html">set_complement</a></td>
+<td>Sets</td></tr>
+<tr><td style="width: 25%;"><a href="set.html">set_contains_element</a></td>
+<td>Sets</td></tr>
+<tr><td style="width: 25%;"><a href="similarity.html">set_dissimilarity</a></td>
+<td>Similarity and Dissimilarity Functions</td></tr>
+<tr><td style="width: 25%;"><a href="set.html">set_intersection</a></td>
+<td>Sets</td></tr>
+<tr><td style="width: 25%;"><a href="set.html">set_is_empty</a></td>
+<td>Sets</td></tr>
+<tr><td style="width: 25%;"><a href="set.html">set_is_equal</a></td>
+<td>Sets</td></tr>
+<tr><td style="width: 25%;"><a href="set.html">set_is_proper_subset</a></td>
+<td>Sets</td></tr>
+<tr><td style="width: 25%;"><a href="set.html">set_is_subset</a></td>
+<td>Sets</td></tr>
+<tr><td style="width: 25%;"><a href="outer.html">set_outer</a></td>
+<td>Outer Product of Sets (Tuples)</td></tr>
+<tr><td style="width: 25%;"><a href="set.html">set_power</a></td>
+<td>Sets</td></tr>
+<tr><td style="width: 25%;"><a href="similarity.html">set_similarity</a></td>
+<td>Similarity and Dissimilarity Functions</td></tr>
+<tr><td style="width: 25%;"><a href="set.html">set_symdiff</a></td>
+<td>Sets</td></tr>
+<tr><td style="width: 25%;"><a href="set.html">set_union</a></td>
+<td>Sets</td></tr>
+<tr><td style="width: 25%;"><a href="tuple.html">singleton</a></td>
+<td>Tuples</td></tr>
+<tr><td style="width: 25%;"><a href="interval.html">sum.interval</a></td>
+<td>Intervals</td></tr>
+</table>
+
+<h2><a name="T">-- T --</a></h2>
+
+<table width="100%">
+<tr><td style="width: 25%;"><a href="tuple.html">triple</a></td>
+<td>Tuples</td></tr>
+<tr><td style="width: 25%;"><a href="tuple.html">tuple</a></td>
+<td>Tuples</td></tr>
+<tr><td style="width: 25%;"><a href="tuple.html">tuple_is_ntuple</a></td>
+<td>Tuples</td></tr>
+<tr><td style="width: 25%;"><a href="tuple.html">tuple_is_pair</a></td>
+<td>Tuples</td></tr>
+<tr><td style="width: 25%;"><a href="tuple.html">tuple_is_singleton</a></td>
+<td>Tuples</td></tr>
+<tr><td style="width: 25%;"><a href="tuple.html">tuple_is_triple</a></td>
+<td>Tuples</td></tr>
+<tr><td style="width: 25%;"><a href="outer.html">tuple_outer</a></td>
+<td>Outer Product of Sets (Tuples)</td></tr>
+</table>
+
+<h2><a name="misc">-- misc --</a></h2>
+
+<table width="100%">
+<tr><td style="width: 25%;"><a href="interval.html">%..%</a></td>
+<td>Intervals</td></tr>
+<tr><td style="width: 25%;"><a href="interval.html">%&lt;%</a></td>
+<td>Intervals</td></tr>
+<tr><td style="width: 25%;"><a href="interval.html">%&lt;=%</a></td>
+<td>Intervals</td></tr>
+<tr><td style="width: 25%;"><a href="interval.html">%&gt;%</a></td>
+<td>Intervals</td></tr>
+<tr><td style="width: 25%;"><a href="interval.html">%&gt;=%</a></td>
+<td>Intervals</td></tr>
+<tr><td style="width: 25%;"><a href="gset.html">%D%</a></td>
+<td>Generalized sets</td></tr>
+<tr><td style="width: 25%;"><a href="gset.html">%e%</a></td>
+<td>Generalized sets</td></tr>
+<tr><td style="width: 25%;"><a href="fuzzyinference.html">%is%</a></td>
+<td>Fuzzy inference</td></tr>
+<tr><td style="width: 25%;"><a href="fuzzy.html">.I.</a></td>
+<td>Fuzzy logic</td></tr>
+<tr><td style="width: 25%;"><a href="fuzzy.html">.N.</a></td>
+<td>Fuzzy logic</td></tr>
+<tr><td style="width: 25%;"><a href="fuzzy.html">.S.</a></td>
+<td>Fuzzy logic</td></tr>
+<tr><td style="width: 25%;"><a href="fuzzy.html">.T.</a></td>
+<td>Fuzzy logic</td></tr>
+</table>
+</body></html>

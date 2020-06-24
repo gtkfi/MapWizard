@@ -1,0 +1,10 @@
+conf.design-package	conf.design-package
+conf.design	conf.design
+conf.set	conf.set
+direct.sum	direct.sum
+factorize	factorize
+factorize.default	factorize
+factorize.factor	factorize
+join	join
+primes	primes
+rjoin	rjoin

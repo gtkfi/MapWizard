@@ -1,8 +1,8 @@
 #version 0.2
 library(raster)
 
-source("rasterproc_2.r")
-
+#source("rasterproc_2.r")
+source("rasterproc.r")
 args = commandArgs(trailingOnly = TRUE)
 
 # 1. DELINEATE PERMISSIVE TRACTS
@@ -57,7 +57,7 @@ args = commandArgs(trailingOnly = TRUE)
 # cleanPolyShpP = entire path and filename to output cleaned polygons
 # cleanPolyShpF = output cleaned polygons file name base (without .shp suffix)
 outPolyP<-args[1]
-minarea<-args[2]
+minarea<-as.numeric(args[2])
 cleanPolyShpP<-args[3]
 cleanPolyShpF<-args[4]
 outCleanStatTxt<-args[5]

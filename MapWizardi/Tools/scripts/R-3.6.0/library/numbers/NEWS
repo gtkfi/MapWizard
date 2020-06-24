@@ -1,0 +1,160 @@
+------------------------------------------------------------------------------
+  numbers                                                               NEWS
+------------------------------------------------------------------------------
+
+
+Version 0.7-5 (2019-11-26)
+
+  o collatz() calculates generalized Collatz sequences.
+
+Version 0.7-4 (2019-08-03)
+
+  o "length > 1 in coercion to logical" error corrected in mGCD() and mLCM().
+  o Corrected hermiteNF(), suggested by Martin Hoffmann.
+
+Version 0.7-3 (2018-12-02)
+
+  o modsqrt() calculates the square root modulo primes.
+
+Version 0.7-1 (2018-05-16)
+
+  o Removed 'numbers-package.Rd' on request of K. Hornick, CRAN.
+
+Version 0.6-8 (2017-03-26)
+
+  o intnthroot() calculates the integer n-th root.
+
+Version 0.6-7 (2017-01-15)
+
+  o modlog() the modular (or: discrete) logarithm.
+  o primroot() got a new keyword 'all=FALSE' to return all primitive
+    roots if it is TRUE. Also, isPrimroot() with the obvious meaning.
+
+Version 0.6-6 (2017-01-10)
+
+  o Extended the description line considerably by request of CRAN.
+  o Finally completed the "?`numbers-package`" entry of the help.
+
+Version 0.6-5 (2017-01-10)
+
+  o cf2num() converts (generalized) continued fractions to numbers,
+    with special care for approximating infinite fractions.
+
+Version 0.6-3 (2016-12-20)
+
+  o divisors() lists all divisors of a number n from its prime factors.
+  o necklace() and bracelet() compute the number of necklaces resp.
+    bracelets in combinatorics, suggested by David Sterratt.
+  o corrected a 'tiny' bug in modpower(), pointed out by Nathan Carter.
+
+Version 0.6-1 (2015-07-13)
+
+  o bell() generates Bell numbers.
+  o Spelling changes in the documentation.
+
+Version 0.5-9 (2015-07-09)
+
+  o Changed package 'gmp' status from "Imports:" to "Suggests:";
+    functions miller_rabin() and mersenne() require 'gmp' to be loaded.
+  o sigma() renamed to Sigma() to avoid name clash.
+
+Version 0.5-8 (2015-07-01)
+
+  o atkin_sieve(): Atkin's prime number sieve.
+  o Small bug corrected: eulerPhi(1) == 1 .
+
+Version 0.5-6 (2015-03-14)
+
+  o Pi-day 3.14.15 9:26:53.58 contribution:
+    dropletPi() realizes the droplet/spigot algorithm for pi;
+    droplet_e() has been renamed to dropletE().
+
+Version 0.5-3 (2015-02-12)
+
+  o radical() computes the radical of n, i.e the product of
+    unique prime factors of n.
+
+Version 0.5-2 (2015-01-28)
+
+  o miller-rabin() executes the probabilistic Miller-Rabin primality
+    test, faster than isPrime(), but still slower than gmp::isprime().
+
+Version 0.5-1 (2015-01-27)
+
+  o egyptian_complete() returns the number of solutions found.
+  o legendre_sym() returned Boolean nonsense, has been corrected. 
+
+Version 0.4-9 (2014-12-30)
+
+  o ordpn() order of a prime number in n!, i.e. n faculty.
+  o fibonacci() and lucas() corrected; the recursive computation
+    has been replaced by an iterative approach.
+
+Version 0.4-7 (2014-08-03)
+
+  o agm() exact to machine accuracy; returns only the AGM value. 
+
+Version 0.4-5 (2014-01-03)
+
+  o Imports 'gmp'.
+  o Primes() avoids creating additional memory, doubled its speed.
+
+Version 0.4-3 (2013-11-16)
+
+  o legendre_sym() Legendre and Jacobi symbol.
+  o quadratic_residues() lists all quadratic residues.
+
+Version 0.4-1 (2013-03-30)
+
+  o mersenne() computes Mersenne prime numbers.
+  o Renamed factorize() to primeFactors() (avoid masking ...)
+
+Version 0.3-5 (2013-01-12)
+
+  o catalan() Catalan numbers.
+  o pythagorean_triple() generating Pythagorean triples.
+
+Version 0.3-3 (2012-11-20)
+
+  o hermiteNF() Hermite normal form.
+  o lucas() Lucas numbers as sequence.
+  o Added corrections to mGCD() and mLCM().
+
+Version 0.3-1 (2012-10-04)
+
+  o chinese() Chinese Remainder Theorem.
+  o egypt_methods(), egypt_complete() Egyptian fractions
+  o zeck() Zeckendorf representation.
+  o Improving modular arithmetics: mod(), rem(), div().
+
+Version 0.2-1 (2012-09-25)
+
+  o agm() algebraic-geometric mean.
+  o fibonacci() Fibonacci sequence.
+  o droplet_e() for generating digits of e.
+
+  o Modular functions:
+      - modinv(), modlin() modular inverses;
+      - primroot() primitive roots.
+
+  o Greatest common divisor, least common multiple:
+      - extGCD(), GCD(), mGCD(), LCM(), mLCM(), coprime().
+
+Version 0.1-1 (2012-09-24)
+
+  o More Number-theoretic functions:
+      - eulersPhi; moebius(), mertens();
+      - sigma(), tau(), omega(), Omega().
+
+  o Shifted number-theoretic functions from 'pracma' to 'numbers':
+      - contFrac() continuous fractions;
+      - ratFarey() rational approximation through Farey sequence.
+
+  o Prime number functions:
+      - primeSieve(), Primes(), isPrime(), factorize();
+      - twinPrimes(), nextPrime(), previousPrime();
+      - isNatural(), isIntpower().
+
+  o New package 'numbers' on R-Forge.
+
+------------------------------------------------------------------------------

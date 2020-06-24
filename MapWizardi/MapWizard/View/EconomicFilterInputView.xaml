@@ -6,11 +6,15 @@
              x:Class="MapWizard.EconomicFilterView"
              xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
              xmlns:service="clr-namespace:MapWizard.Service"
-             mc:Ignorable="d" Height="641" Width="796" DataContext="{Binding Source={StaticResource Locator}, Path=EconomicFilterViewModel}">
+    xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+             mc:Ignorable="d" d:DesignHeight="450" d:DesignWidth="800" DataContext="{Binding Source={StaticResource Locator}, Path=EconomicFilterViewModel}">
     <UserControl.Resources>
         <service:FilePathToFileNameConverter x:Key="FilePathToFileNameConverter" />
         <service:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
         <service:SelectedIndexToBooleanConverter x:Key="SelectedIndexToBooleanConverter"/>
+        <service:RaefBooleanToDaysOfOperationConverter x:Key="RaefBooleanToDaysOfOperationConverter"/>
+        <service:BoolToCollapsedVisibilityConverter x:Key="BoolToCollapsedVisibilityConverter"/>
+        <service:RaefDepthIntToVisibilityConverter x:Key="RaefDepthIntToVisibilityConverter"/>
         <Style x:Key="WrapPanel" TargetType="WrapPanel">
             <Setter Property="HorizontalAlignment" Value="left" />
             <Setter Property="VerticalAlignment" Value="center"></Setter>
@@ -19,45 +23,201 @@
             <Setter Property="Margin" Value="10,05,10,05"></Setter>
         </Style>
     </UserControl.Resources>
-    <TabControl HorizontalAlignment="Stretch" Margin="0,0,0,0" SelectedIndex="{Binding TabIndex}">
-        <TabItem Header="RAEF">
-            <StackPanel >
-                <WrapPanel Margin="10,20,20, 20">
-                    <TextBlock MinWidth="250" FontSize="18" Text="Select RAEF preset file:" Margin="0,0,0,5" VerticalAlignment="Center" HorizontalAlignment="Left"></TextBlock>
-                    <Button Margin="50,0,0,0" FontSize="18" Content="{Binding Model.RaefPresetFile, Converter={StaticResource FilePathToFileNameConverter}}" MinWidth="150" MaxWidth="250" HorizontalAlignment="Center" Command="{Binding SelectRaefPresetFileCommand}" Style="{StaticResource AccentedSquareButtonStyle}" mah:ControlsHelper.ContentCharacterCasing="Normal">
-                        <Button.ToolTip>
-                            <TextBlock Text="{Binding Model.RaefPresetFile}"></TextBlock>
-                        </Button.ToolTip>
-                    </Button>
-                </WrapPanel>
-                <WrapPanel Margin="10,20,20, 20">
-                    <TextBlock MinWidth="250" FontSize="18" Text="Select economic filter file:" Margin="0,0,0,5" VerticalAlignment="Center" HorizontalAlignment="Left"></TextBlock>
-                    <Button Margin="50,0,0,0" FontSize="18" Content="{Binding Model.RaefEconFilterFile, Converter={StaticResource FilePathToFileNameConverter}}" MinWidth="150" MaxWidth="250" HorizontalAlignment="Center" Command="{Binding SelectRaefEconFilterFileCommand}" Style="{StaticResource AccentedSquareButtonStyle}" mah:ControlsHelper.ContentCharacterCasing="Normal">
-                        <Button.ToolTip>
-                            <TextBlock Text="{Binding Model.RaefEconFilterFile}"></TextBlock>
-                        </Button.ToolTip>
-                    </Button>
-                </WrapPanel>
-                <UniformGrid Rows="1" Columns="2" >
-                    <WrapPanel Style="{StaticResource WrapPanel}">
-                        <TextBlock Text="Save output in separate folder?" FontSize="18" Margin="10"></TextBlock>
+    <TabControl HorizontalAlignment="Stretch" Margin="0,0,0,0" SelectedIndex="{Binding Model.TabIndex}">
+        <TabItem Header="RAEF" >
+            <ScrollViewer  VerticalScrollBarVisibility="Visible" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                <StackPanel >
+                    <WrapPanel Margin="10,20,20,20">
+                        <TextBlock MinWidth="250" FontSize="18" Text="Tract id:" Margin="0,0,0,5" VerticalAlignment="Center" HorizontalAlignment="Left"></TextBlock>
+                        <ComboBox Name="cmbx"                 
+                              ItemsSource="{Binding Model.TractIDNames, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"  
+                              Margin="50,0,0,0"
+                              SelectedValue="{Binding Model.SelectedTract, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                              HorizontalAlignment="left"  VerticalAlignment="Center" FontSize="18" Width="150"
+                              ToolTip="Select tract.">
+                            <i:Interaction.Triggers>
+                                <i:EventTrigger EventName="DropDownOpened">
+                                    <i:InvokeCommandAction Command="{Binding FindTractsCommand}" />
+                                </i:EventTrigger>
+                                <i:EventTrigger EventName="SelectionChanged">
+                                    <i:InvokeCommandAction Command="{Binding TractChangedCommand}" />
+                                </i:EventTrigger>
+                            </i:Interaction.Triggers>
+                        </ComboBox>
                     </WrapPanel>
-                    <WrapPanel Margin="-85,7,0,0" Style="{StaticResource ValueColumn}">
-                        <RadioButton Name="YesButton" Margin="0,10,10,10" Padding="0" IsChecked="{Binding RaefUseModelName}">Yes</RadioButton>
-                        <RadioButton Margin="10,10,10,10" Padding="0" IsChecked="True">No</RadioButton>
+                    <WrapPanel Margin="10,20,20, 20">
+                        <TextBlock MinWidth="250" FontSize="18" Text="Select economic filter file:" Margin="0,0,0,5" VerticalAlignment="Center" HorizontalAlignment="Left"></TextBlock>
+                        <Button Margin="50,0,0,0" FontSize="18" Content="{Binding Model.RaefEconFilterFile, Converter={StaticResource FilePathToFileNameConverter}}" MinWidth="150" MaxWidth="250" HorizontalAlignment="Center" Command="{Binding SelectRaefEconFilterFileCommand}" Style="{StaticResource AccentedSquareButtonStyle}" mah:ControlsHelper.ContentCharacterCasing="Normal">
+                            <Button.ToolTip>
+                                <TextBlock Text="{Binding Model.RaefEconFilterFile}"></TextBlock>
+                            </Button.ToolTip>
+                        </Button>
                     </WrapPanel>
-                </UniformGrid>
-                <UniformGrid Margin="0,5,0,20" Rows="1" Columns="2" Visibility="{Binding ElementName=YesButton, Path=IsChecked, Converter={StaticResource BoolToVisibilityConverter}}">
-                    <WrapPanel />
-                    <WrapPanel Margin="-85,0,0,0" Style="{StaticResource ValueColumn}">
-                        <TextBox mah:TextBoxHelper.Watermark="Type model name" Text="{Binding Model.RaefExtensionFolder}" MinWidth="120"></TextBox>
+                    <TextBlock>Run type</TextBlock>
+                    <RadioButton Name="batchYesRadioButton" GroupName="runtype">Use preset parameters</RadioButton>
+                    <RadioButton Name="batchNoRadioButton" GroupName="runtype" IsChecked="{Binding Model.UseRaefInputParams, Mode=TwoWay}">Input parameters in GUI</RadioButton>
+                    <RadioButton Name="EmpiricalModeRadioButton" GroupName="runtype" IsChecked="{Binding Model.RaefEmpiricalModel, Mode=TwoWay}">Empirical mode</RadioButton>
+                    <!--Tähän lisäksi empirical mode.-->
+                        <WrapPanel Visibility="{Binding ElementName=EmpiricalModeRadioButton, Path=IsChecked, Converter={StaticResource BoolToCollapsedVisibilityConverter}}">
+                            <StackPanel>
+                                <TextBlock Margin="40"> Empirical Mode:</TextBlock>
+                            <Button Content="{Binding Model.RaefGTMFile, Converter={StaticResource FilePathToFileNameConverter}}" Command="{Binding SelectGTMFileCommand}" Style="{StaticResource AccentedSquareButtonStyle}" mah:ControlsHelper.ContentCharacterCasing="Normal"></Button>
+                                <!--GTM Model (onko tämä rade tonnagen tulos? vai monte sarlo tulos? vai permissive trakt tulos?-->
+                                <TextBlock> Run name:</TextBlock>
+                                <TextBox Text="{Binding Model.RaefRunName}">
+                                </TextBox>
+                            </StackPanel>
+                        </WrapPanel>
+
+                        <StackPanel Visibility="{Binding ElementName=batchNoRadioButton,Path=IsChecked,Converter={StaticResource BoolToCollapsedVisibilityConverter}}">
+                        <TextBlock Margin="40"> input GUI....</TextBlock>
+                        <WrapPanel>
+                            <StackPanel>
+                                <TextBlock>Run name</TextBlock>
+                                <TextBox Text="{Binding Model.RaefRunName}"></TextBox>
+                                <TextBlock>Area</TextBlock>
+                                <TextBox Text="{Binding Model.RaefArea}"></TextBox>
+                                <TextBlock>Depth intervals</TextBlock>
+                                <!--<TextBox Text="{Binding Model.RaefDepthIntervals}"></TextBox>-->
+                                <mah:NumericUpDown Minimum="1" Maximum="4" Value="{Binding Model.RaefDepthIntervals}"></mah:NumericUpDown>
+                                <!--<Slider Minimum="1" Maximum="4" Value="{Binding Model.RaefDepthIntervals}"></Slider>-->
+                                <TextBlock>Min1</TextBlock>
+                                <TextBox Text="{Binding Model.RaefMin1}"></TextBox>
+                                <!--sitten oikeastaan se näitten näyttäminen niin että depth intervalsin perusteella nämä näkyviin.-->
+                                <StackPanel Visibility="{Binding Model.RaefDepthIntervals,Converter={StaticResource RaefDepthIntToVisibilityConverter},ConverterParameter=1}"></StackPanel>
+                                <TextBlock>Max1</TextBlock>
+                                <TextBox Text="{Binding Model.RaefMax1}"></TextBox>
+                                <TextBlock>Fract1</TextBlock>
+                                <TextBox Text="{Binding Model.RaefFract1}"></TextBox>
+                                <StackPanel Visibility="{Binding Model.RaefDepthIntervals,Converter={StaticResource RaefDepthIntToVisibilityConverter},ConverterParameter=2}">
+                                    <TextBlock>Min2</TextBlock>
+                                    <TextBox Text="{Binding Model.RaefMin2}"></TextBox>
+                                    <TextBlock>Max2</TextBlock>
+                                    <TextBox Text="{Binding Model.RaefMax2}"></TextBox>
+                                    <TextBlock>Fract2</TextBlock>
+                                    <TextBox Text="{Binding Model.RaefFract2}"></TextBox>
+                                </StackPanel>
+                                
+                                <StackPanel Visibility="{Binding Model.RaefDepthIntervals,Converter={StaticResource RaefDepthIntToVisibilityConverter},ConverterParameter=3}">
+                                    <TextBlock>Min3</TextBlock>
+                                    <TextBox Text="{Binding Model.RaefMin3}"></TextBox>
+                                    <TextBlock>Max3</TextBlock>
+                                    <TextBox Text="{Binding Model.RaefMax3}"></TextBox>
+                                    <TextBlock>Fract3</TextBlock>
+                                    <TextBox Text="{Binding Model.RaefFract3}"></TextBox>
+                                </StackPanel>
+                                
+                                <StackPanel Visibility="{Binding Model.RaefDepthIntervals,Converter={StaticResource RaefDepthIntToVisibilityConverter},ConverterParameter=4}">
+                                    <TextBlock>Min4</TextBlock>
+                                    <TextBox Text="{Binding Model.RaefMin4}"></TextBox>
+                                    <TextBlock>Max4</TextBlock>
+                                    <TextBox Text="{Binding Model.RaefMax4}"></TextBox>
+                                    <TextBlock>Fract4</TextBlock>
+                                    <TextBox Text="{Binding Model.RaefFract4}"></TextBox>
+                                </StackPanel>
+                                
+
+                                <TextBlock>Deposit type</TextBlock>
+                                <ComboBox ItemsSource="{Binding Model.RaefDepositTypeOptionsCollection}" SelectedValue="{Binding Model.RaefDepositType, Mode=TwoWay}"></ComboBox>
+
+                                <!--<TextBlock>Mine method</TextBlock>-->
+                                <!--Selected programmatically-->
+                                <!--<TextBox Text="{Binding Model.RaefMineMethod}"></TextBox>-->
+                                <TextBlock>Mill type 1</TextBlock>
+                                <ComboBox ItemsSource="{Binding Model.RaefMillType1OptionsCollection}" SelectedItem="{Binding Model.RaefMillType1}"></ComboBox>
+                                <!--<TextBlock>Jos mill typeksi valittu Custom, näytä alla oleva.</TextBlock>
+                                <TextBlock>make sure että tract file valittu että voit syätääp näitä tulevia optioita</TextBlock>
+                                <TextBlock>Joka Commoditylle pitää olla valittavissa se hipmutin mine methodi ja lieneep CustomTabPF filussa se tarjolla olevien typejen/methodien valinta commodityn (miksi preset filessä on muka tällanen tabi?)</TextBlock>
+                                <TextBlock>ja sit jos siellä on niitä user defineitä, niin jokaiselle erikseen? kysytään seuraavat tiedot:</TextBlock>
+                                <TextBlock> 31,User Define Mill Name (if applicable),NONE
+                                            32,User Define: Mill Capital Cost Constant,0
+                                            33,User Define: Mill Capital Cost Power log,0
+                                            34,User Define: Mill Operating Cost Constant,0
+                                            35,User Define: Mill Operating Cost Power log,0
+                                </TextBlock>-->
+                                
+                                <!--<TextBlock>Mill type 2:??</TextBlock>-->
+                                <!--<TextBox Text="{Binding Model.RaefMillType2}"/>-->
+
+                                <TextBlock>Days of operation</TextBlock>
+                                <RadioButton GroupName="daysOfOperation" IsChecked="{Binding Model.RaefDaysOfOperation, Converter={StaticResource RaefBooleanToDaysOfOperationConverter}}">350</RadioButton>
+                                <!--Kytke tää sit VM!-->
+                                <RadioButton GroupName="daysOfOperation">260</RadioButton>
+
+                                <TextBlock>Waste management options</TextBlock>
+                                <TextBlock>Env. choice 1</TextBlock>
+                                <!--tää ja liner on waste management options-->
+                                <CheckBox IsChecked="{Binding Model.RaefEnvChoice1, Mode=OneWayToSource}"></CheckBox>
+                                <!--<TextBox Text="{Binding Model.RaefEnvChoice1}"/>-->
+                                <TextBlock>Liner</TextBlock>
+                                <CheckBox IsChecked="{Binding Model.RaefLiner, Mode=OneWayToSource}"></CheckBox>
+
+
+                                <TextBlock>Marshall Swift cost</TextBlock>
+                                <TextBox Text="{Binding Model.RaefMarshallSwiftCost}"/>
+                                <TextBlock>Investment rate of return</TextBlock>
+                                <TextBox Text="{Binding Model.RaefInvestmentRateOfReturn}"/>
+                                <TextBlock>Capital cost inflation factor</TextBlock>
+                                <TextBox Text="{Binding Model.RaefCapitalCostInflationFactor}"/>
+                                <TextBlock>Operating cost inflation factor</TextBlock>
+                                <TextBox Text="{Binding Model.RaefOperatingCostInflationFactor}"/>
+                            </StackPanel>
+                            <WrapPanel></WrapPanel>
+                        </WrapPanel>
+                        <!--<TextBlock>Custom Mill</TextBlock>
+                    
+                    <TextBlock>Mill Capital Cost Constant</TextBlock>
+                    <TextBox Text="{Binding Model.RaefMillCapitalConstant}"></TextBox>
+                    <TextBlock>Mill Capital Cost Power log</TextBlock>
+                    <TextBox Text="{Binding Model.RaefMillCapitalLog}"></TextBox>
+                    <TextBlock>Mill Operating Cost Constant</TextBlock>
+                    <TextBox Text="{Binding Model.RaefMillOperatingCostConstant}"></TextBox>
+                    <TextBlock>Mill Operating Cost Power log</TextBlock>
+                    <TextBox Text="{Binding Model.RaefMillOperatingCostLog}"></TextBox>
+                    <TextBlock>Custom Mill Option 1</TextBlock>
+                    <TextBox Text="{Binding Model.RaefCustomMillOption1}"></TextBox>
+                    <TextBlock>Custom Mill Option 2</TextBlock>
+                    <TextBox Text="{Binding Model.RaefCustomMillOption2}"></TextBox>
+                    <TextBlock>Custom Mill Option 3</TextBlock>
+                    <TextBox Text="{Binding Model.RaefCustomMillOption3}"></TextBox>
+                    <TextBlock>Custom Mill Option 4</TextBlock>
+                    <TextBox Text="{Binding Model.RaefCustomMillOption4}"></TextBox>
+                    <TextBlock>Custom Mill Option 5</TextBlock>
+                    <TextBox Text="{Binding Model.RaefCustomMillOption5}"></TextBox>
+                    <TextBlock>Custom Mill Option 6</TextBlock>
+                    <TextBox Text="{Binding Model.RaefCustomMillOption6}"></TextBox>-->
+                    </StackPanel>
+                    
+                    <WrapPanel Visibility="{Binding ElementName=batchYesRadioButton,Path=IsChecked,Converter={StaticResource BoolToVisibilityConverter}}" Margin="10,20,20, 20">
+                        <TextBlock MinWidth="250" FontSize="18" Text="Select RAEF preset file:" Margin="0,0,0,5" VerticalAlignment="Center" HorizontalAlignment="Left"></TextBlock>
+                        <Button Margin="50,0,0,0" FontSize="18" Content="{Binding Model.RaefPresetFile, Converter={StaticResource FilePathToFileNameConverter}}" MinWidth="150" MaxWidth="250" HorizontalAlignment="Center" Command="{Binding SelectRaefPresetFileCommand}" Style="{StaticResource AccentedSquareButtonStyle}" mah:ControlsHelper.ContentCharacterCasing="Normal">
+                            <Button.ToolTip>
+                                <TextBlock Text="{Binding Model.RaefPresetFile}"></TextBlock>
+                            </Button.ToolTip>
+                        </Button>
                     </WrapPanel>
-                </UniformGrid>
-                <WrapPanel Margin="10, 20, 20, 20">
-                    <TextBlock MinWidth="250"></TextBlock>
-                    <Button Margin="50,0,0,0" Content="Run  " FontSize="18"  MinWidth="150" Command="{Binding RunToolCommand}" Style="{StaticResource AccentedSquareButtonStyle}" mah:ControlsHelper.ContentCharacterCasing="Normal"></Button>
-                </WrapPanel>
-            </StackPanel>
+                    <UniformGrid Rows="1" Columns="2" >
+                        <WrapPanel Style="{StaticResource WrapPanel}">
+                            <TextBlock Text="Save output in separate folder?" TextWrapping="Wrap" FontSize="18" Margin="10"></TextBlock>
+                        </WrapPanel>
+                        <WrapPanel Margin="0,7,0,0" Style="{StaticResource ValueColumn}" HorizontalAlignment="Center">
+                            <RadioButton Name="YesButton" Margin="0,10,10,10" Padding="0" IsChecked="{Binding Model.RaefUseModelName}">Yes</RadioButton>
+                            <RadioButton Margin="10,10,10,10" Padding="0" IsChecked="True">No</RadioButton>
+                        </WrapPanel>
+                    </UniformGrid>
+                    <UniformGrid Margin="0,5,0,20" Rows="1" Columns="2" Visibility="{Binding ElementName=YesButton, Path=IsChecked, Converter={StaticResource BoolToVisibilityConverter}}">
+                        <WrapPanel />
+                        <WrapPanel Margin="65,0,0,0" Style="{StaticResource ValueColumn}">
+                            <TextBox mah:TextBoxHelper.Watermark="Type model name" Text="{Binding Model.RaefExtensionFolder}" MinWidth="120"></TextBox>
+                        </WrapPanel>
+                    </UniformGrid>
+                    
+                    <WrapPanel Margin="10, 20, 20, 300">
+                        <TextBlock MinWidth="250"></TextBlock>
+                        <Button Margin="50,0,0,0" Content="Run  " FontSize="18"  MinWidth="150" Command="{Binding RunToolCommand}" Style="{StaticResource AccentedSquareButtonStyle}" mah:ControlsHelper.ContentCharacterCasing="Normal"></Button>
+                    </WrapPanel>
+                </StackPanel>
+            </ScrollViewer>
         </TabItem>
         <TabItem Header="Screener">
             <StackPanel HorizontalAlignment="Left" Margin="0 20 0 0" Width="600">
@@ -80,7 +240,7 @@
                         <TextBlock  Text="Commodity:" Margin="10" HorizontalAlignment="left" VerticalAlignment="Center"/>
                     </WrapPanel>
                     <WrapPanel Style="{StaticResource ValueColumn}">
-                        <ComboBox ItemsSource="{Binding MetalIds}" SelectedItem="{Binding Model.SelectedMetal}" SelectedIndex="0" HorizontalAlignment="left"  VerticalAlignment="Center" FontSize="18" Width="150" ToolTip="Commodity on which the screening will be based."/>
+                        <ComboBox ItemsSource="{Binding Model.MetalIds}" SelectedItem="{Binding Model.SelectedMetal}" SelectedIndex="0" HorizontalAlignment="left"  VerticalAlignment="Center" FontSize="18" Width="150" ToolTip="Commodity on which the screening will be based."/>
                     </WrapPanel>
                 </UniformGrid>
                 <UniformGrid Rows="1" Columns="2">
@@ -88,7 +248,7 @@
                         <TextBlock  Text="Type of screening:" Margin="10" HorizontalAlignment="left" VerticalAlignment="Center"/>
                     </WrapPanel>
                     <WrapPanel Style="{StaticResource ValueColumn}">
-                        <ComboBox ItemsSource="{Binding PerTypes}" SelectedItem="{Binding Model.PerType}" SelectedIndex="0" HorizontalAlignment="left"  VerticalAlignment="Center" FontSize="18" Width="150" ToolTip="Screening based on largest x percent of deposits or largest x percent of their cumulative metal content."/>
+                        <ComboBox ItemsSource="{Binding Model.PerTypes}" SelectedItem="{Binding Model.PerType}" SelectedIndex="0" HorizontalAlignment="left"  VerticalAlignment="Center" FontSize="18" Width="150" ToolTip="Screening based on largest x percent of deposits or largest x percent of their cumulative metal content."/>
                     </WrapPanel>
                 </UniformGrid>
                 <UniformGrid Rows="1" Columns="2">
@@ -105,7 +265,7 @@
                         <TextBlock Text="Save output in separate folder?" Margin="5,0,0,0"></TextBlock>
                     </WrapPanel>
                     <WrapPanel Margin="10,7,0,0" Style="{StaticResource ValueColumn}" ToolTip="Select whether to save the results of the Screener run in a separate subfolder.">
-                        <RadioButton Name="YesButton2" Margin="0,10,10,10" Padding="0" IsChecked="{Binding ScreenerUseModelName}">Yes</RadioButton>
+                        <RadioButton Name="YesButton2" Margin="0,10,10,10" Padding="0" IsChecked="{Binding Model.ScreenerUseModelName}">Yes</RadioButton>
                         <RadioButton Margin="10,0,0,0" Padding="0" IsChecked="True">No</RadioButton>
                     </WrapPanel>
                 </UniformGrid>

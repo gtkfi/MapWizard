@@ -78,7 +78,7 @@
         </Style>
     </UserControl.Resources>
     <Grid>
-        <dragablz:TabablzControl  Margin="20,3,0,0" BorderThickness="0"  Style="{StaticResource MahAppsTabablzControlStyle}" ItemContainerStyle="{StaticResource MahAppsTrapezoidDragableTabItemStyle}" >
+        <dragablz:TabablzControl  Margin="20,0,0,3" BorderThickness="0"  Style="{StaticResource MahAppsTabablzControlStyle}" ItemContainerStyle="{StaticResource MahAppsTrapezoidDragableTabItemStyle}" >
             <dragablz:TabablzControl.InterTabController>
                 <dragablz:InterTabController DataContext="{Binding Source={StaticResource Locator}, Path=TabViewModel}"  InterTabClient="{Binding InterTabClient}" />
             </dragablz:TabablzControl.InterTabController>
@@ -91,7 +91,7 @@
                     <local:DescriptiveView HorizontalAlignment="Left" 
                                            Margin=" 0,0,0,0" 
                                            DataContext="{Binding Source={StaticResource Locator}, Path=DescriptiveViewModel}" 
-                                           IsEnabled="{Binding IsBusy,Converter={StaticResource ReverseBooleanConverter}}"/>
+                                           IsEnabled="{Binding CurrentModel.IsBusy,Converter={StaticResource ReverseBooleanConverter}}"/>
                 </Grid>
             </mah:MetroTabItem>
             <mah:MetroTabItem Padding="5">
@@ -103,8 +103,8 @@
                     <local:DescriptiveResultView HorizontalAlignment="Left"/>
                     <Button 
                         HorizontalAlignment="Right" 
-                        VerticalAlignment="Bottom" 
-                        Margin="0,0,40,40"
+                        VerticalAlignment="Top" 
+                        Margin="0,0,40,0"
                         Padding="-10,0,0,0"                          
                         Background="{DynamicResource AccentColorBrush}" 
                         Foreground="White"
@@ -115,9 +115,9 @@
                         <TextBlock FontSize="16" Text=" Select Model" ToolTip="Select the descriptipve model to be used in this assessment project."></TextBlock>
                     </Button>
                     <Button 
-                        HorizontalAlignment="Center" 
-                        VerticalAlignment="Bottom" 
-                        Margin="0,0,40,40"
+                        HorizontalAlignment="Right" 
+                        VerticalAlignment="Top" 
+                        Margin="0,60,40,0"
                         Padding="-10,0,0,0"                          
                         Background="{DynamicResource AccentColorBrush}" 
                         Foreground="White"
@@ -129,7 +129,7 @@
                         <TextBlock FontSize="16" Text=" Save Order (Run Tool)"></TextBlock>
                     </Button>
                     <UniformGrid  Rows="1" Columns="1">
-                        <mah:ProgressRing DataContext="{Binding Source={StaticResource Locator}, Path=DescriptiveViewModel}" IsActive="{Binding IsBusy}" Width="200"/>
+                        <mah:ProgressRing DataContext="{Binding Source={StaticResource Locator}, Path=DescriptiveViewModel}" IsActive="{Binding CurrentModel.IsBusy}" Width="200"/>
                     </UniformGrid>
                 </Grid>
             </mah:MetroTabItem>

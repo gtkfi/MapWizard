@@ -9,10 +9,10 @@ namespace MapWizard.Model
     public class MonteCarloSimulationResultModel : ObservableObject
     {
         private string summaryTotalTonnage;
-        private string totalTonPdf;
-        private ImageSource totalTonPdfBitMap;
-        private string marginalPdf;
-        private ImageSource marginalPdfBitMap;
+        private string totalTonPlot;
+        private ImageSource totalTonPlotBitMap;
+        private string marginalPlot;
+        private ImageSource marginalPlotBitMap;
         private string simulatedDepositsCSV;
 
         /// <summary>
@@ -32,66 +32,66 @@ namespace MapWizard.Model
         }
 
         /// <summary>
-        /// Total tonnage Pdf.
+        /// Total tonnage Plot.
         /// </summary>
-        /// @return Total tonnage Pdf.
-        public string TotalTonPdf
+        /// @return Total tonnage Plot.
+        public string TotalTonPlot
         {
             get
             {
-                return totalTonPdf;
+                return totalTonPlot;
             }
             set
             {
-                Set<string>(() => this.TotalTonPdf, ref totalTonPdf, value);
+                Set<string>(() => this.TotalTonPlot, ref totalTonPlot, value);
             }
         }
 
         /// <summary>
-        /// Total tonnage Pdf BitMap.
+        /// Total tonnage Plot BitMap.
         /// </summary>
         /// @return ImageSource.
-        public ImageSource TotalTonPdfBitMap
+        public ImageSource TotalTonPlotBitMap
         {
             get
             {
-                return totalTonPdfBitMap;
+                return totalTonPlotBitMap;
             }
             set
             {
-                Set<ImageSource>(() => this.TotalTonPdfBitMap, ref totalTonPdfBitMap, value);
+                Set<ImageSource>(() => this.TotalTonPlotBitMap, ref totalTonPlotBitMap, value);
             }
         }
 
         /// <summary>
-        /// Marginal Pdf.
+        /// Marginal Plot.
         /// </summary>
-        /// @return Marginal Pdf.
-        public string MarginalPdf
+        /// @return Marginal Plot.
+        public string MarginalPlot
         {
             get
             {
-                return marginalPdf;
+                return marginalPlot;
             }
             set
             {
-                Set<string>(() => this.MarginalPdf, ref marginalPdf, value);
+                Set<string>(() => this.MarginalPlot, ref marginalPlot, value);
             }
         }
 
         /// <summary>
-        /// Marginal Pdf BitMap.
+        /// Marginal Plot BitMap.
         /// </summary>
         /// @return ImageSource.
-        public ImageSource MarginalPdfBitMap
+        public ImageSource MarginalPlotBitMap
         {
             get
             {
-                return marginalPdfBitMap;
+                return marginalPlotBitMap;
             }
             set
             {
-                Set<ImageSource>(() => this.MarginalPdfBitMap, ref marginalPdfBitMap, value);
+                Set<ImageSource>(() => this.MarginalPlotBitMap, ref marginalPlotBitMap, value);
             }
         }
 

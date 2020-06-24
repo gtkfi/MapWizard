@@ -13,5 +13,6 @@
         void AddToRegistry(string MAPWfile);
         void SaveSettings(string json_file);
         void LoadSettings(string json_file);
+        void SettingsInitialization();
     }
 }

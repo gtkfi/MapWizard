@@ -16,7 +16,7 @@
                         <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
                     <StackPanel>
-                        <TextBlock Name="Header" Text="Number of undiscovered" Grid.ColumnSpan="2" Margin="0,5,0,4"/>
+                        <TextBlock Name="Header" Text="Number of undiscovered" Grid.ColumnSpan="2" Margin="0,30,0,4"/>
                         <Grid Margin="0,3,0,0" MaxHeight="700"  HorizontalAlignment="Left" VerticalAlignment="Top" Width="327" Grid.ColumnSpan="2">
                             <UniformGrid Rows="1" Columns="3">
                                 <TextBlock Name="Header2" Text="deposits"/>
@@ -70,15 +70,18 @@
                 </Grid>
             </TabItem>
             <TabItem Header="Deposit Density Plot" DataContext="{Binding Source={StaticResource Locator}, Path=DepositDensityViewModel}">
-                <ScrollViewer Margin="5,30,5,10"  HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto"  HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                <ScrollViewer Margin="0, 10, 6, 0"  HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto"  HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
                     <UniformGrid>
-                        <Image Margin="0,0,0,200" Name="DensPlotImage" Source="{Binding Result.PlotImagePath}" />
+                        <!--PlotImageBitMap for DepositDensity-->
+                        <Button Command="{Binding OpenDepositDenPlotCommand}" Cursor="Hand" Background="Transparent" BorderBrush="Transparent">
+                        <Image Margin="0,0,0,0" Name="DensPlotImage" Source="{Binding Result.PlotImageBitMap}" />
+                            </Button>
                     </UniformGrid>
                 </ScrollViewer>
             </TabItem>
             <TabItem HorizontalAlignment="Stretch" Header="Summary">
                 <Grid>
-                    <ScrollViewer Margin="5,30,5,10" MaxHeight="700" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" HorizontalAlignment="Left" VerticalAlignment="Top">
+                    <ScrollViewer Margin="0, 30, 6, 0" MaxHeight="700" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" HorizontalAlignment="Left" VerticalAlignment="Top">
                         <UniformGrid Rows="1" Columns="3">
                             <TextBlock Name="SummaryTxt" Text="{Binding Result.Summary}"/>
                         </UniformGrid>
@@ -86,9 +89,12 @@
                 </Grid>
             </TabItem>
             <TabItem Header="Plot" >
-                <ScrollViewer Margin="5,30,5,10"  HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto"  HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                <ScrollViewer Margin="0, 10, 6, 0" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto"  HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
                     <UniformGrid>
-                        <Image  Margin="0,0,0,200" Name="PlotImage" Source="{Binding Result.PlotImageBitMap}"  />
+                        <Button Command="{Binding OpenUndiscDepPlotCommand}" Cursor="Hand" Background="Transparent" BorderBrush="Transparent">
+                            <!--PlotImageBitMap for UndiscovereDeposits-->
+                            <Image  Margin="0,0,0,0" Name="PlotImage" Source="{Binding Result.PlotImageBitMap}"  />
+                        </Button>
                     </UniformGrid>
                 </ScrollViewer>
             </TabItem>

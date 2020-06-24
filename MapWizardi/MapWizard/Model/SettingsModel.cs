@@ -1,145 +1,123 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using GalaSoft.MvvmLight;
+﻿using GalaSoft.MvvmLight;
 
 namespace MapWizard.Model
 {
     /// Observable object for SettingsModel
     public class SettingsModel : ObservableObject
     {
-        private string pythonexePath;
-        private string rexePath;
-        private string rootFolderPath;
-        private string depModFolderPath;
-        private string RexePathDefault;
-        private string PexePathDefault;
-        private string depModFolderPathDefault;
-        private string defaultPythonLocation;
-        private string customPythonLocation;
-        private string pyButtonVisibility;
-        private string defaultRLocation;
-        private string customRLocation;
-        private string rButtonVisibility;
-        private string defaultDepModLocation;
-        private string customDepModLocation;
-        private string depModButtonVisibility;
+        private string logText="";        
+        private int logHeight = 0;
+        private string logTitle = "Hide log";
+        private string pythonPathDefault;
+        private string pythonPathCustom;
+        private bool pythonLocationDefault;
+        private bool pythonButtonVisibility;
+        private string rPathDefault;
+        private string rPathCustom;
+        private bool rLocationDefault;
+        private bool rButtonVisibility;
+        private string depModelsFolderPathDefault;
+        private string depModelsFolderPathCustom;                        
+        private bool depModelsLocationDefault;
+        private bool depModelsButtonVisibility;
         private string newProjectName;
         private string projectName;
         private string depositType;
         private object depositTypeVisibility;
 
         /// <summary>
-        /// Path to .exe file for Python.
+        /// Title for log, located at the bottom of the view.
         /// </summary>
         /// @return Path.
-        public string PythonEXEPath
+        public string LogTitle
         {
             get
             {
-                return pythonexePath;
+                if (LogHeight > 1)
+                {
+                    logTitle = "Hide log";
+                }
+                else
+                {
+                    logTitle = "Show log";
+                }
+                return logTitle;
             }
             set
             {
-                Set<string>(() => this.PythonEXEPath, ref pythonexePath, value);
+                Set<string>(() => this.LogTitle, ref logTitle, value);
             }
         }
 
         /// <summary>
-        /// Path to .exe file for R.
+        /// Text for log, located at the bottom of the view.
         /// </summary>
         /// @return Path.
-        public string REXEPath
+        public string LogText
         {
             get
             {
-                return rexePath;
+                return logText;
             }
             set
             {
-                Set<string>(() => this.REXEPath, ref rexePath, value);
+                Set<string>(() => this.LogText, ref logText, value);
             }
         }
 
         /// <summary>
-        /// Path to root folder.
+        /// Height of the log. Can be changed with a GridSplitter.
         /// </summary>
         /// @return Path.
-        public string RootFolderPath
+        public int LogHeight
         {
             get
             {
-                return rootFolderPath;
+                return logHeight;
             }
             set
             {
-                Set<string>(() => this.RootFolderPath, ref rootFolderPath, value);
+                Set<int>(() => this.LogHeight, ref logHeight, value);
+                if (value > 1)
+                {
+                    LogTitle = "Hide log";
+                }
+                else
+                {
+                    LogTitle = "Show log";
+                }
             }
         }
-
-        /// <summary>
-        /// Path to Deposit Models folder.
-        /// </summary>
-        /// @return Path.
-        public string DepModFolderPath
-        {
-            get
-            {
-                return depModFolderPath;
-            }
-            set
-            {
-                Set<string>(() => this.DepModFolderPath, ref depModFolderPath, value);
-            }
-        }
-
-        /// <summary>
-        /// Default R path.
-        /// </summary>
-        /// @return Path.
-        public string REXEPathDefault
-         {
-             get
-             {
-                 return RexePathDefault;
-             }
-             set
-             {
-                 Set<string>(() => this.REXEPathDefault, ref RexePathDefault, value);
-             }
-         }
 
         /// <summary>
         /// Default Python path.
         /// </summary>
         /// @return Path.
-        public string PyEXEPathDefault
+        public string PythonPathDefault
         {
             get
             {
-                return PexePathDefault;
+                return pythonPathDefault;
             }
             set
-            {
-                Set<string>(() => this.PyEXEPathDefault, ref PexePathDefault, value);
+            {                
+                Set<string>(() => this.PythonPathDefault, ref pythonPathDefault, value);
             }
         }
 
         /// <summary>
-        /// Default Deposit Models Folder Path.
+        /// Path to .exe file for Python.
         /// </summary>
         /// @return Path.
-        public string DepModFolderPathDefault
+        public string PythonPathCustom
         {
             get
             {
-                return depModFolderPathDefault;
+                return pythonPathCustom;
             }
             set
             {
-                Set<string>(() => this.DepModFolderPathDefault, ref depModFolderPathDefault, value);
+                Set<string>(() => this.PythonPathCustom, ref pythonPathCustom, value);
             }
         }
 
@@ -147,31 +125,17 @@ namespace MapWizard.Model
         /// "Default" radio button.
         /// </summary>
         /// @return Path.
-        public string DefaultPythonLocation
+        public bool PythonLocationDefault
         {
             get
             {
-                return defaultPythonLocation;
+                return pythonLocationDefault;
             }
             set
             {
-                Set<string>(() => this.DefaultPythonLocation, ref defaultPythonLocation, value);
-            }
-        }
-
-        /// <summary>
-        /// "Custom" radio button.
-        /// </summary>
-        /// @return Path.
-        public string CustomPythonLocation
-        {
-            get
-            {
-                return customPythonLocation;
-            }
-            set
-            {
-                Set<string>(() => this.CustomPythonLocation, ref customPythonLocation, value);
+                PythonButtonVisibility = !value;
+                Set<bool>(() => this.PythonLocationDefault, ref pythonLocationDefault, value);
+                RaisePropertyChanged("PythonLocationDefault");
             }
         }
 
@@ -179,31 +143,47 @@ namespace MapWizard.Model
         /// Visibility for custom Python path button.
         /// </summary>
         /// @return Visibility value.
-        public string PyButtonVisibility
+        public bool PythonButtonVisibility
         {
             get
             {
-                return pyButtonVisibility;
+                return pythonButtonVisibility;
             }
             set
             {
-                Set<string>(() => this.PyButtonVisibility, ref pyButtonVisibility, value);
+                Set<bool>(() => this.PythonButtonVisibility, ref pythonButtonVisibility, value);
             }
         }
 
         /// <summary>
-        /// "Custom" radio button.
+        /// Default R path.
         /// </summary>
         /// @return Path.
-        public string CustomRLocation
+        public string RPathDefault
         {
             get
             {
-                return customRLocation;
+                return rPathDefault;
             }
             set
             {
-                Set<string>(() => this.CustomRLocation, ref customRLocation, value);
+                Set<string>(() => this.RPathDefault, ref rPathDefault, value);
+            }
+        }
+
+        /// <summary>
+        /// Path to .exe file for R.
+        /// </summary>
+        /// @return Path.
+        public string RPathCustom
+        {
+            get
+            {
+                return rPathCustom;
+            }
+            set
+            {
+                Set<string>(() => this.RPathCustom, ref rPathCustom, value);
             }
         }
 
@@ -211,15 +191,16 @@ namespace MapWizard.Model
         /// "Default" radio button.
         /// </summary>
         /// @return Path.
-        public string DefaultRLocation
+        public bool RLocationDefault
         {
             get
             {
-                return defaultRLocation;
+                return rLocationDefault;
             }
             set
             {
-                Set<string>(() => this.DefaultRLocation, ref defaultRLocation, value);
+                RButtonVisibility = !value;
+                Set<bool>(() => this.RLocationDefault, ref rLocationDefault, value);
             }
         }
 
@@ -227,7 +208,7 @@ namespace MapWizard.Model
         /// Visibility for custom R path button.
         /// </summary>
         /// @return Visibility value.
-        public string RButtonVisibility
+        public bool RButtonVisibility
         {
             get
             {
@@ -235,39 +216,55 @@ namespace MapWizard.Model
             }
             set
             {
-                Set<string>(() => this.RButtonVisibility, ref rButtonVisibility, value);
+                Set<bool>(() => this.RButtonVisibility, ref rButtonVisibility, value);
             }
         }
 
+        /// <summary>
+        /// Default Deposit Models Folder Path.
+        /// </summary>
+        /// @return Path.
+        public string DepModelsFolderPathDefault
+        {
+            get
+            {
+                return depModelsFolderPathDefault;
+            }
+            set
+            {
+                Set<string>(() => this.DepModelsFolderPathDefault, ref depModelsFolderPathDefault, value);
+            }
+        }
+
+        /// <summary>
+        /// Path to Deposit Models folder.
+        /// </summary>
+        /// @return Path.
+        public string DepModelsFolderPathCustom
+        {
+            get
+            {
+                return depModelsFolderPathCustom;
+            }
+            set
+            {
+                Set<string>(() => this.DepModelsFolderPathCustom, ref depModelsFolderPathCustom, value);
+            }
+        }
         /// <summary>
         /// "Default" radio button.
         /// </summary>
         /// @return Path.
-        public string DefaultDepModLocation
+        public bool DepModelsLocationDefault
         {
             get
             {
-                return defaultDepModLocation;
+                return depModelsLocationDefault;
             }
             set
             {
-                Set<string>(() => this.DefaultDepModLocation, ref defaultDepModLocation, value);
-            }
-        }
-
-        /// <summary>
-        /// "Custom" radio button.
-        /// </summary>
-        /// @return Path.
-        public string CustomDepModLocation
-        {
-            get
-            {
-                return customDepModLocation;
-            }
-            set
-            {
-                Set<string>(() => this.CustomDepModLocation, ref customDepModLocation, value);
+                DepModelsButtonVisibility = !value;
+                Set<bool>(() => this.DepModelsLocationDefault, ref depModelsLocationDefault, value);
             }
         }
 
@@ -275,15 +272,15 @@ namespace MapWizard.Model
         /// Visibility for custom Deposit Models path button.
         /// </summary>
         /// @return Visibility value.
-        public string DepModButtonVisibility
+        public bool DepModelsButtonVisibility
         {
             get
             {
-                return depModButtonVisibility;
+                return depModelsButtonVisibility;
             }
             set
             {
-                Set<string>(() => this.DepModButtonVisibility, ref depModButtonVisibility, value);
+                Set<bool>(() => this.DepModelsButtonVisibility, ref depModelsButtonVisibility, value);
             }
         }
 

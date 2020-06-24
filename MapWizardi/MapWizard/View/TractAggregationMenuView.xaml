@@ -92,9 +92,9 @@
                     <local:TractAggregationInputView HorizontalAlignment="Left" 
                                                      VerticalAlignment="Top" 
                                                      DataContext="{Binding Source={StaticResource Locator}, Path=TractAggregationViewModel}" 
-                                                     IsEnabled="{Binding IsBusy,Converter={StaticResource ReverseBooleanConverter}}"/>
+                                                     IsEnabled="{Binding Model.IsBusy,Converter={StaticResource ReverseBooleanConverter}}"/>
                     <UniformGrid  Rows="1" Columns="1">
-                        <mah:ProgressRing DataContext="{Binding Source={StaticResource Locator}, Path=TractAggregationViewModel}" IsActive="{Binding IsBusy}" Width="200"/>
+                        <mah:ProgressRing DataContext="{Binding Source={StaticResource Locator}, Path=TractAggregationViewModel}" IsActive="{Binding Model.IsBusy}" Width="200"/>
                     </UniformGrid>
                 </Grid>
             </mah:MetroTabItem>
@@ -105,7 +105,7 @@
                 <Grid>
                     <Rectangle Height="3" Fill="LightGray" Stroke="LightGray" VerticalAlignment="Top" HorizontalAlignment="Left" Width="200" Grid.Row="0" />
                     <local:TractAggregationResultView VerticalAlignment="Top" HorizontalAlignment="Left" Margin="0,0,0,0"/>
-                    <mah:ProgressRing DataContext="{Binding Source={StaticResource Locator}, Path=TractAggregationViewModel}" IsActive="{Binding IsBusy}" Width="200"/>
+                    <mah:ProgressRing DataContext="{Binding Source={StaticResource Locator}, Path=TractAggregationViewModel}" IsActive="{Binding Model.IsBusy}" Width="200"/>
                 </Grid>
             </mah:MetroTabItem>
         </dragablz:TabablzControl>

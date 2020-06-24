@@ -1,11 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
-using RDotNet;
-using System.Diagnostics;
 using NLog;
 
 namespace MapWizard.Tools
@@ -22,7 +17,31 @@ namespace MapWizard.Tools
     public class DepositDensityInputParams : ToolParameters
     {
         /// <summary>
-        /// Deposit type
+        /// N10.
+        /// </summary>
+        public string N10
+        {
+            get { return GetValue<string>("N10"); }
+            set { Add<string>("N10", value); }
+        }
+        /// <summary>
+        /// N50.
+        /// </summary>
+        public string N50
+        {
+            get { return GetValue<string>("N50"); }
+            set { Add<string>("N50", value); }
+        }
+        /// <summary>
+        /// N90.
+        /// </summary>
+        public string N90
+        {
+            get { return GetValue<string>("N90"); }
+            set { Add<string>("N90", value); }
+        }
+        /// <summary>
+        /// Deposit type.
         /// </summary>
         public string DepositTypeId
         {
@@ -69,7 +88,23 @@ namespace MapWizard.Tools
             get { return GetValue<string>("GeneralCSVPath"); }
             set { Add<string>("GeneralCSVPath", value); }
         }
+        /// <summary>
+        /// Notes. If estimates cannot be calulated, note is written here.
+        /// </summary>
+        public string Note
+        {
+            get { return GetValue<string>("Note"); }
+            set { Add<string>("Note", value); }
+        }
 
+        /// <summary>
+        /// Tract id for which tool is runned.
+        /// </summary>
+        public string TractId
+        {
+            get { return GetValue<string>("TractId"); }
+            set { Add<string>("TractId", value); }
+        }
     }
 
     /// <summary>
@@ -154,6 +189,7 @@ namespace MapWizard.Tools
         private double MedTons;
         private double NKnown = 0;
         private string modelId;
+        private string TractId;
 
         //Input params from csv -files
         private double a;
@@ -186,22 +222,37 @@ namespace MapWizard.Tools
         /// <returns>Result as DepositDensityResult</returns>
         public ToolResult Execute(ToolParameters inputParams)
         {
-
             DepositDensityInputParams input = inputParams as DepositDensityInputParams;
-            string outputFolder = input.Env.RootPath + @"\DensModel\";
-
+            string outputFolder = Path.Combine(input.Env.RootPath, "UndiscDep", input.TractId);
             if (!Directory.Exists(outputFolder))
             {
                 Directory.CreateDirectory(outputFolder);
             }
-            input.Save(outputFolder + "deposit_density_input_params.json");
+            //input.Save(Path.Combine(outputFolder, "deposit_density_input_params.json"));
             modelId = input.ExistingDepositDensityModelID;
             Area = Convert.ToDouble(input.AreaOfTrack);
             MedTons = Convert.ToDouble(input.MedianTonnage);
             NKnown = input.NumbOfKnownDeposits != "" ? Convert.ToDouble(input.NumbOfKnownDeposits) : 0;
+            TractId = input.TractId;
             DepositDensityResult result = new DepositDensityResult();
-            readinputParamsFromCSV(input.CSVPath);
-
+            string CSVPath = Path.Combine(System.AppDomain.CurrentDomain.BaseDirectory, "scripts", "DepositDensity");
+            if (input.ExistingDepositDensityModelID == "General")
+            {
+                CSVPath = Path.Combine(CSVPath, "General_data.csv");
+            }
+            else if (input.ExistingDepositDensityModelID == "PodiformCr")
+            {
+                CSVPath = Path.Combine(CSVPath, "PodiformCr_data.csv");
+            }
+            else if (input.ExistingDepositDensityModelID == "VMS")
+            {
+                CSVPath = Path.Combine(CSVPath, "VMS_data.csv");
+            }
+            else if (input.ExistingDepositDensityModelID == "PorCu")
+            {
+                CSVPath = Path.Combine(CSVPath, "PorphyryCu_data.csv");  // TAGGED: Fix path.
+            }
+            ReadinputParamsFromCSV(CSVPath);
             //Calculate values based as which deposit type selected
             if (input.ExistingDepositDensityModelID == "General")
             {
@@ -221,9 +272,9 @@ namespace MapWizard.Tools
         private DepositDensityResult GeneralCalculation()
         {
             DepositDensityResult result = new DepositDensityResult();
-            string path = System.AppDomain.CurrentDomain.BaseDirectory.Replace(@"\", @"/");
+            string path = System.AppDomain.CurrentDomain.BaseDirectory;
 
-            string GeneralPlot = Path.Combine(path, "scripts/DepositDensity/GeneralPlot.jpeg");
+            string GeneralPlot = Path.Combine(path, "scripts", "DepositDensity", "GeneralPlot.jpeg");
             try
             {
                 //N50
@@ -282,7 +333,8 @@ namespace MapWizard.Tools
                 result.NExp = Math.Round(NExp).ToString();
                 result.BiblInfo = biblInfo;
                 result.PlotImagePath = GeneralPlot;
-                createResultFile(result, "General", GeneralPlot);
+                result.Note = null;
+                CreateResultFile(result, "General", GeneralPlot);
             }
             catch (Exception ex)
             {
@@ -302,19 +354,19 @@ namespace MapWizard.Tools
             {
                 DepositDensityResult result = new DepositDensityResult();
 
-                string path = System.AppDomain.CurrentDomain.BaseDirectory.Replace(@"\", @"/");
-                string plot = path + "/scripts/DepositDensity/";
+                string path = System.AppDomain.CurrentDomain.BaseDirectory;
+                string plot = Path.Combine(path, "scripts", "DepositDensity");
 
                 switch (DepositDensityModelID)
                 {
                     case "PodiformCr":
-                        plot += "Podiformplot.jpeg";
+                        plot = Path.Combine(plot, "Podiformplot.jpeg");
                         break;
                     case "VMS":
-                        plot += "VMSplot.jpeg";
+                        plot = Path.Combine(plot, "VMSplot.jpeg");
                         break;
                     case "PorCu":
-                        plot += "porphyryPlot.jpeg";
+                        plot = Path.Combine(plot, "porphyryPlot.jpeg");
                         break;
                     default:
                         break;
@@ -377,7 +429,8 @@ namespace MapWizard.Tools
                 result.NExp = Math.Round(NExp).ToString();
                 result.BiblInfo = biblInfo;
                 result.PlotImagePath = plot;
-                createResultFile(result, DepositDensityModelID, plot);
+                result.Note = null;
+                CreateResultFile(result, DepositDensityModelID, plot);
                 return result;
             }
             catch (Exception ex)
@@ -393,11 +446,11 @@ namespace MapWizard.Tools
         /// <param name="result">Result as DepositDensityResult</param>
         /// <param name="ModelID">Model Id</param>
         /// <param name="plot">Result plot image</param>
-        private void createResultFile(DepositDensityResult result, string ModelID, string plot)
+        private void CreateResultFile(DepositDensityResult result, string ModelID, string plot)
         {
             try
             {
-                string outputFolder = Path.Combine(result.Env.RootPath, "DensModel");
+                string outputFolder = Path.Combine(result.Env.RootPath, "UndiscDep", TractId, "DensModel");
 
                 if (!System.IO.Directory.Exists(outputFolder))
                 {
@@ -427,7 +480,7 @@ namespace MapWizard.Tools
         /// Method to read input parameters from CSV file.
         /// </summary>
         /// <param name="CSVPath">CSV path</param>
-        private void readinputParamsFromCSV(string CSVPath)
+        private void ReadinputParamsFromCSV(string CSVPath)
         {
             try
             {
@@ -452,7 +505,6 @@ namespace MapWizard.Tools
                         biblInfo = Convert.ToString(values[10]);
                     }
                 }
-
             }
             catch (Exception ex)
             {

@@ -1,0 +1,50 @@
+aggregate.stars         spatially or temporally aggregate stars object
+as                      Coerce stars object into a Raster raster or
+                        brick
+c.stars                 combine multiple stars objects, or combine
+                        multiple attributes in a single stars object
+                        into a single array
+contour.stars           plot contours of a stars object
+cut_stars               cut methods for stars objects
+dplyr                   dplyr verbs for stars objects
+geom_stars              ggplot geom for stars objects
+make_intervals          create an intervals object
+ops_stars               S3 Ops Group Generic Functions for stars
+                        objects
+plot                    plot stars object, with subplots for each level
+                        of first non-spatial dimension
+read_ncdf               Read NetCDF into stars object
+read_stars              read raster/array dataset from file or
+                        connection
+redimension             redimension array, or collapse attributes into
+                        a new dimension
+st_apply                st_apply apply a function to one or more array
+                        dimensions
+st_as_sf                Convert stars object into an sf object
+st_as_stars             convert objects into a stars object
+st_contour              Compute or plot contour lines or sets
+st_coordinates          retrieve coordinates for raster or vector cube
+                        cells
+st_crop                 crop a stars object
+st_dim_to_attr          create an array with dimension values
+st_dimensions           get dimensions from stars object
+st_intersects.stars     spatial intersect predicate for stars and sfc
+                        object
+st_join.stars           Spatially join a stars and an 'sf' object
+st_mosaic               build mosaic (composite) of several spatially
+                        disjoint stars objects
+st_rasterize            rasterize simple feature geometries
+st_sfc2xy               replace POINT simple feature geometry list with
+                        an x y raster
+st_transform            transform features, or warp/resample grids in
+                        stars objects to a new coordinate reference
+                        system
+st_warp                 Warp (resample) grids in stars objects to a new
+                        grid, possibly in an new coordinate reference
+                        system
+st_xy2sfc               replace x y raster dimensions with simple
+                        feature geometry list (points, or polygons =
+                        rasterize)
+stars_subset            subset stars objects
+write_stars             write stars object to gdal dataset (typically:
+                        to file)

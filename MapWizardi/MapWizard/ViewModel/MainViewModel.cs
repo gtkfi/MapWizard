@@ -36,9 +36,7 @@ namespace MapWizard.ViewModel
         private NewProjectDialog newProjectDialog;
         private MainWindowModel model;
         private ViewModelLocator viewModelLocator;
-        public UserControl activeView;
-        private bool isBusy;
-        private int selectedTestIndex;
+        public UserControl activeView;        
         private readonly IInterTabClient _interTabClient;
 
         /// <summary>
@@ -50,8 +48,7 @@ namespace MapWizard.ViewModel
             mapWizardView = new MapWizardView();
             model = new MainWindowModel();
             viewModelLocator = new ViewModelLocator();
-            activeView = mainWindowView;
-            isBusy = false;
+            activeView = mainWindowView;            
         }
 
         /// <summary>
@@ -189,55 +186,60 @@ namespace MapWizard.ViewModel
             {
                 if (Registry.CurrentUser.OpenSubKey(@"SOFTWARE\MapProjects") != null)
                 {
-                    RegistryKey RegKey = Registry.CurrentUser.CreateSubKey(@"SOFTWARE\MapProjects");
-                    List<string> GetRecents = new List<string>();
-                    string[] nameArray = (string[])RegKey.GetValue("ProjectList");
-                    // Check if the registry has any projects registered.
-                    if (nameArray != null)
+                    using (RegistryKey RegKey = Registry.CurrentUser.CreateSubKey(@"SOFTWARE\MapProjects"))
                     {
-                        for (int i = 0; i < nameArray.Length; i++)
+                        List<string> GetRecents = new List<string>();
+                        string[] nameArray = (string[])RegKey.GetValue("ProjectList");
+                        // Check if the registry has any projects registered.
+                        if (nameArray != null)
                         {
-                            if (File.Exists(nameArray[i]) && !GetRecents.Contains(nameArray[i])) // Check if the registered project exists.
+                            for (int i = 0; i < nameArray.Length; i++)
                             {
-                                GetRecents.Add(nameArray[i]);
+                                if (File.Exists(nameArray[i]) && !GetRecents.Contains(nameArray[i])) // Check if the registered project exists.
+                                {
+                                    GetRecents.Add(nameArray[i]);
+                                }
                             }
+                            nameArray = GetRecents.ToArray();
+                            RegKey.DeleteValue("ProjectList");
+                            RegKey.SetValue("ProjectList", nameArray);  // Update old ProjectList into a new one.
                         }
-                        nameArray = GetRecents.ToArray();
-                        RegKey.DeleteValue("ProjectList");  
-                        RegKey.SetValue("ProjectList", nameArray);  // Update old ProjectList into a new one.
-                    }
-                    List<string>.Enumerator e = GetRecents.GetEnumerator();
-                    if (e.MoveNext() != false)
-                    {
-                        model.Project1Name = Path.GetFileName(Path.GetDirectoryName(e.Current));
-                        model.Project1Path = e.Current;
-                    }
-                    if (e.MoveNext() != false)
-                    {
-                        model.Project2Name = Path.GetFileName(Path.GetDirectoryName(e.Current));
-                        model.Project2Path = e.Current;
-                    }
-                    if (e.MoveNext() != false)
-                    {
-                        model.Project3Name = Path.GetFileName(Path.GetDirectoryName(e.Current));
-                        model.Project3Path = e.Current;
-                    }
-                    if (e.MoveNext() != false)
-                    {
-                        model.Project4Name = Path.GetFileName(Path.GetDirectoryName(e.Current));
-                        model.Project4Path = e.Current;
-                    }
-                    if (e.MoveNext() != false)
-                    {
-                        model.Project5Name = Path.GetFileName(Path.GetDirectoryName(e.Current));
-                        model.Project5Path = e.Current;
+                        using (List<string>.Enumerator e = GetRecents.GetEnumerator())
+                        {
+                            if (e.MoveNext() != false)
+                            {
+                                model.Project1Name = Path.GetFileName(Path.GetDirectoryName(e.Current));
+                                model.Project1Path = e.Current;
+                            }
+                        if (e.MoveNext() != false)
+                        {
+                            model.Project2Name = Path.GetFileName(Path.GetDirectoryName(e.Current));
+                            model.Project2Path = e.Current;
+                        }
+                        if (e.MoveNext() != false)
+                        {
+                            model.Project3Name = Path.GetFileName(Path.GetDirectoryName(e.Current));
+                            model.Project3Path = e.Current;
+                        }
+                        if (e.MoveNext() != false)
+                        {
+                            model.Project4Name = Path.GetFileName(Path.GetDirectoryName(e.Current));
+                            model.Project4Path = e.Current;
+                        }
+                        if (e.MoveNext() != false)
+                        {
+                            model.Project5Name = Path.GetFileName(Path.GetDirectoryName(e.Current));
+                            model.Project5Path = e.Current;
+                        }
+                        }
                     }
                 }
             }
             catch (Exception ex)
             {
                 logger.Error(ex, "Failed to load recent MapWizard projects");
-                dialogService.ShowNotification("Failed to load recent MapWizard projects", "Error");
+                dialogService.ShowNotification("Failed to load recent MapWizard projects.", "Error");
+                viewModelLocator.SettingsViewModel.WriteLogText("Failed to load recent MapWizard projects.", "Error");
             }
         }
 
@@ -288,14 +290,14 @@ namespace MapWizard.ViewModel
         {
             try
             {
-                string MAPWfile = dialogService.OpenFileDialog(settingsService.RootPath, "MapWizard Projects|*.MAPW;", true, true);
+                string MAPWfile = dialogService.OpenFileDialog(settingsService.RootPath, "MapWizard Projects|*.MAPW;", true, true, settingsService.RootPath);
                 OpenProject(MAPWfile);
             }
 
             catch (Exception ex)
             {
                 logger.Error(ex, "Failed to show OpenFileDialog");
-                dialogService.ShowNotification("Failed to show OpenFileDialog", "Error");
+                dialogService.ShowNotification("Failed to show OpenFileDialog.", "Error");
             }
         }
 
@@ -323,13 +325,15 @@ namespace MapWizard.ViewModel
                     Model.ProjectLocation = Directory.GetParent(settingsService.RootPath).ToString();  // Shows the project that is being used in the user interface.
                     viewModelLocator.SettingsViewModel.UpdateSettings(depositType);  // Depositype is the only setting that is project specific.
                     mapWizardView = new MapWizardView();  // The view must be initialized again so that it will be updated.
-                    ChangeToWizardView();                 
+                    ChangeToWizardView();
+                    viewModelLocator.SettingsViewModel.WriteLogText("Project '" + model.ProjectName + "' opened from directory: "+ settingsService.Data.RootFolderPath, "Success");
                 }
             }
             catch (Exception ex)
             {
-                logger.Error(ex, "Failed to open project");
-                dialogService.ShowNotification("Failed to open project", "Error");
+                logger.Error(ex, "Failed to open a project");
+                dialogService.ShowNotification("Failed to open a project.", "Error");
+                viewModelLocator.SettingsViewModel.WriteLogText("Failed to open a project.", "Error");
             }
         }
 
@@ -371,6 +375,10 @@ namespace MapWizard.ViewModel
             try
             {
                 string projectFolder = Path.Combine(Model.ProjectLocation, model.NewProjectName);
+                if (model.NewProjectName==null || model.NewProjectName == "")
+                {
+                    throw new Exception();
+                }
                 if (!Directory.Exists(projectFolder))
                 {
                     Directory.CreateDirectory(projectFolder);
@@ -382,11 +390,13 @@ namespace MapWizard.ViewModel
                     DepositType = Model.DepositType
                 };
                 settingsService.SaveSettings(MAPWfile);  // Save only the root path and the deposittype into projects json file.
+                viewModelLocator.SettingsViewModel.WriteLogText("Project '" + model.NewProjectName + "' created into directory: " + projectFolder, "Success");
             }
             catch (Exception ex)
             {
                 logger.Error(ex, "Failed to create a new project");
-                dialogService.ShowNotification("Failed to create a new project", "Error");
+                dialogService.ShowNotification("Failed to create a new project.", "Error");
+                viewModelLocator.SettingsViewModel.WriteLogText("Failed to create a new project.", "Error");
             }
             OpenProject(MAPWfile);  // Open the created project.
             newProjectDialog.Close();
@@ -406,8 +416,16 @@ namespace MapWizard.ViewModel
         /// </summary>
         private void ChangeToMainWindowView()
         {
-            viewModelLocator.SettingsViewModel.ProjectName = "-";  // In mainwindow there's no project being used.
-            viewModelLocator.SettingsViewModel.DepositTypeVisibility = "Collapsed";  // Since no project is being used, there is no deposittype.
+            viewModelLocator.SettingsViewModel.Model.ProjectName = "-";  // In mainwindow there's no project being used.
+            viewModelLocator.SettingsViewModel.Model.DepositTypeVisibility = "Collapsed";  // Since no project is being used, there is no deposittype.
+            // Close all the tab wndows.
+            for (int intCounter = App.Current.Windows.Count - 1; intCounter >= 0; intCounter--)
+            {
+                if (App.Current.Windows[intCounter]!=App.Current.MainWindow)
+                {
+                    App.Current.Windows[intCounter].Close();
+                }
+            }             
             ActiveView = mainWindowView;
         }
 
@@ -432,7 +450,7 @@ namespace MapWizard.ViewModel
         /// <returns>Boolean representing the state.</returns>
         private bool CanRunTool()
         {
-            return !IsBusy;
+            return !Model.IsBusy;
         }
 
         /// <summary>
@@ -441,37 +459,7 @@ namespace MapWizard.ViewModel
         /// <returns>Boolean representing the state.</returns>
         private bool CanChangeView()
         {
-            return !IsBusy;
-        }
-
-        /// <summary>
-        /// Assess whether the program is busy.
-        /// </summary>
-        /// <returns>Boolean representing the state.</returns>
-        public bool IsBusy
-        {
-            get { return isBusy; }
-            set
-            {
-                if (isBusy == value) return;
-                isBusy = value;
-                RaisePropertyChanged(() => IsBusy);
-            }
-        }
-
-        /// <summary>
-        /// Get and set current Tab index.
-        /// </summary>
-        /// <returns>Index of selected tab.</returns>
-        public int SelectedTabIndex
-        {
-            get { return selectedTestIndex; }
-            set
-            {
-                if (value == selectedTestIndex) return;
-                selectedTestIndex = value;
-                RaisePropertyChanged("SelectedTabIndex");
-            }
+            return !Model.IsBusy;
         }
 
         /// <summary>

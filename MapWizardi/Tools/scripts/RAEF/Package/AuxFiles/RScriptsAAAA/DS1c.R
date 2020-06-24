@@ -1,0 +1,665 @@
+###############################################
+if (GradeNum == 2)
+{
+
+
+if (MineNum001 == 2) 
+{
+
+
+IData2 <<- ITab[2]
+IData3 <<- ITab[15]
+IData4 <<- ITab[70]
+IData5 <<- ITab[71]
+IData6 <<- ITab[72]
+IData7 <<- ITab[73]
+
+ID0 <<- cbind(IData2 ,IData3 , IData4, IData5 , IData6, IData7 )
+data1 = melt(ID0 , id.vars = c("V2","V15"))
+good <<- cast(data1, V2 + V15 ~ variable, sum)
+good2 <<- cast(data1, V2 ~ V15 ~ variable, sum)
+ID3 <<- IData3
+ID3[is.na(ID3)] <- 0
+
+} ## ends if mine num 2 
+
+if (MineNum001 == 1) 
+{
+
+
+IData2 <<- ITab[2]
+IData3 <<- ITab[12]
+IData4 <<- ITab[52]
+IData5 <<- ITab[53]
+IData6 <<- ITab[54]
+IData7 <<- ITab[55]
+
+ID0 <<- cbind(IData2 ,IData3 , IData4, IData5 , IData6, IData7 )
+data1 = melt(ID0 , id.vars = c("V2","V12"))
+good <<- cast(data1, V2 + V12 ~ variable, sum)
+good2 <<- cast(data1, V2 ~ V12 ~ variable, sum)
+ID3 <<- IData3
+ID3[is.na(ID3)] <- 0
+
+} ## ends if mine num 1
+
+
+GN1 <<-  ListGradeNames[1]
+GN1 <- sub("._pct","", GN1)
+GN2 <<-  ListGradeNames[2]
+GN2 <- sub("._pct","", GN2)
+
+
+if (max(ID3) == 4) { NamesDC <<- c("SimIndex",paste(GN1,"_Con_Depth Cat 1",sep=""), paste(GN1,"_Con_Depth Cat 2",sep=""),paste(GN1,"_Con_Depth Cat 3",sep=""),paste(GN1,"_Con_Depth Cat 4",sep=""), paste(GN2,"_Con_Depth Cat 1",sep=""), paste(GN2,"_Con_Depth Cat 2",sep=""),paste(GN2,"_Con_Depth Cat 3",sep=""),paste(GN2,"_Con_Depth Cat 4",sep=""),paste(GN1,"_Rec_Depth Cat 1",sep=""), paste(GN1,"_Rec_Depth Cat 2",sep=""),paste(GN1,"_Rec_Depth Cat 3",sep=""),paste(GN1,"_Rec_Depth Cat 4",sep=""), paste(GN2,"_Rec_Depth Cat 1",sep=""), paste(GN2,"_Rec_Depth Cat 2",sep=""),paste(GN2,"_Rec_Depth Cat 3",sep=""),paste(GN2,"_Rec_Depth Cat 4",sep=""))}
+if (max(ID3) == 3) { NamesDC <<- c("SimIndex",paste(GN1,"_Con_Depth Cat 1",sep=""), paste(GN1,"_Con_Depth Cat 2",sep=""),paste(GN1,"_Con_Depth Cat 3",sep=""),"NA", paste(GN2,"_Con_Depth Cat 1",sep=""), paste(GN2,"_Con_Depth Cat 2",sep=""),paste(GN2,"_Con_Depth Cat 3",sep=""),"NA",paste(GN1,"_Rec_Depth Cat 1",sep=""), paste(GN1,"_Rec_Depth Cat 2",sep=""),paste(GN1,"_Rec_Depth Cat 3",sep=""),"NA", paste(GN2,"_Rec_Depth Cat 1",sep=""), paste(GN2,"_Rec_Depth Cat 2",sep=""),paste(GN2,"_Rec_Depth Cat 3",sep=""),"NA")}
+if (max(ID3) == 2) { NamesDC <<- c("SimIndex",paste(GN1,"_Con_Depth Cat 1",sep=""), paste(GN1,"_Con_Depth Cat 2",sep=""),"NA", paste(GN2,"_Con_Depth Cat 1",sep=""), paste(GN2,"_Con_Depth Cat 2",sep=""),"NA",paste(GN1,"_Rec_Depth Cat 1",sep=""), paste(GN1,"_Rec_Depth Cat 2",sep=""),"NA", paste(GN2,"_Rec_Depth Cat 1",sep=""), paste(GN2,"_Rec_Depth Cat 2",sep=""),"NA")}
+if (max(ID3) == 1) { NamesDC <<- c("SimIndex",paste(GN1,"_Con_Depth Cat 1",sep=""),"NA", paste(GN2,"_Con_Depth Cat 1",sep=""), "NA",paste(GN1,"_Rec_Depth Cat 1",sep=""), "NA", paste(GN2,"_Rec_Depth Cat 1",sep=""),"NA")}
+#colnames(good2) <- NamesDC 
+filename7 <<- paste(TN1,"_DepthCat_Aggregated_Totals",".csv", sep = "")
+write.csv(good2 , file = filename7)
+Rsim0<<- read.csv(filename7, header=FALSE,skip=1)
+colnames(Rsim0) <- NamesDC 
+write.csv(Rsim0, file = filename7)
+} ## ends if grade = 2
+
+
+#########################
+
+if (GradeNum == 2)
+{
+
+
+
+if (max(ID3) == 4) ### if 4 intervals 
+{
+
+### pivot 2 contained total stats 
+###########################################################################OMeans (
+Rsim<<- read.csv(filename7)
+
+
+##Con1
+DataR <<- Rsim[3:6]
+DataR2 <<- Rsim[4:6]
+NamesR <<- names(DataR)
+NamesR2 <<- names(DataR2)
+DataR2[is.na(DataR2)] <- 0
+
+
+### Create mean value for first contained number 
+V1 <<- DataR[1]
+V1[is.na(V1)] <- 0
+V1<- unlist(V1)
+V1<- as.numeric(V1)
+OMeans <- mean(V1)
+
+
+#for each variable 
+yy <- 1
+
+for (g in NamesR2){
+print (g)
+print (yy)
+VN <- DataR2[yy]
+VN<- unlist(VN)
+VN<- as.numeric(VN)
+OM <- mean(VN)
+OMeans<- rbind(OMeans,OM)
+OMeans<- round(OMeans)
+yy<- yy + 1
+}
+
+###########################################################################Mean2
+Rsim<<- read.csv(filename7)
+
+
+##Con2
+DataR <<- Rsim[8:11]
+DataR2 <<- Rsim[9:11]
+NamesR <<- names(DataR)
+NamesR2 <<- names(DataR2)
+DataR2[is.na(DataR2)] <- 0
+
+
+### Create mean value for first contained number 
+V1 <<- DataR[1]
+V1[is.na(V1)] <- 0
+V1<- unlist(V1)
+V1<- as.numeric(V1)
+OMeans2 <- mean(V1)
+
+
+#for each variable 
+yy <- 1
+
+for (g in NamesR2){
+print (g)
+print (yy)
+VN <- DataR2[yy]
+VN<- unlist(VN)
+VN<- as.numeric(VN)
+OM <- mean(VN)
+OMeans2<- rbind(OMeans2,OM)
+OMeans2<- round(OMeans2)
+yy<- yy + 1
+}
+
+
+###########################################################################Mean3
+Rsim<<- read.csv(filename7)
+
+
+##rec1
+DataR <<- Rsim[13:16]
+DataR2 <<- Rsim[14:16]
+NamesR <<- names(DataR)
+NamesR2 <<- names(DataR2)
+DataR2[is.na(DataR2)] <- 0
+
+
+### Create mean value for first contained number 
+V1 <<- DataR[1]
+V1[is.na(V1)] <- 0
+V1<- unlist(V1)
+V1<- as.numeric(V1)
+OMeans3 <- mean(V1)
+
+
+#for each variable 
+yy <- 1
+
+for (g in NamesR2){
+print (g)
+print (yy)
+VN <- DataR2[yy]
+VN<- unlist(VN)
+VN<- as.numeric(VN)
+OM <- mean(VN)
+OMeans3<- rbind(OMeans3,OM)
+OMeans3<- round(OMeans3)
+yy<- yy + 1
+}
+###########################################################################Mean4
+Rsim<<- read.csv(filename7)
+
+
+##rec2
+DataR <<- Rsim[18:21]
+DataR2 <<- Rsim[19:21]
+NamesR <<- names(DataR)
+NamesR2 <<- names(DataR2)
+DataR2[is.na(DataR2)] <- 0
+
+
+### Create mean value for first contained number 
+V1 <<- DataR[1]
+V1[is.na(V1)] <- 0
+V1<- unlist(V1)
+V1<- as.numeric(V1)
+OMeans4 <- mean(V1)
+
+
+#for each variable 
+yy <- 1
+
+for (g in NamesR2){
+print (g)
+print (yy)
+VN <- DataR2[yy]
+VN<- unlist(VN)
+VN<- as.numeric(VN)
+OM <- mean(VN)
+OMeans4<- rbind(OMeans4,OM)
+OMeans4<- round(OMeans4)
+yy<- yy + 1
+}
+
+} ## ends if 4 intervals 
+
+########################################################################################################################################################################################################################
+
+if (max(ID3) == 3)
+{
+
+### pivot 2 contained total stats 
+###########################################################################Mean1
+Rsim<<- read.csv(filename7)
+
+
+##Con1
+DataR <<- Rsim[3:5]
+DataR2 <<- Rsim[4:5]
+NamesR <<- names(DataR)
+NamesR2 <<- names(DataR2)
+DataR2[is.na(DataR2)] <- 0
+
+
+### Create mean value for first contained number 
+V1 <<- DataR[1]
+V1[is.na(V1)] <- 0
+V1<- unlist(V1)
+V1<- as.numeric(V1)
+OMeans <- mean(V1)
+
+
+#for each variable 
+yy <- 1
+
+for (g in NamesR2){
+print (g)
+print (yy)
+VN <- DataR2[yy]
+VN<- unlist(VN)
+VN<- as.numeric(VN)
+OM <- mean(VN)
+OMeans<- rbind(OMeans,OM)
+OMeans<- round(OMeans)
+yy<- yy + 1
+}
+
+###########################################################################Mean2
+Rsim<<- read.csv(filename7)
+
+
+##Con2
+DataR <<- Rsim[7:9]
+DataR2 <<- Rsim[8:9]
+NamesR <<- names(DataR)
+NamesR2 <<- names(DataR2)
+DataR2[is.na(DataR2)] <- 0
+
+
+### Create mean value for first contained number 
+V1 <<- DataR[1]
+V1[is.na(V1)] <- 0
+V1<- unlist(V1)
+V1<- as.numeric(V1)
+OMeans2 <- mean(V1)
+
+
+#for each variable 
+yy <- 1
+
+for (g in NamesR2){
+print (g)
+print (yy)
+VN <- DataR2[yy]
+VN<- unlist(VN)
+VN<- as.numeric(VN)
+OM <- mean(VN)
+OMeans2<- rbind(OMeans2,OM)
+OMeans2<- round(OMeans2)
+yy<- yy + 1
+}
+
+###########################################################################Mean3
+Rsim<<- read.csv(filename7)
+
+
+##rec1
+DataR <<- Rsim[11:13]
+DataR2 <<- Rsim[12:13]
+NamesR <<- names(DataR)
+NamesR2 <<- names(DataR2)
+DataR2[is.na(DataR2)] <- 0
+
+
+### Create mean value for first contained number 
+V1 <<- DataR[1]
+V1[is.na(V1)] <- 0
+V1<- unlist(V1)
+V1<- as.numeric(V1)
+OMeans3 <- mean(V1)
+
+
+#for each variable 
+yy <- 1
+
+for (g in NamesR2){
+print (g)
+print (yy)
+VN <- DataR2[yy]
+VN<- unlist(VN)
+VN<- as.numeric(VN)
+OM <- mean(VN)
+OMeans3<- rbind(OMeans3,OM)
+OMeans3<- round(OMeans3)
+yy<- yy + 1
+}
+###########################################################################Mean4
+Rsim<<- read.csv(filename7)
+
+
+##rec2
+DataR <<- Rsim[15:17]
+DataR2 <<- Rsim[16:17]
+NamesR <<- names(DataR)
+NamesR2 <<- names(DataR2)
+DataR2[is.na(DataR2)] <- 0
+
+
+### Create mean value for first contained number 
+V1 <<- DataR[1]
+V1[is.na(V1)] <- 0
+V1<- unlist(V1)
+V1<- as.numeric(V1)
+OMeans4 <- mean(V1)
+
+
+#for each variable 
+yy <- 1
+
+for (g in NamesR2){
+print (g)
+print (yy)
+VN <- DataR2[yy]
+VN<- unlist(VN)
+VN<- as.numeric(VN)
+OM <- mean(VN)
+OMeans4<- rbind(OMeans4,OM)
+OMeans4<- round(OMeans4)
+yy<- yy + 1
+}
+
+###########################################################################
+
+} ## ends if 3 intervals 
+
+
+if (max(ID3) == 2)  ## starts if 2 intervals 
+{
+
+### pivot 2 contained total stats 
+###########################################################################Mean1
+Rsim<<- read.csv(filename7)
+
+
+##Con1
+DataR <<- Rsim[3:4]
+DataR2 <<- Rsim[4:4]
+NamesR <<- names(DataR)
+NamesR2 <<- names(DataR2)
+DataR2[is.na(DataR2)] <- 0
+
+
+### Create mean value for first contained number 
+V1 <<- DataR[1]
+V1[is.na(V1)] <- 0
+V1<- unlist(V1)
+V1<- as.numeric(V1)
+OMeans <- mean(V1)
+
+
+#for each variable 
+yy <- 1
+
+for (g in NamesR2){
+print (g)
+print (yy)
+VN <- DataR2[yy]
+VN<- unlist(VN)
+VN<- as.numeric(VN)
+OM <- mean(VN)
+OMeans<- rbind(OMeans,OM)
+OMeans<- round(OMeans)
+yy<- yy + 1
+}
+
+###########################################################################Mean2
+Rsim<<- read.csv(filename7)
+
+
+##Con2
+DataR <<- Rsim[6:7]
+DataR2 <<- Rsim[7:7]
+NamesR <<- names(DataR)
+NamesR2 <<- names(DataR2)
+DataR2[is.na(DataR2)] <- 0
+
+
+### Create mean value for first contained number 
+V1 <<- DataR[1]
+V1[is.na(V1)] <- 0
+V1<- unlist(V1)
+V1<- as.numeric(V1)
+OMeans2 <- mean(V1)
+
+
+#for each variable 
+yy <- 1
+
+for (g in NamesR2){
+print (g)
+print (yy)
+VN <- DataR2[yy]
+VN<- unlist(VN)
+VN<- as.numeric(VN)
+OM <- mean(VN)
+OMeans2<- rbind(OMeans2,OM)
+OMeans2<- round(OMeans2)
+yy<- yy + 1
+}
+
+###########################################################################Mean3
+Rsim<<- read.csv(filename7)
+
+
+##rec1
+DataR <<- Rsim[9:10]
+DataR2 <<- Rsim[10:10]
+NamesR <<- names(DataR)
+NamesR2 <<- names(DataR2)
+DataR2[is.na(DataR2)] <- 0
+
+
+### Create mean value for first contained number 
+V1 <<- DataR[1]
+V1[is.na(V1)] <- 0
+V1<- unlist(V1)
+V1<- as.numeric(V1)
+OMeans3 <- mean(V1)
+
+
+#for each variable 
+yy <- 1
+
+for (g in NamesR2){
+print (g)
+print (yy)
+VN <- DataR2[yy]
+VN<- unlist(VN)
+VN<- as.numeric(VN)
+OM <- mean(VN)
+OMeans3<- rbind(OMeans3,OM)
+OMeans3<- round(OMeans3)
+yy<- yy + 1
+}
+
+
+###########################################################################Mean4
+Rsim<<- read.csv(filename7)
+
+
+##rec2
+DataR <<- Rsim[12:13]
+DataR2 <<- Rsim[13:13]
+NamesR <<- names(DataR)
+NamesR2 <<- names(DataR2)
+DataR2[is.na(DataR2)] <- 0
+
+
+### Create mean value for first contained number 
+V1 <<- DataR[1]
+V1[is.na(V1)] <- 0
+V1<- unlist(V1)
+V1<- as.numeric(V1)
+OMeans4 <- mean(V1)
+
+
+#for each variable 
+yy <- 1
+
+for (g in NamesR2){
+print (g)
+print (yy)
+VN <- DataR2[yy]
+VN<- unlist(VN)
+VN<- as.numeric(VN)
+OM <- mean(VN)
+OMeans4<- rbind(OMeans4,OM)
+OMeans4<- round(OMeans4)
+yy<- yy + 1
+}
+
+
+} ## ends if 2 intervals 
+
+
+
+
+if (max(ID3) == 1)  ## starts if 1 intervals 
+{
+
+### pivot 2 contained total stats 
+###########################################################################Mean1
+Rsim<<- read.csv(filename7)
+
+
+##Con1
+DataR <<- Rsim[3]
+NamesR <<- names(DataR)
+
+
+### Create mean value for first contained number 
+V1 <<- DataR[1]
+V1[is.na(V1)] <- 0
+V1<- unlist(V1)
+V1<- as.numeric(V1)
+OMeans <- mean(V1)
+
+###########################################################################Mean2
+Rsim<<- read.csv(filename7)
+
+##Con2
+DataR <<- Rsim[5]
+NamesR <<- names(DataR)
+
+### Create mean value for first contained number 
+V1 <<- DataR[1]
+V1[is.na(V1)] <- 0
+V1<- unlist(V1)
+V1<- as.numeric(V1)
+OMeans2 <- mean(V1)
+
+###########################################################################Mean3
+Rsim<<- read.csv(filename7)
+
+
+##rec1
+DataR <<- Rsim[7]
+NamesR <<- names(DataR)
+
+### Create mean value for first contained number 
+V1 <<- DataR[1]
+V1[is.na(V1)] <- 0
+V1<- unlist(V1)
+V1<- as.numeric(V1)
+OMeans3 <- mean(V1)
+###########################################################################Mean4
+Rsim<<- read.csv(filename7)
+
+
+##rec2
+DataR <<- Rsim[9]
+NamesR <<- names(DataR)
+NamesR2 <<- names(DataR2)
+DataR2[is.na(DataR2)] <- 0
+
+
+### Create mean value for first contained number 
+V1 <<- DataR[1]
+V1[is.na(V1)] <- 0
+V1<- unlist(V1)
+V1<- as.numeric(V1)
+OMeans4 <- mean(V1)
+
+
+} ## ends if 1 intervals 
+
+
+#############################################################################
+##Create stats list
+
+GN1 <<-  ListGradeNames[1]
+GN1 <- sub("._pct","", GN1)
+GN2 <<-  ListGradeNames[2]
+GN2 <- sub("._pct","", GN2)
+
+
+
+if (max(ID3) == 4) 
+{ 
+Name4<<- paste("Depth_Cat_4_" , Min4, "-", Max4,"_",Per4,sep="")
+Name3 <<- paste("Depth_Cat_3_" , Min3, "-", Max3,"_",Per3,sep="")
+Name2 <<- paste("Depth_Cat_2_" , Min2, "-", Max2,"_",Per2,sep="")
+Name1 <<- paste("Depth_Cat_1_" , Min1, "-", Max1,"_",Per1,sep="")
+} 
+if (max(ID3) == 3) 
+{ 
+Name3 <<- paste("Depth_Cat_3_" , Min3, "-", Max3,"_",Per3,sep="")
+Name2 <<- paste("Depth_Cat_2_" , Min2, "-", Max2,"_",Per2,sep="")
+Name1 <<- paste("Depth_Cat_1_" , Min1, "-", Max1,"_",Per1,sep="")
+} 
+
+if (max(ID3) == 2) 
+{ 
+Name2 <<- paste("Depth_Cat_2_" , Min2, "-", Max2,"_",Per2,sep="")
+Name1 <<- paste("Depth_Cat_1_" , Min1, "-", Max1,"_",Per1,sep="")
+} 
+
+
+if (max(ID3) == 1) 
+{ 
+Name1 <<- paste("Depth_Cat_1_" , Min1, "-", Max1,"_",Per1,sep="")
+} 
+
+
+if (max(ID3) == 4) { NamesD <<- c(Name1,Name2,Name3, Name4)}
+if (max(ID3) == 3) { NamesD <<- c(Name1,Name2,Name3)}
+if (max(ID3) == 2) { NamesD <<- c(Name1,Name2)}
+if (max(ID3) == 1) { NamesD <<- c(Name1)}
+
+
+StatsList2 <- cbind(OMeans,OMeans3, OMeans2,OMeans4)
+colnames(StatsList2) <- c(paste(GN1,"_Con","_","Means"), paste(GN1,"_Rec","_","Means"),  paste(GN2,"_Con","_","Means"), paste(GN2,"_Rec","_","Means") )
+rownames(StatsList2) <- NamesD
+Stats1 <<- paste("EF_05_Depth_Stats_",TN1,".csv", sep = "")
+write.csv(StatsList2, file = Stats1, row.names=TRUE)
+
+
+} ## ends if grade = 2
+
+R0005 <<- paste(InputFolder1,"/AuxFiles/RScripts","/DepthMineTypes2int.r", sep="")  
+R0005b <<- paste(InputFolder1,"/AuxFiles/RScripts","/DepthMineTypes3int.r", sep="")  
+R0005c <<- paste(InputFolder1,"/AuxFiles/RScripts","/DepthMineTypes4int.r", sep="")  
+R0005d <<- paste(InputFolder1,"/AuxFiles/RScripts","/DepthMineTypes1intb.r", sep="")  
+
+if (int1 == 2)
+{
+source(R0005)
+}
+
+if (int1 == 3)
+{
+source(R0005b)
+}
+
+if (int1 == 4)
+{
+source(R0005c)
+}
+
+if (int1 == 1)
+{
+source(R0005d)
+}

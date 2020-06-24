@@ -10,8 +10,9 @@ using MapWizard.Service;
 using System.Text;
 using System.Threading.Tasks;
 using MapWizard.Tools;
-using System.Collections.ObjectModel;
 using System.IO;
+using System.Collections.ObjectModel;
+using System.Linq;
 
 namespace MapWizard.ViewModel
 {
@@ -32,12 +33,9 @@ namespace MapWizard.ViewModel
         private readonly ILogger logger;
         private readonly IDialogService dialogService;
         private readonly ISettingsService settingsService;
-        private bool isBusy;
-        private int runStatus;  // 0=error, 1=success, 2=not run yet.
-        private string lastRunDate;
         private TractAggregationModel model;
         private TractAggregationResultModel result;
-        private ObservableCollection<string> combineFilesList;
+        private ViewModelLocator viewModelLocator;
 
         /// <summary>
         /// Initializes a new instance of the TractAggregationViewModel class.
@@ -50,30 +48,59 @@ namespace MapWizard.ViewModel
             this.logger = logger;
             this.dialogService = dialogService;
             this.settingsService = settingsService;
-            combineFilesList = new ObservableCollection<string>();
-            runStatus = 2;
-            lastRunDate = "Last Run: Never";
-            model = new TractAggregationModel
-            {
-                CorrelationMatrix = "Choose file",
-                TestName = "",
-                WorkingDir = "Choose folder",
-                ProbDistFile = "Choose file"
-            };
+            viewModelLocator = new ViewModelLocator();
+            model = new TractAggregationModel();
             result = new TractAggregationResultModel();
             SelectCorrelationMatrixCommand = new RelayCommand(SelectCorrelationMatrix, CanRunTool);
             SelectProbDistFileCommand = new RelayCommand(SelectProbDistFile, CanRunTool);
+            FindTractsCommand = new RelayCommand(FindTractIDs, CanRunTool);
             RunToolCommand = new RelayCommand(RunTool, CanRunTool);
             CombineDistFilesCommand = new RelayCommand(CombineDistFiles, CanRunTool);
-            AddFilesToCombineListCommand = new RelayCommand(AddFilesToCombineList, CanRunTool);            
-            if (Directory.Exists(Path.Combine(settingsService.RootPath, "AggResults")))
+            AddFilesToCombineListCommand = new RelayCommand(AddFilesToCombineList, CanRunTool);
+            CombineTractsCommand = new RelayCommand(CombineTracts, CanRunTool);
+            TractAggregationInputParams inputParams = new TractAggregationInputParams();
+            string projectFolder = Path.Combine(settingsService.RootPath, "TractAggregation");
+            if (!Directory.Exists(projectFolder))
+            {
+                Directory.CreateDirectory(projectFolder);
+            }
+            string param_json = Path.Combine(projectFolder, "tract_aggregation_input_params.json");
+            if (File.Exists(param_json))
+            {
+                try
+                {
+                    inputParams.Load(param_json);
+                    Model = new TractAggregationModel
+                    {
+                        CorrelationMatrix = inputParams.CorrelationMatrix,
+                        ProbDistFile = inputParams.ProbDistFile,
+                        WorkingDir = inputParams.WorkingDir,
+                        TestName = inputParams.TestName,
+                        CreateInputFile = bool.Parse(inputParams.CreateInputFile),
+                        TractCombinationName = inputParams.TractCombinationName
+                    };
+                }
+                catch (Exception ex)
+                {
+                    Model = new TractAggregationModel();
+                    logger.Error(ex, "Failed to read json file");
+                    dialogService.ShowNotification("Couldn't load Tract Aggregation tool's inputs correctly. Inputs were initialized to default values.", "Error");
+                    viewModelLocator.SettingsViewModel.WriteLogText("Couldn't load Tract Aggregation tool's inputs correctly. Inputs were initialized to default values.", "Error");
+                }
+            }
+            else
+            {
+                Model = new TractAggregationModel();
+            }
+            FindTractIDs();
+            if (Directory.Exists(Path.Combine(settingsService.RootPath, "TractAggregation", "AggResults")))
             {
                 LoadResults();
             }
-            var lastRunFile = Path.Combine(settingsService.RootPath, "AggResults", "tract_aggregation_last_run.lastrun");
+            var lastRunFile = Path.Combine(settingsService.RootPath, "TractAggregation", "tract_aggregation_last_run.lastrun");
             if (File.Exists(lastRunFile))
             {
-                LastRunDate = "Last Run: " + (new FileInfo(lastRunFile)).LastWriteTime.ToString();
+                Model.LastRunDate = "Last Run: " + (new FileInfo(lastRunFile)).LastWriteTime.ToString();
             }
         }
 
@@ -88,6 +115,12 @@ namespace MapWizard.ViewModel
         /// </summary>
         /// @return Command.
         public RelayCommand SelectProbDistFileCommand { get; }
+
+        /// <summary>
+        /// Command for getting tracts.
+        /// </summary>
+        /// @return Command.
+        public RelayCommand FindTractsCommand { get; }
 
         /// <summary>
         /// Run tool command.
@@ -108,13 +141,25 @@ namespace MapWizard.ViewModel
         public RelayCommand CombineDistFilesCommand { get; }
 
         /// <summary>
+        /// Combine tracts to dictionary command.
+        /// </summary>
+        /// @return Command.
+        public RelayCommand CombineTractsCommand { get; }
+
+        /// <summary>
+        /// Find TractIDs command.
+        /// </summary>
+        /// @return Command.
+        public RelayCommand FindTractIDsAndOpenMenuCommand { get; }
+
+        /// <summary>
         /// Method to open a dialog and save its result for loading the correlation matrix used by the R script.
         /// </summary>
         private void SelectCorrelationMatrix()
         {
             try
             {
-                string csvFile = dialogService.OpenFileDialog("", "CSV files|*.csv;", true, true);
+                string csvFile = dialogService.OpenFileDialog("", "CSV files|*.csv;", true, true, settingsService.RootPath);
                 if (!string.IsNullOrEmpty(csvFile))
                 {
                     Model.CorrelationMatrix = csvFile.Replace("\\", "/");
@@ -123,6 +168,7 @@ namespace MapWizard.ViewModel
             catch (Exception ex)
             {
                 logger.Error(ex, "Failed to show OpenFileDialog");
+                dialogService.ShowNotification("Failed to select input file", "Error");
             }
         }
 
@@ -133,7 +179,7 @@ namespace MapWizard.ViewModel
         {
             try
             {
-                string csvFile = dialogService.OpenFileDialog("", "CSV files|*.csv;", true, true);
+                string csvFile = dialogService.OpenFileDialog("", "CSV files|*.csv;", true, true, settingsService.RootPath);
                 if (!string.IsNullOrEmpty(csvFile))
                 {
                     model.ProbDistFile = csvFile.Replace("\\", "/");
@@ -142,6 +188,7 @@ namespace MapWizard.ViewModel
             catch (Exception ex)
             {
                 logger.Error(ex, "Failed to show OpenFileDialog");
+                dialogService.ShowNotification("Failed to select input file", "Error");
             }
             finally
             {
@@ -156,12 +203,12 @@ namespace MapWizard.ViewModel
         {
             try
             {
-                List<string> files = dialogService.OpenFilesDialog("", ".csv|*.csv;", true, true);
+                List<string> files = dialogService.OpenFilesDialog("", ".csv|*.csv;", true, true, settingsService.RootPath);
                 if (!string.IsNullOrEmpty(files.ToString()))
                 {
                     foreach (string s in files)
                     {
-                        CombineFilesList.Add(s);
+                        Model.CombineFilesList.Add(s);
                     }
                 }
 
@@ -169,6 +216,7 @@ namespace MapWizard.ViewModel
             catch (Exception ex)
             {
                 logger.Error(ex, "Failed to show OpenFileDialog");
+                dialogService.ShowNotification("Failed to select input file", "Error");
             }
         }
 
@@ -194,7 +242,7 @@ namespace MapWizard.ViewModel
                         f.Delete();
                 }
                 FileInfo file;
-                foreach (string s in CombineFilesList) 
+                foreach (string s in Model.CombineFilesList)
                 {
                     file = new FileInfo(s);
                     File.Copy(s, Path.Combine(destFolder, file.Name));
@@ -209,13 +257,235 @@ namespace MapWizard.ViewModel
                 var filePath = Path.Combine(destFolder, "ListFiles.csv");
                 File.WriteAllText(filePath, csv.ToString());
                 Model.ProbDistFile = Path.Combine(destFolder, "NewAggCProbsFile.csv");
+                viewModelLocator.SettingsViewModel.WriteLogText("Preparation for combining files was success in Tract Aggregation tool.", "Success");
             }
             catch (Exception ex)
             {
                 logger.Error(ex, "Preparation for combining files failed.");
+                dialogService.ShowNotification("Preparation for combining files failed.", "Error");
+                viewModelLocator.SettingsViewModel.WriteLogText("Preparation for combining files failed in Tract Aggregation tool.", "Error");
             }
         }
 
+        /// <summary>
+        /// Combine tracts to dictionary.
+        /// </summary>
+        private void CombineTracts()
+        {
+            logger.Info("-->{0}", this.GetType().Name);
+            Model.TractPairRow.Clear();
+            // Collection of rows that contain columns of tracts.
+            Model.TractPairRow = new ObservableCollection<TractAggregationDataModel>();
+            try
+            {
+                if (Model.TractIDCollection.Count > 1)
+                {
+                    TractAggregationDataModel row;
+                    TractAggregationDataModel column;
+                    foreach (var item in Model.TractIDCollection)
+                    {
+                        // Enumerator makes sure that tract pair will not be added twice.
+                        using (IEnumerator<TractAggregationDataModel> tractIDEnumerator = Model.TractIDCollection.GetEnumerator())
+                        {
+                            while (tractIDEnumerator.Current != item)
+                            {
+                                tractIDEnumerator.MoveNext();
+                            }
+                            if (item.ChooseTract == true)
+                            {                               
+                                row = new TractAggregationDataModel();  // New row where columns will be added
+                                row.TractPairColumn = new ObservableCollection<TractAggregationDataModel>();
+                                string tractName = tractIDEnumerator.Current.TractName;
+                                // Adds the first index.
+                                if (tractIDEnumerator.Current.ChooseTract == true)
+                                {                                   
+                                    column = new TractAggregationDataModel();  // New column where tract pair information will be added.
+                                    column.TractPairColumn.Clear();
+                                    column.TractName = item.TractName + " - " + tractIDEnumerator.Current.TractName;
+                                    column.IsVisible = true;
+                                    if (item.TractName == tractIDEnumerator.Current.TractName)
+                                    {
+                                        column.TractText = "1";
+                                    }
+                                    else
+                                    {
+                                        column.IsCorrelated = true;
+                                    }
+                                    row.TractPairColumn.Add(column);
+                                }
+                                // Adds other indexes.
+                                while (tractIDEnumerator.MoveNext() != false)
+                                {
+                                    if (tractIDEnumerator.Current.ChooseTract == true)
+                                    {                 
+                                        TractAggregationDataModel newColumn = new TractAggregationDataModel();  // New column where tract pair information will be added.
+                                        newColumn.TractName = item.TractName + " - " + tractIDEnumerator.Current.TractName;
+                                        newColumn.IsVisible = true;
+                                        if (item.TractName == tractIDEnumerator.Current.TractName)
+                                        {
+                                            newColumn.TractText = "1";
+                                        }
+                                        else
+                                        {
+                                            newColumn.IsCorrelated = true;
+                                        }
+                                        row.TractPairColumn.Add(newColumn);
+                                    }
+                                }                               
+                                column = new TractAggregationDataModel();  // New column where tract pair information will be added.
+                                column.TractName = tractName;
+                                column.IsTitle = true;  // This column is used as a title for the row where it is located.
+                                column.IsVisible = true; 
+                                row.TractPairColumn.Add(column);
+                                // Reverses the order so the matrix can turned upside down.
+                                for (int i = 0; i < row.TractPairColumn.Count; i++)
+                                {
+                                    row.TractPairColumn.Move(row.TractPairColumn.Count - 1, i);
+                                }
+                                Model.TractPairRow.Add(row);
+                            }
+                        }
+                    }
+                    row = new TractAggregationDataModel();
+                    Model.TractPairRow.Add(row);
+                    for (int i = 0; i < Model.TractPairRow.Count; i++)
+                    {
+                        Model.TractPairRow.Move(Model.TractPairRow.Count - 1, i);
+                    }
+                    column = new TractAggregationDataModel();
+                    //column.TractName = "test";
+                    column.IsVisible = false;  // Makes the first column from first row hidden.
+                    Model.TractPairRow[0].TractPairColumn.Add(column);
+                    var reversedTractCollection = new ObservableCollection<TractAggregationDataModel>(Model.TractIDCollection.Reverse());
+                    // Sets the column title by putting column names for the first row.
+                    foreach (var item in reversedTractCollection)
+                    {
+                        if (item.ChooseTract == true)
+                        {
+                            column = new TractAggregationDataModel();
+                            column.TractName = item.TractName;
+                            column.IsTitle = true;
+                            column.IsVisible = true; // Makes the other columns visible.
+                            Model.TractPairRow[0].TractPairColumn.Add(column);
+                        }
+                    }
+                }
+                else
+                {
+                    dialogService.ShowNotification("Choose more than one tract.", "Error");
+                }
+            }
+            catch (Exception ex)
+            {
+                logger.Error(ex, "Failed to create matrice of tract pairs.");
+                dialogService.ShowNotification("Failed to create matrice of tract pairs.", "Error");
+                viewModelLocator.SettingsViewModel.WriteLogText("Failed to create matrice of tract pairs.", "Error");
+            }
+        }
+
+        private string CreateCorrelationMatrix()
+        {
+
+            var csv = new StringBuilder();
+            var thisRow="";
+            TractAggregationDataModel tr;
+            TractAggregationDataModel tc;
+            //csv.AppendLine();
+            //var testi = Model.TractPairRow;
+            //foreach()
+            for (int i=0;i<Model.TractPairRow.Count; i++)
+            {
+                tr = Model.TractPairRow[i];
+
+                //this loop has to be made dumber to produce the empty commas in the end.
+                for (int j = 0; j < Model.TractPairRow.Count; j++)
+                {
+                    if(tr.TractPairColumn.Count >j) { 
+                        tc = tr.TractPairColumn[j];
+                        if (tc.IsTitle == true)
+                        {
+                            thisRow = thisRow + (thisRow == "" ? (thisRow = tc.TractName) : (thisRow = (tc.TractName)));
+                        }
+                        else 
+                        { 
+                            thisRow += tc.TractText;
+                        }
+                    }
+                    thisRow += ",";
+                }
+                //foreach (TractAggregationDataModel tc in tr.TractPairColumn)
+                //{
+                //    if (tc.IsTitle == true)
+                //    {
+                //        thisRow = thisRow + (thisRow == "" ? (thisRow = tc.TractName) : (thisRow = (tc.TractName)));
+                //    }
+                //    else
+                //        thisRow += tc.TractText;
+                //    thisRow += ",";
+                //    //thisRow= thisRow+( thisRow==""? (thisRow = tc.TractText) : (thisRow = ("," + tc.TractText)));               
+
+                thisRow = thisRow.Remove(thisRow.Length - 1, 1);
+
+                csv.AppendLine(thisRow);//tr.tractpaircolumneista tractText)              
+                thisRow = "";
+
+            }
+
+          
+            //kato et se errori kans heittää täällä exceptionin. ja että tulee kunnon virheviestit. ei niin että menee ajoon asti ja ajossa tulee joku kryptinen "input file not found" herja
+            string filePath = Path.Combine(settingsService.RootPath, "TractAggregation","CorrelationMatrix.csv");
+            File.WriteAllText(filePath, csv.ToString());
+            //yah.! sit se T1T2T3 litania tiedosto pitäs vielä kirjottaa myös
+            
+            //ja ne tractPmf.rds filut löytyy undisc dep selected resultseista, per träkti
+            return filePath;
+               
+               
+   
+        }
+        /// <summary>
+        /// Get TractIDs.
+        /// </summary>
+        public string CombineTractPMFs()
+        {
+            //Model.TractIDCollection.Clear();
+            //Model.TractIDCollection = new ObservableCollection<TractAggregationDataModel>();
+            var pmfString = "";
+            var tractCsvPath = "";
+            StringBuilder csv = new StringBuilder();
+            csv.Append("TractID,NDeposits,RelProbs\r\n");
+            foreach (TractAggregationDataModel tr in Model.TractPairRow)
+            {
+                if (tr.TractPairColumn[0].TractName != null)
+                {
+                    tractCsvPath = Path.Combine(settingsService.RootPath, "UndiscDep", tr.TractPairColumn[0].TractName, "SelectedResult", "TractPmf.csv");//tractId, "SelectedResult"
+
+                    if (File.Exists(tractCsvPath))
+                    {
+
+                        pmfString = File.ReadAllText(tractCsvPath);
+                        int indexToCutFrom = pmfString.IndexOf("\r\n");
+                        pmfString = pmfString.Substring(indexToCutFrom + 2, pmfString.Length - indexToCutFrom - 2);
+                        //pmfString = pmfString.Split(new string[] { "\r\n" }, StringSplitOptions.None)[1];
+                        csv.Append(pmfString);
+                        //foreach (DirectoryInfo dir in di.GetDirectories())
+                        //{
+                        //    TractAggregationDataModel item = new TractAggregationDataModel
+                        //    {
+                        //        TractName = dir.Name,
+                        //        ChooseTract = false
+                        //    };
+                        //    Model.TractIDCollection.Add(item);  // Get TractID by getting the name of the directory.
+                        //}
+                    }
+                }
+                
+            }
+            string filePath = Path.Combine(settingsService.RootPath, "TractAggregation", "CorrespondingEstimates.csv");
+            File.WriteAllText(filePath, csv.ToString());
+            return filePath;
+
+        }
         /// <summary>
         /// Run Tract Aggregation tool with user input. Calls TractAggregationTool class for functionality.
         /// </summary>
@@ -225,17 +495,25 @@ namespace MapWizard.ViewModel
             try
             {
                 string rootFolder = settingsService.RootPath;
-                if (Model.CreateInputFile == true)
+                
+                if (Model.UseInputParams == true)
+                {
+                    Model.CorrelationMatrix=CreateCorrelationMatrix();//ilimota jos ei oo selectedresulttia
+                    Model.ProbDistFile=CombineTractPMFs(); //nyt tosiaan toimii vaan selectedresulteille. is this OK?
+                    //pitäs asettaa sit modelin filet oikein.
+                }
+                else if (Model.CreateInputFile == true)
                 {
                     CombineDistFiles();
                 }
                 TractAggregationInputParams inputParams = new TractAggregationInputParams
                 {
-                    CorrelationMatrix = model.CorrelationMatrix,
-                    ProbDistFile = model.ProbDistFile,
-                    WorkingDir = model.WorkingDir,
-                    TestName = model.TestName,
-                    CreateInputFile = model.CreateInputFile.ToString()
+                    CorrelationMatrix = Model.CorrelationMatrix,
+                    ProbDistFile = Model.ProbDistFile,
+                    WorkingDir = Model.WorkingDir,
+                    TestName = Model.TestName,
+                    CreateInputFile = Model.CreateInputFile.ToString(),
+                    TractCombinationName = Model.TractCombinationName
                 };
                 logger.Trace(
                   "GradeTonnageInputParams:\n" +
@@ -246,11 +524,12 @@ namespace MapWizard.ViewModel
                   inputParams.CorrelationMatrix,
                   inputParams.ProbDistFile,
                   inputParams.WorkingDir,
-                  inputParams.TestName
+                  inputParams.TestName,
+                  inputParams.TractCombinationName
                 );
-                IsBusy = true;
+                Model.IsBusy = true;
 
-                var lastResult = Path.Combine(settingsService.RootPath, "AggResults", "AggEstSummary.csv");
+                var lastResult = Path.Combine(settingsService.RootPath, "TractAggregation", "AggResults","AGG"+Model.TractCombinationName, "AggEstSummary.csv");
                 if (File.Exists(lastResult))
                 {
                     File.Delete(lastResult);
@@ -264,19 +543,36 @@ namespace MapWizard.ViewModel
                     tractAggregationResult = tool.Execute(inputParams) as TractAggregationResult;
                     Result.TractAggregationSummary = tractAggregationResult.TractAggregationSummary;
                 });
-                string lastRunFile = Path.Combine(Path.Combine(settingsService.RootPath, "AggResults", "tract_aggregation_last_run.lastrun"));
-                File.Create(lastRunFile);
-                dialogService.ShowNotification("Tract Aggregation tool completed successfully", "Success");
-                RunStatus = 1;
-                LastRunDate = "Last Run: " + DateTime.Now.ToString("g");
+                string lastRunFile = Path.Combine(Path.Combine(settingsService.RootPath, "TractAggregation", "tract_aggregation_last_run.lastrun"));
+                File.Create(lastRunFile).Close();
+                dialogService.ShowNotification("Tract Aggregation tool completed successfully.", "Success");
+                viewModelLocator.SettingsViewModel.WriteLogText("Tract Aggregation tool completed successfully.", "Success");
+                Model.RunStatus = 1;
+                Model.LastRunDate = "Last Run: " + DateTime.Now.ToString("g");
+                //tänne se tractsaggregated.csv:n kirjotus, koska se on kaikille run typeille.
+                Directory.CreateDirectory(Path.Combine(settingsService.RootPath, "TractDelineation", "Tracts", "AGG"+Model.TractCombinationName));
+                var filePath = Path.Combine(Path.Combine(settingsService.RootPath, "TractDelineation", "Tracts", "AGG" + Model.TractCombinationName,"TractsAggregated.csv"));
+                using (StreamReader sr = new StreamReader(Path.Combine(Path.Combine(settingsService.RootPath, "TractAggregation", "AggResults", "AGG" + Model.TractCombinationName, "TractCorrelations.csv"))))
+                {
+                  
+                    var headers=sr.ReadLine();
+                    File.WriteAllText(filePath, headers.Substring(1));
+                }
+                    
+                //pyydä nimi luotavalle tract kombinaatiolle
+
+                //^ talleta kaikki tulokset ton nimiseen alihakemistoon
+
+                //kirjota se suamarin TractsAggregated.csv tiedosto saman nimiseen alikansioon tract delineationin alle tms(tractdelineation / tracts / AGG<ID>)
             }
             catch (Exception ex)
             {
-                dialogService.ShowNotification("Run failed. Check output for details", "Error");
-                RunStatus = 0;
                 logger.Error(ex, "Failed to run R-script.");
+                dialogService.ShowNotification("Run failed. Check output for details.\r\n- Are all input parameters correct?\r\n- Are all input files valid? \r\n- Are all input and output files closed?", "Error");
+                viewModelLocator.SettingsViewModel.WriteLogText("Tract Aggregation tool run failed. Check output for details.\r\n- Are all input parameters correct?\r\n- Are all input files valid? \r\n- Are all input and output files closed?", "Error");
+                Model.RunStatus = 0;
             }
-            finally { IsBusy = false; }
+            finally { Model.IsBusy = false; }
         }
 
         /// <summary>
@@ -284,43 +580,65 @@ namespace MapWizard.ViewModel
         /// </summary>
         private void LoadResults()
         {
-            var projectFolder = Path.Combine(settingsService.RootPath, "AggResults");
-            var EstSummaryCSV = Path.Combine(projectFolder, "AggEstSummary.csv");
-            RunStatus = 1; //Set status to success: if file loading fails, it will be changed to error.
-            try
+            if (Model.TractCombinationName != null)
             {
-                // If result file exists.
-                if (File.Exists(EstSummaryCSV)) 
+                var projectFolder = Path.Combine(settingsService.RootPath, "TractAggregation", "AggResults", "AGG" + Model.TractCombinationName);
+                var EstSummaryCSV = Path.Combine(projectFolder, "AggEstSummary.csv");
+                Model.RunStatus = 1; //Set status to success: if file loading fails, it will be changed to error.
+                try
                 {
-                    Result.TractAggregationSummary = File.ReadAllText(EstSummaryCSV); // Load file's contents to Result.
+                    // If result file exists.
+                    if (File.Exists(EstSummaryCSV))
+                    {
+                        Result.TractAggregationSummary = File.ReadAllText(EstSummaryCSV); // Load file's contents to Result.
+                    }
+                    else
+                    {
+                        Result.TractAggregationSummary = null;
+                        Model.RunStatus = 0;
+                    }
                 }
-                else
+                catch (Exception ex)
                 {
-                    Result.TractAggregationSummary = null;
-                    RunStatus = 0;
+                    logger.Error(ex + " Could not load results files.");
+                    dialogService.ShowNotification("Could not load results files.", "Error");
+                    viewModelLocator.SettingsViewModel.WriteLogText("Could not load results files in Tract Aggregation tool.", "Error");
+                    Model.RunStatus = 0;
                 }
-            }
-            catch (Exception ex)
-            {
-                logger.Error(ex + " Could not load results files");
-                RunStatus = 0;
             }
         }
 
         /// <summary>
-        /// Collection containing a list of files for when probability distribution file is created from separate files.
+        /// Get TractIDs.
         /// </summary>
-        /// @return File list.
-        public ObservableCollection<string> CombineFilesList
+        public void FindTractIDs()
         {
-            get
+            Model.TractIDCollection.Clear();
+            Model.TractIDCollection = new ObservableCollection<TractAggregationDataModel>();
+            string tractRootPath = Path.Combine(settingsService.RootPath, "TractDelineation", "Tracts");
+            if (Directory.Exists(tractRootPath))
             {
-                return combineFilesList;
+                DirectoryInfo di = new DirectoryInfo(tractRootPath);
+                foreach (DirectoryInfo dir in di.GetDirectories())
+                {
+                    if (!dir.Name.StartsWith("AGG"))
+                    {
+                        string tractCsvPath = Path.Combine(settingsService.RootPath, "UndiscDep", dir.Name, "SelectedResult", "TractPmf.csv");
+                        if (!dir.GetFiles().Any(f => f.Name == "TractsAggregated.csv") && File.Exists(tractCsvPath))
+                        {
+                            TractAggregationDataModel item = new TractAggregationDataModel
+                            {
+                                TractName = dir.Name,
+                                ChooseTract = false
+                            };
+                            Model.TractIDCollection.Add(item);  // Get TractID by getting the name of the directory.                      
+                        }
+                    }
+                }
             }
-            set
+            else
             {
-                if (value == combineFilesList) return;
-                combineFilesList = value;
+                Directory.CreateDirectory(Path.Combine(settingsService.RootPath, "TractDelineation", "Tracts"));
             }
         }
 
@@ -342,38 +660,6 @@ namespace MapWizard.ViewModel
         }
 
         /// <summary>
-        /// Whether last run has been succesful, failed or the tool has not been run yet on this project.
-        /// </summary>
-        /// @return Integer representing the status.
-        public int RunStatus
-        {
-            get { return runStatus; }
-            set
-            {
-                if (value == runStatus) return;
-                runStatus = value;
-                RaisePropertyChanged("RunStatus");
-            }
-        }
-
-        /// <summary>
-        /// Whether tool is busy or not.
-        /// </summary>
-        /// @return Boolean representing the state.
-        public bool IsBusy
-        {
-            get { return isBusy; }
-            set
-            {
-                if (isBusy == value) return;
-                isBusy = value;
-                RaisePropertyChanged(() => IsBusy);
-                RunToolCommand.RaiseCanExecuteChanged();
-
-            }
-        }
-
-        /// <summary>
         /// TractAggregation result model.
         /// </summary>
         /// @return TractAggregationResultModel.
@@ -391,27 +677,12 @@ namespace MapWizard.ViewModel
         }
 
         /// <summary>
-        /// Date of last run.
-        /// </summary>
-        /// @return Date.
-        public string LastRunDate
-        {
-            get { return lastRunDate; }
-            set
-            {
-                if (value == lastRunDate) return;
-                lastRunDate = value;
-                RaisePropertyChanged("LastRunDate");
-            }
-        }
-
-        /// <summary>
         /// Check if tool can be executed (not busy.)
         /// </summary>
         /// <returns>@return Boolean representing the state.</returns>
         private bool CanRunTool()
         {
-            return !IsBusy;
+            return !Model.IsBusy;
         }
     }
 }

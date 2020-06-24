@@ -1,0 +1,324 @@
+Dear Emacs, please make this -*-Text-*- mode!
+
+NEWS for gWidgetstcltk
+
+Changes for 0.0-54
+-------------------
+
+* gfile has character value for filter argument to simplify specification
+* fix svalue<- method of gslider
+
+Changes for 0.0-53
+-------------------
+
+* add tag method for gaction.
+* fix dnd table to gedit. (prompted by stackoverflow answer). (Still a
+  little off, as you need to select first, then drag)
+* replace gdf with tablelist, not tktable widget. Seems better and
+  requires no external installation, as it is pure Tcl.
+
+Changes for 0.0-50
+-------------------
+
+Changes for 0.0-49
+-------------------
+
+* Bug fix for enabled<- method for gedit when initial text is
+  "". (Thanks Yves)
+
+Changes for 0.0-48
+-------------------
+ 
+* fixed bug with user-defined icons (Thanks Erich)
+* fixed bug where inner frame in gwindow rendered separately (Thanks Erich, Rich and Patrick)
+
+Changes for 0.0-47
+-------------------
+
+* bug fix for svalue<- for gedit. (Thanks Pat)
+* bug fix of using wrong idiom to store data in a namespace (Thanks Erich)
+
+Changes for 0.0-46
+-------------------
+
+* minor bug fix to fix environment issue, get past check
+
+Changes for 0.0-45
+-------------------
+
+* Requires gWidgets 0.0-46
+
+* Fixed reference class fields to accomodate changes to upcoming
+  2.14.0
+
+* Added generics so that $, [[ and [[<- work with underlying toolkit object
+
+* added use.table option to gcheckboxgroup
+
+* focus<- for gwindow (for Erich)
+
+* added do.buttons options for gbasicdialog
+
+* improved [ method for glayout (Returns widget, list of widgets (if
+  1-d slice) or matrix of widgets.
+
+Changes for 0.0-44
+-------------------
+* new add method for adding tkrplot objects
+
+* bug fixes for gfile (Thanks Richie, Yves)
+
+* bug fixes for gcomobobox (Thanks Erich, Yves)
+
+* added stub for ghtml
+
+Changes for 0.0-43
+-------------------
+* change to selected= argument of gcomobobx. Will allow item value in
+addition to index. 
+
+* Bug fixes, (Thanks Erich, Carlos)
+
+* new method editable<-. Used by gedit to allow selection but no
+changing of the text.
+
+Changes for 0.0-42
+-------------------
+* fix to add method of box containers and the expand, fill, anchor arguments
+ 
+Changes for 0.0-41
+-------------------
+* doc fixes	
+
+Changes for 0.0-40
+-------------------
+* gcheckboxgroup now uses backend R5 class
+* gradio cannow use [<- to lengthen/shorten radio button count
+* gedit new [<- for auto complete
+* Added new R5 classes
+* change behavior of default anchoring of children into parent. This
+can be adjusted through the option "gw:tcltkDefaultAnchor".
+* added extra functionality for gslider. Need not be integer valued now.
+* bug fix for add method and fill argument
+* Added calendar selector to gcalendar
+* add [ method for gnotebook, kill [<- (wasn't working, isn't right)
+
+Changes for 0.0-39
+-------------------
+* added [ method to glayout for extraction
+* fix to handler code. Adds blockHandler, unblockHandler and fixes
+bugs. Just gradio and gcheckboxgroup have only 1 handler per widget,
+others can have multiple. Handler code is not as general as tcltk itself.
+
+Changes for 0.0-38
+-------------------
+* minor fixes for ggroup, gframe to get traitr to work
+* visible<- method for gedit fixed
+
+Changes for 0.0-37
+-------------------
+* Fixes to gfile (bug fix when spaces are in filename, keeps track in
+"initialdir". This may be passed in, or is remembered between
+invocations through an option. 
+
+Changes for 0.0-36
+-------------------
+* added visible<- method for gedit. If FALSE will mask characters
+
+Changes for 0.0-35
+-------------------
+* fix to gradio's addHandlerChanged and svalue methods.
+
+Changes for 0.0-34
+-------------------
+* Bug fix to svalue method for gtable when index=TRUE
+
+
+
+CHanges for 0.0-33
+-------------------
+
+* fix to slant value in font to pass R CMD check
+
+CHanges for 0.0-32
+-------------------
+
+* font fixes for gtext, and font<-
+
+Changes for  0.0-31
+-------------------
+ 
+* added method isExtant
+
+* added hidden argument not.toplevel to gstatusbar to relax
+  restriction on container being gwindow instance
+
+Changes for  0.0-30
+-------------------
+
+* bug fix for gtable
+
+Changes for  0.0-29
+-------------------
+
+* added [<- method for gspinbutton, gslider
+
+* minor fix for gfilebrowse and width argument
+
+Changes for  0.0-28
+-------------------
+
+* fixed enable<- to recurse, and for gradio, gcheckbox
+
+* Changes to stock icons in gtable, gimage, gbutton. 
+
+* fix to add method for ggroup -- handlers anchor better with
+  expand=TRUE
+
+* Numerous small bug fixes.
+
+
+Changes for  0.0-27
+-------------------
+
+* fixes to gdf() for Enter, Tab binding
+
+Changes for  0.0-26
+-------------------
+
+* added gdf() constructor if user has tktable package installed for
+  tcl
+
+* fixes to gmessasge gconfirm to use tkmessagebox
+
+Changes for  0.0-25
+-------------------
+
+* fixed inheritance for gbasicdialog so that size<- method works as expected
+
+Changes for  0.0-24
+-------------------
+
+* fix to gmenu to get working with gbasicdialog
+
+Changes for  0.0-23
+-------------------
+
+* minor fix to DESCRIPTION
+
+Changes for  0.0-22
+-------------------
+
+* added gbasicdialog. Three step process: create ocntainer, add
+  widget, call visible with set=TRUE.
+
+* fixes to gtable -- working on column width issues, but still not
+  great
+
+* fixed several issues with how containers are used, some were not
+  expanding properly: gnotebook, gexpandgroup
+
+* changed layout of gexpandgroup so that group is always below the
+  label and trigger icon, instead of adjacent. Code was cleaned up.
+
+* changed how statusbars and toolbars are handled by gwindow. Also use
+ttkframe within gwindow to offer theme support to window.
+
+* added use.scrollwindow argument for ggroup. Not quite perfect, as
+the frame doesn't scroll to follow recently added children.
+
+* new(ish) constructor gformlayout coming from gWidgets
+
+* new(ish) gaction for menus, toolbars, buttons. This is now
+  recommened means to implement menus and toolbars
+
+* new galert dialog. This is like gmessage only non obtrusive. Can be
+  improved.
+
+* added autoscroll bar feature to gtree, gtable, gtext.
+
+
+Changes for  0.0-20
+-------------------
+
+* fixed handler code in gcheckbox, gcheckboxgrioup
+
+Changes for  0.0-19
+-------------------
+* fixed bug with gtable and multiple selection
+
+Changes for  0.0-18
+-------------------
+* fixed another issue with gtable: debugging info, extra columns,
+error if more than 2 columns
+
+Changes for  0.0-17
+-------------------
+
+* fixed issues with gtable (factors converted to character, widths)
+Changes for  0.0-16
+-------------------
+
+* fixed ggroup bug in svalue method
+
+Changes for  0.0-15
+-------------------
+
+* fix bug in gfile regarding initialfilename
+* fix to eliminate extra column in gtree if single column
+
+Changes for  0.0-14
+-------------------
+
+* fix to gtree
+
+Changes for  0.0-13
+-------------------
+
+* added test for version 8.5.
+
+Changes for  0.0-11
+-------------------
+
+* fixed typo in gframe
+
+* changes to pass R CMD check on R-devel (again!)
+
+Changes for  0.0-9
+-------------------
+
+* changes to pass R CMD check on R-devel
+
+Changes for  0.0-9
+-------------------
+
+* added tests directory to run tests from gWidgets package
+
+* fixed documentation to avoid warnings
+
+Changes for  0.0-8
+-------------------
+
+* new uses ttk (tile) libraries. (Hence R 2.7.0)
+
+* implemented parent argument for gwindow. This can be used to specify
+  a gwindow parent or a location by x,y coordinates.
+
+* added parent argument for dialogs
+
+* replaced hacked versions of gcombobox, gnotebook, gexpandgroup,
+  gframe, ... with ttk versions 
+
+* added gtable widget based on ttktreeview replacing one based on
+  itemlist
+
+* added gtree widget using ttktreeview
+
+* exported addHandler for binding events not covered by gWidgets API
+
+* fixed tag to use an environment not one big list.
+
+* fixed gfilebrowse error
+
+* fixed wrap argument for gtext
+

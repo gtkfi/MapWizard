@@ -331,7 +331,7 @@ namespace MapWizard.Tools
     /// </summary>
     public class PermissiveTractTool : ITool
     {
-        string projectFolder = @"c:\temp\mapWizard\";
+        string projectFolder;
         private readonly ILogger logger = NLog.LogManager.GetCurrentClassLogger();
 
         /// <summary>
@@ -351,7 +351,7 @@ namespace MapWizard.Tools
             input.Save(projectFolder + @"\permissive_tract_input_params.json");
             PermissiveTractResult result = new PermissiveTractResult();
 
-            if (input.MethodId == "fuzzy")
+            if (input.MethodId == "fuzzy" || input.MethodId == "fuzzyClassification")
             {
                 result = FuzzyOverlay(input, result);
             }
@@ -359,7 +359,11 @@ namespace MapWizard.Tools
             {
                 result = Delineation(input, result);
             }
-            else if (input.MethodId == "wofe")
+            else if (input.MethodId == "delineation_polygon")
+            {
+                result = DelineationPolygon(input, result);
+            }
+            else if (input.MethodId == "wofe" || input.MethodId == "wofeClassification")
             {
                 result = WofE(input, result);
             }
@@ -391,37 +395,26 @@ namespace MapWizard.Tools
             }
             else
             {
-                //Get RScript folder from registry
-                //Microsoft.Win32.RegistryKey regKey = null;
-                //regKey = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\R-core\R");
-                //string[] nameList = regKey.GetSubKeyNames();
-                //RegistryKey subKey = regKey.OpenSubKey(nameList[0]);
-                //string rInstallationFolder = subKey.GetValue("InstallPath").ToString();
-                //string rScriptExecutablePath = rInstallationFolder + "\\bin\\RScript.exe";
                 string rScriptExecutablePath = input.Env.RPath;
                 string procResult = string.Empty;
-                //try
-                //{
-                    var info = new ProcessStartInfo();
-                    info.FileName = rScriptExecutablePath;
-                    var path = System.AppDomain.CurrentDomain.BaseDirectory.Replace(@"\", @"/");
-                    info.WorkingDirectory = path + "scripts/";
-                    var rCodeFilePath = path + "scripts/rasterproc_generatetracts_wrapper.r";
 
-                    string outputFolder = projectFolder + @"\Delineation\" + input.DelID;
-                    if (!Directory.Exists(outputFolder))
-                    {
-                        Directory.CreateDirectory(outputFolder);
-                    }
+                var info = new ProcessStartInfo();
+                info.FileName = rScriptExecutablePath;
+                var path = System.AppDomain.CurrentDomain.BaseDirectory.Replace(@"\", @"/");
+                info.WorkingDirectory = path + "scripts/";
+                var rCodeFilePath = path + "scripts/rasterproc_generatetracts_wrapper.r";
 
-                    string[] boundaryList = input.BoundaryValues.Split(',');
-                    foreach (string boundary in boundaryList)
-                    {
+                string outputFolder = projectFolder + @"\Delineation\temp\" + input.DelID;
+                if (!Directory.Exists(outputFolder))
+                {
+                    Directory.CreateDirectory(outputFolder);
+                }
 
-                        //string discrOutput = outputFolder + Path.GetFileName(input.ProspectivityRasterFile) + "_" + boundary.ToString() + "_discr.pdf";
+                /*  string[] boundaryList = input.BoundaryValues.Split(',');
+                  foreach (string boundary in boundaryList)
+                  {*/
 
-                        //string polyOutput = outputFolder + Path.GetFileName(input.ProspectivityRasterFile) + "_" + boundary.ToString() + "_poly.pdf";
-                        /*
+                /*
                 # Input:
                 # outPolyP = the input polygon shape file
                 # minarea = minimum are of saved polygons
@@ -435,46 +428,40 @@ namespace MapWizard.Tools
                 outCleanDistPdf < -args[6]
                 pgon_clean < -poly_clean(outPolyP, minarea, cleanPolyShpP, cleanPolyShpF, outCleanStatTxt, outCleanDistPdf)*/
 
-                        string inputPolygon = input.TractPolygonFile;
-                        string minArea = input.MinArea;
-                        string cleanPolyShp = outputFolder + "\\PermissiveTracts_" + input.DelID + ".shp";
-                        string cleanPolyShpF = "PermissiveTracts_" + input.DelID;
-                        string outCleanStatTxt = outputFolder + "\\DelineationSummary" + input.DelID + ".txt";
-                        string outCleanDistPdf = outputFolder + "\\TractAreaCdf" + input.DelID + ".pdf";
+                string inputPolygon = input.TractPolygonFile;
+                string minArea = input.MinArea;
+                double area = Convert.ToDouble(minArea);
+                area = area * 1000000; //km2 -> m2
+                minArea = Convert.ToString(area);
+                string cleanPolyShp = outputFolder + "\\DelineationPolygons_" + input.DelID + "_" + input.MinArea + "km2.shp";
+                string cleanPolyShpF = "DelineationPolygons_" + input.DelID + "_" + input.MinArea + "km2";
+                string outCleanStatTxt = outputFolder + "\\DelineationSummary" + input.DelID + ".txt";
+                string outCleanDistPdf = outputFolder + "\\TractAreaCdf" + input.DelID + ".pdf";
 
-                        info.Arguments = "\"" + rCodeFilePath + "\" \"" + inputPolygon + "\" \"" + minArea + "\" \"" + cleanPolyShp + "\" \"" + cleanPolyShpF
-                            + "\" \"" + outCleanStatTxt + "\" \"" + outCleanDistPdf;
-                        //info.Arguments = rCodeFilePath + " " + args;
-                        info.RedirectStandardInput = false;
-                        info.RedirectStandardOutput = true;
-                        info.RedirectStandardError = true;
-                        info.UseShellExecute = false;
-                        info.CreateNoWindow = true;
+                info.Arguments = "\"" + rCodeFilePath + "\" \"" + inputPolygon + "\" \"" + minArea + "\" \"" + cleanPolyShp + "\" \"" + cleanPolyShpF
+                    + "\" \"" + outCleanStatTxt + "\" \"" + outCleanDistPdf;
+                info.RedirectStandardInput = false;
+                info.RedirectStandardOutput = true;
+                info.RedirectStandardError = true;
+                info.UseShellExecute = false;
+                info.CreateNoWindow = true;
 
-                        using (var proc = new Process())
-                        {
-                            proc.StartInfo = info;
-                            proc.Start();
-                            StreamReader errorReader = proc.StandardError;
-                            StreamReader myStreamReader = proc.StandardOutput;
-                            string errors = errorReader.ReadToEnd();
-                            logger.Trace(errors);
-                            string stream = myStreamReader.ReadToEnd();
-                            procResult = proc.StandardOutput.ReadToEnd();
-                            proc.Close();
+                using (var proc = new Process())
+                {
+                    proc.StartInfo = info;
+                    proc.Start();
+                    StreamReader errorReader = proc.StandardError;
+                    StreamReader myStreamReader = proc.StandardOutput;
+                    string errors = errorReader.ReadToEnd();
+                    logger.Trace(errors);
+                    string stream = myStreamReader.ReadToEnd();
+                    procResult = proc.StandardOutput.ReadToEnd();
+                    proc.Close();
 
-                        }
-                    }
+                }
                 //}
-                //catch (Exception ex)
-                //{
-                //    //   result.Summary = ex.ToString();
-                //    throw new Exception("R Script failed: " + result, ex);
-                //}
-
 
             }
-
 
             return result;
         }
@@ -493,6 +480,9 @@ namespace MapWizard.Tools
             }
             else
             {
+                //mask raster with polygon before calculate treshold
+                maskRasterWPolygon(input, result);
+
                 //Get RScript folder from registry
                 Microsoft.Win32.RegistryKey regKey = null;
                 regKey = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\R-core\R");
@@ -502,86 +492,125 @@ namespace MapWizard.Tools
                 string rScriptExecutablePath = rInstallationFolder + "\\bin\\RScript.exe";
 
                 string procResult = string.Empty;
-                //try
-                //{
 
-                    var info = new ProcessStartInfo();
-                    info.FileName = rScriptExecutablePath;
-                    var path = System.AppDomain.CurrentDomain.BaseDirectory.Replace(@"\", @"/");
-                    info.WorkingDirectory = path + "scripts/";
-                    var rCodeFilePath = path + "scripts/rasterproc_stats_wrapper.r";
-                    string outCsv = projectFolder + "\\stats.csv";
 
-                    string outputFolder = projectFolder + "\\Temp\\";
-                    if (!Directory.Exists(outputFolder))
+                var info = new ProcessStartInfo();
+                info.FileName = rScriptExecutablePath;
+                var path = System.AppDomain.CurrentDomain.BaseDirectory.Replace(@"\", @"/");
+                info.WorkingDirectory = path + "scripts/";
+                var rCodeFilePath = path + "scripts/rasterproc_stats_wrapper.r";
+                string outCsv = projectFolder + "\\stats.csv";
+
+                string outputFolder = projectFolder + "\\Temp\\";
+                if (!Directory.Exists(outputFolder))
+                {
+                    Directory.CreateDirectory(outputFolder);
+                }
+
+                string delineationRaster = projectFolder + "\\Classification\\Temp\\" + "maskedRaster" + input.DelID + ".img";
+
+                if (!File.Exists(delineationRaster))
+                {
+                    delineationRaster = input.DelineationRaster;
+                }
+
+
+
+                info.Arguments = "\"" + rCodeFilePath + "\" \"" + delineationRaster + "\" \"" + outCsv;
+                info.RedirectStandardInput = false;
+                info.RedirectStandardOutput = true;
+                info.RedirectStandardError = true;
+                info.UseShellExecute = false;
+                info.CreateNoWindow = true;
+
+                using (var proc = new Process())
+                {
+                    proc.StartInfo = info;
+                    proc.Start();
+                    StreamReader errorReader = proc.StandardError;
+                    StreamReader myStreamReader = proc.StandardOutput;
+                    string errors = errorReader.ReadToEnd();
+                    string stream = myStreamReader.ReadToEnd();
+                    procResult = proc.StandardOutput.ReadToEnd();
+                    proc.Close();
+
+                    string csvContent = File.ReadAllText(outCsv);
+                    double[] doubles = Array.ConvertAll(csvContent.Split(','), Double.Parse);
+                    double min = doubles[0];
+                    double max = doubles[1];
+                    double gap = (max - min) / Convert.ToDouble(input.NumberOfProspectivityClasses);
+                    result.TresholdValues = "";
+                    double current = min;
+
+                    for (int i = 0; i < Convert.ToInt16(input.NumberOfProspectivityClasses) - 1; i++) // max value not added any more
                     {
-                        Directory.CreateDirectory(outputFolder);
-                    }
-
-
-                    info.Arguments = "\"" + rCodeFilePath + "\" \"" + input.DelineationRaster + "\" \"" + outCsv;
-                    //info.Arguments = rCodeFilePath + " " + args;
-                    info.RedirectStandardInput = false;
-                    info.RedirectStandardOutput = true;
-                    info.RedirectStandardError = true;
-                    info.UseShellExecute = false;
-                    info.CreateNoWindow = true;
-
-                    using (var proc = new Process())
-                    {
-                        proc.StartInfo = info;
-                        proc.Start();
-                        StreamReader errorReader = proc.StandardError;
-                        StreamReader myStreamReader = proc.StandardOutput;
-                        string errors = errorReader.ReadToEnd();
-                        /*if (errors != "")
+                        if (result.TresholdValues != "")
                         {
-                            MessageBox.Show(errors, "Errors in R execution");
-                        }*/
-                        string stream = myStreamReader.ReadToEnd();
-                        procResult = proc.StandardOutput.ReadToEnd();
-                        proc.Close();
-
-
-                        string csvContent = File.ReadAllText(outCsv);
-                        double[] doubles = Array.ConvertAll(csvContent.Split(','), Double.Parse);
-                        double min = doubles[0];
-                        double max = doubles[1];
-                        double gap = (max - min) / Convert.ToDouble(input.NumberOfProspectivityClasses);
-                        //result.TresholdValues = Math.Round(min,4).ToString();
-                        //result.TresholdValues = min.ToString(); //min value not added any more
-                        result.TresholdValues = "";
-                        double current = min;
-                        //for (int i = 0; i < Convert.ToInt16(input.NumberOfProspectivityClasses); i++)
-                        for (int i = 0; i < Convert.ToInt16(input.NumberOfProspectivityClasses) - 1; i++) // max value not added any more
-                        {
-                            if (result.TresholdValues != "")
-                            {
-                                result.TresholdValues += ",";
-                            }
-                            current += gap;
-
-                            //result.TresholdValues += Math.Round(current,4).ToString();
-                            result.TresholdValues += current.ToString();
-
+                            result.TresholdValues += ",";
                         }
-                        result.MinMaxValues = min.ToString() + " / " + max.ToString();
-
+                        current += gap;
+                        result.TresholdValues += current.ToString();
                     }
+                    result.MinMaxValues = min.ToString() + " / " + max.ToString();
+                }
+            }
+            return result;
+        }
 
-                //}
-                //catch (Exception ex)
-                //{
-                //    //   result.Summary = ex.ToString();
-                //    throw new Exception("R Script failed: " + result, ex);
-                //}
+        private PermissiveTractResult maskRasterWPolygon(PermissiveTractInputParams input, PermissiveTractResult result)
+        {
+            Microsoft.Win32.RegistryKey regKey = null;
+            regKey = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\R-core\R");
+            string[] nameList = regKey.GetSubKeyNames();
+            RegistryKey subKey = regKey.OpenSubKey(nameList[0]);
+            string rInstallationFolder = subKey.GetValue("InstallPath").ToString();
+            string rScriptExecutablePath = rInstallationFolder + "\\bin\\RScript.exe";
 
+            string procResult = string.Empty;
 
+            var info = new ProcessStartInfo();
+            info.FileName = rScriptExecutablePath;
+            var path = System.AppDomain.CurrentDomain.BaseDirectory.Replace(@"\", @"/");
+            info.WorkingDirectory = path + "scripts/";
+            var rCodeFilePath = path + "scripts/mask_polygon_wrapper.R";
+
+            string outputFolder = projectFolder + "\\Classification\\Temp\\";
+            if (!Directory.Exists(outputFolder))
+            {
+                Directory.CreateDirectory(outputFolder);
             }
 
 
+            string inputRaster = input.DelineationRaster;
+            string inputMask = projectFolder + "\\Tracts\\TR" + input.DelID + "\\TR" + input.DelID + ".shp";
+            string outputRaster = outputFolder + "maskedRaster" + input.DelID + ".img";
+            string outputPdf = outputFolder + "maskedRaster" + input.DelID + ".pdf";
+
+            if (inputRaster != "" && inputMask != "")
+            {
+                info.Arguments = "\"" + rCodeFilePath + "\" " + inputRaster + " " + inputMask + " " + outputRaster + " " + outputPdf;
+                info.RedirectStandardInput = false;
+                info.RedirectStandardOutput = true;
+                info.RedirectStandardError = true;
+                info.UseShellExecute = false;
+                info.CreateNoWindow = true;
+
+                using (var proc = new Process())
+                {
+                    proc.StartInfo = info;
+                    proc.Start();
+                    StreamReader errorReader = proc.StandardError;
+                    StreamReader myStreamReader = proc.StandardOutput;
+                    //string errors = errorReader.ReadToEnd();
+                    string stream = myStreamReader.ReadToEnd();
+                    procResult = proc.StandardOutput.ReadToEnd();
+                    proc.Close();
+                }
+            }
             return result;
         }
+
+
 
 
         /// <summary>
@@ -597,6 +626,7 @@ namespace MapWizard.Tools
             }
             else
             {
+
                 //Get RScript folder from registry
                 Microsoft.Win32.RegistryKey regKey = null;
                 regKey = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\R-core\R");
@@ -606,72 +636,46 @@ namespace MapWizard.Tools
                 string rScriptExecutablePath = rInstallationFolder + "\\bin\\RScript.exe";
 
                 string procResult = string.Empty;
-                //try
-                //{
 
-                    var info = new ProcessStartInfo();
-                    info.FileName = rScriptExecutablePath;
-                    var path = System.AppDomain.CurrentDomain.BaseDirectory.Replace(@"\", @"/");
-                    info.WorkingDirectory = path + "scripts/";
-                    var rCodeFilePath = path + "scripts/rasterproc_classify_wrapper.r";
+                var info = new ProcessStartInfo();
+                info.FileName = rScriptExecutablePath;
+                var path = System.AppDomain.CurrentDomain.BaseDirectory.Replace(@"\", @"/");
+                info.WorkingDirectory = path + "scripts/";
+                var rCodeFilePath = path + "scripts/rasterproc_classify_wrapper.r";
 
-                    string outputFolder = projectFolder + "\\Classification\\Temp\\";
-                    if (!Directory.Exists(outputFolder))
-                    {
-                        Directory.CreateDirectory(outputFolder);
-                    }
+                string outputFolder = projectFolder + "\\Classification\\Temp\\";
+                if (!Directory.Exists(outputFolder))
+                {
+                    Directory.CreateDirectory(outputFolder);
+                }
 
-                    string outCsv = projectFolder + "\\stats.csv";
-                    string csvContent = File.ReadAllText(outCsv);
-                    double[] doubles = Array.ConvertAll(csvContent.Split(','), Double.Parse);
-                    double min = doubles[0];
-                    double max = doubles[1];
+                string outCsv = projectFolder + "\\stats.csv";
+                string csvContent = File.ReadAllText(outCsv);
+                double[] doubles = Array.ConvertAll(csvContent.Split(','), Double.Parse);
+                double min = doubles[0];
+                double max = doubles[1];
+                string tresholds = input.TresholdValues;
+                string outputRaster = outputFolder + "ClassificationRaster_" + input.ClassificationId + ".img";
+                string outputPdf = outputFolder + "ClassificationRaster_" + input.ClassificationId + ".pdf";
+                info.Arguments = "\"" + rCodeFilePath + "\" " + input.DelineationRaster + " " + tresholds + " " + outputRaster + " " + outputPdf;
+                info.RedirectStandardInput = false;
+                info.RedirectStandardOutput = true;
+                info.RedirectStandardError = true;
+                info.UseShellExecute = false;
+                info.CreateNoWindow = true;
 
-                    //string tresholds = min.ToString() + ",";
-                    string tresholds = input.TresholdValues;
-                    //tresholds += ",";
-                    //tresholds += max.ToString();
-                    //MessageBox.Show(tresholds);
-
-
-
-                    string outputRaster = outputFolder + "ProspectivityRaster_" + input.ClassificationId + ".img";
-                    string outputPdf = outputFolder + "ProspectivityRaster_" + input.ClassificationId + ".pdf";
-                    //info.Arguments = "\"" + rCodeFilePath + "\" \"" + input.DelineationRaster + " "+input.TresholdValues + " c:/temp/temp.img c:/temp/temp.pdf";
-                    info.Arguments = "\"" + rCodeFilePath + "\" " + input.DelineationRaster + " " + tresholds + " " + outputRaster + " " + outputPdf;
-                    info.RedirectStandardInput = false;
-                    info.RedirectStandardOutput = true;
-                    info.RedirectStandardError = true;
-                    info.UseShellExecute = false;
-                    info.CreateNoWindow = true;
-
-                    using (var proc = new Process())
-                    {
-                        proc.StartInfo = info;
-                        proc.Start();
-                        StreamReader errorReader = proc.StandardError;
-                        StreamReader myStreamReader = proc.StandardOutput;
-                        //string errors = errorReader.ReadToEnd();
-                        string stream = myStreamReader.ReadToEnd();
-                        procResult = proc.StandardOutput.ReadToEnd();
-                        proc.Close();
-
-
-
-
-                    }
-
-                //}
-                //catch (Exception ex)
-                //{
-                //    //   result.Summary = ex.ToString();
-                //    throw new Exception("R Script failed: " + result, ex);
-                //}
-
-
+                using (var proc = new Process())
+                {
+                    proc.StartInfo = info;
+                    proc.Start();
+                    StreamReader errorReader = proc.StandardError;
+                    StreamReader myStreamReader = proc.StandardOutput;
+                    //string errors = errorReader.ReadToEnd();
+                    string stream = myStreamReader.ReadToEnd();
+                    procResult = proc.StandardOutput.ReadToEnd();
+                    proc.Close();
+                }
             }
-
-
             return result;
         }
 
@@ -689,79 +693,114 @@ namespace MapWizard.Tools
             }
             else
             {
-                //Get RScript folder from registry
-                //Microsoft.Win32.RegistryKey regKey = null;
-                //regKey = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\R-core\R");
-                //string[] nameList = regKey.GetSubKeyNames();
-                //RegistryKey subKey = regKey.OpenSubKey(nameList[0]);
-                //string rInstallationFolder = subKey.GetValue("InstallPath").ToString();
-                //string rScriptExecutablePath = rInstallationFolder + "\\bin\\RScript.exe";
                 string rScriptExecutablePath = input.Env.RPath;
                 string procResult = string.Empty;
-                //try
-                //{
 
-                    var info = new ProcessStartInfo();
-                    info.FileName = rScriptExecutablePath;
-                    var path = System.AppDomain.CurrentDomain.BaseDirectory.Replace(@"\", @"/");
-                    info.WorkingDirectory = path + "scripts/";
-                    var rCodeFilePath = path + "scripts/rasterproc_wrapper.r";
+                var info = new ProcessStartInfo();
+                info.FileName = rScriptExecutablePath;
+                var path = System.AppDomain.CurrentDomain.BaseDirectory.Replace(@"\", @"/");
+                info.WorkingDirectory = path + "scripts/";
+                var rCodeFilePath = path + "scripts/rasterproc_wrapper.r";
 
-                    string outputFolder = projectFolder + @"\Delineation\temp\";
-                    if (!Directory.Exists(outputFolder))
+                string outputFolder = projectFolder + @"\Delineation\temp\";
+                if (!Directory.Exists(outputFolder))
+                {
+                    Directory.CreateDirectory(outputFolder);
+                }
+
+                string[] boundaryList = input.BoundaryValues.Split(',');
+                foreach (string boundary in boundaryList)
+                {
+
+                    string discrOutput = outputFolder + "DelineationRaster_" + boundary.ToString();
+                    string polyOutput = outputFolder + "DelineationPolygons_" + boundary.ToString();
+                    string polyOutputF = "DelineationPolygons_" + boundary.ToString();
+                    string boundariesOnEvidence = outputFolder + "BoundariesOnEvidence_" + boundary.ToString() + ".pdf";
+
+                    info.Arguments = "\"" + rCodeFilePath + "\" \"" + input.ProspectivityRasterFile + "\" \"" + discrOutput + "\" \"" + polyOutput + "\" \"" + polyOutputF
+                        + "\" \"" + boundary + "\" \"" + input.EvidenceLayerFile + "\" \"" + boundariesOnEvidence;
+                    info.RedirectStandardInput = false;
+                    info.RedirectStandardOutput = true;
+                    info.RedirectStandardError = true;
+                    info.UseShellExecute = false;
+                    info.CreateNoWindow = true;
+
+                    using (var proc = new Process())
                     {
-                        Directory.CreateDirectory(outputFolder);
+                        proc.StartInfo = info;
+                        proc.Start();
+                        StreamReader errorReader = proc.StandardError;
+                        StreamReader myStreamReader = proc.StandardOutput;
+                        string stream = myStreamReader.ReadToEnd();
+                        procResult = proc.StandardOutput.ReadToEnd();
+                        proc.Close();
+
                     }
-
-                    string[] boundaryList = input.BoundaryValues.Split(',');
-                    foreach (string boundary in boundaryList)
-                    {
-
-                        //string discrOutput = outputFolder + Path.GetFileName(input.ProspectivityRasterFile) + "_" + boundary.ToString() + "_discr.pdf";
-                        //string polyOutput = outputFolder + Path.GetFileName(input.ProspectivityRasterFile) + "_" + boundary.ToString() + "_poly.pdf";
-
-                        string discrOutput = outputFolder + "DelineationRaster_" + boundary.ToString();
-                        string polyOutput = outputFolder + "DelineationPolygons_" + boundary.ToString();
-                        string polyOutputF = "DelineationPolygons_" + boundary.ToString();
-                        string boundariesOnEvidence = outputFolder + "BoundariesOnEvidence_" + boundary.ToString() + ".pdf";
-
-                        info.Arguments = "\"" + rCodeFilePath + "\" \"" + input.ProspectivityRasterFile + "\" \"" + discrOutput + "\" \"" + polyOutput + "\" \"" + polyOutputF
-                            + "\" \"" + boundary + "\" \"" + input.EvidenceLayerFile + "\" \"" + boundariesOnEvidence;
-                        //info.Arguments = rCodeFilePath + " " + args;
-                        info.RedirectStandardInput = false;
-                        info.RedirectStandardOutput = true;
-                        info.RedirectStandardError = true;
-                        info.UseShellExecute = false;
-                        info.CreateNoWindow = true;
-
-                        using (var proc = new Process())
-                        {
-                            proc.StartInfo = info;
-                            proc.Start();
-                            StreamReader errorReader = proc.StandardError;
-                            StreamReader myStreamReader = proc.StandardOutput;
-                            /*string errors = errorReader.ReadToEnd();
-                            logger.Error("Errors:" + errors);
-                            if (errors != "")
-                            {
-                                MessageBox.Show(errors, "Errors in R execution");
-                            }*/
-                            string stream = myStreamReader.ReadToEnd();
-                            procResult = proc.StandardOutput.ReadToEnd();
-                            proc.Close();
-
-                        }
-                    }
-                //}
-                //catch (Exception ex)
-                //{
-                //    //   result.Summary = ex.ToString();
-                //    throw new Exception("R Script failed: " + result, ex);
-                //}
-
-
+                }
             }
 
+            return result;
+        }
+
+
+        /// <summary>
+        /// Runs Delineation process with given parameters.
+        /// </summary>
+        /// <param name="input">Input parameters.</param>
+        /// <returns>Result of executing Delineation.</returns>
+        private PermissiveTractResult DelineationPolygon(PermissiveTractInputParams input, PermissiveTractResult result)
+        {
+            if (input.ProspectivityRasterFile == "" || input.BoundaryValues == "")
+            {
+                throw new ArgumentException("Input parameters not set correctly", "ProspectivityRasterFile/BoundaryValues");
+            }
+            else
+            {
+                string rScriptExecutablePath = input.Env.RPath;
+                string procResult = string.Empty;
+
+                var info = new ProcessStartInfo();
+                info.FileName = rScriptExecutablePath;
+                var path = System.AppDomain.CurrentDomain.BaseDirectory.Replace(@"\", @"/");
+                info.WorkingDirectory = path + "scripts/";
+                var rCodeFilePath = path + "scripts/rasterproc_wrapper_polygon.r";
+
+                string outputFolder = projectFolder + @"\Delineation\temp\";
+                if (!Directory.Exists(outputFolder))
+                {
+                    Directory.CreateDirectory(outputFolder);
+                }
+
+                string[] boundaryList = input.BoundaryValues.Split(',');
+                foreach (string boundary in boundaryList)
+                {
+
+                    string discrOutput = outputFolder + "DelineationRaster_" + boundary.ToString();
+                    string polyOutput = outputFolder + "DelineationPolygons_" + boundary.ToString();
+                    string polyOutputF = "DelineationPolygons_" + boundary.ToString();
+                    string boundariesOnEvidence = outputFolder + "BoundariesOnEvidence_" + boundary.ToString() + ".pdf";
+
+                    info.Arguments = "\"" + rCodeFilePath + "\" \"" + input.ProspectivityRasterFile + "\" \"" + discrOutput + "\" \"" + polyOutput + "\" \"" + polyOutputF
+                        + "\" \"" + boundary + "\" \"" + input.EvidenceLayerFile + "\" \"" + boundariesOnEvidence;
+                    info.RedirectStandardInput = false;
+                    info.RedirectStandardOutput = true;
+                    info.RedirectStandardError = true;
+                    info.UseShellExecute = false;
+                    info.CreateNoWindow = true;
+
+                    using (var proc = new Process())
+                    {
+                        proc.StartInfo = info;
+                        proc.Start();
+                        StreamReader errorReader = proc.StandardError;
+                        StreamReader myStreamReader = proc.StandardOutput;
+                        string stream = myStreamReader.ReadToEnd();
+                        procResult = proc.StandardOutput.ReadToEnd();
+                        proc.Close();
+
+                    }
+                }
+            }
 
             return result;
         }
@@ -805,7 +844,12 @@ namespace MapWizard.Tools
         /// <returns>Result of executing WofE.</returns>
         private PermissiveTractResult WofE(PermissiveTractInputParams input, PermissiveTractResult result)
         {
-            var outputfolder = projectFolder + @"\ProspRaster\WofE\EvidenceData\";
+
+            var outputfolder = projectFolder + @"\Delineation\WofE\EvidenceData\";
+            if (input.MethodId == "wofeClassification")
+            {
+                outputfolder = projectFolder + @"\Classification\WofE\EvidenceData\";
+            }
 
             if (!Directory.Exists(outputfolder))
             {
@@ -819,13 +863,12 @@ namespace MapWizard.Tools
             else
             {
                 string parameters = "";
-                //string ws = input.WorkSpace;//"C:\\data\\w2.gdb";
                 string ws = outputfolder;//"C:\\data\\w2.gdb";
                 string evidence_raster_layers = "";
                 string evidence_weight_tables = "";
                 string cellsize = "200";
                 //string arcsdm_path = System.AppDomain.CurrentDomain.BaseDirectory.Replace(@"\", @"/") + "scripts/ArcSDMToolbox/ArcSDM.pyt";
-                string arcsdm_path = "./scripts/ArcSDMToolbox/ArcSDM.pyt";
+                string arcsdm_path = System.AppDomain.CurrentDomain.BaseDirectory + "scripts\\ArcSDMToolbox\\ArcSDM.pyt";
                 string[] Weights = input.WofEWeightsType.Split(',');
                 int raster = 0;
                 string calculateWeightResult = "";
@@ -864,10 +907,7 @@ namespace MapWizard.Tools
 
                 foreach (string er in input.EvidenceRasterList)
                 {
-
-                    string rasterIn = er; //"C:\\TFS2\\Muut\\MapWizardi\\ToolsTests\\testdata\\MAP\\WofE\\Input\\Reclass_albitite.img";
-                    //var path = System.AppDomain.CurrentDomain.BaseDirectory.Replace(@"\", @"/");
-                    //parameters = Path.Combine(path, "scripts");
+                    string rasterIn = er;
                     parameters = "";
                     parameters += "./scripts/WofeCalculateWeights.pyw";
                     parameters += " " + ws; //workspace
@@ -881,7 +921,7 @@ namespace MapWizard.Tools
                     parameters += " " + cellsize; //cell size
                     parameters += " " + input.MaskRaster;//mask
                     parameters += " " + input.TrainingPoints;// training sites
-                    parameters += " " + arcsdm_path;
+                    parameters += " " + "\"" + arcsdm_path + "\"";
                     parameters += " " + getWeight(Weights[raster].Trim()); //"Ascending"; //Weights type
                     parameters += " " + input.ConfidenceLevel; //Confidence level
                     parameters += " " + input.UnitArea; //Unit area
@@ -912,7 +952,6 @@ namespace MapWizard.Tools
                         }
                     }
 
-
                     //for calculate response
                     evidence_raster_layers += evidence_raster_layers != "" ? ";" : "";
                     evidence_raster_layers += er;
@@ -925,8 +964,9 @@ namespace MapWizard.Tools
                 if (calWeightMessage != "")
                 {
                     //MessageBox.Show("Raster: " + er + "\n\n" + calculateWeightResult + "\n\n" + "Dataset must be improved!", "Dataset fail!");
-                    MessageBox.Show(calWeightMessage, "Dataset fail!");
-                    return result;
+                    //MessageBox.Show(calWeightMessage, "Dataset fail!");
+                    logger.Error(calculateWeightResult + "\n\n" + "Dataset must be improved!", "Dataset fail!");
+                    throw new Exception("Wofe weigth calculation failed, dataset must be improved!");
                 }
 
                 parameters = "";
@@ -938,17 +978,15 @@ namespace MapWizard.Tools
                 parameters += " " + input.MaskRaster;// mask
                 parameters += " " + input.TrainingPoints;// training sites
                 parameters += " " + outputfolder;
-                parameters += " " + arcsdm_path;//ArcSDM path
+                parameters += " " + "\"" + arcsdm_path + "\"";
                 parameters += " " + input.UnitArea; //Unit area
                 logger.Trace("Response parameters:" + parameters);
                 result.CalculateResponsesResult = runPythonScript(input, result, parameters);
 
             }
-
             return result;
-
-
         }
+
         /// <summary>
         /// Method to run python script parameters with parameters.
         /// </summary>
@@ -977,7 +1015,7 @@ namespace MapWizard.Tools
             //string ErrorValue = errorReader.ReadToEnd();
             //logger.Trace("ErrorValue runPythonscript:" + ErrorValue);
 
-            //string returnValue = myProcess.StandardOutput.ReadToEnd();
+            //string errValue = errorReader.ReadToEnd();
             string returnValue = myStreamReader.ReadToEnd();
             logger.Trace("ReturnValue:" + returnValue);
             myProcess.WaitForExit();
@@ -1006,15 +1044,11 @@ namespace MapWizard.Tools
         private PermissiveTractResult FuzzyOverlay(PermissiveTractInputParams input, PermissiveTractResult result)
         {
 
-            //var reclassifyProject = projectFolder + @"\Fuzzy\Reclassify"; //not used
-
-
-            var outputfolder = projectFolder + @"\ProspRaster\Fuzzy\EvidenceData\";
-            if (input.LastFuzzyRound == "True")
+            var outputfolder = projectFolder + @"\Delineation\Fuzzy\EvidenceData\";
+            if (input.MethodId == "fuzzyClassification")
             {
-                outputfolder = projectFolder + @"\ProspRaster\";
+                outputfolder = projectFolder + @"\Classification\Fuzzy\EvidenceData\";
             }
-
 
             if (!Directory.Exists(outputfolder))
             {
@@ -1054,8 +1088,6 @@ namespace MapWizard.Tools
             }
 
             string python = @input.PythonPath;
-            //python = "C:\\Python27\\ArcGIS10.6\\pythonw.exe";
-            //python = "C:\\Program Files\\ArcGIS\\Pro\\bin\\Python\\envs\\arcgispro-py3\\pythonw.exe";
             string myPythonApp = input.ScriptPath;
             string str = string.Join(",", inRasters);
 
@@ -1064,43 +1096,26 @@ namespace MapWizard.Tools
             myProcessStartInfo.UseShellExecute = false;
             myProcessStartInfo.RedirectStandardError = true;
             myProcessStartInfo.RedirectStandardOutput = true;
-            /*myProcessStartInfo.Arguments = myPythonApp + " " + input.EnvPath + " " + str + " " + input.OutRaster
-                                         + " " + input.FuzzyOverlayType + " " + input.FuzzyOutputFileName + " "+input.FuzzyGammaValue;*/
-
-            /*myProcessStartInfo.Arguments = myPythonApp + " " + outputfolder + " " + str + " " + outputfolder
-                                         + " " + input.FuzzyOverlayType + " " + input.FuzzyOutputFileName + " " + input.FuzzyGammaValue;*/
-            /* "\"" + rCodeFilePath + "\" \""*/
 
             myProcessStartInfo.Arguments = myPythonApp + " " + outputfolder + " " + str + " " + outputfolder
             + " " + input.FuzzyOverlayType + " " + input.FuzzyOutputFileName + " " + input.FuzzyGammaValue;
 
+            Process myProcess = new Process();
+            myProcess.StartInfo = myProcessStartInfo;
 
-            //myProcessStartInfo.Arguments = myPythonApp + " " + "c:\\data\\w4.gdb\\" + " " + str + " " + "c:\\data\\w4.gdb\\" + " " + input.FuzzyOverlayType;
+            Console.WriteLine("Calling Python script with arguments {0}, {1} and {2}", input.EnvPath, str, input.OutRaster);
+            myProcess.Start();
+            StreamReader errorReader = myProcess.StandardError;
+            StreamReader myStreamReader = myProcess.StandardOutput;
+            string returnValue = myStreamReader.ReadToEnd();
+            string errReturnValue = errorReader.ReadToEnd();
+            //MessageBox.Show(returnValue, "returnValue");
+            logger.Trace("Permissive Tract script return value:" + returnValue);
+            myProcess.WaitForExit();
+            myProcess.Close();
 
-            //try
-            //{
-                Process myProcess = new Process();
-                myProcess.StartInfo = myProcessStartInfo;
-
-                Console.WriteLine("Calling Python script with arguments {0}, {1} and {2}", input.EnvPath, str, input.OutRaster);
-                myProcess.Start();
-                StreamReader errorReader = myProcess.StandardError;
-                StreamReader myStreamReader = myProcess.StandardOutput;
-                string returnValue = myStreamReader.ReadToEnd();
-                //string returnValue = errorReader.ReadToEnd();
-                //MessageBox.Show(returnValue, "returnValue");
-                logger.Trace("Permissive Tract script return value:" + returnValue);
-                myProcess.WaitForExit();
-                myProcess.Close();
-
-                Console.WriteLine("Value received from script: " + returnValue);
-                result.PermissiveTractResults = returnValue;
-            //}
-            //catch (Exception ex)
-            //{
-            //    //   result.Summary = ex.ToString();
-            //    throw new Exception("R Script failed: " + result, ex);
-            //}
+            Console.WriteLine("Value received from script: " + returnValue);
+            result.PermissiveTractResults = returnValue;
             return result;
 
         }

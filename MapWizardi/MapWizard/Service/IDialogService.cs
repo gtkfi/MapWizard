@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Windows;
 
 namespace MapWizard.Service
 {
@@ -19,11 +20,12 @@ namespace MapWizard.Service
     /// </summary>
     public interface IDialogService
     {
-        string OpenFileDialog(string initialPath = "", string filter = "", bool checkFileExists = true, bool checkPathExists = true);
-        List<string> OpenFilesDialog(string initialPath = "", string filter = "", bool checkFileExists = true, bool checkPathExists = true);
+        string OpenFileDialog(string initialPath = "", string filter = "", bool checkFileExists = true, bool checkPathExists = true, string rootPath = "");
+        List<string> OpenFilesDialog(string initialPath = "", string filter = "", bool checkFileExists = true, bool checkPathExists = true, string rootPath = "");
         string SelectFolderDialog(string selectedPath = "", Environment.SpecialFolder rootFolder = Environment.SpecialFolder.MyComputer);
-        string SaveFileDialog(string initialPath = "", string filter = "", bool checkFileExists = true, bool checkPathExists = true);
+        bool MessageBoxDialog();
         void ShowNotification(string message, string notificationType);
         void ShowMessageDialog();
+        bool ConfirmationDialog(string message);
     }
 }

@@ -1,6 +1,6 @@
-﻿using System;
+﻿
+using System;
 using System.Threading.Tasks;
-using System.Collections.ObjectModel;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.CommandWpf;
 using MapWizard.Model;
@@ -15,6 +15,8 @@ using MahApps.Metro.Controls;
 using MahApps.Metro.Controls.Dialogs;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using System.Diagnostics;
+using System.Collections.ObjectModel;
 
 namespace MapWizard.ViewModel
 {
@@ -38,14 +40,6 @@ namespace MapWizard.ViewModel
         private UndiscoveredDepositsModel model;
         private UndiscoveredDepositsResultModel result;
         private ViewModelLocator viewModelLocator;
-        private bool isBusy;
-        private bool negBinomialUseModelName;
-        private bool mark3UseModelName;
-        private bool customUseModelName;
-        private int selectedModelIndex;
-        private ObservableCollection<string> modelNames;
-        private string lastRunDate;
-        private int runStatus;
 
         /// <summary>
         /// Initialize new instance of UndiscoveredDepositsViewModel
@@ -58,35 +52,23 @@ namespace MapWizard.ViewModel
             this.logger = logger;
             this.dialogService = dialogService;
             this.settingsService = settingsService;
-            lastRunDate = "Last Run: Never";
-            runStatus = 2;
-            negBinomialUseModelName = false;
-            mark3UseModelName = false;
-            customUseModelName = false;
-            selectedModelIndex = 0;
-            modelNames = new ObservableCollection<string>();
             result = new UndiscoveredDepositsResultModel();
+            TractChangedCommand = new RelayCommand(TractChanged, CanRunTool);
+            FindTractsCommand = new RelayCommand(FindTractIDs, CanRunTool);
             RunToolCommand = new RelayCommand(RunTool, CanRunTool);
             AddEstimationCommand = new RelayCommand(AddEstimation, CanRunTool);
             AddCustomEstimationCommand = new RelayCommand(AddCustomEstimation, CanRunTool);
             SelectModelCommand = new RelayCommand(SelectResult, CanRunTool);
             ShowModelDialog = new RelayCommand(OpenModelDialog, CanRunTool);
+            OpenUndiscDepPlotCommand = new RelayCommand(OpenUndiscDepPlot, CanRunTool);
             viewModelLocator = new ViewModelLocator();
             UndiscoveredDepositsInputParams inputParams = new UndiscoveredDepositsInputParams();
-            string selectedProjectFolder = Path.Combine(settingsService.RootPath, "UndiscDep", "SelectedResult");
-            try
+            string projectFolder = Path.Combine(settingsService.RootPath, "UndiscDep");
+            if (!Directory.Exists(projectFolder))
             {
-                if (!Directory.Exists(selectedProjectFolder))
-                {
-                    Directory.CreateDirectory(selectedProjectFolder);
-                }
+                Directory.CreateDirectory(projectFolder);
             }
-            catch (Exception ex)
-            {
-                logger.Error(ex, "Could not create Undiscovered Deposits project folder");
-                throw;
-            }
-            string param_json = Path.Combine(selectedProjectFolder, "undiscovered_deposits_input_params.json");
+            string param_json = Path.Combine(projectFolder, "undiscovered_deposits_input_params.json");
             if (File.Exists(param_json))
             {
                 try
@@ -94,74 +76,88 @@ namespace MapWizard.ViewModel
                     inputParams.Load(param_json);
                     Model = new UndiscoveredDepositsModel
                     {
-                        DepositsCsvString = inputParams.depositsNegativeCSV,
-                        CustomFunctionCsvString = inputParams.depositsCustomCSV,
+                        DepositsCsvString = inputParams.DepositsNegativeCSV,
+                        CustomFunctionCsvString = inputParams.DepositsCustomCSV,
                         EstN90 = inputParams.N90,
                         EstN50 = inputParams.N50,
                         EstN10 = inputParams.N10,
                         EstN5 = inputParams.N5,
                         EstN1 = inputParams.N1,
-                        TractId = inputParams.TractID,
+                        SelectedTract = inputParams.TractID,
                         NegBinomialExtensionFolder = "",
                         Mark3ExtensionFolder = "",
                         CustomExtensionFolder = "",
-                        EstimateRationale = inputParams.estRationaleTXT,
-                        MARK3EstimateRationale = inputParams.mark3EstRationaleTXT,
-                        CustomEstimateRationale = inputParams.customEstRationaleTXT
+                        EstimateRationale = inputParams.EstRationaleTXT,
+                        MARK3EstimateRationale = inputParams.Mark3EstRationaleTXT,
+                        CustomEstimateRationale = inputParams.CustomEstRationaleTXT
                     };
                 }
                 catch (Exception ex)
                 {
-                    Model = new UndiscoveredDepositsModel
-                    {
-                        DepositsCsvString = "Name,Weight,N90,N50,N10"
-                    };
+                    Model = new UndiscoveredDepositsModel();
                     logger.Error(ex, "Failed to read json file");
-                    dialogService.ShowNotification("Couldn't load Undiscovered Deposits tool's inputs correctly.", "Error");
+                    dialogService.ShowNotification("Couldn't load Undiscovered Deposits tool's inputs correctly. Inputs were initialized to default values.", "Error");
+                    viewModelLocator.SettingsViewModel.WriteLogText("Couldn't load Undiscovered Deposits tool's inputs correctly. Inputs were initialized to default values.", "Error");
                 }
             }
             else
             {
-                Model = new UndiscoveredDepositsModel
-                {
-                    DepositsCsvString = "Name,Weight,N90,N50,N10"
-                };
+                Model = new UndiscoveredDepositsModel();
             }
+            FindTractIDs();
+            LoadResults();
             try
             {
-                if (Directory.GetFiles(selectedProjectFolder).Length != 0)
+                if (Model.SelectedTract != null)
                 {
-                    LoadResults();
-                }
-                //  Find saved results from all the methods.
-                DirectoryInfo projectFolderInfo = null;
-                if (Directory.Exists(Path.Combine(settingsService.RootPath, "UndiscDep", "NegativeBinomial")))
-                {
-                    projectFolderInfo = new DirectoryInfo(Path.Combine(settingsService.RootPath, "UndiscDep", "NegativeBinomial")); //NegativeBinomial results
-                    FindModelnames(projectFolderInfo);
-                }
-                if (Directory.Exists(Path.Combine(settingsService.RootPath, "UndiscDep", "MARK3")))
-                {
-                    projectFolderInfo = new DirectoryInfo(Path.Combine(settingsService.RootPath, "UndiscDep", "MARK3")); //MARK3 results
-                    FindModelnames(projectFolderInfo);
-                }
-                if (Directory.Exists(Path.Combine(settingsService.RootPath, "UndiscDep", "Custom")))
-                {
-                    projectFolderInfo = new DirectoryInfo(Path.Combine(settingsService.RootPath, "UndiscDep", "Custom")); //Custom results
-                    FindModelnames(projectFolderInfo);
-                }
-                var lastRunFile = Path.Combine(settingsService.RootPath, "UndiscDep", "undiscovered_deposits_last_run.lastrun");
-                if (File.Exists(lastRunFile))
-                {
-                    LastRunDate = "Last Run: " + (new FileInfo(lastRunFile)).LastWriteTime.ToString();
+                    projectFolder = Path.Combine(projectFolder, Model.SelectedTract);
+                    if (Directory.Exists(projectFolder))
+                    {
+                        //  Find saved results from all the methods.
+                        DirectoryInfo projectFolderInfo = null;
+                        Model.ModelNames.Clear();
+                        if (Directory.Exists(Path.Combine(projectFolder, "NegativeBinomial")))
+                        {
+                            projectFolderInfo = new DirectoryInfo(Path.Combine(projectFolder, "NegativeBinomial")); //NegativeBinomial results
+                            FindModelnames(projectFolderInfo);
+                        }
+                        if (Directory.Exists(Path.Combine(projectFolder, "MARK3")))
+                        {
+                            projectFolderInfo = new DirectoryInfo(Path.Combine(projectFolder, "MARK3")); //MARK3 results
+                            FindModelnames(projectFolderInfo);
+                        }
+                        if (Directory.Exists(Path.Combine(projectFolder, "Custom")))
+                        {
+                            projectFolderInfo = new DirectoryInfo(Path.Combine(projectFolder, "Custom")); //Custom results
+                            FindModelnames(projectFolderInfo);
+                        }
+                    }
                 }
             }
             catch (Exception ex)
             {
                 logger.Error(ex, "Failed to load model names");
-                throw;
+                dialogService.ShowNotification("Failed to load model names.", "Error");
+                viewModelLocator.SettingsViewModel.WriteLogText("Failed to load model names correctly in Undiscovered Deposits tool.", "Error");
+            }
+            var lastRunFile = Path.Combine(settingsService.RootPath, "UndiscDep", "undiscovered_deposits_last_run.lastrun");
+            if (File.Exists(lastRunFile))
+            {
+                Model.LastRunDate = "Last Run: " + (new FileInfo(lastRunFile)).LastWriteTime.ToString();
             }
         }
+
+        /// <summary>
+        /// Tract change command.
+        /// </summary>
+        /// @return Command.
+        public RelayCommand TractChangedCommand { get; }
+
+        /// <summary>
+        /// Command for getting tracts.
+        /// </summary>
+        /// @return Command.
+        public RelayCommand FindTractsCommand { get; }
 
         /// <summary>
         /// Run tool command.
@@ -186,6 +182,12 @@ namespace MapWizard.ViewModel
         /// </summary>
         /// @return Command.
         public RelayCommand SelectModelCommand { get; }
+
+        /// <summary>
+        /// Open plots command.
+        /// </summary>
+        /// @return Command.
+        public RelayCommand OpenUndiscDepPlotCommand { get; }
 
         /// <summary>
         /// Show model command.
@@ -228,18 +230,36 @@ namespace MapWizard.ViewModel
         }
 
         /// <summary>
-        /// Is busy?
+        /// Update which tract is chosen and get the tract spesific results.
         /// </summary>
-        /// <returns>Boolean representing the state.</returns>
-        public bool IsBusy
+        private void TractChanged()
         {
-            get { return isBusy; }
-            set
+            viewModelLocator.DepositDensityViewModel.Model.SelectedTract = Model.SelectedTract;
+            string projectFolder = Path.Combine(settingsService.RootPath, "UndiscDep");
+            if (Model.SelectedTract != null)
             {
-                if (isBusy == value) return;
-                isBusy = value;
-                RaisePropertyChanged(() => IsBusy);
-                RunToolCommand.RaiseCanExecuteChanged();
+                projectFolder = Path.Combine(projectFolder, Model.SelectedTract);
+                if (Directory.Exists(projectFolder))
+                {
+                    //  Find saved results from all the methods.
+                    DirectoryInfo projectFolderInfo = null;
+                    Model.ModelNames.Clear();
+                    if (Directory.Exists(Path.Combine(projectFolder, "NegativeBinomial")))
+                    {
+                        projectFolderInfo = new DirectoryInfo(Path.Combine(projectFolder, "NegativeBinomial")); //NegativeBinomial results
+                        FindModelnames(projectFolderInfo);
+                    }
+                    if (Directory.Exists(Path.Combine(projectFolder, "MARK3")))
+                    {
+                        projectFolderInfo = new DirectoryInfo(Path.Combine(projectFolder, "MARK3")); //MARK3 results
+                        FindModelnames(projectFolderInfo);
+                    }
+                    if (Directory.Exists(Path.Combine(projectFolder, "Custom")))
+                    {
+                        projectFolderInfo = new DirectoryInfo(Path.Combine(projectFolder, "Custom")); //Custom results
+                        FindModelnames(projectFolderInfo);
+                    }
+                }
             }
         }
 
@@ -258,39 +278,39 @@ namespace MapWizard.ViewModel
             else if (Model.SelectedTabIndex == 3)
                 usedMethod = "Custom";
 
-            if (NegBinomialUseModelName == false)
+            if (Model.NegBinomialUseModelName == false)
             {
                 Model.NegBinomialExtensionFolder = "";
             }
-            if (Mark3UseModelName == false)
+            if (Model.Mark3UseModelName == false)
             {
                 Model.Mark3ExtensionFolder = "";
             }
-            if (CustomUseModelName == false)
+            if (Model.CustomUseModelName == false)
             {
                 Model.CustomExtensionFolder = "";
             }
             UndiscoveredDepositsInputParams input = new UndiscoveredDepositsInputParams
             {
-                depositsNegativeCSV = Model.DepositsCsvString,
-                depositsCustomCSV = Model.CustomFunctionCsvString,
-                estRationaleTXT = Model.EstimateRationale,
-                mark3EstRationaleTXT = Model.MARK3EstimateRationale,
-                customEstRationaleTXT = Model.CustomEstimateRationale,
+                DepositsNegativeCSV = Model.DepositsCsvString,
+                DepositsCustomCSV = Model.CustomFunctionCsvString,
+                EstRationaleTXT = Model.EstimateRationale,
+                Mark3EstRationaleTXT = Model.MARK3EstimateRationale,
+                CustomEstRationaleTXT = Model.CustomEstimateRationale,
                 N90 = Model.EstN90,
                 N50 = Model.EstN50,
                 N10 = Model.EstN10,
                 N5 = Model.EstN5,
                 N1 = Model.EstN1,
-                method = usedMethod,
-                TractID = Model.TractId,
+                Method = usedMethod,
+                TractID = Model.SelectedTract,
                 NegBinomialExtensionFolder = Model.NegBinomialExtensionFolder,
                 Mark3ExtensionFolder = Model.Mark3ExtensionFolder,
                 CustomExtensionFolder = Model.CustomExtensionFolder
             };
             // 2. Execute tool
             UndiscoveredDepositsResult ddResult = default(UndiscoveredDepositsResult);
-            IsBusy = true;
+            Model.IsBusy = true;
             try
             {
                 await Task.Run(() =>
@@ -301,33 +321,61 @@ namespace MapWizard.ViewModel
                     Result.PlotImage = ddResult.PlotImage;
                     Result.PlotImageBitMap = BitmapFromUri(Result.PlotImage);
                 });
-                var modelFolder = Path.Combine(input.Env.RootPath, "UndiscDep", "NegativeBinomial", Model.NegBinomialExtensionFolder);
-                if (usedMethod == "Negative" && !ModelNames.Contains(modelFolder))
-                    ModelNames.Add(modelFolder);
 
-                modelFolder = Path.Combine(input.Env.RootPath, "UndiscDep", "Mark3", Model.Mark3ExtensionFolder);
-                if (usedMethod == "Middle" && !ModelNames.Contains(modelFolder))
-                    ModelNames.Add(modelFolder);
+                //TODO: refactor this cleaner
+                var projectFolder = Path.Combine(input.Env.RootPath, "UndiscDep", Model.SelectedTract);                
+                DirectoryInfo projectFolderInfo = null;
+                Model.ModelNames.Clear();
+                var modelFolder = Path.Combine(input.Env.RootPath, "UndiscDep", Model.SelectedTract, "NegativeBinomial", Model.NegBinomialExtensionFolder);
+                if (Directory.Exists(Path.Combine(projectFolder, "NegativeBinomial")))
+                {
+                    if(usedMethod == "Negative")
+                    {
+                        input.Save(Path.Combine(modelFolder, "undiscovered_deposits_input_params.json"));
+                    }
+                    projectFolderInfo = new DirectoryInfo(Path.Combine(projectFolder, "NegativeBinomial")); //NegativeBinomial results
+                    FindModelnames(projectFolderInfo);
+                }
+                modelFolder = Path.Combine(input.Env.RootPath, "UndiscDep", Model.SelectedTract, "Mark3", Model.Mark3ExtensionFolder);
+                if (Directory.Exists(Path.Combine(projectFolder, "MARK3")))
+                {
 
-                modelFolder = Path.Combine(input.Env.RootPath, "UndiscDep", "Custom", Model.CustomExtensionFolder);
-                if (usedMethod == "Custom" && !ModelNames.Contains(modelFolder))
-                    ModelNames.Add(modelFolder);
+                    if (usedMethod == "Middle")
+                    {
+                        input.Save(Path.Combine(modelFolder, "undiscovered_deposits_input_params.json"));
+                    }
+                    projectFolderInfo = new DirectoryInfo(Path.Combine(projectFolder, "MARK3")); //MARK3 results
+                    FindModelnames(projectFolderInfo);
+                }
+                modelFolder = Path.Combine(input.Env.RootPath, "UndiscDep", Model.SelectedTract, "Custom", Model.CustomExtensionFolder);
+                if (Directory.Exists(Path.Combine(projectFolder, "Custom")))
+                {
+                    if (usedMethod == "Custom")
+                    {
+                        input.Save(Path.Combine(modelFolder, "undiscovered_deposits_input_params.json"));
+                    }
+                    projectFolderInfo = new DirectoryInfo(Path.Combine(projectFolder, "Custom")); //Custom results
+                    FindModelnames(projectFolderInfo);
+                }
 
                 string lastRunFile = Path.Combine(Path.Combine(settingsService.RootPath, "UndiscDep", "undiscovered_deposits_last_run.lastrun"));
-                File.Create(lastRunFile);
+                File.Create(lastRunFile).Close();
+                input.Save(Path.Combine(settingsService.RootPath, "UndiscDep", "undiscovered_deposits_input_params.json"));
                 dialogService.ShowNotification("UndiscoveredDepositsTool completed successfully", "Success");
-                LastRunDate = "Last Run: " + DateTime.Now.ToString("g");
-                RunStatus = 1;
+                viewModelLocator.SettingsViewModel.WriteLogText("UndiscoveredDepositsTool completed successfully", "Success");
+                Model.LastRunDate = "Last Run: " + DateTime.Now.ToString("g");
+                Model.RunStatus = 1;
             }
             catch (Exception ex)
             {
                 logger.Error(ex, "Failed to execute REngine() script");
-                dialogService.ShowNotification("Run failed. Check output for details", "Error");
-                RunStatus = 0;
+                dialogService.ShowNotification("Run failed. Check output for details.\r\n- Are all input parameters correct?\r\n- Are all input files valid? \r\n- Are all input and output files closed?", "Error");
+                viewModelLocator.SettingsViewModel.WriteLogText("Undiscovered Deposits Tool run failed. Check output for details.\r\n- Are all input parameters correct?\r\n- Are all input files valid? \r\n- Are all input and output files closed?", "Error");
+                Model.RunStatus = 0;
             }
             finally
             {
-                IsBusy = false;
+                Model.IsBusy = false;
             }
             logger.Info("<--{0} completed", this.GetType().Name);
         }
@@ -337,101 +385,108 @@ namespace MapWizard.ViewModel
         /// </summary>
         private void SelectResult()
         {
-            if (ModelNames.Count > 0)
+            if (Model.ModelNames.Count <= 0)
             {
-                try
+                dialogService.ShowNotification("There are no results to select.", "Error");
+                viewModelLocator.SettingsViewModel.WriteLogText("There are no results to select.", "Error");
+                return;
+            }
+            try
+            {
+                var modelDirPath = Model.ModelNames[Model.SelectedModelIndex];
+                var modelDirInfo = new DirectoryInfo(Model.ModelNames[Model.SelectedModelIndex]);
+                var selectedProjectFolder = Path.Combine(settingsService.RootPath, "UndiscDep", Model.SelectedTract, "SelectedResult");
+                if (modelDirPath == selectedProjectFolder)
                 {
-                    var modelDirPath = ModelNames[SelectedModelIndex];
-                    var modelDirInfo = new DirectoryInfo(ModelNames[SelectedModelIndex]);
-                    var efRootPath = Path.Combine(settingsService.RootPath, "UndiscDep", "SelectedResult");
-                    if (!Directory.Exists(efRootPath))
-                    {
-                        Directory.CreateDirectory(efRootPath);
-                    }
-                    if (modelDirPath != efRootPath)
-                    {
-                        DirectoryInfo di = new DirectoryInfo(efRootPath);
-                        foreach (FileInfo file in di.GetFiles())
-                        {
-                            file.Delete();
-                        }
-                        foreach (DirectoryInfo dir in di.GetDirectories())
-                        {
-                            dir.Delete(true);
-                        }
-                        Result.PlotImage = null;
-                        foreach (FileInfo file2 in modelDirInfo.GetFiles())
-                        {
-                            var destPath = Path.Combine(efRootPath, file2.Name);
-                            var sourcePath = Path.Combine(modelDirPath, file2.Name);
-                            File.Copy(sourcePath, destPath, true);
-                        }
-                    }
-
-                    UndiscoveredDepositsInputParams inputParams = new UndiscoveredDepositsInputParams();
-                    string selectedProjectFolder = Path.Combine(settingsService.RootPath, "UndiscDep", "SelectedResult");
-                    string param_json = Path.Combine(selectedProjectFolder, "undiscovered_deposits_input_params.json");
-
-                    if (File.Exists(param_json))
-                    {
-                        inputParams.Load(param_json);
-
-                        Model.DepositsCsvString = inputParams.depositsNegativeCSV;
-                        Model.CustomFunctionCsvString = inputParams.depositsCustomCSV;
-                        Model.EstN90 = inputParams.N90;
-                        Model.EstN50 = inputParams.N50;
-                        Model.EstN10 = inputParams.N10;
-                        Model.EstN5 = inputParams.N5;
-                        Model.EstN1 = inputParams.N1;
-                        Model.TractId = inputParams.TractID;
-                        Model.NegBinomialExtensionFolder = inputParams.NegBinomialExtensionFolder;
-                        Model.Mark3ExtensionFolder = inputParams.Mark3ExtensionFolder;
-                        Model.CustomExtensionFolder = inputParams.CustomExtensionFolder;
-                        Model.EstimateRationale = inputParams.estRationaleTXT;
-                        Model.MARK3EstimateRationale = inputParams.mark3EstRationaleTXT;
-                        Model.CustomEstimateRationale = inputParams.customEstRationaleTXT;
-                    }
-
-                    string summary = Path.Combine(selectedProjectFolder, "summary.txt");
-                    string plot = Path.Combine(selectedProjectFolder, "plot.jpeg");
-                    string estRationale = Path.Combine(selectedProjectFolder, "EstRationale.txt");
-
-                    if (File.Exists(summary) && File.Exists(plot) && File.Exists(estRationale))
-                    {
-                        string depEst = Path.Combine(selectedProjectFolder, "nDepEst.csv");
-                        string depEstMiddle = Path.Combine(selectedProjectFolder, "nDepEstMiddle.csv");
-                        string depEstCustom = Path.Combine(selectedProjectFolder, "nDepEstCustom.csv");
-                        if (inputParams.method == "Negative" && File.Exists(depEst))
-                        {
-                            viewModelLocator.ReportingViewModel.IsUndiscDepDone = "Yes (NegativeBinomial)";
-                        }
-                        else if (inputParams.method == "Middle" && File.Exists(depEstMiddle))
-                        {
-                            viewModelLocator.ReportingViewModel.IsUndiscDepDone = "Yes (MARK3)";
-                        }
-                        else if (inputParams.method == "Custom" && File.Exists(depEstCustom))
-                        {
-                            viewModelLocator.ReportingViewModel.IsUndiscDepDone = "Yes (Custom)";
-                        }
-                        else
-                        {
-                            viewModelLocator.ReportingViewModel.IsUndiscDepDone = "No";
-                        }
-                        viewModelLocator.ReportingViewModel.SaveInputs();
-                    }
-                    else
-                    {
-                        viewModelLocator.ReportingViewModel.IsUndiscDepDone = "No";
-                    }
+                    dialogService.ShowNotification("SelectedResult folder cannot be selected. ", "Error");
+                    return;
                 }
-                catch (Exception ex)
+                if (!Directory.Exists(selectedProjectFolder))
                 {
-                    logger.Trace(ex, "Error in Model Selection:");
+                    Directory.CreateDirectory(selectedProjectFolder);
                 }
-                var metroWindow = (Application.Current.MainWindow as MetroWindow);
-                var dialog = metroWindow.GetCurrentDialogAsync<BaseMetroDialog>();
-                metroWindow.HideMetroDialogAsync(dialog.Result);
-                LoadResults();
+                DirectoryInfo di = new DirectoryInfo(selectedProjectFolder);
+                foreach (FileInfo file in di.GetFiles())
+                {
+                    file.Delete();
+                }
+                foreach (DirectoryInfo dir in di.GetDirectories())
+                {
+                    dir.Delete(true);
+                }
+                Result.PlotImage = null;
+                foreach (FileInfo file2 in modelDirInfo.GetFiles())
+                {
+                    var destPath = Path.Combine(selectedProjectFolder, file2.Name);
+                    var sourcePath = Path.Combine(modelDirPath, file2.Name);
+                    File.Copy(sourcePath, destPath, true);
+                }
+                UndiscoveredDepositsInputParams inputParams = new UndiscoveredDepositsInputParams();
+                string param_json = Path.Combine(selectedProjectFolder, "undiscovered_deposits_input_params.json");
+                if (File.Exists(param_json))
+                {
+                    inputParams.Load(param_json);
+                    Model.DepositsCsvString = inputParams.DepositsNegativeCSV;
+                    Model.CustomFunctionCsvString = inputParams.DepositsCustomCSV;
+                    Model.EstN90 = inputParams.N90;
+                    Model.EstN50 = inputParams.N50;
+                    Model.EstN10 = inputParams.N10;
+                    Model.EstN5 = inputParams.N5;
+                    Model.EstN1 = inputParams.N1;
+                    Model.SelectedTract = inputParams.TractID;
+                    Model.NegBinomialExtensionFolder = inputParams.NegBinomialExtensionFolder;
+                    Model.Mark3ExtensionFolder = inputParams.Mark3ExtensionFolder;
+                    Model.CustomExtensionFolder = inputParams.CustomExtensionFolder;
+                    Model.EstimateRationale = inputParams.EstRationaleTXT;
+                    Model.MARK3EstimateRationale = inputParams.Mark3EstRationaleTXT;
+                    Model.CustomEstimateRationale = inputParams.CustomEstRationaleTXT;
+                    File.Copy(param_json, Path.Combine(settingsService.RootPath, "UndiscDep", "undiscovered_deposits_input_params.json"), true);
+                }
+                if (Model.SelectedTract.StartsWith("AGG"))
+                {
+                    viewModelLocator.ReportingAssesmentViewModel.Model.SelectedTractCombination = Model.SelectedTract;
+                    viewModelLocator.ReportingAssesmentViewModel.CheckFiles();
+                    viewModelLocator.ReportingAssesmentViewModel.SaveInputs();
+                }
+                else
+                {
+                    viewModelLocator.ReportingViewModel.Model.SelectedTract = Model.SelectedTract;
+                    viewModelLocator.ReportingViewModel.CheckFiles();
+                    viewModelLocator.ReportingViewModel.SaveInputs();
+                }                                                
+                dialogService.ShowNotification("Undiscovered Deposits result selected successfully.", "Success");
+                viewModelLocator.SettingsViewModel.WriteLogText("Undiscovered Deposits result selected successfully.", "Success");
+            }
+            catch (Exception ex)
+            {
+                logger.Trace(ex, "Error in result selection");
+                dialogService.ShowNotification("Failed to select result.", "Error");
+                viewModelLocator.SettingsViewModel.WriteLogText("Failed to select result in Undiscovered Deposits tool.", "Error");
+            }
+            var metroWindow = (Application.Current.MainWindow as MetroWindow);
+            var dialog = metroWindow.GetCurrentDialogAsync<BaseMetroDialog>();
+            metroWindow.HideMetroDialogAsync(dialog.Result);
+            LoadResults();
+        }
+
+        /// <summary>
+        /// Get TractIDs.
+        /// </summary>
+        public void FindTractIDs() 
+        {
+            Model.TractIDNames = new ObservableCollection<string>();
+            string tractRootPath = Path.Combine(settingsService.RootPath, "TractDelineation", "Tracts");
+            if (Directory.Exists(tractRootPath))
+            {
+                DirectoryInfo di = new DirectoryInfo(tractRootPath);
+                foreach (DirectoryInfo dir in di.GetDirectories())
+                {
+                    Model.TractIDNames.Add(dir.Name);  // Get TractID by getting the name of the directory.
+                }
+            }
+            else
+            {
+                Directory.CreateDirectory(Path.Combine(settingsService.RootPath, "TractDelineation", "Tracts"));
             }
         }
 
@@ -469,49 +524,81 @@ namespace MapWizard.ViewModel
         }
 
         /// <summary>
-        /// Load results of the last run.
+        /// Open image file.
         /// </summary>
-        private void LoadResults()
+        private void OpenUndiscDepPlot()
         {
             try
             {
-                var projectFolder = Path.Combine(settingsService.RootPath, "UndiscDep", "SelectedResult");
-                var Summary = Path.Combine(projectFolder, "summary.txt");
-                var PlotImage = Path.Combine(projectFolder, "plot.jpeg");
-                var NDepositsPmf = Path.Combine(projectFolder, "oPmf.rds");
-                RunStatus = 1;  // Change status to error if any of the result files is not found.
-
-                if (File.Exists(Summary))
+                bool openFile = dialogService.MessageBoxDialog();
+                if (openFile == true)
                 {
-                    Result.Summary = File.ReadAllText(Summary);
-                }
-                else
-                {
-                    Result.Summary = null;
-                    RunStatus = 0;
-                }
-                if (File.Exists(PlotImage))
-                {
-                    Result.PlotImage = PlotImage;
-                    Result.PlotImageBitMap = BitmapFromUri(PlotImage);
-                }
-                else
-                {
-                    Result.PlotImage = null;
-                    Result.PlotImageBitMap = null;
-                    RunStatus = 0;
-                }
-                if (File.Exists(NDepositsPmf))
-                    Result.NDepositsPmf = NDepositsPmf;
-                else
-                {
-                    Result.NDepositsPmf = null;
-                    RunStatus = 0;
+                    if (File.Exists(Result.PlotImage))
+                    {
+                        Process.Start(Result.PlotImage);
+                    }
                 }
             }
             catch (Exception ex)
             {
-                logger.Error(ex + " Could not load results files");
+                logger.Error(ex, "Failed to open imagefile");
+                dialogService.ShowNotification("Failed to open imagefile.", "Error");
+            }
+        }
+
+        /// <summary>
+        /// Load results of the last run.
+        /// </summary>
+        private void LoadResults()
+        {
+            if (Model.SelectedTract != null)
+            {
+                try
+                {
+                    var projectFolder = Path.Combine(settingsService.RootPath, "UndiscDep", Model.SelectedTract, "SelectedResult");
+                    // Makes sure that the result have been selected even once.
+                    if (Directory.Exists(projectFolder))
+                    {
+                        var Summary = Path.Combine(projectFolder, "summary.txt");
+                        var PlotImage = Path.Combine(projectFolder, "plot.jpeg");
+                        var NDepositsPmf = Path.Combine(projectFolder, "oPmf.rds");
+                        Model.RunStatus = 1;  // Change status to error if any of the result files is not found.
+
+                        if (File.Exists(Summary))
+                        {
+                            Result.Summary = File.ReadAllText(Summary);
+                        }
+                        else
+                        {
+                            Result.Summary = null;
+                            Model.RunStatus = 0;
+                        }
+                        if (File.Exists(PlotImage))
+                        {
+                            Result.PlotImage = PlotImage;
+                            Result.PlotImageBitMap = BitmapFromUri(PlotImage);
+                        }
+                        else
+                        {
+                            Result.PlotImage = null;
+                            Result.PlotImageBitMap = null;
+                            Model.RunStatus = 0;
+                        }
+                        if (File.Exists(NDepositsPmf))
+                            Result.NDepositsPmf = NDepositsPmf;
+                        else
+                        {
+                            Result.NDepositsPmf = null;
+                            Model.RunStatus = 0;
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    logger.Error(ex + " Could not load results files");
+                    dialogService.ShowNotification("Failed to load Undiscovered Deposits tool's result files.", "Error");
+                    viewModelLocator.SettingsViewModel.WriteLogText("Failed to load Undiscovered Deposits tool's result files.", "Error");
+                }
             }
         }
 
@@ -527,10 +614,9 @@ namespace MapWizard.ViewModel
                 {
                     foreach (FileInfo file in model.GetFiles())
                     {
-
                         if (file.Name == "undiscovered_deposits_input_params.json")
                         {
-                            modelNames.Add(model.FullName);
+                            Model.ModelNames.Add(model.FullName);
                         }
                     }
                 }
@@ -539,7 +625,7 @@ namespace MapWizard.ViewModel
             {
                 if (file.Name == "undiscovered_deposits_input_params.json")
                 {
-                    modelNames.Add(projectFolderInfo.FullName);
+                    Model.ModelNames.Add(projectFolderInfo.FullName);
                 }
             }
         }
@@ -550,111 +636,7 @@ namespace MapWizard.ViewModel
         /// <returns>Boolean representing the state.</returns>
         private bool CanRunTool()
         {
-            return !IsBusy;
-        }
-
-        /// <summary>
-        /// Whether last run has been succesful, failed or the tool has not been run yet on this project.
-        /// </summary>
-        /// <returns>Integer representing the status.</returns>
-        public int RunStatus
-        {
-            get { return runStatus; }
-            set
-            {
-                if (value == runStatus) return;
-                runStatus = value;
-                RaisePropertyChanged("RunStatus");
-            }
-        }
-
-        /// <summary>
-        /// Date of last run.
-        /// </summary>
-        /// <returns>Date.</returns>
-        public string LastRunDate
-        {
-            get { return lastRunDate; }
-            set
-            {
-                if (value == lastRunDate) return;
-                lastRunDate = value;
-                RaisePropertyChanged("LastRunDate");
-            }
-        }
-
-        /// <summary>
-        /// Collection containing names of previously ran models for model selection.
-        /// </summary>
-        /// @return Collection of model names.
-        public ObservableCollection<string> ModelNames
-        {
-            get { return modelNames; }
-            set
-            {
-                if (value == modelNames) return;
-                modelNames = value;
-            }
-        }
-
-        /// <summary>
-        /// Public property for index of selected model, for View to bind to.
-        /// </summary>
-        /// @return Collection of model names.
-        public int SelectedModelIndex
-        {
-            get { return selectedModelIndex; }
-            set
-            {
-                if (value == selectedModelIndex) return;
-                selectedModelIndex = value;
-                RaisePropertyChanged("SelectedModelIndex");
-            }
-        }
-
-        /// <summary>
-        /// Whether to use a name for Neg. Binomial model.
-        /// </summary>
-        /// @return Boolean representing the choice.
-        public bool NegBinomialUseModelName
-        {
-            get { return negBinomialUseModelName; }
-            set
-            {
-                if (value == negBinomialUseModelName) return;
-                negBinomialUseModelName = value;
-                RaisePropertyChanged("NegBinomialUseModelName");
-            }
-        }
-
-        /// <summary>
-        ///  Whether to use a name for Mark3 model.
-        /// </summary>
-        /// @return Boolean representing the choice.
-        public bool Mark3UseModelName
-        {
-            get { return mark3UseModelName; }
-            set
-            {
-                if (value == mark3UseModelName) return;
-                mark3UseModelName = value;
-                RaisePropertyChanged("Mark3UseModelName");
-            }
-        }
-
-        /// <summary>
-        /// Whether to use a name for Custom model
-        /// </summary>
-        /// @return Boolean representing the choice.
-        public bool CustomUseModelName
-        {
-            get { return customUseModelName; }
-            set
-            {
-                if (value == customUseModelName) return;
-                customUseModelName = value;
-                RaisePropertyChanged("CustomUseModelName");
-            }
+            return !Model.IsBusy;
         }
 
         /// <summary>

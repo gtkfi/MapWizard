@@ -1,0 +1,26 @@
+Package: gWidgets
+Version: 0.0-54.1
+Title: gWidgets API for Building Toolkit-Independent, Interactive GUIs
+Author: John Verzani. Based on  the iwidgets code of Simon Urbanek and suggestions by Simon Urbanek, Philippe Grosjean and Michael Lawrence
+Maintainer: John Verzani <jverzani@gmail.com>
+Depends: methods, utils
+Suggests: gWidgetstcltk
+Description: Provides a toolkit-independent API for building interactive GUIs. At least one of the 'gWidgetsXXX packages', such as gWidgetstcltk, needs to be installed. Some icons are on loan from the scigraphica project <http://scigraphica.sourceforge.net>.
+License: GPL (>= 2)
+URL: https://r-forge.r-project.org/R/?group_id=761
+Collate: aaaGenerics.R common.R toolkitClasses.R guiWidget.R
+        guiContainer.R guiComponent.R guiComponentWithItems.R
+        handlers.R ggroup.R gframe.R gexpandgroup.R gspinbutton.R
+        gslider.R gsvg.R ggenericwidget.R gtable.R ggraphics.R gtext.R
+        dialogs.R gtoolbar.R gaction.R ghelp.R gtree.R gbutton.R
+        ghtml.R gcalendar.R gimage.R gcheckbox.R glabel.R
+        gcheckboxgroup.R glayout.R gcombobox.R gmenu.R gvarbrowser.R
+        gcommandline.R gnotebook.R gvariables.R gdf.R gpanedgroup.R
+        gwindow.R gdfnotebook.R gradio.R gedit.R gseparator.R icons.R
+        gfile.R gformlayout.R gstatusbar.R bbbGenericsANY.R zzz.R
+LazyLoad: yes
+Packaged: 2019-01-27 14:39:09 UTC; hornik
+NeedsCompilation: no
+Repository: CRAN
+Date/Publication: 2019-01-27 14:43:44 UTC
+Built: R 3.6.2; ; 2020-01-31 21:57:24 UTC; windows

@@ -1,0 +1,55 @@
+gWidgets-classes        Classes for gWidgets instances
+gWidgets-dialogs        Basic dialog constructors
+gWidgets-dnd            Functions to add drag and drop ability to
+                        widgets
+gWidgets-handlers       Methods to add event handlers to objects
+gWidgets-icons          Functions for adding icons
+gWidgets-methods        Methods for gWidgets instances
+gWidgets-package        gWidgets API for building toolkit-independent,
+                        interactive GUIs
+gbutton                 Button constructors
+gcheckbox               Constructor of widget to indicate whether a
+                        value is desired or not
+gcheckboxgroup          Widget to allow multiple selection from a
+                        vector of items
+gcombobox               Widgets to allow selection from a vector of
+                        items
+gcommandline            A command line interface
+gdf                     Constructor of widget to edit a data frame
+gedit                   Constructor for widget to handle single-line
+                        text input
+gfile                   Dialogs for file and date selection
+gformlayout             A constructor for laying out groups of widgets
+                        from a template defined by a list
+ggenericwidget          A constructor to create widgets for evaluating
+                        functions
+ggraphics               Constructor for a toolkit specific plot device
+                        and a notebook to wrap plots in
+ggroup                  Box containers for packing in subsequent
+                        widgets
+ghelp                   Widget to interface with help pages
+ghtml                   Constructors for widgets to handle text input
+gimage                  Constructor to show images
+glabel                  Constructors for label widget
+glayout                 A container for aligning widgets in a table
+gmenu                   Constructors to make menubars or toolbars
+gnotebook               constructor for notebook widget
+gpanedgroup             A paned group holds two child components with a
+                        handle, or sash, between them to adjust the
+                        amount of space allocated to each
+gradio                  Radio button group widget
+gseparator              Widget to draw separator line
+gslider                 Constructors for widgets to select a value from
+                        a sequence.
+gstatusbar              Constructor of status bar widget
+gsvg                    Constructor for widget to show SVG files
+gtable                  Constructor for widget to display tabular data
+gtext                   Constructor for widget for multi-line editable
+                        text input
+gtree                   Constructor for widget to display heirarchical
+                        dta
+guiToolkit              Function to select the GUI toolkit used by
+                        gWidgets
+guiWidget-class         Class "guiWidget" ~~~
+gvarbrowser             Widget for browsing environment
+gwindow                 Constructor for base container

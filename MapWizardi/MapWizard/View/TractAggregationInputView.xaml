@@ -3,12 +3,17 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
              xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
              xmlns:service="clr-namespace:MapWizard.Service"
+             x:Name="Root"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800">
+             d:DesignHeight="450" d:DesignWidth="800"
+             DataContext="{Binding TractAggregationViewModel, Source={StaticResource Locator}}">
     <UserControl.Resources>
         <service:FilePathToFileNameConverter x:Key="FilePathToFileNameConverter" />
+        <service:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
+        <service:BoolToCollapsedVisibilityConverter x:Key="BoolToCollapsedVisibilityConverter"/>
         <Style x:Key="WrapPanel" TargetType="WrapPanel">
             <Setter Property="HorizontalAlignment" Value="left" />
             <Setter Property="VerticalAlignment" Value="center"></Setter>
@@ -16,13 +21,55 @@
         <Style x:Key="ValueColumn" TargetType="WrapPanel">
             <Setter Property="Margin" Value="10,05,0,05"></Setter>
         </Style>
-        <service:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
+        <DataTemplate x:Key="MatrixIndex">
+            <WrapPanel Visibility="{Binding IsVisible, Converter={StaticResource BoolToVisibilityConverter}}" >
+                <Border x:Name="Border" BorderBrush="Black" BorderThickness="1" Margin="0,5,5,5">
+                    <Grid Margin="5" HorizontalAlignment="Left">
+                        <Grid.RowDefinitions>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition x:Name="Column" />
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Grid.Row="1" Text="{Binding TractName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Left"/>
+                        <TextBlock Grid.Row="2" Margin="0,6,16,6" Text="Tract Correlation:"/>
+                        <TextBox Grid.Row="3"
+                                Grid.Column="0"
+                                Margin="0,0,0,0"
+                                    Padding="0,0,0,0"
+                                Height="50"
+                                    Width="150"
+                                HorizontalAlignment="Left"
+                                HorizontalScrollBarVisibility="Auto"
+                                 IsEnabled="{Binding IsCorrelated, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                Text="{Binding TractText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                FontFamily="Calibri"
+                                FontSize="16"                                                     
+                                AcceptsReturn="True">
+                        </TextBox>
+                    </Grid>
+                </Border>
+            </WrapPanel>
+        </DataTemplate>
+        <DataTemplate x:Key="MatrixTitle">
+            <TextBlock Grid.Row="1"  Text="{Binding TractName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+        </DataTemplate>
     </UserControl.Resources>
-    <Grid>
-        <StackPanel HorizontalAlignment="Left">
+        <ScrollViewer Margin="0,0,10,0" VerticalScrollBarVisibility="Visible" HorizontalScrollBarVisibility="Auto"  HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+        <StackPanel >
+            <RadioButton Margin="20,30,5,5" Name="batchYesRadioButton" GroupName="runtype">Use preset parameters</RadioButton>
+            <RadioButton Margin="20,5,5,5" Name="batchNoRadioButton" GroupName="runtype" IsChecked="{Binding Model.UseInputParams, Mode=TwoWay}">Input parameters in GUI</RadioButton>
+            <WrapPanel Style="{StaticResource ValueColumn}">
+                <TextBlock>Name of the tract combination:</TextBlock>
+                <TextBox Text="{Binding Model.TractCombinationName}" DataContext="{Binding TractAggregationViewModel, Source={StaticResource Locator}}" Width="200"></TextBox>
+            </WrapPanel>
+            <StackPanel Visibility="{Binding ElementName=batchYesRadioButton,Path=IsChecked,Converter={StaticResource BoolToCollapsedVisibilityConverter}}">
             <UniformGrid Rows="1" Columns="2">
                 <WrapPanel Style="{StaticResource WrapPanel}">
-                    <TextBlock Text="Tract probability distribution file(s)"   Margin="10" HorizontalAlignment="left" VerticalAlignment="Center"/>
+                    <TextBlock Text="Tract probability distribution file(s)"  Margin="10" HorizontalAlignment="left" VerticalAlignment="Center"/>
                 </WrapPanel>
                 <WrapPanel Style="{StaticResource ValueColumn}">
                     <StackPanel>
@@ -65,6 +112,8 @@
                     <TextBlock Text="Tract correlation matrix"   Margin="10" HorizontalAlignment="left" VerticalAlignment="Center"/>
                 </WrapPanel>
                 <WrapPanel Style="{StaticResource ValueColumn}">
+                    <!--<RadioButton>Load from csv</RadioButton>-->
+                    <!--<RadioButton>Create Matrix</RadioButton>-->
                     <Button  FontSize="18" Content="{Binding Model.CorrelationMatrix, Converter={StaticResource FilePathToFileNameConverter}}" Width="200" FontWeight="Normal" mah:ButtonHelper.PreserveTextCase="True" Background="LightGray" BorderBrush="Black"
                              Margin="0" HorizontalAlignment="Left" VerticalAlignment="Center"  DataContext="{Binding TractAggregationViewModel, Source={StaticResource Locator}}" Command="{Binding SelectCorrelationMatrixCommand}" IsDefault="True">
                         <Button.ToolTip>
@@ -73,21 +122,100 @@
                     </Button>
                 </WrapPanel>
             </UniformGrid>
-            <UniformGrid Rows="1" Columns="2">
+            <UniformGrid HorizontalAlignment="Left" Width="600" Rows="1" Columns="2">
                 <WrapPanel></WrapPanel>
                 <WrapPanel>
-                    <ListBox IsEnabled="{Binding ElementName=MultipleFilesRadioButton, Path=IsChecked}" Visibility="{Binding ElementName=MultipleFilesRadioButton, Path=IsChecked, Converter={StaticResource BoolToVisibilityConverter}}" DataContext="{Binding TractAggregationViewModel, Source={StaticResource Locator}}" ItemsSource="{Binding CombineFilesList}">
+                    <ListBox IsEnabled="{Binding ElementName=MultipleFilesRadioButton, Path=IsChecked}" Visibility="{Binding ElementName=MultipleFilesRadioButton, Path=IsChecked, Converter={StaticResource BoolToVisibilityConverter}}" DataContext="{Binding TractAggregationViewModel, Source={StaticResource Locator}}" ItemsSource="{Binding Model.CombineFilesList}">
                     </ListBox>
                 </WrapPanel>
             </UniformGrid>
-            <UniformGrid>
+                <UniformGrid HorizontalAlignment="Left" Width="600" Rows="1" Columns="2">
                 <WrapPanel></WrapPanel>
                 <WrapPanel Style="{StaticResource ValueColumn}">
                     <Button Content="Run Tool   " FontSize="18" DataContext="{Binding TractAggregationViewModel, Source={StaticResource Locator}}" Command="{Binding RunToolCommand}" 
                             FontWeight="Normal" mah:ButtonHelper.PreserveTextCase="True" Background="{DynamicResource AccentColorBrush}"  Foreground="White"
-                            BorderThickness="0"  Margin="0" HorizontalAlignment="Left" VerticalAlignment="Center"></Button>
+                            BorderThickness="0"  Margin="0" HorizontalAlignment="Left" VerticalAlignment="Center" Padding="-10,0,0,0" Width="120" Height="50"></Button>
                 </WrapPanel>
             </UniformGrid>
         </StackPanel>
-    </Grid>
+            <StackPanel Visibility="{Binding ElementName=batchNoRadioButton,Path=IsChecked,Converter={StaticResource BoolToCollapsedVisibilityConverter}}">
+                <WrapPanel Margin="10,20,20,20">
+                    <TextBlock MinWidth="250" FontSize="18" Text="Tract id:" Margin="0,0,0,5" VerticalAlignment="Center" HorizontalAlignment="Left"></TextBlock>
+                    <ComboBox Name="cmbx"                 
+                              ItemsSource="{Binding Model.TractIDCollection, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"  
+                              Margin="50,0,0,0"
+                              HorizontalAlignment="left"  VerticalAlignment="Center" FontSize="18" Width="150"
+                              ToolTip="Only the tracts that have the result selected in the Undiscovered Deposits tool are selectable."
+                              ScrollViewer.VerticalScrollBarVisibility="Auto"
+                              MaxDropDownHeight="180">
+                        <i:Interaction.Triggers>
+                            <i:EventTrigger EventName="DropDownOpened">
+                                <i:InvokeCommandAction Command="{Binding FindTractsCommand}" />
+                            </i:EventTrigger>
+                            </i:Interaction.Triggers>
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate>
+                                <CheckBox 
+                Content="{Binding TractName}"
+                IsChecked="{Binding ChooseTract}" />
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
+                    </ComboBox>
+                </WrapPanel>
+                <UniformGrid HorizontalAlignment="Left" Width="600" Rows="1" Columns="2">
+                    <WrapPanel></WrapPanel>
+                    <WrapPanel Margin="10,0,0,0" Style="{StaticResource ValueColumn}">
+                        <Button Content="Get Tracts" FontSize="18" DataContext="{Binding TractAggregationViewModel, Source={StaticResource Locator}}" Command="{Binding CombineTractsCommand}" 
+                            FontWeight="Normal" mah:ButtonHelper.PreserveTextCase="True" Background="{DynamicResource AccentColorBrush}"  Foreground="White"
+                            BorderThickness="0"  Margin="0" HorizontalAlignment="Left" VerticalAlignment="Center" Padding="-10,0,0,0" Width="120" Height="50" ></Button>
+                    </WrapPanel>
+                </UniformGrid>
+                <UniformGrid HorizontalAlignment="Left" Width="600" Rows="1" Columns="2">
+                    <WrapPanel></WrapPanel>
+                    <WrapPanel Margin="10,20,0,20" Style="{StaticResource ValueColumn}">
+                        <Button Content="Run Tool   " FontSize="18" DataContext="{Binding TractAggregationViewModel, Source={StaticResource Locator}}" Command="{Binding RunToolCommand}" 
+                            FontWeight="Normal" mah:ButtonHelper.PreserveTextCase="True" Background="{DynamicResource AccentColorBrush}"  Foreground="White"
+                            BorderThickness="0"  Margin="0" HorizontalAlignment="Left" VerticalAlignment="Center" Padding="-10,0,0,0" Width="120" Height="50"></Button>
+                    </WrapPanel>
+                </UniformGrid>
+                <ItemsControl x:Name="Items" ItemsSource="{Binding Path=Model.TractPairRow, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <StackPanel Margin="0 0 0 0" HorizontalAlignment="Left" CanVerticallyScroll="True" />
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <!-- Another ItemControl inside the another. -->
+                            <ItemsControl x:Name="Items" HorizontalAlignment="Left" ItemsSource="{Binding Path=TractPairColumn, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                                <ItemsControl.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <UniformGrid Rows="1"/>
+                                    </ItemsPanelTemplate>
+                                </ItemsControl.ItemsPanel>
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <ContentControl Content="{Binding}">
+                                            <ContentControl.Style>
+                                                <Style TargetType="ContentControl">
+                                                    <Style.Triggers>
+                                                        <DataTrigger Binding="{Binding IsTitle}" Value="False">
+                                                            <Setter Property="ContentTemplate" Value="{StaticResource MatrixIndex}" />
+                                                        </DataTrigger>
+                                                        <DataTrigger Binding="{Binding IsTitle}" Value="True">
+                                                            <Setter Property="ContentTemplate" Value="{StaticResource MatrixTitle}" />
+                                                        </DataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </ContentControl.Style>
+                                        </ContentControl>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </StackPanel>
+        </StackPanel>
+            </ScrollViewer>
 </UserControl>

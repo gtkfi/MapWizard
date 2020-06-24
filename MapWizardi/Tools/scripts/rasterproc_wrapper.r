@@ -41,16 +41,16 @@ bgEvid<-args[6]
 # outPolyF = output shape file name base (without .shp suffix)
 # bgEvid = background evidence raster on which to plot the tract boundaries
 # outPolyMap = permissive tract drawn on a selected evidence map
-mask_ras<-raster_mask(inras,breakval,outMaskedPdf,outMaskedImg,outPolyP,outPolyF,bgEvid,outPolyMap)
+mask_ras<-raster_mask(inras,breakval,outMaskedPdf,outMaskedImg,bgEvid,outPolyMap)
 
 # Compute statistics for a given polygon shape file
-outStatTxt=paste(outPolyP,"_stats.txt",sep="")
-outDistPdf=paste(outPolyP,"_dist.pdf",sep="")
+#outStatTxt=paste(outPolyP,"_stats.txt",sep="")
+#outDistPdf=paste(outPolyP,"_dist.pdf",sep="")
 # Input:
 # outPolyP = the input polygon shape file
 # outStatTxt = output textfile for polygon area statistics
 # outDistPfd = output distributions (histogram and culumative)
-pgon_stats<-poly_stat(outPolyP,outStatTxt,outDistPdf)
+#pgon_stats<-poly_stat(outPolyP,outStatTxt,outDistPdf)
 
 # Clean up, dissolve and delete small polygons from a given set of polygons
 ##minarea=100000

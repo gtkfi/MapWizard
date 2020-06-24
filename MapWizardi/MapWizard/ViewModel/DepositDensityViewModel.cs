@@ -10,6 +10,10 @@ using MapWizard.Tools.Settings;
 using MapWizard.Service;
 using System.IO;
 using System.ComponentModel;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
+using System.Diagnostics;
+using System.Windows;
 
 namespace MapWizard.ViewModel
 {
@@ -33,9 +37,7 @@ namespace MapWizard.ViewModel
         private readonly ISettingsService settingsService;
         private DepositDensityModel model;
         private DepositDensityResultModel result;
-        private bool isBusy;
-        private string lastRunDate;
-        private int runStatus;
+        private ViewModelLocator viewModelLocator;
 
         /// <summary>
         /// Initialize new instance of DepositDensityViewModel class.
@@ -48,13 +50,13 @@ namespace MapWizard.ViewModel
             this.logger = logger;
             this.dialogService = dialogService;
             this.settingsService = settingsService;
-            lastRunDate = "Last Run: Never";
-            runStatus = 2;
             result = new DepositDensityResultModel();
+            viewModelLocator = new ViewModelLocator();
             RunToolCommand = new RelayCommand(RunTool, CanRunTool);
-            SelectFileCommand = new RelayCommand(SelectFile, CanRunTool);
+            OpenDepositDenPlotCommand = new RelayCommand(OpenDepositDenPlotFile, CanRunTool);
+            TractChangedDeposit = new RelayCommand(TractChanged, CanRunTool);
             DepositDensityInputParams inputParams = new DepositDensityInputParams();
-            string outputFolder = Path.Combine(settingsService.RootPath, "DensModel");
+            string outputFolder = Path.Combine(settingsService.RootPath, "UndiscDep");
             if (!Directory.Exists(outputFolder))
             {
                 Directory.CreateDirectory(outputFolder);
@@ -65,37 +67,37 @@ namespace MapWizard.ViewModel
                 try
                 {
                     inputParams.Load(param_json);
-                    model = new DepositDensityModel
+                    Model = new DepositDensityModel
                     {
+                        N10 = inputParams.N10,
+                        N50 = inputParams.N50,
+                        N90 = inputParams.N90,
+                        Note = inputParams.Note,
                         CSVPath = inputParams.CSVPath,
                         MedianTonnage = Convert.ToDouble(inputParams.MedianTonnage),
                         AreaOfPermissiveTract = Convert.ToDouble(inputParams.AreaOfTrack),
                         NumbOfKnownDeposits = Convert.ToInt32(inputParams.NumbOfKnownDeposits),
-                        ExistingDepositDensityModelID = inputParams.ExistingDepositDensityModelID
+                        ExistingDepositDensityModelID = inputParams.ExistingDepositDensityModelID,
+                        SelectedTract = inputParams.TractId
                     };
+                    FindTractIDs();
+                    if (Directory.GetFiles(outputFolder).Length != 0)
+                    {
+                        LoadResults();
+                    }
                 }
                 catch (Exception ex)
-                {                    
-                    model = new DepositDensityModel
-                    {
-                        CSVPath = "Choose *.csv file",
-                        MedianTonnage = 0,
-                        AreaOfPermissiveTract = 0,
-                        NumbOfKnownDeposits = 0
-                    };
+                {
+                    Model = new DepositDensityModel();
                     logger.Error(ex, "Failed to read json file");
-                    dialogService.ShowNotification("Couldn't load Deposit Density tool's inputs correctly.", "Error");
+                    dialogService.ShowNotification("Couldn't load Deposit Density tool's inputs correctly. Inputs were initialized to default values.", "Error");
+                    viewModelLocator.SettingsViewModel.WriteLogText("Couldn't load Deposit Density tool's inputs correctly. Inputs were initialized to default values.", "Error");
                 }
             }
             else
             {
-                model = new DepositDensityModel
-                {
-                    CSVPath = "Choose *.csv file",
-                    MedianTonnage = 0,
-                    AreaOfPermissiveTract = 0,
-                    NumbOfKnownDeposits = 0
-                };
+                Model = new DepositDensityModel();
+                FindTractIDs();
             }
         }
 
@@ -112,10 +114,16 @@ namespace MapWizard.ViewModel
         public RelayCommand RunToolCommand { get; }
 
         /// <summary>
-        /// Select file command.
-        /// @return Command.
+        /// Open Deposit Density plot command.
         /// </summary>
-        public RelayCommand SelectFileCommand { get; }
+        /// @return Command.
+        public RelayCommand OpenDepositDenPlotCommand { get; }
+
+        /// <summary>
+        /// Tract changed.
+        /// </summary>
+        /// @return Command.
+        public RelayCommand TractChangedDeposit { get; }
 
         /// <summary>
         /// Deposit Density model.
@@ -151,6 +159,32 @@ namespace MapWizard.ViewModel
             }
         }
 
+        private void TractChanged()
+        {
+            viewModelLocator.UndiscoveredDepositsViewModel.Model.SelectedTract = Model.SelectedTract;
+        }
+
+        /// <summary>
+        /// Get TractIDs.
+        /// </summary>
+        public void FindTractIDs()
+        {
+            Model.TractIDNames = new ObservableCollection<string>();
+            string tractRootPath = Path.Combine(settingsService.RootPath, "TractDelineation", "Tracts");
+            if (Directory.Exists(tractRootPath))
+            {
+                DirectoryInfo di = new DirectoryInfo(tractRootPath);
+                foreach (DirectoryInfo dir in di.GetDirectories())
+                {
+                    Model.TractIDNames.Add(dir.Name);  // Get TractID by getting the name of the directory.
+                }
+            }
+            else
+            {
+                Directory.CreateDirectory(Path.Combine(settingsService.RootPath, "TractDelineation", "Tracts"));
+            }
+        }
+
         /// <summary>
         /// Run tool with user input.
         /// </summary>
@@ -165,14 +199,16 @@ namespace MapWizard.ViewModel
                 AreaOfTrack = Model.AreaOfPermissiveTract.ToString(),
                 NumbOfKnownDeposits = Model.NumbOfKnownDeposits.ToString(),
                 ExistingDepositDensityModelID = Model.ExistingDepositDensityModelID,
-                CSVPath = Model.CSVPath
+                CSVPath = Model.CSVPath,
+                TractId = Model.SelectedTract
             };
             // 2. Execute tool.
             DepositDensityResult ddResult = default(DepositDensityResult);
-            IsBusy = true;
+            Model.IsBusy = true;
 
             try
             {
+
                 await Task.Run(() =>
                 {
                     DepositDensityTool tool = new DepositDensityTool();
@@ -181,6 +217,7 @@ namespace MapWizard.ViewModel
                     Result.N50 = ddResult.N50;
                     Result.N90 = ddResult.N90;
                     Result.PlotImagePath = ddResult.PlotImagePath;
+                    Result.PlotImageBitMap = BitmapFromUri(ddResult.PlotImagePath);
                     Result.Model = Model.ExistingDepositDensityModelID;
                     if (Model.ExistingDepositDensityModelID == "General")
                     {
@@ -194,57 +231,127 @@ namespace MapWizard.ViewModel
                     Result.NKnown = Model.NumbOfKnownDeposits.ToString();
                     Result.Note = ddResult.Note;
                 });
-                dialogService.ShowNotification("DepositDensityTool completed successfully", "Success");
-                LastRunDate = "Last Run: " + DateTime.Now.ToString("g");
-                RunStatus = 1;
+                input.N10 = Result.N10;
+                input.N50 = Result.N50;
+                input.N90 = Result.N90;
+                input.Note = Result.Note;
+                string outputFolder = Path.Combine(settingsService.RootPath, "UndiscDep");
+                input.Save(Path.Combine(outputFolder, "deposit_density_input_params.json"));
+                dialogService.ShowNotification("DepositDensityTool completed successfully.", "Success");
+                viewModelLocator.SettingsViewModel.WriteLogText("DepositDensityTool completed successfully.", "Success");
+                Model.LastRunDate = "Last Run: " + DateTime.Now.ToString("g");
+                Model.RunStatus = 1;
             }
             catch (Exception ex)
             {
                 logger.Error(ex, "Failed to execute REngine() script");
-                dialogService.ShowNotification("Run failed. Check output for details", "Error");
-                RunStatus = 0;
+                dialogService.ShowNotification("Run failed. Check output for details.\r\n- Are all input parameters correct?\r\n- Are all input files valid? \r\n- Are all input and output files closed?", "Error");
+                viewModelLocator.SettingsViewModel.WriteLogText("Run failed in Deposit Density Tool. Check output for details.\r\n- Are all input parameters correct?\r\n- Are all input files valid? \r\n- Are all input and output files closed?", "Error");
+                Model.RunStatus = 0;
             }
             finally
             {
-                IsBusy = false;
+                Model.IsBusy = false;
             }
             logger.Info("<--{0} completed", this.GetType().Name);
         }
 
         /// <summary>
-        /// Select file from filesystem.
+        /// Load results of the last run.
         /// </summary>
-        private void SelectFile()
+        private void LoadResults()
         {
             try
             {
-                string csvFile = dialogService.OpenFileDialog("", "CSV files|*.csv;", true, true);
-                if (!string.IsNullOrEmpty(csvFile))
+                Result.N10 = Model.N10;
+                Result.N50 = Model.N50;
+                Result.N90 = Model.N90;
+                Result.MTonnage = Model.MedianTonnage.ToString();
+                Result.Model = Model.ExistingDepositDensityModelID;
+                Result.TArea = Model.AreaOfPermissiveTract.ToString();
+                Result.NKnown = Model.NumbOfKnownDeposits.ToString();
+                Result.Note = Model.Note;
+
+                string plotDirectory = Path.Combine(System.AppDomain.CurrentDomain.BaseDirectory, "scripts", "DepositDensity");
+                if (Model.ExistingDepositDensityModelID == "General")
                 {
-                    model.CSVPath = csvFile;
-                    model.CSVPath = csvFile.Replace("\\", "/");
+                    Result.PlotImagePath = Path.Combine(plotDirectory, "GeneralPlot.jpeg");
+                    Result.PlotImageBitMap = BitmapFromUri(Path.Combine(plotDirectory, "GeneralPlot.jpeg"));
+                }
+                else if (Model.ExistingDepositDensityModelID == "PorCu")
+                {
+                    Result.PlotImagePath = Path.Combine(plotDirectory, "porphyryPlot.jpeg");
+                    Result.PlotImageBitMap = BitmapFromUri(Path.Combine(plotDirectory, "porphyryPlot.jpeg"));
+                }
+                else if (Model.ExistingDepositDensityModelID == "VMS")
+                {
+                    Result.PlotImagePath = Path.Combine(plotDirectory, "VMSplot.jpeg");
+                    Result.PlotImageBitMap = BitmapFromUri(Path.Combine(plotDirectory, "VMSplot.jpeg"));
+                }
+                else if (Model.ExistingDepositDensityModelID == "PodiformCr")
+                {
+                    Result.PlotImagePath = Path.Combine(plotDirectory, "Podiformplot.jpeg");
+                    Result.PlotImageBitMap = BitmapFromUri(Path.Combine(plotDirectory, "Podiformplot.jpeg"));
                 }
             }
             catch (Exception ex)
             {
-                logger.Error(ex, "Failed to show OpenFileDialog");
+                logger.Error(ex, "Failed to execute REngine() script");
+                dialogService.ShowNotification("Error when loading Deposit Density results.", "Error");
+                viewModelLocator.SettingsViewModel.WriteLogText("Error when loading Deposit Density results.", "Error");
             }
         }
 
         /// <summary>
-        /// Is busy?
+        /// Method to create bitmap from image. Prevents file locks from binding in XAML.
         /// </summary>
-        /// @return Boolean representing the state.
-        public bool IsBusy
+        /// <param name="source">Path for bitmap.</param>
+        /// <returns>Bitmap.</returns>
+        private ImageSource BitmapFromUri(string source)
         {
-            get { return isBusy; }
-            set
+            if (source == null)
             {
-                if (isBusy == value) return;
-                isBusy = value;
-                RaisePropertyChanged(() => IsBusy);
-                RunToolCommand.RaiseCanExecuteChanged();
-                SelectFileCommand.RaiseCanExecuteChanged();
+                return null;  // No picture for either grade or tonnage so no error.
+            }
+            try
+            {
+                Uri sourceUri = new Uri(source);
+                var bitmap = new BitmapImage();
+                bitmap.BeginInit();
+                bitmap.UriSource = sourceUri;
+                bitmap.CreateOptions = BitmapCreateOptions.IgnoreImageCache; //Image cache must be ignored, to be able to update the images.
+                bitmap.CacheOption = BitmapCacheOption.OnLoad;
+                bitmap.EndInit();
+                bitmap.Freeze(); //Bitmap must be freezable, so it can be accessed from other threads.
+                return bitmap;
+            }
+            catch (Exception ex)
+            {
+                logger.Error(ex, "Failed to create BitMap from imagefile.");
+                throw;
+            }
+        }
+
+        /// <summary>
+        /// Open plot image.
+        /// </summary>
+        public void OpenDepositDenPlotFile()
+        {
+            try
+            {
+                bool openFile = dialogService.MessageBoxDialog();
+                if (openFile == true)
+                {
+                    if (File.Exists(Result.PlotImagePath))
+                    {
+                        Process.Start(Result.PlotImagePath);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                logger.Error(ex, "Failed to open imagefile");
+                dialogService.ShowNotification("Failed to open imagefile.", "Error");
             }
         }
 
@@ -254,35 +361,7 @@ namespace MapWizard.ViewModel
         /// @return Boolean representing the state.
         private bool CanRunTool()
         {
-            return !IsBusy;
-        }
-
-        /// <summary>
-        /// Whether last run has been succesful, failed or the tool has not been run yet on this project.
-        /// </summary>
-        /// @return Integer representing the status.
-        public int RunStatus
-        {
-            get { return runStatus; }
-            set
-            {
-                if (value == runStatus) return;
-                runStatus = value;
-            }
-        }
-
-        /// <summary>
-        /// Date of last run.
-        /// </summary>
-        /// @return Date.
-        public string LastRunDate
-        {
-            get { return lastRunDate; }
-            set
-            {
-                if (value == lastRunDate) return;
-                lastRunDate = value;
-            }
+            return !Model.IsBusy;
         }
     }
 }

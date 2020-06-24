@@ -1,0 +1,48 @@
+GCD                     GCD and LCM Integer Functions
+Primes                  Prime Numbers
+Sigma                   Divisor Functions
+agm                     Arithmetic-geometric Mean
+bell                    Bell Numbers
+catalan                 Catalan Numbers
+cf2num                  Generalized Continous Fractions
+chinese                 Chinese Remainder Theorem
+collatz                 Collatz Sequences
+contFrac                Continous Fractions
+coprime                 Coprimality
+div                     Integer Division
+divisors                List of Divisors
+dropletPi               Droplet Algorithm for pi and e
+egyptian_complete       Egyptian Fractions - Complete Search
+egyptian_methods        Egyptian Fractions - Specialized Methods
+eulersPhi               Eulers's Phi Function
+extGCD                  Extended Euclidean Algorithm
+fibonacci               Fibonacci and Lucas Series
+hermiteNF               Hermite Normal Form
+iNthroot                Integer N-th Root
+isIntpower              Powers of Integers
+isNatural               Natural Number
+isPrime                 isPrime Property
+isPrimroot              Primitive Root Test
+legendre_sym            Legendre and Jacobi Symbol
+mersenne                Mersenne Numbers
+miller_rabin            Miller-Rabin Test
+mod                     Modulo Operator
+modinv                  Modular Inverse and Square Root
+modlin                  Modular Linear Equation Solver
+modlog                  Modular (or: Discrete) Logarithm
+modpower                Power Function modulo m
+moebius                 Moebius Function
+necklace                Necklace and Bracelet Functions
+nextPrime               Next Prime
+numbers-package         Number-Theoretic Functions
+omega                   Number of Prime Factors
+ordpn                   Order in Faculty
+previousPrime           Previous Prime
+primeFactors            Prime Factors
+primroot                Primitive Root
+pythagorean_triples     Pythagorean Triples
+quadratic_residues      Quadratic Residues
+ratFarey                Farey Approximation
+rem                     Integer Remainder
+twinPrimes              Twin Primes
+zeck                    Zeckendorf Representation

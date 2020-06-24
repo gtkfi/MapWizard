@@ -5,6 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"              
              xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
              xmlns:service="clr-namespace:MapWizard.Service"
+             xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800"
              DataContext="{Binding Source={StaticResource Locator}, Path=ReportingViewModel}">
@@ -24,8 +25,8 @@
             <TextBlock Text="Not done"/>
         </DataTemplate>
     </UserControl.Resources>
-    <ScrollViewer Margin="0,0,10,0" VerticalScrollBarVisibility="Visible" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
-        <StackPanel Margin="0,20,0,0" HorizontalAlignment="Left" Grid.ColumnSpan="3">
+    <ScrollViewer Margin="0,0,10,0" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Visible" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+        <StackPanel Margin="0,20,0,200" HorizontalAlignment="Left" Grid.ColumnSpan="3">
             <UniformGrid Rows="1" Columns="2">
                 <WrapPanel Style="{StaticResource WrapPanel}">
                     <Button Padding="-10,0,0,0"
@@ -49,9 +50,18 @@
                     <ComboBox Name="cmbx"                 
                               ItemsSource="{Binding Model.TractIDNames, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"  
                               Margin="0,20,0,0"
-                              SelectedIndex="{Binding Model.SelectedTractIndex, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                              SelectedValue="{Binding Model.SelectedTract, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                               Width="160"
-                              ToolTip="Select tracts to include in the report."/>
+                              ToolTip="Select tracts to include in the report.">
+                        <i:Interaction.Triggers>
+                            <i:EventTrigger EventName="DropDownOpened">
+                                <i:InvokeCommandAction Command="{Binding FindTractsCommand}" />
+                            </i:EventTrigger>
+                            <i:EventTrigger EventName="SelectionChanged">
+                                <i:InvokeCommandAction Command="{Binding CheckTractFilesCommand}" />
+                            </i:EventTrigger>
+                        </i:Interaction.Triggers>
+                    </ComboBox>
                 </WrapPanel>
             </UniformGrid>
             <UniformGrid Rows="1" Columns="2">
@@ -72,7 +82,7 @@
             </UniformGrid>
             <UniformGrid Rows="1" Columns="2">
                 <WrapPanel Style="{StaticResource WrapPanel}">
-                    <TextBlock Text="Assesment Date:" Margin="30,10,10,10" TextWrapping="Wrap" HorizontalAlignment="left" VerticalAlignment="Center"/>
+                    <TextBlock Text="Assesment Date:" Margin="10" TextWrapping="Wrap" HorizontalAlignment="left" VerticalAlignment="Center"/>
                 </WrapPanel>
                 <WrapPanel Style="{StaticResource ValueColumn}">
                     <TextBox Text="{Binding Model.AsDate}"  Width="250" HorizontalAlignment="left" VerticalAlignment="Center" HorizontalScrollBarVisibility="Auto" ToolTip="Date of assessment report."/>
@@ -80,7 +90,7 @@
             </UniformGrid>
             <UniformGrid Rows="1" Columns="2">
                 <WrapPanel Style="{StaticResource WrapPanel}">
-                    <TextBlock Text="Assesment Depth:" Margin="30,10,10,10" TextWrapping="Wrap" HorizontalAlignment="left" VerticalAlignment="Center"/>
+                    <TextBlock Text="Assesment Depth:" Margin="10" TextWrapping="Wrap" HorizontalAlignment="left" VerticalAlignment="Center"/>
                 </WrapPanel>
                 <WrapPanel Style="{StaticResource ValueColumn}">
                     <TextBox Text="{Binding Model.AsDepth}"  Width="250" HorizontalAlignment="left" VerticalAlignment="Center" HorizontalScrollBarVisibility="Auto" ToolTip="Depth of assessment."/>
@@ -88,7 +98,7 @@
             </UniformGrid>
             <UniformGrid Rows="1" Columns="2">
                 <WrapPanel Style="{StaticResource WrapPanel}">
-                    <TextBlock Text="Assesment Team Leader:" Margin="30,10,10,10" TextWrapping="Wrap" HorizontalAlignment="left" VerticalAlignment="Center"/>
+                    <TextBlock Text="Assesment Team Leader:" Margin="10" TextWrapping="Wrap" HorizontalAlignment="left" VerticalAlignment="Center"/>
                 </WrapPanel>
                 <WrapPanel Style="{StaticResource ValueColumn}">
                     <TextBox Text="{Binding Model.AsLeader}"  Width="250" HorizontalAlignment="left" VerticalAlignment="Center" HorizontalScrollBarVisibility="Auto" ToolTip="Leader of the assessment team responsible for the report"/>
@@ -96,7 +106,7 @@
             </UniformGrid>
             <UniformGrid Rows="1" Columns="2">
                 <WrapPanel Style="{StaticResource WrapPanel}">
-                    <TextBlock Text="Assesment Team Member List:" Margin="30,10,10,10" TextWrapping="Wrap" HorizontalAlignment="left" VerticalAlignment="Center"/>
+                    <TextBlock Text="Assesment Team Member List:" Margin="10" TextWrapping="Wrap" HorizontalAlignment="left" VerticalAlignment="Center"/>
                 </WrapPanel>
                 <WrapPanel Style="{StaticResource ValueColumn}">
                     <TextBox Text="{Binding Model.AsTeamMembers}" Height="57" Width="250" Margin="0,10,10,10" AcceptsReturn="True" TextWrapping="Wrap" HorizontalAlignment="left" VerticalAlignment="Center"  VerticalScrollBarVisibility="Auto" ToolTip="List of other assessment team members."/>
@@ -107,15 +117,15 @@
                     <TextBlock Text="Deposit type:"   Margin="10" HorizontalAlignment="left" VerticalAlignment="Center"/>
                 </WrapPanel>
                 <WrapPanel Style="{StaticResource ValueColumn}">
-                    <TextBlock Text="{Binding DepositType, UpdateSourceTrigger=PropertyChanged}" Margin="75,10,0,10" HorizontalAlignment="left" VerticalAlignment="Center"/>
+                    <TextBlock Text="{Binding Model.DepositType, UpdateSourceTrigger=PropertyChanged}" Margin="75,10,0,10" HorizontalAlignment="left" VerticalAlignment="Center"/>
                 </WrapPanel>
             </UniformGrid>
             <UniformGrid Rows="1" Columns="2">
                 <WrapPanel Style="{StaticResource WrapPanel}">
-                    <TextBlock Text="Selected Descriptive model (not mandatory):" TextWrapping="Wrap"  Margin="10,10,-75,10" HorizontalAlignment="left" VerticalAlignment="Center"/>
+                    <TextBlock Text="Descriptive model:" TextWrapping="Wrap"  Margin="10,10,-75,10" HorizontalAlignment="left" VerticalAlignment="Center"/>
                 </WrapPanel>
                 <WrapPanel Style="{StaticResource ValueColumn}" >
-                    <TextBlock Text="{Binding DescModelName, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" Margin="75,10,0,10" HorizontalAlignment="left" VerticalAlignment="Center"/>
+                    <TextBlock Text="{Binding Model.DescModelName, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" Margin="75,10,0,10" HorizontalAlignment="left" VerticalAlignment="Center"/>
                 </WrapPanel>
             </UniformGrid>
             <UniformGrid Rows="1" Columns="2">
@@ -127,10 +137,10 @@
             </UniformGrid>
             <UniformGrid Rows="1" Columns="2">
                 <WrapPanel Style="{StaticResource WrapPanel}">
-                    <TextBlock Text="Selected Grade-Tonnage model (not mandatory):" TextWrapping="Wrap"  Margin="10,10,-75,10" HorizontalAlignment="left" VerticalAlignment="Center"/>
+                    <TextBlock Text="Grade-Tonnage model:" TextWrapping="Wrap"  Margin="10,10,-75,10" HorizontalAlignment="left" VerticalAlignment="Center"/>
                 </WrapPanel>
                 <WrapPanel Style="{StaticResource ValueColumn}">
-                    <TextBlock Text="{Binding GTModelName, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" Margin="75,10,0,10" HorizontalAlignment="left" VerticalAlignment="Center"/>
+                    <TextBlock Text="{Binding Model.GTModelName, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" Margin="75,10,0,10" HorizontalAlignment="left" VerticalAlignment="Center"/>
                 </WrapPanel>
             </UniformGrid>
             <UniformGrid Rows="1" Columns="2">
@@ -142,25 +152,25 @@
             </UniformGrid>
             <UniformGrid Margin="0,15,0,0" Rows="1" Columns="2">
                 <WrapPanel Style="{StaticResource WrapPanel}">
-                    <TextBlock Text="Selected Undiscovered deposits result:" TextWrapping="Wrap" Margin="10" HorizontalAlignment="left" VerticalAlignment="Center"/>
+                    <TextBlock Text="Undiscovered deposits pmf:" TextWrapping="Wrap" Margin="10" HorizontalAlignment="left" VerticalAlignment="Center"/>
                 </WrapPanel>
                 <WrapPanel Style="{StaticResource ValueColumn}">
-                    <TextBlock Text="{Binding IsUndiscDepDone}" Margin="75,10,0,10" TextWrapping="Wrap" HorizontalAlignment="left" VerticalAlignment="Center"/>
+                    <TextBlock Text="{Binding Model.IsUndiscDepDone}" Margin="75,10,0,10" TextWrapping="Wrap" HorizontalAlignment="left" VerticalAlignment="Center"/>
                 </WrapPanel>
             </UniformGrid>
-            <UniformGrid Rows="1" Columns="2">
+            <!--<UniformGrid Rows="1" Columns="2">
                 <WrapPanel Style="{StaticResource WrapPanel}">
                     <TextBlock Text="Selected Economic Filter (Raef) result:" TextWrapping="Wrap" Margin="10" HorizontalAlignment="left" VerticalAlignment="Center"/>
                 </WrapPanel>
                 <WrapPanel Style="{StaticResource ValueColumn}">
-                    <TextBlock Text="{Binding IsRaefDone}" Margin="75,10,0,10" TextWrapping="Wrap" HorizontalAlignment="left" VerticalAlignment="Center"/>
+                    <TextBlock Text="{Binding Model.IsRaefDone}" Margin="75,10,0,10" TextWrapping="Wrap" HorizontalAlignment="left" VerticalAlignment="Center"/>
                 </WrapPanel>
-            </UniformGrid>
-            <UniformGrid Rows="1" Columns="2" Margin="0,2,0,2">
+            </UniformGrid>-->
+            <UniformGrid Rows="1" Columns="2" Margin="0,12,0,2">
                 <WrapPanel Style="{StaticResource WrapPanel}">
                     <TextBlock Text="Image file containing location of the tract:" Margin="10" TextWrapping="Wrap" HorizontalAlignment="left" VerticalAlignment="Center"/>
                 </WrapPanel>
-                <WrapPanel MaxHeight="50" HorizontalAlignment="left" VerticalAlignment="Center" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Auto">
+                <WrapPanel Margin="30,0,0,0" MaxHeight="50" HorizontalAlignment="left" VerticalAlignment="Center" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Auto">
                     <Button  FontSize="18" Content="{Binding Model.TractImageFile, Converter={StaticResource FilePathToFileNameConverter}}" FontWeight="Normal" mah:ButtonHelper.PreserveTextCase="True" Background="LightGray" BorderBrush="Black"
                          HorizontalAlignment="Left" VerticalAlignment="Center"  DataContext="{Binding ReportingViewModel, Source={StaticResource Locator}}" Command="{Binding SelectTractImageFileCommand}" IsDefault="True">
                     </Button>
@@ -168,19 +178,9 @@
             </UniformGrid>
             <UniformGrid Rows="1" Columns="2" Margin="0,2,0,2">
                 <WrapPanel Style="{StaticResource WrapPanel}">
-                    <TextBlock Text="Word file containing criteria for tract delineation:" Margin="10" TextWrapping="Wrap" HorizontalAlignment="left" VerticalAlignment="Center"/>
+                    <TextBlock Text="Known deposits within the tract:" Margin="10" TextWrapping="Wrap" HorizontalAlignment="left" VerticalAlignment="Center" ToolTip="MS Word table."/>
                 </WrapPanel>
-                <WrapPanel MaxHeight="50" HorizontalAlignment="left" VerticalAlignment="Center" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Auto">
-                    <Button  FontSize="18" Content="{Binding Model.TractCriteriaFile, Converter={StaticResource FilePathToFileNameConverter}}" FontWeight="Normal" mah:ButtonHelper.PreserveTextCase="True" Background="LightGray" BorderBrush="Black"
-                         HorizontalAlignment="Left" VerticalAlignment="Center"  DataContext="{Binding ReportingViewModel, Source={StaticResource Locator}}" Command="{Binding SelectTractCriteriaFileCommand}" IsDefault="True">
-                    </Button>
-                </WrapPanel>
-            </UniformGrid>
-            <UniformGrid Rows="1" Columns="2" Margin="0,2,0,2">
-                <WrapPanel Style="{StaticResource WrapPanel}">
-                    <TextBlock Text="Word file containing known deposits within the permissive tract:" Margin="10" TextWrapping="Wrap" HorizontalAlignment="left" VerticalAlignment="Center"/>
-                </WrapPanel>
-                <WrapPanel MaxHeight="50" HorizontalAlignment="left" VerticalAlignment="Center" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Auto">
+                <WrapPanel Margin="30,0,0,0" MaxHeight="50" HorizontalAlignment="left" VerticalAlignment="Center" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Auto">
                     <Button  FontSize="18" Content="{Binding Model.KnownDepositsFile, Converter={StaticResource FilePathToFileNameConverter}}" FontWeight="Normal" mah:ButtonHelper.PreserveTextCase="True" Background="LightGray" BorderBrush="Black"
                          HorizontalAlignment="Left" VerticalAlignment="Center"  DataContext="{Binding ReportingViewModel, Source={StaticResource Locator}}" Command="{Binding SelectKnownDepositsFileCommand}" IsDefault="True">
                     </Button>
@@ -188,9 +188,9 @@
             </UniformGrid>
             <UniformGrid Rows="1" Columns="2" Margin="0,2,0,2">
                 <WrapPanel Style="{StaticResource WrapPanel}">
-                    <TextBlock Text="Word file containing known prospects and occurrences within the permissive tract:" Margin="10" TextWrapping="Wrap" HorizontalAlignment="left" VerticalAlignment="Center"/>
+                    <TextBlock Text="Known occurrences within the tract:" Margin="10" TextWrapping="Wrap" HorizontalAlignment="left" VerticalAlignment="Center" ToolTip="MS Word table."/>
                 </WrapPanel>
-                <WrapPanel MaxHeight="50" HorizontalAlignment="left" VerticalAlignment="Center" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Auto">
+                <WrapPanel Margin="30,0,0,0" MaxHeight="50" HorizontalAlignment="left" VerticalAlignment="Center" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Auto">
                     <Button  FontSize="18" Content="{Binding Model.ProspectsOccurencesFile, Converter={StaticResource FilePathToFileNameConverter}}" FontWeight="Normal" mah:ButtonHelper.PreserveTextCase="True" Background="LightGray" BorderBrush="Black"
                          HorizontalAlignment="Left" VerticalAlignment="Center"  DataContext="{Binding ReportingViewModel, Source={StaticResource Locator}}" Command="{Binding SelectProspectsOccurencesFileCommand}" IsDefault="True">
                     </Button>
@@ -198,9 +198,9 @@
             </UniformGrid>
             <UniformGrid Rows="1" Columns="2" Margin="0,2,0,2">
                 <WrapPanel Style="{StaticResource WrapPanel}">
-                    <TextBlock Text="Word file containing exploration history for the permissive tract :" Margin="10" TextWrapping="Wrap" HorizontalAlignment="left" VerticalAlignment="Center"/>
+                    <TextBlock Text="Exploration history of the tract:" Margin="10" TextWrapping="Wrap" HorizontalAlignment="left" VerticalAlignment="Center" ToolTip="MS Word table."/>
                 </WrapPanel>
-                <WrapPanel MaxHeight="50" HorizontalAlignment="left" VerticalAlignment="Center" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Auto">
+                <WrapPanel Margin="30,0,0,0" MaxHeight="50" HorizontalAlignment="left" VerticalAlignment="Center" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Auto">
                     <Button  FontSize="18" Content="{Binding Model.ExplorationFile, Converter={StaticResource FilePathToFileNameConverter}}" FontWeight="Normal" mah:ButtonHelper.PreserveTextCase="True" Background="LightGray" BorderBrush="Black"
                          HorizontalAlignment="Left" VerticalAlignment="Center"  DataContext="{Binding ReportingViewModel, Source={StaticResource Locator}}" Command="{Binding SelectExplorationFileCommand}" IsDefault="True">
                     </Button>
@@ -208,9 +208,9 @@
             </UniformGrid>
             <UniformGrid Rows="1" Columns="2" Margin="0,2,0,2">
                 <WrapPanel Style="{StaticResource WrapPanel}">
-                    <TextBlock Text="Word file containing principal sources of information used by the assessment team for the permissive tract:" Margin="10" TextWrapping="Wrap" HorizontalAlignment="left" VerticalAlignment="Center"/>
+                    <TextBlock Text="Principal sources of information:" Margin="10" TextWrapping="Wrap" HorizontalAlignment="left" VerticalAlignment="Center" ToolTip="MS Word table."/>
                 </WrapPanel>
-                <WrapPanel MaxHeight="50" HorizontalAlignment="left" VerticalAlignment="Center" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Auto">
+                <WrapPanel Margin="30,0,0,0" MaxHeight="50" HorizontalAlignment="left" VerticalAlignment="Center" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Auto">
                     <Button  FontSize="18" Content="{Binding Model.SourcesFile, Converter={StaticResource FilePathToFileNameConverter}}" FontWeight="Normal" mah:ButtonHelper.PreserveTextCase="True" Background="LightGray" BorderBrush="Black"
                          HorizontalAlignment="Left" VerticalAlignment="Center"  DataContext="{Binding ReportingViewModel, Source={StaticResource Locator}}" Command="{Binding SelectSourcesFileCommand}" IsDefault="True">
                     </Button>
@@ -218,9 +218,9 @@
             </UniformGrid>
             <UniformGrid Rows="1" Columns="2" Margin="0,2,0,2">
                 <WrapPanel Style="{StaticResource WrapPanel}">
-                    <TextBlock Text="Word file containing references:" Margin="10" TextWrapping="Wrap" HorizontalAlignment="left" VerticalAlignment="Center"/>
+                    <TextBlock Text="References:" Margin="10" TextWrapping="Wrap" HorizontalAlignment="left" VerticalAlignment="Center" ToolTip="MS Word text."/>
                 </WrapPanel>
-                <WrapPanel MaxHeight="50" HorizontalAlignment="left" VerticalAlignment="Center" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Auto">
+                <WrapPanel Margin="30,0,0,0" MaxHeight="50" HorizontalAlignment="left" VerticalAlignment="Center" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Auto">
                     <Button  FontSize="18" Content="{Binding Model.ReferencesFile, Converter={StaticResource FilePathToFileNameConverter}}" FontWeight="Normal" mah:ButtonHelper.PreserveTextCase="True" Background="LightGray" BorderBrush="Black"
                          HorizontalAlignment="Left" VerticalAlignment="Center"  DataContext="{Binding ReportingViewModel, Source={StaticResource Locator}}" Command="{Binding SelectReferencesFileCommand}" IsDefault="True">
                     </Button>
@@ -228,7 +228,7 @@
             </UniformGrid>
             <UniformGrid Rows="1" Columns="2">
                 <WrapPanel></WrapPanel>
-                <WrapPanel Margin="10">
+                <WrapPanel Margin="30,30,0,0">
                     <Button Padding="-10,0,0,0"
                         VerticalAlignment="Bottom" 
                         Background="{DynamicResource AccentColorBrush}" 

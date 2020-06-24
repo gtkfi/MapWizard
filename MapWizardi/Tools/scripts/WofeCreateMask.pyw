@@ -19,8 +19,9 @@ out_name = "WofE.gdb"
 out_wrkspace = out_folder_path+out_name 
 # Execute CreateFileGDB
 if arcpy.Exists(out_wrkspace):
-    print ("ArcGis workspace exits, ",out_wrkspace)
-else:
-    arcpy.CreateFileGDB_management(out_folder_path, out_name)
+    print ("ArcGis workspace exits, delete it...",out_wrkspace)
+    arcpy.Delete_management(out_wrkspace)
+#else:
+arcpy.CreateFileGDB_management(out_folder_path, out_name)
 #arcpy.env.mask = sys.argv[5] #"C:\\Users\\hissakai\\Documents\\ArcGIS\\Projects\\MyProject2\\MyProject2.gdb\\RasterT_img1"
 arcpy.conversion.FeatureClassToFeatureClass(sys.argv[2], out_wrkspace, "mask")
