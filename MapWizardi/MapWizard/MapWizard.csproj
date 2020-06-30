@@ -154,7 +154,6 @@
     <Compile Include="Service\DoubleGridLengthConverter.cs" />
     <Compile Include="Service\FilePathToBitmapConverter.cs" />
     <Compile Include="Service\FilePathToFileNameConverter.cs" />
-    <Compile Include="Service\MathConverter.cs" />
     <Compile Include="Service\RaefBooleanToDaysOfOperationConverter.cs" />
     <Compile Include="Service\RaefDepthIntToVisibilityConverter.cs" />
     <Compile Include="Service\ReverseBooleanConverter.cs" />

@@ -162,22 +162,4 @@ Global
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {1F585604-2F8B-4217-BA54-084AE47309E4}
 	EndGlobalSection
-	GlobalSection(TeamFoundationVersionControl) = preSolution
-		SccNumberOfProjects = 5
-		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
-		SccTeamFoundationServer = https://gtkkoodit.visualstudio.com/
-		SccLocalPath0 = .
-		SccProjectUniqueName1 = MapWizard\\MapWizard.csproj
-		SccProjectName1 = MapWizard
-		SccLocalPath1 = MapWizard
-		SccProjectUniqueName2 = Tools\\Tools.csproj
-		SccProjectName2 = Tools
-		SccLocalPath2 = Tools
-		SccProjectUniqueName3 = ToolsTests\\Tests.csproj
-		SccProjectName3 = ToolsTests
-		SccLocalPath3 = ToolsTests
-		SccProjectUniqueName4 = MapWizardInstaller\\MapWizardInstaller.vdproj
-		SccProjectName4 = MapWizardInstaller
-		SccLocalPath4 = MapWizardInstaller
-	EndGlobalSection
 EndGlobal

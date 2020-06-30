@@ -1027,7 +1027,15 @@ namespace MapWizard.ViewModel
                 csv.AppendLine("40,Custom_Mill_Option5," + "" + Model.RaefCustomMillOption5 + "");// "No set custom mill option for commodity #5"
                 csv.AppendLine("41,Custom_Mill_Option6," + "" + Model.RaefCustomMillOption6 + "");// "No set custom mill option for commodity #6"
                 int csvIndex = 42;
-                for (int i = 0; i < 4; i++)
+                //for (int i = 0; i < 4; i++)
+                //{
+                //    csv.AppendLine((csvIndex + "," + CVandMRRList[i * 4] + "," + CVandMRRList[i * 4 + 2]).Replace(" ", "").Replace("\"", ""));
+                //    csvIndex++;
+                //    csv.AppendLine((csvIndex + "," + CVandMRRList[i * 4 + 1] + "," + CVandMRRList[i * 4 + 3]).Replace(" ", "").Replace("\"", "").Replace("NULL", ""));
+                //    csvIndex++;
+                //    //CVandMRRList
+                //}
+                for (int i = 0; i < (CVandMRRList.Count / 4); i++)
                 {
                     csv.AppendLine((csvIndex + "," + CVandMRRList[i * 4] + "," + CVandMRRList[i * 4 + 2]).Replace(" ", "").Replace("\"", ""));
                     csvIndex++;

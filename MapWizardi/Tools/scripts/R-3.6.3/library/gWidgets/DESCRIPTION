@@ -1,0 +1,31 @@
+Package: gWidgets
+Version: 0.0-54.2
+Title: gWidgets API for Building Toolkit-Independent, Interactive GUIs
+Author: John Verzani. Based on  the iwidgets code of Simon Urbanek and suggestions by Simon Urbanek, Philippe Grosjean and Michael Lawrence
+Maintainer: ORPHANED
+Depends: methods, utils
+Suggests: gWidgetstcltk
+Description: Provides a toolkit-independent API for building interactive GUIs. At least one of the 'gWidgetsXXX packages', such as gWidgetstcltk, needs to be installed. Some icons are on loan from the scigraphica project <http://scigraphica.sourceforge.net>.
+License: GPL (>= 2)
+URL: https://r-forge.r-project.org/R/?group_id=761
+Collate: aaaGenerics.R common.R toolkitClasses.R guiWidget.R
+        guiContainer.R guiComponent.R guiComponentWithItems.R
+        handlers.R ggroup.R gframe.R gexpandgroup.R gspinbutton.R
+        gslider.R gsvg.R ggenericwidget.R gtable.R ggraphics.R gtext.R
+        dialogs.R gtoolbar.R gaction.R ghelp.R gtree.R gbutton.R
+        ghtml.R gcalendar.R gimage.R gcheckbox.R glabel.R
+        gcheckboxgroup.R glayout.R gcombobox.R gmenu.R gvarbrowser.R
+        gcommandline.R gnotebook.R gvariables.R gdf.R gpanedgroup.R
+        gwindow.R gdfnotebook.R gradio.R gedit.R gseparator.R icons.R
+        gfile.R gformlayout.R gstatusbar.R bbbGenericsANY.R zzz.R
+LazyLoad: yes
+Packaged: 2020-04-25 06:52:58 UTC; ripley
+NeedsCompilation: no
+Repository: CRAN
+Date/Publication: 2020-04-29 05:27:07 UTC
+X-CRAN-Original-Maintainer: John Verzani <jverzani@gmail.com>
+X-CRAN-Comment: Orphaned and corrected on 2020-04-29 as no response
+        from maintainer.
+ .
+ And NMUs by the CRAN team since 2014.
+Built: R 3.6.3; ; 2020-05-11 03:19:58 UTC; windows

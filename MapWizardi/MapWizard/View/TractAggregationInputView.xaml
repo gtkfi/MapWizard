@@ -64,7 +64,7 @@
             <RadioButton Margin="20,5,5,5" Name="batchNoRadioButton" GroupName="runtype" IsChecked="{Binding Model.UseInputParams, Mode=TwoWay}">Input parameters in GUI</RadioButton>
             <WrapPanel Style="{StaticResource ValueColumn}">
                 <TextBlock>Name of the tract combination:</TextBlock>
-                <TextBox Text="{Binding Model.TractCombinationName}" DataContext="{Binding TractAggregationViewModel, Source={StaticResource Locator}}" Width="200"></TextBox>
+                <TextBox Margin="10,0,0,0" Text="{Binding Model.TractCombinationName}" DataContext="{Binding TractAggregationViewModel, Source={StaticResource Locator}}" Width="200"></TextBox>
             </WrapPanel>
             <StackPanel Visibility="{Binding ElementName=batchYesRadioButton,Path=IsChecked,Converter={StaticResource BoolToCollapsedVisibilityConverter}}">
             <UniformGrid Rows="1" Columns="2">
@@ -139,6 +139,13 @@
             </UniformGrid>
         </StackPanel>
             <StackPanel Visibility="{Binding ElementName=batchNoRadioButton,Path=IsChecked,Converter={StaticResource BoolToCollapsedVisibilityConverter}}">
+                <UniformGrid HorizontalAlignment="Left" Width="600" Rows="1" Columns="2">
+                    <WrapPanel></WrapPanel>
+                    <WrapPanel Margin="0,35,0,0" Style="{StaticResource ValueColumn}">
+                        <TextBlock MinWidth="250" FontSize="18" TextWrapping="Wrap" Text="Only the tracts that have the result selected in the Undiscovered Deposits tool are selectable." VerticalAlignment="Center" HorizontalAlignment="Left">
+                            </TextBlock>
+                    </WrapPanel>
+                </UniformGrid>
                 <WrapPanel Margin="10,20,20,20">
                     <TextBlock MinWidth="250" FontSize="18" Text="Tract id:" Margin="0,0,0,5" VerticalAlignment="Center" HorizontalAlignment="Left"></TextBlock>
                     <ComboBox Name="cmbx"                 
@@ -152,7 +159,7 @@
                             <i:EventTrigger EventName="DropDownOpened">
                                 <i:InvokeCommandAction Command="{Binding FindTractsCommand}" />
                             </i:EventTrigger>
-                            </i:Interaction.Triggers>
+                        </i:Interaction.Triggers>
                         <ComboBox.ItemTemplate>
                             <DataTemplate>
                                 <CheckBox 
@@ -161,18 +168,21 @@
                             </DataTemplate>
                         </ComboBox.ItemTemplate>
                     </ComboBox>
+                    <Button  FontSize="14"  
+                 DataContext="{Binding TractAggregationViewModel, Source={StaticResource Locator}}"         
+                             Height="30"
+                             Padding="-10,0,0,0"
+                 Width="100"   
+                 Background="{DynamicResource AccentColorBrush}" 
+                 Foreground="White"                     
+                 HorizontalAlignment="Center" VerticalAlignment="Center"                                                                                    
+                 Command="{Binding CombineTractsCommand}">
+                        <TextBlock Text="Get Tracts" FontSize="14"/>
+                    </Button>
                 </WrapPanel>
                 <UniformGrid HorizontalAlignment="Left" Width="600" Rows="1" Columns="2">
                     <WrapPanel></WrapPanel>
-                    <WrapPanel Margin="10,0,0,0" Style="{StaticResource ValueColumn}">
-                        <Button Content="Get Tracts" FontSize="18" DataContext="{Binding TractAggregationViewModel, Source={StaticResource Locator}}" Command="{Binding CombineTractsCommand}" 
-                            FontWeight="Normal" mah:ButtonHelper.PreserveTextCase="True" Background="{DynamicResource AccentColorBrush}"  Foreground="White"
-                            BorderThickness="0"  Margin="0" HorizontalAlignment="Left" VerticalAlignment="Center" Padding="-10,0,0,0" Width="120" Height="50" ></Button>
-                    </WrapPanel>
-                </UniformGrid>
-                <UniformGrid HorizontalAlignment="Left" Width="600" Rows="1" Columns="2">
-                    <WrapPanel></WrapPanel>
-                    <WrapPanel Margin="10,20,0,20" Style="{StaticResource ValueColumn}">
+                    <WrapPanel Margin="10,0,0,20" Style="{StaticResource ValueColumn}">
                         <Button Content="Run Tool   " FontSize="18" DataContext="{Binding TractAggregationViewModel, Source={StaticResource Locator}}" Command="{Binding RunToolCommand}" 
                             FontWeight="Normal" mah:ButtonHelper.PreserveTextCase="True" Background="{DynamicResource AccentColorBrush}"  Foreground="White"
                             BorderThickness="0"  Margin="0" HorizontalAlignment="Left" VerticalAlignment="Center" Padding="-10,0,0,0" Width="120" Height="50"></Button>

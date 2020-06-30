@@ -33,7 +33,6 @@
     <Window.Resources>
         <service:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
         <service:DoubleGridLengthConverter x:Key="DoubleGridLengthConverter"/>
-        <service:MathConverter x:Key="MathConverter"/>
         <Style x:Key="LargeTileStyle" TargetType="mah:Tile">
             <Setter Property="Width" Value="300" />
             <Setter Property="Height" Value="125" />
@@ -289,14 +288,10 @@
                       Content="{Binding ActiveView, Mode=TwoWay}"/>
         </Grid>
         <Grid DataContext="{Binding Source={StaticResource Locator}, Path=SettingsViewModel}" Margin="0,0,0,21"  VerticalAlignment="Bottom" 
-              MaxHeight="{Binding ElementName=MapWizardMainWindow, Path=ActualHeight,
-                                  Converter={StaticResource MathConverter},
-                                  ConverterParameter=@VALUE/2}" Grid.ColumnSpan="2">
+              MaxHeight="370" Grid.ColumnSpan="2">
             <Grid.RowDefinitions>
                 <RowDefinition></RowDefinition>
-                <RowDefinition MaxHeight="{Binding ElementName=MapWizardMainWindow, Path=ActualHeight,
-                               Converter={StaticResource MathConverter},
-                               ConverterParameter=@VALUE*0.4}"
+                <RowDefinition MaxHeight="360"
                  Height="{Binding Model.LogHeight, Mode=TwoWay, Converter={StaticResource DoubleGridLengthConverter}}"></RowDefinition>
                 <!--<RowDefinition ></RowDefinition>-->
             </Grid.RowDefinitions>

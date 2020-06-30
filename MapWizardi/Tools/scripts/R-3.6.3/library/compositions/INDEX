@@ -1,0 +1,222 @@
+%*%                     inner product for matrices and vectors
+%*%.acomp               inner product for datasets with a vector space
+                        structure
+%*%.rmult               inner product for datasets with vector scale
++.aplus                 vectorial arithmetic for data sets with aplus
+                        class
++.rcomp                 Arithmetic operations for compositions in a
+                        real geometry
++.rmult                 vectorial arithmetic for datasets in a
+                        classical vector scale
++.rplus                 vectorial arithmetic for data sets with rplus
+                        class
+Aar                     Composition of glaciar sediments from the Aar
+                        massif (Switzerland)
+Activity10              Activity patterns of a statistician for 20 days
+Activity31              Activity patterns of a statistician for 20 days
+AnimalVegetation        Animal and vegetation measurement
+ArcticLake              Artic lake sediment samples of different water
+                        depth
+Bayesite                Permeabilities of bayesite
+Blood23                 Blood samples
+Boxite                  Compositions and depth of 25 specimens of
+                        boxite
+ClamEast                Color-size compositions of 20 clam colonies
+                        from East Bay
+ClamWest                Color-size compositions of 20 clam colonies
+                        from West Bay
+ClusterFinder1          Heuristics to find subpopulations of outliers
+CoDaDendrogram          Dendrogram representation of acomp or rcomp
+                        objects
+CompLinModCoReg         Compositional Linear Model of Coregionalisation
+ConfRadius              Helper to compute confidence ellipsoids
+Coxite                  Compositions, depths and porosities of 25
+                        specimens of coxite
+DiagnosticProb          Diagnostic probabilities
+Firework                Firework mixtures
+Gauss.test              Classical Gauss Test
+Glacial                 Compositions and total pebble counts of 92
+                        glacial tills
+Hongite                 Compositions of 25 specimens of hongite
+HouseholdExp            Household Expenditures
+Hydrochem               Hydrochemical composition data set of Llobregat
+                        river basin water (NE Spain)
+IsMahalanobisOutlier    Checking for outliers
+Kongite                 Compositions of 25 specimens of kongite
+MahalanobisDist         Compute Mahalanobis distances based von robust
+                        Estimations
+Metabolites             Steroid metabolite patterns in adults and
+                        children
+OutlierClassifier1      Detect and classify compositional outliers.
+PogoJump                Honk Kong Pogo-Jumps Championship
+PoissonGOF.test         Compositional Goodness of fit test
+R2                      R square
+Sediments               Proportions of sand, silt and clay in sediments
+                        specimens
+SerumProtein            Serum Protein compositions of blood samples
+ShiftOperators          Shifts of machine operators
+SimulatedAmounts        Simulated amount datasets
+Skulls                  Measurement of skulls
+SkyeAFM                 AFM compositions of 23 aphyric Skye lavas
+Supervisor              Proportions of supervisor's statements assigned
+                        to different categories
+WhiteCells              White-cell composition of 30 blood samples by
+                        two different methods
+Yatquat                 Yatquat fruit evaluation
+acomp                   Aitchison compositions
+acompGOF.test           Compositional Goodness of fit test
+acompNormalLocation.test
+                        Compositional Goodness of fit test
+acompmargin             Marginal compositions in Aitchison Compositions
+alr                     Additive log ratio transform
+aplus                   Amounts analysed in log-scale
+apt                     Additive planar transform
+arrows3D                arrows in 3D, based on package rgl
+as.data.frame.acomp     Convert "compositions" classes to data frames
+axis3D                  Drawing a 3D coordiante system to a plot, based
+                        on package rgl
+balance                 Compute balances for a compositional dataset.
+barplot.acomp           Bar charts of amounts
+binary                  Treating binary and g-adic numbers
+biplot3D                Three-dimensional biplots, based on package rgl
+boxplot.acomp           Displaying compositions and amounts with
+                        box-plots
+ccomp                   Count compositions
+cdt                     Centered default transform
+clo                     Closure of a composition
+clr                     Centered log ratio transform
+clr2ilr                 Convert between clr and ilr, and between cpt
+                        and ipt.
+coloredBiplot           A biplot providing somewhat easier access to
+                        details of the plot.
+colorsForOutliers1      Create a color/char palette or for groups of
+                        outliers
+compOKriging            Compositional Ordinary Kriging
+compositions-package    Compositional Data Analysis
+cor.acomp               Correlations of amounts and compositions
+cpt                     Centered planar transform
+dist                    Distances in variouse approaches
+ellipses                Draw ellipses
+endmemberCoordinates    Recast amounts as mixtures of end-members
+fitDirichlet            Fitting a Dirichlet distribution
+fitSameMeanDifferentVarianceModel
+                        Fit Same Mean Different Variance Model
+geometricmean           The geometric mean
+getDetectionlimit       Gets the detection limit stored in the data set
+groupparts              Group amounts of parts
+idt                     Isometric default transform
+iit                     Isometric identity transform
+ilr                     Isometric log ratio transform
+ilrBase                 The canonical basis in the clr plane used for
+                        ilr and ipt transforms.
+ilt                     Isometric log transform
+ipt                     Isometric planar transform
+is.acomp                Check for compositional data type
+isoPortionLines         Isoportion- and Isoproportion-lines
+juraset                 The jura dataset
+kingTetrahedron         Ploting composition into rotable tetrahedron
+lines.rmult             Draws connected lines from point to point.
+logratioVariogram       Empirical variograms for compositions
+mean.acomp              Mean amounts and mean compositions
+meanRow                 The arithmetic mean of rows or columns
+missingProjector        Returns a projector the the observed space in
+                        case of missings.
+missingSummary          Classify and summarize missing values in a
+                        dataset
+missingsInCompositions
+                        The policy of treatment of missing values in
+                        the "compositions" package
+mix.2aplus              Transformations from 'mixtures' to
+                        'compositions' classes
+mix.Read                Reads a data file in a mixR format
+mvar                    Metric summary statistics of real, amount or
+                        compositional data
+names.acomp             The names of the parts
+norm.default            Vector space norm
+normalize               Normalize vectors to norm 1
+oneOrDataset            Treating single compositions as one-row
+                        datasets
+outlierplot             Plot various graphics to analyse outliers.
+outliersInCompositions
+                        Analysing outliers in compositions.
+pMaxMahalanobis         Compute distributions of empirical Mahalanobis
+                        distances based on simulations
+pairs.acomp             Pairs plot method for compositions
+pairwisePlot            Creates a paneled plot like pairs for two
+                        different datasets.
+parametricPosdefMat     Unique parametrisations for matrices.
+perturbe                Perturbation of compositions
+plot.acomp              Ternary diagrams
+plot.aplus              Displaying amounts in scatterplots
+plot.logratioVariogram
+                        Empirical variograms for compositions
+plot.missingSummary     Plot a Missing Summary
+plot3D                  plot in 3D based on rgl
+plot3D.acomp            3D-plot of compositional data
+plot3D.aplus            3D-plot of positive data
+plot3D.rmult            plot in 3D based on rgl
+plot3D.rplus            plot in 3D based on rgl
+power.acomp             Power transform in the simplex
+powerofpsdmatrix        power transform of a matrix
+princomp.acomp          Principal component analysis for Aitchison
+                        compositions
+princomp.aplus          Principal component analysis for amounts in log
+                        geometry
+princomp.rcomp          Principal component analysis for real
+                        compositions
+princomp.rmult          Principal component analysis for real data
+princomp.rplus          Principal component analysis for real amounts
+print.acomp             Printing compositional data.
+pwlr                    Pairwise log ratio transform
+pwlrPlot                Plots of pairwise logratio against a
+                        covariable.
+qHotellingsTsq          Hotellings T square distribution
+qqnorm.acomp            Normal quantile plots for compositions and
+                        amounts
+rAitchison              Aitchison Distribution
+rDirichlet              Dirichlet distribution
+rcomp                   Compositions as elements of the simplex
+                        embedded in the D-dimensional real space
+rcompmargin             Marginal compositions in real geometry
+read.geoeas             Reads a data file in a geoeas format
+relativeLoadings        Loadings of relations of two amounts
+replot                  Modify parameters of compositional plots.
+rlnorm.rplus            The multivariate lognormal distribution
+rmult                   Simple treatment of real vectors
+rnorm.acomp             Normal distributions on special spaces
+robustnessInCompositions
+                        Handling robustness issues and outliers in
+                        compositions.
+rplus                   Amounts i.e. positive numbers analysed as
+                        objects of the real vector space
+rpois.ccomp             Simulate count compositions without
+                        overdispersion
+runif.acomp             The uniform distribution on the simplex
+scalar                  Parallel scalar products
+scale                   Normalizing datasets by centering and scaling
+segments.rmult          Draws straight lines from point to point.
+simpleMissingSubplot    Ternary diagrams
+simulateMissings        Artifical simulation of various kinds of
+                        missings/polluted data
+split.acomp             Splitting datasets in groups given by factors
+straight                Draws straight lines.
+sumMissingProjector     Compute the global projector to the observed
+                        subspace.
+summary.acomp           Summarizing a compositional dataset in terms of
+                        ratios
+summary.aplus           Summaries of amounts
+summary.rcomp           Summary of compositions in real geometry
+ternaryAxis             Axis for ternary diagrams
+totals                  Total sum of amounts
+tryDebugger             Empirical variograms for compositions
+ult                     Uncentered log transform
+var.acomp               Variances and covariances of amounts and
+                        compositions
+var.lm                  Residual variance of a model
+variation               Variation matrices of amounts and compositions
+vcovAcomp               Variance covariance matrix of parameters in
+                        compositional regression
+vgmFit                  Compositional variogram model fitting
+vgram.sph               Variogram functions
+vgram2lrvgram           vgram2lrvgram
+zeroreplace             Zero-replacement routine

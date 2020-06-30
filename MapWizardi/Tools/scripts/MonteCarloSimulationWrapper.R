@@ -133,7 +133,13 @@ mcSimulation <- function(oPmfPath,oTonPath,oGradePath,oMetaPath,summaryOutput, p
 	MinTons<- paste(NamesMins,'_MetricTons')
 	OreN<- sub(".tonnage", "_MetricTons",OreN)	
 	NamesMins<- paste(NamesMins,"_pct")
-	NameList12<- c(NamesBegin,OreN,NamesMins,Gan,MinTons ) 
+
+	
+	NameList12Unformatted<- c(NamesBegin,OreN,NamesMins,Gan,MinTons ) 
+	formatHeader<-function(obj){gsub(".Grade....","",  obj)}
+	NameList12<-lapply(NameList12Unformatted,formatHeader)
+	#NameList12<- c(NamesBegin,OreN,NamesMins,Gan,MinTons ) 
+
 	lenCont2 <- length(NewCont)
 	con9 <- lenCont2 - 1
 	colnames(NewCont) <- NameList12 

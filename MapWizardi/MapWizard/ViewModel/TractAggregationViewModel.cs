@@ -407,8 +407,13 @@ namespace MapWizard.ViewModel
                             thisRow = thisRow + (thisRow == "" ? (thisRow = tc.TractName) : (thisRow = (tc.TractName)));
                         }
                         else 
-                        { 
-                            thisRow += tc.TractText;
+                        {
+
+                            //thisRow += tc.TractText;
+                            if (tc.TractText != null)
+                            {
+                                thisRow += (tc.TractText).Replace(",", ".");
+                            }
                         }
                     }
                     thisRow += ",";

@@ -492,10 +492,7 @@ namespace MapWizard.ViewModel
                 DirectoryInfo di = new DirectoryInfo(tractRootPath);
                 foreach (DirectoryInfo dir in di.GetDirectories())
                 {
-                    if (!dir.Name.StartsWith("AGG"))
-                    {
                         Model.TractIDNames.Add(dir.Name);  // Get TractID by getting the name of the directory.
-                    }
                 }
             }
             else

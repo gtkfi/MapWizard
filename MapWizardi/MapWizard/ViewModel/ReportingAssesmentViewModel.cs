@@ -192,9 +192,6 @@ namespace MapWizard.ViewModel
             try
             {
                 logger.Info("-->{0}", this.GetType().Name);
-                var selectedTract = Model.SelectedTractCombination;
-                Model.CombinedTracts.Clear();
-                Model.SelectedTractCombination = selectedTract;
                 Model.TractIDNames.Clear();
                 Model.TractIDChoices.Clear();
                 foreach (var item in Model.TractIDCollection)
