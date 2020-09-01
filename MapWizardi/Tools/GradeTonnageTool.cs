@@ -306,7 +306,7 @@ namespace MapWizard.Tools
                                 procErrors += (e.Data);
                             }
                         });
-
+                        proc.BeginErrorReadLine();
                         procResult = proc.StandardOutput.ReadToEnd();
                         proc.Close();
                         if (procErrors.Length > 1)

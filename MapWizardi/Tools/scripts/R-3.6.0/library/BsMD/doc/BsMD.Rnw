@@ -1,0 +1,764 @@
+\documentclass[letterpaper]{article}
+%\documentclass[a4paper]{article}
+\usepackage{Sweave}
+\usepackage{amsmath}
+\usepackage[round]{natbib}
+%\usepackage{hyperref}
+%\usepackage{url}
+%\usepackage[left=2.5cm,right=2.5cm,top=2.5cm]{geometry}
+\usepackage{geometry}
+
+\newcommand{\code}[1]{\texttt{#1}} \newcommand{\pkg}[1]{\textsf{#1}} 
+\newcommand{\R}{\pkg{R}} \newcommand{\subsectionF}[1]{
+    \subsection*{Function \code{#1}}
+    \addcontentsline{toc}{subsection}{Function \code{#1}}
+    }
+
+%%\VignetteIndexEntry{Rnw script for \emph{BsMD} package} 
+%%\VignetteDepends{BsMD}
+
+%% headings ========================================================
+\pagestyle{myheadings} \markright{\hfill Bayesian Screening and Model
+Discrimination \hfill}
+%% headings ========================================================
+
+
+\begin{document}
+\SweaveOpts{concordance=TRUE,strip.white=TRUE}
+%\VignetteIndexEntry{Bayesian Screening and Model Discrimination}
+%\VignetteDepends{BsMD}
+%\SweaveOpts{engine=R,eps=TRUE,pdf=TRUE,width=5,height=3,strip.white=TRUE}
+%\SweaveOpts{engine=R,eps=TRUE,pdf=TRUE,width=5,height=3,strip.white="true"}
+\setkeys{Gin}{width=\textwidth}
+\title{Using the \textsf{BsMD} Package for Bayesian Screening and Model 
+    Discrimination\footnote{\pkg{BsMD} current version: 2013.0510}}
+\author{Ernesto Barrios Zamudio \\
+    \texttt{ebarrios@itam.mx} \\ [1ex]
+    \bf Instituto Tecnol\'{o}gico Aut\'{o}nomo de M\'{e}xico}
+\date{July, 2013}
+\maketitle
+\tableofcontents
+
+\section{Introduction}
+
+Screening experiments are employed the at initial stages of investigation to
+discriminate, among many factors, those with potential effect over the
+response under study. It is common in screening studies to use most of the
+observations estimating different contrasts, leaving only a few or even no
+degrees of freedom at all to estimate the experiment standard error. Under
+these conditions it is not possible to assess the statistical significance
+of the estimated contrast effects. Some procedures, for example, the
+analysis of the normal plot of the effects, have been developed to overcome
+this situation.
+
+\textsf{BsMD} package includes a set of functions useful for factor screening
+in unreplicated factorial experiments. Some of the functions were written
+originally for \textsf{S}, then adapted for \textsf{S-PLUS} and now for
+\textsf{R}. Functions for Bayesian screening and model discrimination
+follow-up designs are based on Daniel Meyer's \textsf{mdopt}
+\textsc{fortran} bundle \citep{Meyer-1996}. The programs were modified and
+converted to subroutines to be called from \textsf{R} functions.
+
+
+This document is organized in three sections: Screening Designs, Bayesian
+Screening, and Model Discrimination, with the references to the articles as
+subsections to indicate the sources of the examples presented. All the
+examples in \citet{Box&Meyer-1986,Box&Meyer-1993} and
+\citet*{Meyer&etal-1996} are worked out and the code displayed in its
+totality to show the use of the functions in the \textsf{BsMD} package. The
+detailed discussion of the examples and the theory behind them is left to the
+original papers. Details of the \textsf{BsMD} functions are contained to
+their help pages.
+
+
+\section{Screening Designs\label{sec:ScreeningDesigns}}
+
+In screening experiments, \emph{factor sparsity} is usually assumed. That is,
+from all factors considered in the experiment only a few of these will
+actually affect the response. (See for example, \citet{Box&Meyer-1986}, sec.
+1.) Based on this sparsity hypothesis various procedures have have been
+developed to identify such active factors. Some of these procedures are
+included in the \textsf{BsMD} package: \texttt{DanielPlot} (Normal Plot of
+Effects), \texttt{LenthPlot} (based on a robust estimation of the standard
+error of the contrasts), and \texttt{BsProb} for Bayesian screening. See the
+references for details on the theory of the procedures. The data set used in
+the examples of this section is from \citet{Box&Meyer-1986}. They represent
+four different experiments: \emph{log drill advance}, \emph{tensile
+strength}, \emph{shrinkage} and \emph{yield of isatin} with responses denoted
+by \texttt{y1},\dots,\texttt{y4} and different design factors. The estimable
+contrasts are denoted by \texttt{X1},\dots,\texttt{X15}. The design matrix
+and responses are presented next.
+
+<<BM86data,echo=TRUE>>=
+options(width=80)
+library(BsMD)
+data(BM86.data,package="BsMD")
+print(BM86.data)
+@
+
+Saturated linear models for each of the responses are fitted and the
+estimated coefficients are presented in the table below. The \texttt{lm}
+calls, not displayed here, produce the \texttt{advance.lm}, \dots,
+\texttt{yield.lm} objects used in the next subsections.
+
+<<BM86fitting,echo=FALSE >>=
+advance.lm <- lm(y1 ~ X1 + X2 + X3 + X4 + X5 + X6 + X7 + X8 + X9 +
+                    X10 + X11 + X12 + X13 + X14 + X15, data=BM86.data)
+shrinkage.lm <- lm(y2 ~ X1 + X2 + X3 + X4 + X5 + X6 + X7 + X8 + X9 +
+                    X10 + X11 + X12 + X13 + X14 + X15, data=BM86.data)
+strength.lm <- lm(y3 ~ X1 + X2 + X3 + X4 + X5 + X6 + X7 + X8 + X9 +
+                    X10 + X11 + X12 + X13 + X14 + X15, data=BM86.data)
+yield.lm <- lm(y4 ~ X1 + X2 + X3 + X4 + X5 + X6 + X7 + X8 + X9 +
+                    X10 + X11 + X12 + X13 + X14 + X15, data=BM86.data)
+coef.tab <- data.frame(advance=coef(advance.lm),shrinkage=coef(shrinkage.lm),
+                strength=coef(strength.lm),yield=coef(yield.lm))
+print(round(coef.tab,2))
+@
+
+For each of the experiments the 16 runs are used on the estimation of the 15
+contrasts and the constant term. Thus the need of graphical aims to determine
+which are likely active contrasts.
+
+\subsection{Daniel Plots}
+Daniel plots, known as normal plot of effects, arrange the estimated factor
+effects in a normal probability plot; those factors ``out of the straight
+line'' are identified as potentially active factors. See for example,
+\cite{Daniel-1976} for different applications and interpretations.
+
+\texttt{DanielPlot} produces normal plot of effects. The main argument of the
+function is an \texttt{lm} object, say, \texttt{lm.obj}. The function removes
+the constant term \texttt{(Intercept)} if it is in the model. Factor effects,
+assumed as \texttt{2*coef(lm.obj)} are displayed using the \texttt{qqnorm}
+function. See the help pages for details.
+
+\subsubsection{Box et al. 1986: Example 1}
+By default \texttt{DanielPlot} labels all the effects, as show in figure a).
+This example shows how to label only some particular factors for clarity, as
+exhibited in figure b). The corresponding linear model \texttt{advance.lm}
+was already fitted at the beginning of the section.
+
+\begin{center}
+<<DanielPlots,fig=TRUE,width=5,height=3,echo=TRUE>>=
+par(mfrow=c(1,2),mar=c(3,3,1,1),mgp=c(1.5,.5,0),oma=c(0,0,0,0),
+    xpd=TRUE,pty="s",cex.axis=0.7,cex.lab=0.8,cex.main=0.9)
+DanielPlot(advance.lm,cex.pch=0.8,main="a) Default Daniel Plot")
+DanielPlot(advance.lm,cex.pch=0.8,main="b) Labelled Plot",pch=20,
+    faclab=list(idx=c(2,4,8),lab=c(" 2"," 4"," 8")))
+@
+\end{center}
+
+\subsubsection{Box et al. 1986: Example 3}
+
+Some people prefer the use of half-normal plots. These plots are similar to
+the normal plots but instead of the signed effects absolute values of the
+effects are displayed. There are some advantages and disadvantages using one
+or the other. See for example, \citet[chap.~7.6]{Daniel-1976}.
+
+Figure a) depicts the half-normal plot of the effects for the strength
+response (\texttt{y3}). \texttt{DanielPlot} has the option to generate
+half-normal plots (\texttt{half=TRUE}). The corresponding normal plot of
+signed effects is presented in figure b) below.
+
+\begin{center}
+<<fig=TRUE,width=5,height=3,echo=TRUE>>=
+par(mfrow=c(1,2),mar=c(3,3,1,1),mgp=c(1.5,.5,0),oma=c(0,0,0,0),
+    xpd=TRUE,pty="s",cex.axis=0.7,cex.lab=0.8,cex.main=0.9)
+DanielPlot(strength.lm,half=TRUE,cex.pch=0.8,main="a) Half-Normal Plot",
+    faclab=list(idx=c(4,12,13),lab=c(" x4"," x12"," x13")))
+DanielPlot(strength.lm,main="b) Normal Plot",
+    faclab=list(idx=c(4,12,13),lab=c(" 4"," 12"," 13")))
+@
+\end{center}
+
+\subsection{Lenth Plots}
+
+Lenth's method for factor effects assessment is based on factor sparsity too.
+For and unreplicated factorial design Let $c_1,\dots,c_m$ the estimated
+contrasts and approximate the standard error by \( s_0 = 1.5 \times
+\mathop{\text{median}} |c_i| \). Then the author defines the \emph{pseudo
+standard error} by
+\[ \text{PSE}=1.5 \times \mathop{\text{median}}_{|c_j|<2.5s_0} |c_j| \]
+and the 95\% \emph{margin of error} by
+\[ \text{ME}=t_{0.975,d} \times \text{PSE} \]
+where $t_{0.975,d}$ is the .975th quantile of the $t$ distribution with
+$d=m/3$ degrees of freedom. The 95\% \emph{simultaneous margin of error}
+(SME) is defined for simultaneous inference on all the contrast and is given
+by
+\[\text{SME} = t_{\gamma,d} \times \text{PSE} \]
+where $\gamma=(1+0.95^{1/m})/2$.  See \citet{Lenth-1989}, for details.
+
+The \texttt{LenthPlot} function displays the factor effects and the SE and
+SME limits. Spikes instead of the barplot used originally by Lenth are
+employed to represent the factor effects. As in \texttt{DanielPlot}, the main
+argument for the function is a \texttt{lm} object, and
+\texttt{2*coef(lm.obj)} is displayed.
+
+\subsubsection{Box et al. 1986: Example 2}
+
+Figure a) below shows the default plot produced by \texttt{LenthPlot}. The SE
+and MSE limits at a 95\% confidence level ($\alpha=0.05$) are displayed by
+default. Figure b) shows Lenth's plot for the same experiment using
+$\alpha=0.01$, locating the labels of SME and ME close to the vertical axis
+and labelling the contrast effects $X_{14}$ and $X_{15}$ as $P$ and $-M$, for
+period and material respectively and accordingly to Lenth's paper. Note that
+the effects are considered as 2 times the coefficients $\texttt{b}$.
+
+\begin{center}
+<<fig=TRUE,width=5,height=3,echo=TRUE>>=
+par(mfrow=c(1,2),mar=c(4,4,1,1),mgp=c(1.5,.5,0),oma=c(0,0,0,0),
+    xpd=TRUE,pty="s",cex.axis=0.7,cex.lab=0.8,cex.main=0.9)
+LenthPlot(shrinkage.lm)
+title("a) Default Lenth Plot")
+b <- coef(shrinkage.lm)[-1] #    Intercept removed
+LenthPlot(shrinkage.lm,alpha=0.01,adj=0.2)
+title(substitute("b) Lenth Plot (" *a* ")",list(a=quote(alpha==0.01))))
+text(14,2*b[14],"P ",adj=1,cex=.7)  # Label x14 corresponding to factor P
+text(15,2*b[15]," -M",adj=0,cex=.7) # Label x15 corresponding to factor -M
+@
+\end{center}
+
+\subsubsection{Box et al. 1986: Example 4\label{sec:isatin}}
+This example exhibits the Daniel and Lenth plots for the isatin data,
+originally presented by Davis and co-authors in 1954 and discussed in the Box
+and Meyer paper (p. 16--17). As can be seen in the figures below, it is not
+clear which contrasts may be active. For example, in Lenth's plot none of the
+effects goes beyond the margin of error ME, thus the SME limits are not
+displayed. The corresponding Bayes plot is presented in the next section.
+
+\begin{center}
+<<fig=TRUE,width=5,height=3,echo=TRUE>>=
+par(mfrow=c(1,2),mar=c(3,3,1,1),mgp=c(1.5,.5,0),oma=c(0,0,0,0),
+    pty="s",cex.axis=0.7,cex.lab=0.8,cex.main=0.9)
+DanielPlot(yield.lm,cex.pch=0.6,main="a) Daniel Plot")
+LenthPlot(yield.lm,alpha=0.05,xlab="factors",adj=.9,
+main="b) Lenth Plot")
+@
+\end{center}
+
+\section{Bayesian Screening}
+
+Box and Meyer Bayesian screening is also based on the factor sparsity
+hypothesis. For the linear model $y=X\beta+\epsilon$, the procedure assigns
+to each of the $\beta_i$ independent prior normal distributions
+$N(0,\gamma^2\sigma^2)$, where $\sigma^2$ is the variance of the error and
+$\gamma^2$ is the magnitude of the effect relative to the experimental noise.
+The factor sparsity assumption is brought into the procedure assigning a
+prior probability $\pi$ to any factor of being active, and $1-\pi$ to the
+factor of being inert. Models $M_l$ for all-subsets of factors (main effects
+and interactions) are constructed and their posterior probabilities
+calculated. Marginal factor posterior probabilities $p_i$ are computed and
+displayed. Those contrasts or factor effects with higher probabilities are
+identified as potentially active. See \citet{Box&Meyer-1986,Box&Meyer-1993}
+for explanation and details of the procedure.
+
+The \texttt{BsProb} function computes the posterior probabilities for
+Bayesian screening. The function calls the \texttt{bs} \textsc{fortran}
+subroutine, a modification of the \texttt{mbcqpi5.f} program included in the
+\textsf{mdopt} bundle. Most of the output of the original program is included in the 
+\texttt{BsProb}'s output list. This is a list of class \texttt{BsProb} with methods functions for \texttt{print}, \texttt{plot} and \texttt{summary}.
+
+\subsection{Fractional Factorial Designs}
+
+Bayesian screening was presented by Box and Meyer in their 1986 and 1993
+papers. The former refers to 2-level orthogonal designs while the latter
+refer to general designs. The distinction is important since in the case of
+2-level orthogonal designs some factorization is possible that allows the
+calculation of the marginal probabilities without summing over all-subsets
+models' probabilities. This situation is explained in the 1986 paper, where
+$\alpha$ and $k$ are used instead of the $\pi$ and $\gamma$ described at the
+beginning of the section. Their correspondence is $\alpha=\pi$, and
+$k^2=n\gamma^2+1$, where $n$ is the number of runs in the design. The
+function is written for the general case and arguments \texttt{p} and
+\texttt{g} (for $\pi$ and $\gamma$) should be provided. In the mentioned
+paper the authors estimated $\alpha$ and $k$ for a number of published
+examples. They found $.13\leq \hat{\alpha} \leq .27$, and $2.7\leq
+\hat{k}\leq 27$. Average values of $\alpha=0.20\ (=\pi)$ and $k=10\
+(\gamma=2.49)$ are used in the examples.
+
+\subsubsection{Box et al. 1986: Example 1}
+
+This example exhibits most of the output of the \texttt{BsProb} function. The
+design matrix and response vector, the 15 contrasts and 5 models posterior
+probabilities are printed. As mentioned before, \texttt{g=2.49} corresponds
+to $k=10$ used in the paper. Note that all possible $2^{15}$ factor
+combinations were used to construct the \texttt{totMod=32768} estimated
+models. Only the top \texttt{nMod=5} are displayed. See the \texttt{BsProb}
+help pages for details. Figures below show the Bayes plot (a) and Daniel plot
+(b) for the estimated effects. In this case both procedures clearly identify
+$x_2$, $x_4$, and $x_8$ as active contrasts.
+
+\begin{center}
+<<fig=TRUE,width=5,height=3,echo=TRUE>>=
+par(mfrow=c(1,2),mar=c(3,3,1,1),mgp=c(1.5,.5,0),oma=c(0,0,0,0),
+    pty="s",cex.axis=0.7,cex.lab=0.8,cex.main=0.9)
+X <- as.matrix(BM86.data[,1:15])
+y <- BM86.data[,16] # Using prior probability of p=0.20, and k=10 (gamma=2.49)
+advance.BsProb <- BsProb(X=X,y=y,blk=0,mFac=15,mInt=1,p=0.20,g=2.49,ng=1,nMod=10)
+print(advance.BsProb,X=FALSE,resp=FALSE,nMod=5)
+plot(advance.BsProb,main="a) Bayes Plot")
+DanielPlot(advance.lm,cex.pch=0.6,main="b) Daniel Plot",
+        faclab=list(idx=c(2,4,8),lab=c(" x2"," x4"," x8")))
+#title("Example I",outer=TRUE,line=-1,cex=.8)
+@
+\end{center}
+
+\subsubsection{Box et al. 1986: Example 4}
+
+As mentioned in section~\ref{sec:isatin}, in the isatin data example active
+contrasts, if present, are not easily identified by Daniel or Lenth's plot.
+This situation is reflected in the sensitivity of the Bayes procedure to the
+value of $\gamma$. Different values for $k$ ($\gamma$) can be provided to the
+\texttt{BsProb} function and the respective factor posterior probabilities
+computed. The range of such probabilities is plotted as stacked spikes. This
+feature is useful in data analysis. See next subsection for further
+explanation. In the call of the function \textsf{BsProb},
+\texttt{g=c(1.22,3.74)} and \texttt{ng=10} indicate that the calculation of
+the marginal posterior probabilities is done for 10 equally spaced values of
+$\gamma$ in the range $(1.22, 3.74)$ corresponding to the range of $k$
+between 5 and 15 used in the paper. The sensitivity of the posterior
+probabilities to various values of $\gamma$ is exhibited in figure a) below.
+The large ranges displayed by some of the contrasts is an indication that no
+reliable inference is possible to draw from the data.
+
+\begin{center}
+<<fig=TRUE,width=5,height=3,echo=TRUE>>=
+par(mfrow=c(1,2),mar=c(3,3,1,1),mgp=c(1.5,.5,0),oma=c(0,0,0,0),
+    pty="s",cex.axis=0.7,cex.lab=0.8,cex.main=0.9)
+X <- as.matrix(BM86.data[,1:15])
+y <- BM86.data[,19]
+# Using prior probability of p=0.20, and k=5,10,15
+yield.BsProb <- BsProb(X=X,y=y,blk=0,mFac=15,mInt=1,p=0.20,g=c(1.22,3.74),ng=10,nMod=10)
+summary(yield.BsProb)
+plot(yield.BsProb,main="a) Bayes Plot")
+#title(substitute("( " *g* " )",list(g=quote(1.2<=gamma<=3.7))),line=-1)
+title(substitute("( " *g1* "" *g2* " )",list(g1=quote(1.2<=gamma),g2=quote(""<=3.7))),line=-1)
+DanielPlot(yield.lm,cex.pch=0.6,main="b) Daniel Plot",
+    faclab=list(idx=c(1,7,8,9,10,14),lab=paste(" ",c(1,7,8,9,10,14),sep="")))
+#title("Example IV",outer=TRUE,line=-1,cex=.8)
+@
+\end{center}
+
+\subsection{Plackett-Burman Designs}
+
+Simulation studies have shown Bayes screening to be robust to reasonable
+values of $\pi$ ($\alpha$). The method however is more sensitive to variation
+of $\gamma$ values. Box and Meyer suggest the use of the $\gamma$ value that
+minimize the posterior probability of the null model (no active factors). The
+rationale of this recommendation is because this value of $\gamma$ also
+maximizes the likelihood function of $\gamma$ since
+\[ p(\gamma|y) \propto \frac{1}{p(M_0|y,\gamma)} \]
+where $M_0$ denotes the null model with no factors. See
+\citet{Box&Meyer-1993} and references therein.
+
+\subsubsection{Box et al. 1993: Example 1}
+
+This example considers a factorial design where 5 factors are allocated in a
+12-run Plackett-Burman. The runs were extracted from the $2^5$ factorial
+design in of the reactor experiment introduced by \citet{BHH-1978} and presented
+in section~\ref{reactor.experiment}.
+Posterior probabilities are obtained and 3 factors are identified as
+potentially active, as shown in figure a) below. Then, the complete saturated
+design (11 orthogonal columns) is considered and marginal probabilities are
+calculated and displayed in figure b). None of the other contrasts
+$x_6$--$x_{11}$ seem to be active.
+
+
+\begin{center}
+<<fig=TRUE,width=5,height=3,echo=TRUE>>=
+par(mfrow=c(1,2),mar=c(3,3,1,1),mgp=c(1.5,.5,0),oma=c(0,0,0,0),
+    pty="s",cex.axis=0.7,cex.lab=0.8,cex.main=0.9)
+data(BM93.e1.data,package="BsMD")
+X <- as.matrix(BM93.e1.data[,2:6])
+y <- BM93.e1.data[,7]
+prob <- 0.25
+gamma <- 1.6
+# Using prior probability of p=0.20, and k=5,10,15
+reactor5.BsProb <- BsProb(X=X,y=y,blk=0,mFac=5,mInt=3,p=prob,g=gamma,ng=1,nMod=10)
+summary(reactor5.BsProb)
+plot(reactor5.BsProb,main="a) Main Effects")
+
+data(PB12Des,package="BsMD")
+X <- as.matrix(PB12Des)
+reactor11.BsProb <- BsProb(X=X,y=y,blk=0,mFac=11,mInt=3,p=prob,g=gamma,ng=1,nMod=10)
+print(reactor11.BsProb,models=FALSE)
+plot(reactor11.BsProb,main="b) All Contrasts")
+#title("12-runs Plackett-Burman Design",outer=TRUE,line=-1,cex.main=0.9)
+@
+\end{center}
+
+\subsubsection{Box et al. 1993: Example 2}
+
+In this example again a 12-run Plackett-Burman design is analyzed. The effect
+of 8 factors ($A,\dots,G$), on the fatigue life of weld repaired castings is
+studied. As mentioned before, Box and Meyer suggest the use of values of
+$\gamma$ that maximizes its likelihood (minimizes the probability of the null
+model). Figure a) below displays $P\{\gamma|y\}$ ($\equiv 1/P\{M_0|y\}$) as
+function of $\gamma$. It can be seen that the likelihood $P\{\gamma|y\}$ is
+maximum around $\gamma=1.5$. In this example the maximization is carried out
+by calculating the marginal posterior probabilities for $1\leq \gamma \leq 2$
+and plotting the reciprocal of the probabilities of the null model. These
+probabilities are allocated in the first row of the probabilities matrix
+(\texttt{fatigueG.BsProb\$prob}), where \texttt{fatigueG.BsProb} is the
+output of \texttt{BsProb}. A Bayes plot based on this $\gamma=1.5$ is
+exhibited in figure b). Factors $F(X_6)$ and $G(X_7)$ clearly stick out from
+the rest. Alternatively, the unscaled $\gamma$ likelihood ($P\{\gamma|y\}$)
+could be used since it has been already calculated by \texttt{BsProb} and
+assigned to \texttt{fatigueG.BsProb\$pgam} element.
+
+\begin{center}
+<<fig=TRUE,width=5,height=3,echo=TRUE>>=
+par(mfrow=c(1,2),mar=c(3,3,1,1),mgp=c(1.5,.5,0),oma=c(0,0,1,0),
+    pty="s",cex.axis=0.7,cex.lab=0.8,cex.main=0.9)
+data(BM93.e2.data,package="BsMD")
+X <- as.matrix(BM93.e2.data[,1:7])
+y <- BM93.e2.data[,8]
+prob <- 0.25
+gamma <- c(1,2)
+ng <- 20
+# Using prior probability of p=0.20, and k=5,10,15
+fatigueG.BsProb <- BsProb(X=X,y=y,blk=0,mFac=7,mInt=2,p=prob,g=gamma,ng=ng,nMod=10)
+plot(fatigueG.BsProb$GAMMA,1/fatigueG.BsProb$prob[1,],type="o",
+    xlab=expression(gamma),ylab=substitute("P{" *g* "|y}",list(g=quote(gamma))))
+title(substitute("a) P{" *g* "|y}"%prop%"1/P{Null|y, " *g* "}",list(g=quote(gamma))),
+    line=+.5,cex.main=0.8)
+gamma <- 1.5
+fatigue.BsProb <- BsProb(X=X,y=y,blk=0,mFac=7,mInt=2,p=prob,g=gamma,ng=1,nMod=10)
+plot(fatigue.BsProb,main="b) Bayes Plot",code=FALSE)
+title(substitute("( "*g*" )",list(g=quote(gamma==1.5))),line=-1)
+@
+\end{center}
+
+\subsection{Extra Runs}
+
+\subsubsection{\label{sec:BM93-e3}Box et al. 1993: Example 3}
+
+This the injection molding example from \cite{BHH-1978}, where the analysis
+of the design is discussed in detail. In \cite{Box&Meyer-1993} the design is
+reanalyzed from the Bayesian approach. Firstly, a 16-run fractional factorial
+design is analyzed and the marginal posterior probabilities are calculated
+and displayed in figure a) below. Factors $A$, $C$, $E$ and $H$ are
+identified as potential active factors. The $2^{8-4}$ factorial design
+collapses to a replicated $2^{4-1}$ design in these factors. Thus, estimates
+of the main effects and interactions are not all possible. Then, it is
+assumed that 4 extra runs are available and the full 20-run design is
+analyzed considering the blocking factor as another design factor. Their
+posterior probabilities are computed and exhibited in figure b). It is noted
+in the paper that the conclusions arrived there differ from those in
+\cite{BHH-1978}, because the order of the interactions considered in the
+analysis, 3 and 2 respectively. In the \textsf{BsProb} function, the maximum
+interaction order to consider is declared with the argument \texttt{mInt}.
+For a detailed of the analysis see the source paper and reference therein.
+
+\begin{center}
+<<fig=TRUE,width=6,height=3,echo=TRUE>>=
+par(mfrow=c(1,2),mar=c(4,4,1,1),mgp=c(2,.5,0),oma=c(0,0,1,0),
+    pty="s",cex.axis=0.7,cex.lab=0.8,cex.main=0.9)
+data(BM93.e3.data,package="BsMD")
+print(BM93.e3.data)
+X <- as.matrix(BM93.e3.data[1:16,2:9])
+y <- BM93.e3.data[1:16,10]
+prob <- 0.25
+gamma <- 2.0
+# Using prior probability of p=0.25, and gamma=2.0
+plot(BsProb(X=X,y=y,blk=0,mFac=8,mInt=3,p=prob,g=gamma,ng=1,nMod=10),
+    code=FALSE,main="a) Fractional Factorial (FF)")
+
+X <- as.matrix(BM93.e3.data[,c(2:9,1)])
+y <- BM93.e3.data[,10]
+plot(BsProb(X=X,y=y,blk=0,mFac=9,mInt=3,p=prob,g=gamma,ng=1,nMod=5),
+    code=FALSE,main="b) FF with Extra Runs",prt=TRUE,)
+mtext(side=1,"(Blocking factor blk)",cex=0.7,line=2.5)
+@
+\end{center}
+
+\section{Model Discrimination}
+
+Follow-up experiments for model discrimination (MD) are discussed by
+\citet*{Meyer&etal-1996}. They introduce the design of follow-up experiments
+based on the MD criterion:
+\[ \text{MD}= \sum_{i \neq j}P(M_i|Y)P(M_j|Y)I(p_i,p_j) \]
+\sloppy where $p_i$ denotes the predictive density of a new observation(s)
+conditional on the observed data $Y$ and on model $M_i$ being the correct
+model, and \mbox{$I(p_i,p_j)\!=\!\int\! p_i \ln(p_i/p_j)$} is the
+Kullback-Leibler information, measuring the mean information for
+discriminating in favor of $M_i$ against $M_j$ when $M_i$ is true. Under this
+criterion designs with larger MD are preferred.
+
+The criterion combines the ideas for discrimination among models presented by
+\citet*{Box&Hill-1967} and the Bayesian factor screening by
+\citeauthor*{Box&Meyer-1986}. The authors present examples for 4-run
+follow-up experiments but the criterion can be applied to any number of runs.
+In the next subsections we present the 4-run examples in the
+\cite{Meyer&etal-1996} paper and revisit the last of the examples from the
+one-run-at-a-time experimentation strategy.
+
+The \texttt{MD} function is available for MD optimal follow-up designs. The
+function calls the \texttt{md} \textsc{fortran} subroutine, a modification of
+the \texttt{MD.f} program included in the \textsf{mdopt} bundle. The output of the \texttt{MD} function is a list
+of class \texttt{MD} with \texttt{print} and \texttt{summary} method
+functions.
+
+For a given number of factors and a number of follow-up sets of runs, models
+are built and their MD calculated. The method employs the exchange search
+algorithm. See \cite{Meyer&etal-1996} and references therein. The \texttt{MD}
+function uses factor probabilities provided by \texttt{BsProb}. See the help
+pages for details.
+
+\subsection{4-run Follow-Up Experiments}
+
+\subsubsection{Meyer et al. 1996: Example 1}
+
+The example presents the 5 best MD 4-run follow-up experiments for injection
+molding example, presented in section~\ref{sec:BM93-e3}. In the code below
+note the call to the \texttt{BsProb} function before calling \texttt{MD}. The
+procedure selects the follow-up runs from a set of candidate runs
+\texttt{Xcand} (the original $2^{8-4}$ design), including the blocking factor
+\texttt{blk}. The best 4-run follow-up experiment, runs $(9, 9, 12, 15)$, has
+a MD of 85.72, followed by (9,12,14,15) with $\text{MD}=84.89$. Note that
+these runs are different from the 4 extra runs in section~\ref{sec:BM93-e3}.
+
+<<MSBExample1,echo=TRUE>>=
+par(mfrow=c(1,2),mar=c(3,4,1,1),mgp=c(2,.5,0),oma=c(0,0,1,0),
+    pty="s",cex.axis=0.7,cex.lab=0.8,cex.main=0.9)
+data(BM93.e3.data,package="BsMD")
+X <- as.matrix(BM93.e3.data[1:16,c(1,2,4,6,9)])
+y <- BM93.e3.data[1:16,10]
+injection16.BsProb <- BsProb(X=X,y=y,blk=1,mFac=4,mInt=3,p=0.25,g=2,ng=1,nMod=5)
+
+X <- as.matrix(BM93.e3.data[1:16,c(1,2,4,6,9)])
+p <- injection16.BsProb$ptop
+s2 <- injection16.BsProb$sigtop
+nf <- injection16.BsProb$nftop
+facs <- injection16.BsProb$jtop
+nFDes <- 4
+Xcand <- matrix(c(1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
+                    -1,-1,-1,-1,1,1,1,1,-1,-1,-1,-1,1,1,1,1,
+                    -1,-1,1,1,-1,-1,1,1,-1,-1,1,1,-1,-1,1,1,
+                    -1,1,-1,1,-1,1,-1,1,-1,1,-1,1,-1,1,-1,1,
+                    -1,1,1,-1,1,-1,-1,1,1,-1,-1,1,-1,1,1,-1),
+                    nrow=16,dimnames=list(1:16,c("blk","A","C","E","H"))
+                )
+print(MD(X=X,y=y,nFac=4,nBlk=1,mInt=3,g=2,nMod=5,p=p,s2=s2,nf=nf,facs=facs,
+            nFDes=4,Xcand=Xcand,mIter=20,nStart=25,top=5))
+@
+
+\subsubsection{Meyer et al. 1996: Example 2}\label{reactor.experiment}
+
+This example is based on the $2^5$ factorial reactor experiment presented
+initially in \citet[chap.~12]{BHH-1978} and revisited from the MD criterion
+perspective in \citet[chap.~7]{BHH2-2005}. The full design matrix and
+response is:
+<< ReactorData,echo=TRUE>>==
+data(Reactor.data,package="BsMD")
+print(Reactor.data)
+#print(cbind(run=1:16,Reactor.data[1:16,],run=17:32,Reactor.data[17:32,]))
+@
+
+First, it is assumed that only 8 runs $(25,2,\dots,32)$, from a $2^{5-2}$
+were run. The runs are displayed in the output as \texttt{Fraction}. Bayesian
+screening is applied and posterior marginal probabilities are calculated and
+shown in figure a) below. These probabilities are used to find the MD optimal
+4-run follow-up designs choosing the possible factor level combinations from
+the full $2^5$ design. Since in this example responses for all the 32 runs
+are available, they are used as if the follow-up experiment was actually run
+and the posterior factor probabilities for the 12-run experiment determined
+and displayed in figure b). It is apparent how the extra runs clean up the
+activity of factors $B$, $D$ and $E$. Note that the output of the
+\textsf{BsProb} function is used in the the call of \textsf{MD}. Method functions
+\texttt{print} and \texttt{summary} are available to control the amount of
+displayed output.
+
+\begin{center}
+<<fig=TRUE,width=5,height=3,echo=TRUE>>=
+par(mfrow=c(1,2),mar=c(3,4,1,1),mgp=c(2,.5,0),oma=c(0,0,0,0),
+    pty="s",cex.axis=0.7,cex.lab=0.8,cex.main=0.9)
+fraction <- c(25,2,19,12,13,22,7,32)
+cat("Fraction: ",fraction)
+X <- as.matrix(cbind(blk=rep(-1,8),Reactor.data[fraction,1:5]))
+y <- Reactor.data[fraction,6]
+print(reactor8.BsProb <- BsProb(X=X,y=y,blk=1,mFac=5,mInt=3,
+    p=0.25,g=0.40,ng=1,nMod=32),X=FALSE,resp=FALSE,factors=TRUE,models=FALSE)
+plot(reactor8.BsProb,code=FALSE,main="a) Initial Design\n(8 runs)")
+p <- reactor8.BsProb$ptop
+s2 <- reactor8.BsProb$sigtop
+nf <- reactor8.BsProb$nftop
+facs <- reactor8.BsProb$jtop
+nFDes <- 4
+Xcand <- as.matrix(cbind(blk=rep(+1,32),Reactor.data[,1:5]))
+print(MD(X=X,y=y,nFac=5,nBlk=1,mInt=3,g=0.40,nMod=32,p=p,s2=s2,nf=nf,facs=facs,
+            nFDes=4,Xcand=Xcand,mIter=20,nStart=25,top=5),Xcand=FALSE,models=FALSE)
+new.runs <- c(4,10,11,26)
+cat("Follow-up:",new.runs)
+X <- rbind(X,Xcand[new.runs,])
+y <- c(y,Reactor.data[new.runs,6])
+print(reactor12.BsProb <- BsProb(X=X,y=y,blk=1,mFac=5,mInt=3,p=0.25,g=1.20,ng=1,nMod=5))
+plot(reactor12.BsProb,code=FALSE,main="b) Complete Design\n(12 runs)")
+@
+\end{center}
+
+\subsection{One-run-at-a-time Experiments}
+
+\subsubsection{\label{sec:one-run-at-a-time} Meyer et al. 1996: Example 2}
+
+Example~\ref{reactor.experiment} is considered again in this subsection. In
+this exercise we assume that the follow-up experimentation is in
+one-run-at-a-time fashion instead of the 4-run experiment discussed before.
+At each stage marginal posterior probabilities are computed and MD is
+determined, using $\gamma = 0.4, 0.7, 1.0 , 1.3$. Once again, candidate runs
+are chosen from the $2^5$ design. It can be seen there that at run 11,
+factors $B$, $D$ and possibly $E$ too, are cleared from the other factors.
+Note also that the final set of runs under the one-at-a-time approach $(10,
+4, 11, 15)$ ended being different from $(4, 10, 11, 26)$ suggested by the
+4-run follow-up strategy based on $\gamma=0.4$. Bayes plots for each step are
+displayed in the figure below. See \citet[chap.~7]{BHH2-2005} for discussion
+of this approach. The code used in this section is included as appendix.
+
+<<One-at-a-time,echo=FALSE >>=
+data(Reactor.data,package="BsMD")
+#cat("Initial Design:\n")
+X <- as.matrix(cbind(blk=rep(-1,8),Reactor.data[fraction,1:5]))
+y <- Reactor.data[fraction,6]
+lst <- reactor8.BsProb <- BsProb(X=X,y=y,blk=1,mFac=5,mInt=3,p=0.25,g=0.40,ng=1,nMod=32)
+
+#cat("Follow-Up: run 1\n")
+p <- lst$ptop; s2 <- lst$sigtop; nf <- lst$nftop; facs <- lst$jtop
+reactor8.MD <- MD(X=X,y=y,nFac=5,nBlk=1,mInt=3,g=0.40,nMod=32,p=p,s2=s2,nf=nf,facs=facs,
+            nFDes=1,Xcand=Xcand,mIter=20,nStart=25,top=3)
+new.run <- 10
+X <- rbind(X,Xcand[new.run,]); rownames(X)[nrow(X)] <- new.run
+y <- c(y,Reactor.data[new.run,6])
+lst <- reactor9.BsProb <- BsProb(X=X,y=y,blk=1,mFac=5,mInt=3,p=0.25,g=0.7,ng=1,nMod=32)
+
+#cat("Follow-Up: run 2\n")
+p <- lst$ptop; s2 <- lst$sigtop; nf <- lst$nftop; facs <- lst$jtop
+reactor9.MD <- MD(X=X,y=y,nFac=5,nBlk=1,mInt=3,g=0.7,nMod=32,p=p,s2=s2,nf=nf,facs=facs,
+            nFDes=1,Xcand=Xcand,mIter=20,nStart=25,top=3)
+new.run <- 4
+X <- rbind(X,Xcand[new.run,]); rownames(X)[nrow(X)] <- new.run
+y <- c(y,Reactor.data[new.run,6])
+lst <- reactor10.BsProb <- BsProb(X=X,y=y,blk=1,mFac=5,mInt=3,p=0.25,g=1.0,ng=1,nMod=32)
+
+#cat("Follow-Up: run 3\n")
+p <- lst$ptop; s2 <- lst$sigtop; nf <- lst$nftop; facs <- lst$jtop
+reactor10.MD <- MD(X=X,y=y,nFac=5,nBlk=1,mInt=3,g=1.0,nMod=32,p=p,s2=s2,nf=nf,facs=facs,
+            nFDes=1,Xcand=Xcand,mIter=20,nStart=25,top=3)
+new.run <- 11
+X <- rbind(X,Xcand[new.run,]); rownames(X)[nrow(X)] <- new.run
+y <- c(y,Reactor.data[new.run,6])
+lst <- reactor11.BsProb <- BsProb(X=X,y=y,blk=1,mFac=5,mInt=3,p=0.25,g=1.3,ng=1,nMod=32)
+
+#cat("Follow-Up: run 4\n")
+p <- lst$ptop; s2 <- lst$sigtop; nf <- lst$nftop; facs <- lst$jtop
+reactor10.MD <- MD(X=X,y=y,nFac=5,nBlk=1,mInt=3,g=1.3,nMod=32,p=p,s2=s2,nf=nf,facs=facs,
+            nFDes=1,Xcand=Xcand,mIter=20,nStart=25,top=3)
+new.run <- 15
+X <- rbind(X,Xcand[new.run,]); rownames(X)[nrow(X)] <- new.run
+y <- c(y,Reactor.data[new.run,6])
+reactor12 <- BsProb(X=X,y=y,blk=1,mFac=5,mInt=3,p=0.25,g=1.30,ng=1,nMod=10)
+
+print(reactor12,nMod=5,models=TRUE,plt=FALSE)
+@
+
+\begin{center}
+<<fig=TRUE,width=5,height=4,echo=FALSE >>=
+par(mfrow=c(2,2),mar=c(3,4,1,1),mgp=c(2,.5,0),oma=c(1,0,1,0),
+    pty="s",cex.axis=0.7,cex.lab=0.8,cex.main=0.9)
+#plot(reactor8.BsProb,code=FALSE)
+#mtext(side=1,"a) 8 runs",line=3,cex=0.7)
+plot(reactor9.BsProb,code=FALSE)
+mtext(side=1,"b) 9 runs",line=3,cex=0.7)
+plot(reactor10.BsProb,code=FALSE)
+mtext(side=1,"c) 10 runs",line=3,cex=0.7)
+plot(reactor11.BsProb,code=FALSE)
+mtext(side=1,"d) 11 runs",line=3,cex=0.7)
+plot(reactor12.BsProb,code=FALSE)
+mtext(side=1,"e) 12 runs",line=3,cex=0.7)
+title("One-at-a-time Experiments",outer=TRUE)
+@
+\end{center}
+
+\section{Summary}
+Various techniques are available for factor screening of unreplicated
+experiments. In this document we presented the functions of the \textsf{BsMD}
+package for Bayesian Screening and Model Discrimination. A number of examples
+were worked to show some of the features of such functions. We refer the
+reader to the original papers for detailed discussion of the examples and the
+theory behind the procedures.
+
+\section*{Acknowledgment} Many thanks to Daniel Meyer for making his
+\textsc{fortran} programs available and his permission to adapt and include
+them in this package. I want to thank as well Alejandro Mu\~{n}oz whose
+detailed comments on early versions of the package and this document made
+\textsf{BsMD} easier to use and understand.
+
+\bibliographystyle{plainnat} \addcontentsline{toc}{section}{References}
+\bibliography{BsMD}
+
+\section*{Appendix}
+\addcontentsline{toc}{section}{Appendix}
+
+Code used in section~\ref{sec:one-run-at-a-time}.
+
+\bigskip
+
+\begin{verbatim}
+data(Reactor.data,package="BsMD")
+
+#cat("Initial Design:\n")
+X <- as.matrix(cbind(blk=rep(-1,8),Reactor.data[fraction,1:5]))
+y <- Reactor.data[fraction,6]
+lst <- reactor8.BsProb <- BsProb(X=X,y=y,blk=1,mFac=5,mInt=3,p=0.25,g=0.40,ng=1,nMod=32)
+
+#cat("Follow-Up: run 1\n")
+p <- lst$ptop; s2 <- lst$sigtop; nf <- lst$nftop; facs <- lst$jtop
+reactor8.MD <- MD(X=X,y=y,nFac=5,nBlk=1,mInt=3,g=0.40,nMod=32,p=p,s2=s2,nf=nf,facs=facs,
+            nFDes=1,Xcand=Xcand,mIter=20,nStart=25,top=3)
+new.run <- 10
+X <- rbind(X,Xcand[new.run,]); rownames(X)[nrow(X)] <- new.run
+y <- c(y,Reactor.data[new.run,6])
+lst <- reactor9.BsProb <- BsProb(X=X,y=y,blk=1,mFac=5,mInt=3,p=0.25,g=0.7,ng=1,nMod=32)
+
+#cat("Follow-Up: run 2\n")
+p <- lst$ptop; s2 <- lst$sigtop; nf <- lst$nftop; facs <- lst$jtop
+reactor9.MD <- MD(X=X,y=y,nFac=5,nBlk=1,mInt=3,g=0.7,nMod=32,p=p,s2=s2,nf=nf,facs=facs,
+            nFDes=1,Xcand=Xcand,mIter=20,nStart=25,top=3)
+new.run <- 4
+X <- rbind(X,Xcand[new.run,]); rownames(X)[nrow(X)] <- new.run
+y <- c(y,Reactor.data[new.run,6])
+lst <- reactor10.BsProb <- BsProb(X=X,y=y,blk=1,mFac=5,mInt=3,p=0.25,g=1.0,ng=1,nMod=32)
+
+#cat("Follow-Up: run 3\n")
+p <- lst$ptop; s2 <- lst$sigtop; nf <- lst$nftop; facs <- lst$jtop
+reactor10.MD <- MD(X=X,y=y,nFac=5,nBlk=1,mInt=3,g=1.0,nMod=32,p=p,s2=s2,nf=nf,facs=facs,
+            nFDes=1,Xcand=Xcand,mIter=20,nStart=25,top=3)
+new.run <- 11
+X <- rbind(X,Xcand[new.run,]); rownames(X)[nrow(X)] <- new.run
+y <- c(y,Reactor.data[new.run,6])
+lst <- reactor11.BsProb <- BsProb(X=X,y=y,blk=1,mFac=5,mInt=3,p=0.25,g=1.3,ng=1,nMod=32)
+
+#cat("Follow-Up: run 4\n")
+p <- lst$ptop; s2 <- lst$sigtop; nf <- lst$nftop; facs <- lst$jtop
+reactor10.MD <- MD(X=X,y=y,nFac=5,nBlk=1,mInt=3,g=1.3,nMod=32,p=p,s2=s2,nf=nf,facs=facs,
+            nFDes=1,Xcand=Xcand,mIter=20,nStart=25,top=3)
+new.run <- 15
+X <- rbind(X,Xcand[new.run,]); rownames(X)[nrow(X)] <- new.run
+y <- c(y,Reactor.data[new.run,6])
+reactor12 <- BsProb(X=X,y=y,blk=1,mFac=5,mInt=3,p=0.25,g=1.30,ng=1,nMod=10)
+
+print(reactor12,nMod=5,models=TRUE,plt=FALSE)
+
+par(mfrow=c(2,2),mar=c(3,4,1,1),mgp=c(2,.5,0),oma=c(1,0,1,0),
+    pty="s",cex.axis=0.7,cex.lab=0.8,cex.main=0.9)
+plot(reactor9.BsProb,code=FALSE)
+mtext(side=1,"b) 9 runs",line=3,cex=0.7)
+plot(reactor10.BsProb,code=FALSE)
+mtext(side=1,"c) 10 runs",line=3,cex=0.7)
+plot(reactor11.BsProb,code=FALSE)
+mtext(side=1,"d) 11 runs",line=3,cex=0.7)
+plot(reactor12.BsProb,code=FALSE)
+mtext(side=1,"e) 12 runs",line=3,cex=0.7)
+title("One-at-a-time Experiments",outer=TRUE)
+
+\end{verbatim}
+
+\end{document}

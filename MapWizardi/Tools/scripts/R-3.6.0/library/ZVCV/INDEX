@@ -1,0 +1,9 @@
+Expand_Temperatures     Adjusting the temperature schedule
+VDP                     Example of estimation using SMC
+ZVCV                    Zero-Variance Control Variates
+evidence                Evidence estimation with ZV-CV
+getX                    The function 'getX' is used to get the matrix
+                        of covariates for the regression based on a
+                        specified polynomial order.
+helper_functions        Useful helper functions
+zvcv                    ZV-CV for general expectations

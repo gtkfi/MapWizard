@@ -1,0 +1,877 @@
+Changes to package DoE.base
+
+This package is still under development. 
+Suggestions and bug reports are very welcome. 
+
+May 2019, Version 1.1-3
+- modified function print.oa in order to suppress 
+  all non-standard attributes per default
+
+May 2019, Version 1.1-2
+- added information on reproducing old randomizations 
+  with R versions 3.6-0 and later 
+  - to the documentation of all functions affected by the 
+    new default RNGkind for function sample, 
+    under argument "seed" and in the section "Warning"
+    (functions oa.design, cross.design, fac.design, 
+    rerandomize.design), 
+  - to the documentation of the class design under 
+    design.info elements seed and creator, 
+    and in section "Warning"
+  - to the documentation of the VSGFS data frame, 
+    in the example code that reproduces the design
+    and in the Details section.
+- further small fixes in the documention
+- added an argument "version" with default 2 
+  to function export.design, in order to ensure 
+  that exported designs can still be read in 
+  R versions 3.4.x and lower; the default may change, 
+  once R versions below R 3.5 can be considered rare.
+- changed the test output to reflect the R 3.6-0 behavior 
+  of function sample
+
+August 2018, Version 1.1-1
+- added information example to documentation of oacat3
+
+Bug fix:
+- new arrays exported
+
+August 2018, Version 1.1
+- made show.oas always show strong arrays, if these exist
+- use strong arrays automatically in oa.design, if possible
+  (this changes the design created for some situations, 
+   for which an array ID has not been specified)
+- added an option for creation of all non-isomorphic replacements 
+  to the expansive.replace function (if replacement array 
+  is a small full factorial)
+- added an import from package partitions, in support for previous bullet
+- added three strength 3 arrays from the Aggrawal/Dey 
+  construction method 2 (found fix for wrong formula in their paper)
+- deactivated message on column order optimization for cases for which 
+  the default column order is known from the literature to have GMA
+  (Butler 2005); this involves adding columns gmarule and sgmarule 
+  to oacat
+
+Bug fix:
+- fixed level coding of some arrays listed in oacat3, 
+  which were coded from -(s-1) to (s-1) in steps of 2, rather than from 1 to s
+  (affects all arrays from the Aggrawal/Dey construction)
+
+June 2018, Version 1.0
+- added CITATION of JSS paper
+- reentered link to documentation of planor, 
+  which is on CRAN again
+- added caveat to the documentation of the lower bounds functions 
+  that resolution needs to be ascertained before applying these
+Bug fix:
+- fixed function SCFTs (a necessary instance of break 
+  had been removed with version 0.32, which made 
+  the output of function SCFTs ugly under option all=TRUE)
+
+March 2018, Version 0.32
+- added function lowerbound_AR (based on hidden functions 
+  lowerbounds and lowerbound_chi2) that calculates a best possible A_R
+  for a combination of nruns, nlevels and resolution;
+  the functions were originally in DoE.MIParray only
+- added function oa.min4 that optimizes column allocation 
+  in resolution 4 designs without the need to first go through 
+  all triples as well
+- incorporated best possible A_R ("target") into
+  functions oa.min3 and oa.min4 in order to speed things up
+  when searching for small designs within relatively large designs, 
+  if only a single array is sought and the best possible 
+  array is reached fast
+- replaced function oa.maxGR with 
+  oa.min3 and oa.min4 using rela=TRUE and crit="worst", where possible
+  (much faster)
+- updated a reference
+- modified description
+- added a link to package DoE.MIParray
+- removed link to documentation of planor (as planor was archived)
+Bug fix:
+- removed two useless instances of "break" (functions halfnormal and SCFTs)
+
+August 2017, Version 0.31
+- added function oa_feasible that tests necessary conditions 
+  for the feasibility of a request for a combination of nruns, 
+  nlevels and strength
+- added an S3 method for class oa for the generic function print
+- added factor level recognition to levels.no
+- modified print methods to be more reactive to line widths
+- updated references in help files to reflect 
+  latest published research results 
+  (help files GRind, ICFTs, oa.design, generalized.word.length, 
+  and DoE.base-package)
+
+March 2017, Version 0.30
+- modified get() to not request package:DoE.base in function getArray 
+  (file utilities.for.children) in order to make importing DoE.base possible. 
+  Users who want to use function oa.design inside their package without depending 
+  on DoE.base will have to write their namespace file such that it 
+  imports package DoE.base, possibly excepting some non-needed functions,
+  and that it *exports* the arrays (L...) and the function contr.XuWu. 
+  Exporting must happen *after the import*. 
+- modified function ICFT to force all columns of matrix U to non-negative 
+  column means, and add coding invariant coefficient vector c.worst 
+  to output list
+
+September 2016, Version 0.29
+- added a function corrPlot for overview diagnostic plots of the confounding 
+  structure of (possibly mixed level) fractional factorial designs, 
+  including also the possibility to investigate confounding with run order
+- added a function P2.2 and modified function tupleSel 
+  to work for resolution II designs as well
+- added an option showGRs to function show.oas
+- added two experimental functions ICFTs and ICFT for interaction contributions, 
+  as will be described in a future technical report
+- added hidden auxiliary functions rect_simplex and HouseholderRotToOne for 
+  supporting the ICFT functions
+- Bug fixes: 
+  - rerandomize.design did not always update the run.no column in the run.order 
+    attribute and the row names of the design
+  - the block factor in designs created by fac.design did not have enough 
+    levels in case of between blocks replication
+  - plot.design behaved inappropriately if factor names and factor letters 
+    partly coincided; this has been resolved by always giving precedence 
+    to factor names.
+  - actually did what was claimed for version 0.28:
+    modified the column "regular" for oacat to reflect non-regularity 
+    that occurs in full resolution sets of more than the overall resolution 
+    columns (see Grömping and Bailey 2016), and fixed the documentation 
+    for this aspect
+
+March 2016, Version 0.28
+- added a function expansive.replace for combining two arrays by 
+  expansive replacement
+- modified the column "regular" for oacat to reflect non-regularity 
+  that occurs in full resolution sets of more than the overall resolution 
+  columns (see Grömping and Bailey 2016)
+- added 31 strength 3 and stronger OAs, 
+  and collected info on them in an additional data frame oacat3 
+  (where the three already present stronger arrays are also listed)
+- added an option to function show.oas for requesting a resolution larger than 3
+- Bug fixes:
+  - for function SCFTs: 
+    combination of kmin and regcheck did not work as intended
+  - for function cross.design: removed a superfluous and wrong 
+    (but inconsequential) rownames argument to an as.data.frame call 
+    (thanks to Bill Dunlap for spotting this)
+  - for function paramtowide: corrected a column name specification 
+    in a reshape call on the rn order data frame ro 
+    (luckily inconsequential for the correctness of the reshaped order;
+    again, thanks to Bill Dunlap for spotting this)
+
+21/08/2015, Version 0.27-1
+- improved documentation for function GRind
+- added class GRind to the GRind output
+- added a print method for class GRind
+- lowered required resolution for GRind to 2
+- added a function SCFTs for more detailed analysis of squared canonical correlations
+  and average R^2 frequencies, and for regularity checking
+- bug fix for data2design: sapply -> lapply for making it work properly for symmetric designs
+
+29/03/2015, Version 0.27 
+- modified the blocking facility for full factorial designs to 
+  yield better designs in case there are factors with 2^a or 3^b levels
+- extended error messages to more accurately reflect the limitations of 
+  automated blocking for function fac.design
+- added labeling to the block.gen component of the design.info object 
+  of blocked full factorials (does not overwrite existing names of custom 
+  block.gen matrix)
+- added pseudo factor numbers of levels to the design.info object
+  of blocked full factorials
+- added generator information to design.info also for planor designs
+  (unmodified designkey attribute stored in element generators)
+- added columns to the oacat data frame for supporting more informed choice 
+  of starting designs for column selection 
+- modified function show.oas 
+  - to allow selection based on the new columns regular, regular.strict, and GR    criteria, 
+  - to display quality metrics on request 
+    by new option showmetrics
+  - to consequently use the word "array" instead of "design" in function output    and documentation
+- made it the default behavior of factor.names to add factor levels 
+  in the order of the factor.names element of design.info 
+  (added option to switch to old behavior, where needed)
+- made it the default behavior of oa.design to assign factor levels 
+  in the order specified in factor.names (fac.design always did)
+  (added option to switch to old behavior, where needed)
+- made function lengths generic with methods for classes design and matrix, 
+  and a default method that is the new base function lengths for R versions from 3.2;
+  note that this change is defensive, i.e. considers not breaking user expectations 
+  regarding the behavior of base functions a high priority: 
+  using the package function lengths on a data frame without class design 
+  now requires explicit use of DoE.base:::lengths.design; 
+  this choice has been made, given that application of lengths to such data frames 
+  is expected to be rare and function GWLP can do a similar job for most purposes
+- modified function rerandomize.design to allow randomization w.r.t. a block 
+  factor after design creation with function oa.design or pb
+- adapted test outputs to new masking message from new base function lengths
+- modified function GRind to ignore non-factor columns in class design objects,
+  to gain an optio with.blocks (default FALSE), 
+  and to throw an error for designs of resolution less than 3
+- added the data frame VSGFS as an example for use of an optimized 
+  orthogonal array
+- improvements to plot.design:
+  - removed redundant warning when temporarily removing responses
+  - improved y axis labeling in case plot.design from package graphics is called
+- improvements to halfnormal:
+  - changed printed output from cat/print to message, 
+  - reversed print order for significant effects to show strongest first, 
+  - improved visual structuring of printed output
+  - added option cex.text for sizing the point labels and further 
+    plot annotations 
+    text 
+  - added a response argument to the design method  
+  - added a note to the plot in case the coefficients depend on 
+    effect ordering because of (partial) aliasing
+- changed package title to title case
+- changed start of description in order to avoid warning
+- bugfix to oacat documentation (L128.2.15.8.1 is resolution IV, not V)
+- bugfix to factor.names: correctly leave factor levels unchanged for 
+  R factors  whose levels are not in the order of the factor.names 
+  element of design.info
+
+29/09/2014, Version 0.26-3
+- added functions planor2design and data2design for converting 
+  a planordesign, data.frame or matrix object to a class design object
+
+16/08/2014, Version 0.26-2
+- bugfix: the xlab option did not work for lm or design objects 
+  in function halfnormal
+- bugfix: the (non-default) use of conservative critical values 
+  used too conservative df for functions CME.LW98 and CME.EM08, 
+  the default use of simulated critical values was OK for the standard use 
+  case of small dfe but also too conservative for large dfe;
+  the conservative t-values have been modified to match the Larntz and Whitcomb 
+  specification (and might thus be slightly off for the Edwards and Mee method, 
+  the simulated critical values have been adapted to adequate behavior under 
+  all dfe settings; currently, these are simulated (1000 runs) on the fly; 
+  it is planned for the future to provide pre-calculate ones from many 
+  simulation runs for the most important situations
+- bugfix: halfnormal.lm did not handle pch vectors correctly
+- improvements to function halfnormal: 
+  - the default x label "absolute effects" was changed to the more 
+    accurate "absolute coefficients" for lm and design classes
+  - the function can now take pointwise cex and col arguments 
+    in the expected order
+  - the labs argument has gained a default, 
+    in order to make quick assessments easier
+  - for class design and class lm objects, 
+    there are new e.points and e.line arguments that both default to TRUE. 
+    These allow switching off the pure error points and/or adding 
+    a null line (with slope 1/std.err). 
+    The previous behavior of the function (points, no line) can be obtained by 
+    setting e.line to FALSE. 
+  - added a default title that shows the response name, the test method (if applicable) 
+    and the significance level
+  - changed the output from function halfnormal.default to invisible, 
+    as the visible output was often annoying rather than helpful.
+- added an imports entry to the NAMESPACE file for package grid
+
+09/04/2014, Version 0.26-1
+- bugfix: in some situations, function summary.design erroneously 
+  reported no aliasing for FrF2 designs generated with the option 
+  alias.info=3
+
+19/02/2014, Version 0.26
+- implemented advanced quality criteria for orthogonal arrays 
+  according to Grömping and Xu 2013 and Grömping (2013) in functions 
+  P3.3, P4.4 and GRind
+- updated test for column order to also test other P3.3 selections and GRind
+
+11/12/2013, Version 0.25-3
+- bugfix: function plot.design from package graphics was not called as intended from 
+  within package DoE.base's function plot.design
+
+26/08/2013, Version 0.25-2
+- bugfix: manual choice of alpha values in halfnormal or ME.Lenth, CME.LW98 and CME.EM08
+  failed to produce the simulated critical values in many cases 
+  (because of small numerical deviations of seq(0.01,0.25,0.01) from 0.01,0.02,...,0.25)
+- bugfix: the case with automated replications without lack of fit did not work
+- bugfix: scl did not work correctly for external pure error points with polynomial 
+  contrasts 
+  
+18/08/2013, Version 0.25-1
+- bugfix: print.lm.design printed the linear model twice because of a left-over 
+  stats::print.lm
+
+16/08/2013, Version 0.25
+- added function halfnormal (generic with methods for classes lm and design) 
+  for more general half normal plots than in function DanielPlot of package FrF2
+  (mixed level designs, violations of orthogonality and partial aliasing 
+  possible, e.g. by a missing response measurement)
+- added simulated critical values for Lenth's method (crit.ME and crit.SME)
+- added functions for the significance assessment methods by 
+  Lenth (ME.Lenth), Larntz and Whitcomb 1998 (CME.LW98) and Edwards and Mee 2008 
+  (CME.EM08)
+- added function contr.XuWuPoly, removed option sparse from function contr.XuWu, 
+  made option contrasts non-functional for contr.XuWu, and added a (non-functional) 
+  option contrasts to contr.FrF2, because model.matrix apparently throws an error
+  if that option is not available
+- fixed issues with DESCRIPTION and NAMESPACE according to new rules
+- removed ":::" access to functions from other packages, where possible
+
+05/07/2013, Version 0.24
+- removed dependencies on packages tcltk and relimp, by removing 
+  functions fix and showData (these were moved to package RcmdrPlugin.DoE, 
+  which was possible because Rcmdr plugins can now have namespaces)
+- moved package dependencies from "Depends" to "Imports", where possible
+- replaced the Author and Maintainer field in Description by Authors@R
+- added a fast way to obtain word length patterns, based on code provided 
+  by Hongquan Xu  
+- added a convenience feature for looking at a series of several mosaic plots 
+  for a design
+- added automated sub titles with design properties for mosaic plots 
+  (interesting for experts only)
+- created a separate documentation file for the plot.design method
+- modified function GR to return Inf for unconfounded three- and four-factor designs, 
+  and to also return RPFT=NULL for unconfounded 3-factor designs
+- modified attribute GR of output of function P3.3 to ">=4" for designs with zero length 
+  three words, and P4.4 to ">=5" for designs with zero length four words
+- new function tupleSel automatically selects worst-case tuples from a factorial 
+  design, with the goal of helping the user inspect the sore spots of a design
+- added an option "detailed" to functions P3.3 and P4.4 that is used by 
+  the new function tupleSel
+- fixed a few documentation bugs for class design methods
+
+23/02/2013, Version 0.23-4
+- modified function generators.design to provide more easily understandable output 
+  for blocked full factorial designs
+- added a function getblock that allows extracting block factor information 
+  in ways usable by R functions outside the package, e.g. functions from package nlme
+- added a function rerandomize.design for randomization after design creation;
+  different from the randomization option in package functions, this function 
+  does not block the randomization of replications; hence, users have a choice 
+  whether they do or do not want a blocked randomization of replications.
+- slightly modified the output of function summary.design for blocked designs 
+  (moved a line of white space)
+- modified functions iscube and isstar to work with the new run.order attribute as of package 
+  FrF2 version 1.6-5
+- modified function factorize.factor to conform to the latest version of package 
+  conf.design, where function factorize.default is no longer exported
+
+11/02/2013, Version 0.23-3
+- Bug fix to functions P3.3 and P4.4: For rela=TRUE, these calculated wrong 
+  results for designs with more than 9 columns, due to a character instead of 
+  numeric sorting bug.
+- modified an assign statement in function export.design to comply with new CRAN 
+  ban on assignments to global environment
+
+17/03/2012, Version 0.23-2
+- Function generators.design did not work (=error message) for blocked designs 
+  with any manually specified explicit block factors and yielded confusing 
+  results for designs that were created using function blockpick.big.
+  The updated function yields valid results for designs that were created 
+  using function blockpick.big and still throws an error on older version 
+  blocked designs with manually specified explicit block factors; for valid 
+  generator information on these, package FrF2 has to be version at least 1.4.
+
+04/03/2012, Version 0.23-1
+- Functions formula.design and lm.design gained an argument use.dummies for use in 
+  function DanielPlot (package FrF2) for including error dummies in pb designs
+  (they used to be always included; the new 0.23 convenience feature of excluding 
+  them for linear models wrongly excluded them also for Daniel plots).
+
+01/03/2012, Version 0.23
+- modified P3.3 and P4.4 to be faster and return more information 
+  (overall quality criteria are returned as attributes)
+- modified formula.design to automatically remove error dummy factors 
+  for pb type designs (better comfort in function lm.design
+  for designs created with FrF2 version 1.3 and beyond)
+- modified function oa.min3 to be faster and slightly more flexible:
+  added distinction between total and worst case perspective (new crit option)
+- added variants option to functions oa.min3, oa.maxGR and oa.min34, 
+  in order to be able to incorporate restrictions from previous 
+  filtering by other criteria
+- modified functions oa.min34, oa.max3 and oa.max4 to be faster
+- modified function oa.maxGR34 to include optimization of the RPFTs, 
+  and renamed the function to oa.minRelProjAberr 
+- made functions oa.min3, oa.min34, oa.max3, oa.max4, oa.maxGR work with 
+  factorial designs with levels different from 1, 2, 3, ...
+- added new internal functions PFTs.from.variants, matrix.fromPFTs, rankPFTs, 
+  bestPFT for supporting (R)PFT-based ranking and optimization of designs
+  (these may become external functions later)
+ Bug fixes:
+ - For version 0.22-8 of package \pkg{DoE.base}, function \code{iscube} 
+   returned a wrong result without warning, 
+   when applied to an old version CCD design 
+   (before DoE.wrapper, version 0.8-6 of Nov 15 2011).
+ - GR ignored the digits argument in the output number (but not in interim calculations, 
+   no more than digits digits were valid).
+ - removed element plan from sysdata.rda (created issues whenever a user named 
+   a design plan, because the intrinsic plan of the package would surprisingly 
+   sometimes supersede the users design)
+ - With only two factors with even number of levels, blocking into two blocks was not possible, 
+   because the respective row did not exist in block.catlg.
+
+15/11/2011, Version 0.22-8
+- allow picking cube only runs from central composite
+   - moved function iscube from FrF2 to DoE.base
+   - added functions isstar and pickcube
+   - modified lm.design and formula.design to cover both 
+     designs with center points and ccd designs (added option use.star, 
+     changed default for option use.center to NULL (because of different 
+     default needs for designs with center points and ccd designs; 
+     should not affect standard usage of the functions)
+
+08/11/2011, Version 0.22-7
+- bugfix: col.remove did not work, if no response was among the columns to be removed
+- bugfix: response.names with remove=TRUE caused various issues, if designs had been 
+  handled in unconventional ways before (e.g. columns added without using 
+  the add.response function); this has been fixed by making the handling of desnum 
+  more lenient; desnum is currently not really used for anything; if it would be, 
+  this would have to be revisited.
+
+07/11/2011, Version 0.22-6
+- oa.design now uses message command rather than cat() for conveying the message 
+  that a better way of column allocation would be available; 
+  this allows other packages to suppress this message, if appropriate
+- error message for mismatch between nruns and number of runs of specified array 
+  improved to show name of array rather than array itself
+
+11/08/2011, Version 0.22-5
+- improvements and bug fixes to add.response: 
+  - partial replacement of NA values for responses with otherwise idential values 
+    is now possible without the replace=TRUE option 
+  - small numeric differences between factors in design and response file 
+    led to error messages of different factor settings
+  - small numeric differences between responses in both files 
+    without the replace option led to error messages
+  - block columns and column name with small n were not automatically exempted 
+    from being responses
+
+10/08/2011, Version 0.22-4
+- bug fix to automatic block creation in case of multiplicity of a prime in the same 
+  factor
+- made block.catlg and Yates internal in order to avoid warnings from loading the 
+  same quantities again with FrF2
+
+09/08/2011, Version 0.22-3
+- automatic block creation possible for many more situations by incorporation 
+  of block factor catalogs for 2 and 3-level factor full factorials 
+  (block.catlg used to be in FrF2, block.catlg3 added, Yates used to be in FrF2, 
+  Yates3 added)
+- bug fix: the number of bocks could be smaller than requested without warning 
+  in case block.gen specified a linearly dependent set of generators
+
+05/08/2011, Version 0.22-2
+- removed generic for factorize and factorize.default, 
+  which had been included for avoiding problems with function factorize 
+  from sfsmisc; as their inclusion created problems, 
+  the conflict with sfsmisc was solved via selective import 
+  from sfsmisc in package FrF2.
+
+04/08/2011, Version 0.22-1
+- catered for class design objects from package conf.design 
+  in functions lm.design, aov.design, formula.design (error messages)
+  and summary.design (summary for data frames)
+- added warning for split-plot experiments, 
+  indicating which effects might have too small p-values, 
+  to outputs from functions print.lm.design, summary.lm.design 
+  print.aov.design and summary.aov.design 
+
+03/08/2011, Version 0.22
+- added blocking facility to function fac.design, 
+  i.e. full factorials can now be blocked
+  (one level of blocking only; automatic possible, 
+  if only one prime of each type is needed 
+  (confounds the highest possible degree of interaction); 
+  otherwise, user must specify block generators)
+- added some functions for prime and pseudo factor 
+  factorization 
+- added dependence on package conf.design
+
+31/07/2011, Version 0.21-3
+- added a branch to function print.design for an exception 
+  for class design from package conf.design
+
+04/06/2011, Version 0.21-2
+- added names to the list generated by make.formulas 
+  in support of making Fractional factorial 2-level designs 
+  with center points fit for response surface analysis
+
+27/04/2011, Version 0.21-1
+- bug in function print.design: 
+  for many designs, printing in standard order prompted two printouts, 
+  one in standard order and one in actual run order (wrongly placed return)
+
+31/01/2011, Version 0.21
+- made the run.no.in.std.order column in the run.order attribute 
+  a factor with properly ordered levels for oa.design and fac.design
+- introduced option std.order for print.design
+- enabled response.names<- function for wide designs
+- fixed bug in param.design that led to problems with long-to-wide reformatting 
+  for designs without responses
+- improved treatment of one-column response matrix in add.response
+- modified aggregate.design to keep previous responses, apart from the individual ones
+- fixed bug in summary.design that made summaries fail for combined designs 
+  like parameter designs
+- fixed bug in function generator.design that led to showing wrong block 
+   generator information for full factorial blocked designs
+
+05/01/2011, Version 0.20
+- added function contr.XuWu for calculating normalized contrasts for GWLP 
+  calculation
+- use contr.XuWu in length functions instead of normalization to square root of n, 
+  which makes these functions work appropriately for designs with imbalanced 
+  individual columns
+- implemented several improvements with the purpose of supporting adequate selection 
+  of mixed level screening designs, following Groemping 2011
+  - added relative projection frequency tables in functions 
+    P3.3 and P4.4 with option rela
+  - implemented option rela also into functions length3, length4 and length5, 
+    for obtaining the total relative number of words (cf. Grömping 2011)
+  - implemented new function GR for generalized resolution (generalizing 
+    Deng and Tang 2009)
+  - also enhanced functions oa.min3, oa.max3, oa.max4, oa.min34 with rela option,
+    added functions oa.maxGR for maximizing generalized resolution and 
+    oa.maxGR.min34 for optimizing numbers of relative length 3 or 4 words 
+    among designs with maximum generalized resolution (and in case of ties 
+    absolute length 4 words for best relative length 3)
+  - added options regarding the new optimization facilities 
+    to function oa.design (additional choices for column option)
+- improvement for fix.design: message box that informs about permissible changes
+
+05/08/2010, Version 0.12
+Methods of lm and aov for class design:
+- added a generic for function aov, a default method (which is the function 
+  from package stats) and a method for class design, as well as 
+  summary and print functions that ensure that enough information 
+  is printed regarding the number of observations and the formula used 
+- added an explanation about the implications of the existence 
+  of lm and aov generics for match.call-requests
+- introduced a method for function coef for lm.design objects that omits 
+  NA coefficients
+Design diagnostics:
+- improved memory usage in functions length3 and length4 
+  (replace mm3 and mm4 by vec3 and vec4 with sum)
+- added functions length2 and length5 for occasional uses, 
+  plus an overall function lengths for all four implemented lengths
+- added option J to length functions for optional output of 
+  J-characteristics instead of lengths 
+  (for supporting theoretical investigations rather than 
+  practical design generation)
+- added function oa.max4 (for supporting theoretical investigations rather than 
+  practical design generation)
+- removed function P4.3 because it is considered redundant
+- further improvement to documentation of generalized word length 
+Bug fix:
+- made nruns a minimum requirement rather than an exact requirement in function 
+  oa.design, as was always documented; 
+  the previous version returned a full factorial, whenever the requested 
+  minimum number of runs itself was not feasible; 
+  now the smallest orthogonal array with at least nruns runs is returned
+
+09/06/2010, Version 0.11-1
+Bug fix: function summary.design gave wrong statement on alias information 
+for FrF2 designs with only one alias entry for main effects or 2fis. 
+
+23/04/2010, Version 0.11
+- documentation of generalized.word.length: corrected typos and made it more understandable
+- made generators.character able to look up designs in arbitrary selected catalogues
+- made generators.design use the new catlg.name entry in design.info for FrF2 designs,
+  so that summary.design works for such designs
+
+03/04/2010, Version 0.10
+- meaningful error message, if full factorial is too large;
+  now indicate before trying to create full factorial how many runs this will have
+- implemented child arrays with substantial contributions from Boyko Amarov
+- included child arrays into oacat
+- moved documentation of oacat from oa.design documentation to a separate file
+- made show.oas show lineage information and child arrays
+- made show.oas return the displayed information as a data frame
+- allowed for show=0 and show="all" in show.oas
+- removed arrays L18.2.1.3.7 and L36.2.11.3.12, which were identical to Taguchi arrays 
+  L18 and L36; Taguchi arrays are available now as L18, L36 and L54; the corresponding 
+  arrays with regular labelling (L18.2.1.3.7, L36.2.11.3.12, L54.2.1.3.25) 
+  can be constructed as children from Kuhfeld parent arrays, as indicated in oacat 
+- adapted formula.design to reflect formula in (future) Dopt designs
+- adapted summary.design for lhs and Dopt type designs to display optimality 
+  criteria
+- added functions P3.3, P4.3 and P4.4 for pattern of length 3 (4) words 
+  of projections onto 3 (4) factors
+- added an explanation of generalized word length to the documentation 
+  word length based functions
+- added some word length information to summary.design for smaller type oa designs
+- made option quote for summary.design take effect on more aspects
+
+24/02/2010, Version 0.9-17
+- fixed documentation issues
+- added functions length3 and length4 for calculating numbers 
+  of generalized words of lengths 3 and 4 in support 
+  of automatic choice of better designs than just populating columns 
+  from left to right
+- added functions oa.min3, oa.min34 and oa.max3 for looking at best 
+  and worst arrays
+- added optimization possibility (default: no optimization, like previously) 
+  to oa.design (using option columns)
+- added some large (128, 256, 2048) resolution V non-regular arrays for 2-level 
+  factors from textbook by Mee 2009
+- improved print.design for blocked and split-plot structures: 
+  structured the printout to display structuring lines between blocks or plots
+- improved summary.design for FrF2-type designs: 
+  - removed empty aliased entries (i.e. empty entries for main or fi2s 
+    that were displayed as character(0) previously)
+  - added the possibility to displaying the design itself with the summary
+    (default: designs with up to 40 runs and 12 factors are displayed, others not;
+    controllable by option brief)
+  - added display of generator information via function generators 
+    (generic with methods)
+    - note that function generators.design does not work for designs of 
+      types FrF2.param... and FrF2.folded
+    - note that this feature does not work on blocked or splitplot designs 
+      that were produced with old versions of FrF2, 
+      as calculated generators would be wrong in some cases
+      (this is protected against by checking for the new entry FrF2.version 
+      in design.info of newer FrF2 designs) 
+  - removed message on non-usage of center points with formula.design
+bug fixes:
+  - nlevels of length 1 with ID produced uncaptured error
+  - various factor specifications with only one factor produced uncaptured error
+  - full factorial is returned whenever possible; originally, 
+    a (arbitrarily badly-aliased) design from the orthogonal array catalogue was returned, 
+    if one existed with same size as full factorial
+
+
+13/01/2010, Version 0.9-14
+- fixed new bug in plot.design that stopped the function to work for designs 
+  with responses
+
+13/01/2010, Version 0.9-13
+- modified function plot.design to enable selection of some factors only
+- fixed bug in plot.design that led to creation of an insubstantial warning
+  for many designs
+
+13/01/2010, Version 0.9-12
+- created function show.oas, which allows to inspect the available orthogonal 
+  arrays according to a few criteria
+Bug fixes:
+- fac.design and oa.design did not provide reasonable error messages, 
+  if nlevels contained integers below 2
+
+02/01/2010, Version 0.9-11
+- extended print.design and summary.design to accomodate specialities of 
+  D-optimal designs
+Bug fixes:
+- summary.design gave the wrong number of blocks 
+  (block size instead of number of blocks)
+- export.design for csv files exported row names without header, 
+  which led to a numeric variable X when reimporting the file 
+  with default behavior
+
+27/11/2009, Version 0.9-10
+- bug fix of Version 0.9-9 really implemented
+
+27/11/2009, Version 0.9-9
+- bug fix: column names of desnum attribute were not updated to new names when
+     using `factor.names<-` replacement for the design
+
+26/11/2009, Version 0.9-8
+- added a function col.remove for removing responses and non-design columns 
+  while preserving the class design structure
+- added a remove option to `response.names<-` 
+- added to function `factor.names<-` the possibility of choosing 
+  whether or not to modify contrasts
+- made documentation of class design more explicit for attributes desnum 
+  and value of assignment functions `response.names<-` and `factor.names<-`
+- provided for lm.design and formula.design for Dopt designs (to be implemented 
+  soon in DoE.wrapper)
+- modified summary.design:
+  - cat instead of message for design generation info for RcmdrPlugin.DoE
+    (--> no longer shown as warning in RcmdrPlugin.DoE)
+  - improved output for ccd, bbd and lhs designs 
+    (further enhancements to come, which require pending changes in DoE.wrapper)
+- modified export.design to include more meaningful headers for factor levels 
+  legend in case of quantitative designs
+bug fixes: 
+`factor.names<-` now also modifies the legend of the alias information 
+  for FrF2 designs. Furthermore, it correctly handles designs with quantitative 
+  factors and does not modify the desnum attribute of lhs, ccd and bbd designs.
+
+05/11/2009, Version 0.9-7
+The fix in 0.9-6 was not as robust as intended, reverted to the previous version. 
+
+04/11/2009, Version 0.9-6
+provided a more robust bug fix for the "lm.default" not found bug: 
+modified the call of the stored lm objects so that they can be handled 
+without package DoE.base loaded, and excluded lm.default and lm.design 
+from exporting again; 
+also removed most arguments from lm.default
+
+03/11/2009, Version 0.9-5
+- bug fix: 
+  export also lm.default and lm.design, as registration as S3 methods did not 
+  suffice to have them found; this messed up function update (error message: 
+  lm.default not found)
+  Thanks to Alex Loguinov for the bug report.
+- fixed broken links in documentation to formula.design
+
+25/09/2009, Version 0.9-4
+- corrected another link in documentation for lm.design
+
+17/09/2009, Version 0.9-3
+- added meaningful title to showData display (was always undesign(dataframe))
+- corrected a link in documentation for lm.design
+
+14/09/2009, Version 0.9-2
+- add.response now converts the name of a numeric variable to a valid R name. This 
+  solves issues with using add.response indirectly when applying it with a calculated response. 
+- oa.design and fac.design now also convert factor names to valid R names using make.names
+- param.design now converts given response names to valid R names.
+
+11/09/2009, Version 0.9-1
+- changed message to cat in print and summary
+- added function SN for signal-to-noise ratio 
+  (target only, since other versions are not scale invariant)
+- added generic, default and design method for showData (in support of RcmdrPlugin.DoE)
+
+07/09/09, Version 0.9
+- export function contr.FrF2 
+- fixed bugs in oa.design and fac.design for factor.names as an unnamed list 
+  for cases with nfactors unspecified 
+- made all experimental factors for function fac.design R factors per default 
+  (previously, numeric 2-level experimental factors were exported as numerics)
+- created method for aggregate for aggregating related response columns for the wide 
+  designs (useful for repeated measurements and parameter designs)
+- made contrasts option of function qua.design more user-friendly
+- added function change.contr to change contrasts for design objects 
+  even more user-friendly than with qua.design
+- made function formula.design (method for function formula) a serious function that 
+  covers the currently available design types for packages DoE.base, FrF2 and DoE.wrapper
+- added a generic, a default and a class design method for function lm,
+  the class design method of which does default analyses and adds the class lm.design 
+  to the output object
+- added a summary method for class lm.design that adds a class summary.lm.design 
+  to a standard output object from summary.lm
+- added print methods for classes lm.design and summary.lm.design in order to
+  make sure that automatic changes to the data body (like 
+  omission of center points or aggregation) cannot go unnoticed
+- added function iscube (identical to the one in package FrF2) as an internal function  
+  in support of lm.design
+- bug fix: [.design generated a warning for logical i 
+- bug fix: repeat.only element of design.info of wide format repeated measurement designs 
+  was TRUE, which led to inconsistent behavior (fixed in function reptowide)
+
+24/08/09, Version 0.8
+- updated qua.design to also be able to make quantitative designs qualitative (except lhs designs), 
+  fixed several bugs in qua.design, added a test file, and tidied the code
+- made functions fac.design and oa.design tolerate factor.names to be an unnamed list
+- bug fix: plot.design did not work, if design.info had a quantitative element with all entries NA
+- removed bug for add.response, if some but not all response values are NA and replace=FALSE
+Thanks to Matthias Burger for initiating the following improvements:
+- exported function origin and added a usage example (was unintentionally internal before)
+- eliminated instances of partial argument matching in function html.data.frame
+- use functions comment and comment<- from package base and do not define special function here
+- fixed installation note regarding global binding of result
+- improved markup in Rd files
+
+
+17/08/2009, Version 0.7
+- added function plot.design for allowing to deviate from plot.design 
+  in package graphics as appropriate
+- splitted documentation for class design into documentation of class itself 
+  with direct accessor functions on the one hand and methods for the class 
+  on the other hand
+- generalized function des.recode to be usable within FrF2 as well in place of the 
+  previously existing internal function within FrF2; 
+  made the function visible rather than internal
+- bug fix: explicitly disabled qua.design for designs with center points for the time being
+  (it is intended (but not trivial) to allow switching away from quantitative later)
+
+12/08/2009, Version 0.6-1
+- added further design types to designs for which run.order is displayed
+  (for upcoming version of FrF2)
+- bugfix: function design.info refused to assign correct design info element 
+  to blocked designs
+
+11/08/2009, Version 0.6
+- further restricted the designs to be treatable by function cross.design 
+  (splitplot and combined designs excluded, wide version designs excluded, 
+  designs with response.names excluded);
+  this should not limit reasonable use much and greatly reduces the number 
+  of cases to be distinguished
+- improved the design.info content for designs output by function cross.design, 
+  particularly the generators element (in case of FrF2.generator designs), but also 
+  for the elements generating.oa, origin, residual.df, clear, res3, map, nlevels 
+  (the last two are set to NULL and replaced by elements cross.map and cross.nlevels 
+  respectively)
+- modified the type of designs output by function paramtowide to be the type of the 
+  inner array design suffixed by .paramwide
+- modified the design.info for wide parameter designs to refer to the inner array 
+  only (the outer array is usually the noise array that is aggregated over in various 
+  ways for analysis purposes)
+- modified summary.design (printing of response for wide format designs) 
+- added function qua.design for switching between quantitative and qualitative factors 
+  and choosing contrasts for qualitative factors (limited freedom of choice for contrasts!)
+- documentation bug fix: nruns in oa.design gives the *minimum* number of runs
+
+
+31/07/2009 Version 0.5
+- changed R version to R-2.8.0 or newer (extractor for class design does not work 
+  with earlier versions)
+- added function print.design for printing useful information along with the design
+- added function summary.design for providing key information from design.info in 
+  convenient format
+  (will be developed further and may still change)
+- added functions reptowide and reptolong to reshape the experiment for 
+  repeated measurements (repeat.only=TRUE) between wide and long shape;
+  still experimental when applied to non-standard designs
+- added function cross.design for crossing designs, 
+  algorithm modified from function direct.sum from package conf.design
+- added function param.design for creating Taguchi style inner/outer array designs, 
+  and function paramtowide for setting these to wide format
+- added type all to export.design so that both csv and html can be output at the same time; 
+  meant for non-Excel users who want to work with csv file but nevertheless need the legend from 
+  html file
+- new function add.response to combine exported design with externally input response data;
+  this is still somewhat experimental
+- extended extractor method for designs to allow limited replication possibilities
+- added modification step to creator attribute of designs modified by extraction
+- removed intercept column from desnum attribute for designs created with 
+  fac.design or oa.design or modified with factor.names
+- bug fix: there were unintended names attached to the selected.columns element in design.info;
+  these were not always correct and have now been removed
+- bug fix: [.design did not always work correctly if j was not specified
+- bug fix: run.no.in.std.order for run.order attribute of functions fac.design 
+  and oa.design was previously made unique (by uniqueness of row.names for data frames); 
+  corrected to yield the run numbers only
+- bug fix: renamed randomized to randomize in functions oa.design and fac.design, 
+  in line with package FrF2, and adjusted documentation accordingly
+
+15/07/2009   Version 0.4-1
+- bug fix in function fix.design: error checking for changed factors 
+  had a bug and stopped perfectly legal edits from being stored.
+
+
+13/07/2009   Version 0.4
+- all experimental factors are now R-factors, even if they are numeric
+- export.design can now also export the R workspace only, without csv or html
+- bugfix: export.design did not correctly check replacing of files in case of 
+  capital letters in file names
+- modified export.design to handle factor labels with blanks from (future) GUI 
+  package RcmdrPlugin.DoE
+- added S3 generic for fix with default and design method
+- extended design.info for output objects from function oa.design to include nruns, 
+  nfactors and nlevels
+- improved documentation of class design and the respective parts of the value 
+  sections of functions oa.design and fac.design
+- included function contr.FrF2 and constant Yates from package FrF2 
+  (not exported; also remain in package FrF2)
+
+27/06/2009   Version 0.3
+- added list element creator to design.info attributes of created designs
+  and improved documentation of class design and its accessors
+- bug fix in documentation to export.design and several other small changes 
+  in documentation and package description
+- substantially improved and extended documentation to function oa.design
+
+26/05/2009   Version 0.2
+- modified internal function html.data.frame, 
+  so that top row of html file created by export.design 
+  is only one row when file is opened in Excel 
+  (changed top row formatting from <h3> to <b>)
+- added options filename and replace to function export, 
+  in order to protect users from inadvertent replacement of existing 
+  files and to allow filenames different from design names
+- moved documentation of constant Letters from oa.design.Rd 
+  to Utilities.Rd

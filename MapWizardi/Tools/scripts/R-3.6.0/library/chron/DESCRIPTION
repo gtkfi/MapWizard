@@ -1,0 +1,28 @@
+Package: chron
+Version: 2.3-54
+Title: Chronological Objects which can Handle Dates and Times
+Description: Provides chronological objects which can handle dates and times.
+Authors@R: c(person("David", "James", role = "aut",
+                     comment = "S original"),
+             person("Kurt", "Hornik", role = c("aut", "trl", "cre"),
+                    email = "Kurt.Hornik@R-project.org",
+                    comment = c(ORCID = "0000-0003-4198-9911")),
+             person("Gabor", "Grothendieck", role = "ctb",
+                    email = "ggrothendieck@gmail.com"),
+             person("R Core Team", role = "ctb"))
+Depends: R (>= 2.12.0)
+Imports: graphics, stats
+Suggests: scales, ggplot2
+Enhances: zoo
+License: GPL-2
+NeedsCompilation: yes
+Packaged: 2019-08-26 06:36:15 UTC; hornik
+Author: David James [aut] (S original),
+  Kurt Hornik [aut, trl, cre] (<https://orcid.org/0000-0003-4198-9911>),
+  Gabor Grothendieck [ctb],
+  R Core Team [ctb]
+Maintainer: Kurt Hornik <Kurt.Hornik@R-project.org>
+Repository: CRAN
+Date/Publication: 2019-08-26 06:58:12 UTC
+Built: R 3.6.2; x86_64-w64-mingw32; 2020-01-31 22:02:25 UTC; windows
+Archs: i386, x64

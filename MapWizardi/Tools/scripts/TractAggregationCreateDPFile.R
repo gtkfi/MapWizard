@@ -23,9 +23,9 @@
 #################################################################
 #library(MapMark4)
 #install.packages('gWidgets')
-library(gWidgets)
+#library(gWidgets)
 #install.packages('gWidgetstcltk')
-library(gWidgetstcltk)
+#library(gWidgetstcltk)
 #install.packages("dplyr")
 library(dplyr)
 

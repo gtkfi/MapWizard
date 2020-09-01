@@ -1,0 +1,22 @@
+BM86.data               Data sets in Box and Meyer (1986)
+BM93.e1.data            Example 1 data in Box and Meyer (1993)
+BM93.e2.data            Example 2 data in Box and Meyer (1993)
+BM93.e3.data            Example 3 data in Box and Meyer (1993)
+BsMD-package            Bayes screening and model discrimination
+                        follow-up designs
+BsProb                  Posterior Probabilities from Bayesian Screening
+                        Experiments
+DanielPlot              Normal Plot of Effects
+LenthPlot               Lenth's Plot of Effects
+MD                      Best Model Discrimination (MD) Follow-Up
+                        Experiments
+PB12Des                 12-run Plackett-Burman Design Matrix
+Reactor.data            Reactor Experiment Data
+plot.BsProb             Plotting of Posterior Probabilities from
+                        Bayesian Screening
+print.BsProb            Printing Posterior Probabilities from Bayesian
+                        Screening
+print.MD                Print Best MD Follow-Up Experiments
+summary.BsProb          Summary of Posterior Probabilities from
+                        Bayesian Screening
+summary.MD              Summary of Best MD Follow-Up Experiments

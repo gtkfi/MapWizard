@@ -508,7 +508,7 @@ namespace MapWizard.ViewModel
         {
             try
             {
-                string objectFile = dialogService.OpenFileDialog(Path.Combine(settingsService.RootPath, "GTModel", "SelectedResult"), "", true, true, settingsService.RootPath);
+                string objectFile = dialogService.OpenFileDialog(Path.Combine(settingsService.RootPath, "GTModel", "SelectedResult"), "RDS files|*.rds;", true, true, settingsService.RootPath);
                 if (!string.IsNullOrEmpty(objectFile))
                 {
                     Model.GradePlot = objectFile.Replace("\\", "/");
@@ -529,7 +529,7 @@ namespace MapWizard.ViewModel
         {
             try
             {
-                string objectFile = dialogService.OpenFileDialog(Path.Combine(settingsService.RootPath, "GTModel", "SelectedResult"), "", true, true, settingsService.RootPath);
+                string objectFile = dialogService.OpenFileDialog(Path.Combine(settingsService.RootPath, "GTModel", "SelectedResult"), "RDS files|*.rds;", true, true, settingsService.RootPath);
                 if (!string.IsNullOrEmpty(objectFile))
                 {
                     Model.TonnagePlot = objectFile.Replace("\\", "/");
@@ -550,7 +550,7 @@ namespace MapWizard.ViewModel
         {
             try
             {
-                string objectFile = dialogService.OpenFileDialog(Path.Combine(settingsService.RootPath, "UndiscDep", Model.SelectedTract, "SelectedResult"), "", true, true, settingsService.RootPath);
+                string objectFile = dialogService.OpenFileDialog(Path.Combine(settingsService.RootPath, "UndiscDep", Model.SelectedTract, "SelectedResult"), "RDS files|*.rds;", true, true, settingsService.RootPath);
                 if (!string.IsNullOrEmpty(objectFile))
                 {
                     Model.NDepositsPmf = objectFile.Replace("\\", "/");
