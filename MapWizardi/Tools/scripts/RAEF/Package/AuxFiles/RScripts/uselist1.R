@@ -10,7 +10,7 @@ for ( b in ListCNames)
 	UseList2 <<- c()
 	for ( b in UseList00)
 		 {
-		hhh <<- svalue(b)
+		hhh <<- get(b)
 		UseList2 <<- c(UseList2,hhh)
 		}
 

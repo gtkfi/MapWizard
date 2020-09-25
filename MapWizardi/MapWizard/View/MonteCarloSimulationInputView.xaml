@@ -20,7 +20,7 @@
         <service:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
         <service:SelectedIndexToBooleanConverter x:Key="SelectedIndexToBooleanConverter"/>
     </UserControl.Resources>
-    <StackPanel HorizontalAlignment="Left" Margin="0 20 0 0" Width="600">
+    <StackPanel HorizontalAlignment="Left" Margin="0 20 0 0" Width="700">
         <UniformGrid  Margin="0,0,0,0"
                               Rows="1"
                               Columns="2">
@@ -38,6 +38,9 @@
                               Width="160"
                               ToolTip="Select tracts to include in the report.">
                     <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="DropDownOpened">
+                            <i:InvokeCommandAction Command="{Binding FindTractsCmd}" />
+                        </i:EventTrigger>
                         <i:EventTrigger EventName="SelectionChanged">
                             <i:InvokeCommandAction Command="{Binding TractChangedCommand}" />
                         </i:EventTrigger>
@@ -47,7 +50,7 @@
         </UniformGrid>
         <UniformGrid Rows="1" Columns="2">
             <WrapPanel Style="{StaticResource WrapPanel}">
-                <TextBlock  Text="Path to grade pdf:" Margin="5,10,10,10" HorizontalAlignment="left" VerticalAlignment="Center"/>
+                <TextBlock  Text="Grade probability density function:" Margin="5,10,10,10" HorizontalAlignment="left" VerticalAlignment="Center"/>
             </WrapPanel>
             <WrapPanel Margin="10" MaxHeight="50"  HorizontalAlignment="left" VerticalAlignment="Center" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Auto">
                 <Button  FontSize="18" Content="{Binding Model.GradePlot, Converter={StaticResource FilePathToFileNameConverter}}" FontWeight="Normal" mah:ButtonHelper.PreserveTextCase="True"
@@ -61,7 +64,7 @@
         </UniformGrid>
         <UniformGrid Rows="1" Columns="2" Margin="0,4,0,2">
             <WrapPanel Style="{StaticResource WrapPanel}">
-                <TextBlock Text="Path to tonnage pdf:" Margin="5,10,10,10" HorizontalAlignment="left" VerticalAlignment="Center"/>
+                <TextBlock Text="Tonnage probability density function:" Margin="5,10,10,10" HorizontalAlignment="left" VerticalAlignment="Center"/>
             </WrapPanel>
             <WrapPanel Margin="10" MaxHeight="50" HorizontalAlignment="left" VerticalAlignment="Center" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Auto">
                 <Button  FontSize="18" Content="{Binding Model.TonnagePlot, Converter={StaticResource FilePathToFileNameConverter}}" FontWeight="Normal" mah:ButtonHelper.PreserveTextCase="True" Background="LightGray" BorderBrush="Black"

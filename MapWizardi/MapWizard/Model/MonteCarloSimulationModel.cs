@@ -16,6 +16,7 @@ namespace MapWizard.Model
         private ObservableCollection<string> modelNames = new ObservableCollection<string>();
         // Not always initialized the same way.
         private string lastRunDate = "Last Run: Never";
+        private string lastRunTract = "Tract: not run";
         private int runStatus = 2; // 0=error, 1=success, 2=not run yet.
         private string gradePlot = "Please select Grade object";
         private string tonnagePlot = "Please select Tonnage object";
@@ -133,6 +134,22 @@ namespace MapWizard.Model
                 RaisePropertyChanged("LastRunDate");
             }
         }
+
+        /// <summary>
+        /// Last run tractid.
+        /// </summary>
+        /// <returns>Date.</returns>
+        public string LastRunTract
+        {
+            get { return lastRunTract; }
+            set
+            {
+                if (value == lastRunTract) return;
+                lastRunTract = value;
+                RaisePropertyChanged("LastRunTract");
+            }
+        }
+
         /// <summary>
         /// Grade image file.
         /// </summary>

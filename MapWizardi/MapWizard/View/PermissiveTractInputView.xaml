@@ -846,19 +846,19 @@
                                        ScrollViewer.HorizontalScrollBarVisibility="Disabled"
                                        ScrollViewer.VerticalScrollBarVisibility="Auto">
                                     <Button FontWeight="Normal"
-                                        mah:ButtonHelper.PreserveTextCase="True"
-                                        Background="LightGray"
-                                        BorderBrush="Black"
-                                        FontSize="18"
-                                        Content="Select delineation raster"
-                                        Margin="0"
-                                        Width="auto"
-                                        HorizontalAlignment="left"
-                                        VerticalAlignment="Center"
-                                        DataContext="{Binding Source={StaticResource Locator}, Path=PermissiveTractViewModel}"
-                                        Command="{Binding SelectPRCommand}"
-                                        IsDefault="True"
-                                        ToolTip="The Delineation raster to be used in tract delineation." />
+                                            mah:ButtonHelper.PreserveTextCase="True"
+                                            Background="LightGray"
+                                            BorderBrush="Black"
+                                            FontSize="18"
+                                            Content="Select delineation raster"
+                                            Margin="0"
+                                            Width="auto"
+                                            HorizontalAlignment="left"
+                                            VerticalAlignment="Center"
+                                            DataContext="{Binding PermissiveTractViewModel, Source={StaticResource Locator}}"
+                                            Command="{Binding SelectPRCommand}"
+                                            IsDefault="True"
+                                            ToolTip="The Delineation raster to be used in tract delineation." />
                                     <!--Button Content="Upload rasters" Click="UploadRasters"></-->
                                 </WrapPanel>
                             </UniformGrid>
@@ -1213,6 +1213,9 @@
                               Width="160"
                               ToolTip="Select tracts to include in the report.">
                                     <i:Interaction.Triggers>
+                                        <i:EventTrigger EventName="DropDownOpened">
+                                            <i:InvokeCommandAction Command="{Binding FindTractsCmd}" />
+                                        </i:EventTrigger>
                                         <i:EventTrigger EventName="SelectionChanged">
                                             <i:InvokeCommandAction Command="{Binding TractChangedCmd}" />
                                         </i:EventTrigger>

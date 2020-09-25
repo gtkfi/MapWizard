@@ -17,6 +17,7 @@ namespace MapWizard.Model
         private ObservableCollection<string> modelNames = new ObservableCollection<string>();
         // Not always initialized the same way.
         private string lastRunDate = "Last Run: Never";
+        private string lastRunTract = "Tract: not run";
         private int runStatus = 2;
         private string depositsCsvString = "Name,Weight,N90,N50,N10";
         private string customFunctionCsvString;
@@ -156,6 +157,21 @@ namespace MapWizard.Model
                 if (value == lastRunDate) return;
                 lastRunDate = value;
                 RaisePropertyChanged("LastRunDate");
+            }
+        }
+
+        /// <summary>
+        /// Last run tractid.
+        /// </summary>
+        /// <returns>Date.</returns>
+        public string LastRunTract
+        {
+            get { return lastRunTract; }
+            set
+            {
+                if (value == lastRunTract) return;
+                lastRunTract = value;
+                RaisePropertyChanged("LastRunTract");
             }
         }
 

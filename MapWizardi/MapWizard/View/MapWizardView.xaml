@@ -132,6 +132,7 @@
                             <TextBlock Text="Undiscovered deposits" Foreground="Blue" />
                             <TextBlock DataContext="{Binding Source={StaticResource Locator}, Path=UndiscoveredDepositsViewModel}">Status: <Span FontFamily="/Resources/fontawesome/otfs/#Font Awesome 5 Free Regular 400" Foreground="{Binding Model.RunStatus, Converter={StaticResource ToolStatusColorConverter}}" FontSize="14"  ><Run Text="{Binding Model.RunStatus, Converter={StaticResource ToolStatusSymbolConverter}}"/></Span></TextBlock>
                             <TextBlock DataContext="{Binding Source={StaticResource Locator}, Path=UndiscoveredDepositsViewModel}" Style="{StaticResource SmallTextStyle}" Text="{Binding Model.LastRunDate}"></TextBlock>
+                            <TextBlock DataContext="{Binding Source={StaticResource Locator}, Path=UndiscoveredDepositsViewModel}" Style="{StaticResource SmallTextStyle}" Text="{Binding Model.LastRunTract}"></TextBlock>
                         </StackPanel>
                         <Separator Style="{StaticResource SeparatorStyle}"/>
                     </StackPanel>
@@ -145,6 +146,7 @@
                             <TextBlock Text="Monte Carlo simulation" Foreground="Blue" />
                             <TextBlock DataContext="{Binding Source={StaticResource Locator}, Path=MonteCarloSimulationViewModel}">Status: <Span FontFamily="/Resources/fontawesome/otfs/#Font Awesome 5 Free Regular 400" Foreground="{Binding Model.RunStatus, Converter={StaticResource ToolStatusColorConverter}}" FontSize="14"  ><Run Text="{Binding Model.RunStatus, Converter={StaticResource ToolStatusSymbolConverter}}"/></Span></TextBlock>
                             <TextBlock DataContext="{Binding Source={StaticResource Locator}, Path=MonteCarloSimulationViewModel}" Style="{StaticResource SmallTextStyle}" Text="{Binding Model.LastRunDate}"></TextBlock>
+                            <TextBlock DataContext="{Binding Source={StaticResource Locator}, Path=MonteCarloSimulationViewModel}" Style="{StaticResource SmallTextStyle}" Text="{Binding Model.LastRunTract}"></TextBlock>
                         </StackPanel>
                         <Separator Style="{StaticResource SeparatorStyle}"/>
                     </StackPanel>
@@ -158,6 +160,7 @@
                             <TextBlock  Text="Economic filter" Foreground="Blue"/>
                             <TextBlock DataContext="{Binding Source={StaticResource Locator}, Path=EconomicFilterViewModel}">Status: <Span FontFamily="/Resources/fontawesome/otfs/#Font Awesome 5 Free Regular 400" Foreground="{Binding Model.RunStatus, Converter={StaticResource ToolStatusColorConverter}}" FontSize="14"  ><Run Text="{Binding Model.RunStatus, Converter={StaticResource ToolStatusSymbolConverter}}"/></Span></TextBlock>
                             <TextBlock DataContext="{Binding Source={StaticResource Locator}, Path=EconomicFilterViewModel}" Style="{StaticResource SmallTextStyle}" Text="{Binding Model.LastRunDate}"></TextBlock>
+                            <TextBlock DataContext="{Binding Source={StaticResource Locator}, Path=EconomicFilterViewModel}" Style="{StaticResource SmallTextStyle}" Text="{Binding Model.LastRunTract}"></TextBlock>
                         </StackPanel>
                         <Separator Style="{StaticResource SeparatorStyle}"/>
                     </StackPanel>
@@ -194,7 +197,7 @@
         <StatusBar Grid.ColumnSpan="3" Grid.Row="2">
             <StatusBarItem>Project:</StatusBarItem>
             <StatusBarItem>
-                <TextBlock  Text="{Binding Model.ProjectName}"/>
+                <TextBlock FontWeight="Bold" Text="{Binding Model.ProjectName}"/>
             </StatusBarItem>
         </StatusBar>
     </Grid>

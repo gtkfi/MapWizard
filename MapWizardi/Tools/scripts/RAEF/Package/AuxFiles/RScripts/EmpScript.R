@@ -30,7 +30,7 @@ lbl_data_frame_name <- glabel(
 
 obj <- gfilebrowse("Select output directory ",type = "selectdir", cont=EmpWindow)                                     ### browse for file 
 addhandlerchanged(obj, handler=function(h,...) 
-	InputFolder2 <<- svalue(h$obj))
+	InputFolder2 <<- get(h$obj))
 
 
 
@@ -48,8 +48,8 @@ obj <- gbutton(                                                                 
       handler = function(h,...)
 	{
 	setwd(InputFolder2)	
-	GTMEmp <<- svalue(GTMEmp)	
-	TestNameEmp <<- svalue(TestNameEmp )
+	GTMEmp <<- get(GTMEmp)	
+	TestNameEmp <<- get(TestNameEmp )
 	GTMEmpFile<- read.csv(file=GTMEmp, header=TRUE, sep=",")
 	GLen <<- nrow(GTMEmpFile)
 	

@@ -147,6 +147,7 @@ namespace MapWizard.ViewModel
             DelineationWofeCommand = new RelayCommand(DelineationWofe, CanRunTool);
             DeleteBoundariesCommand = new RelayCommand(DeleteBoundaries, CanRunTool);
             TractChangedCmd = new RelayCommand(TractChanged, CanRunTool);
+            FindTractsCmd = new RelayCommand(FindTracts, CanRunTool);
 
 
             viewModelLocator = new ViewModelLocator();
@@ -162,6 +163,7 @@ namespace MapWizard.ViewModel
             delineationFolder = Path.Combine(settingsService.RootPath, "TractDelineation", "Delineation");
             classificationFolder = Path.Combine(settingsService.RootPath, "TractDelineation", "Classification");
             finalRasterFolder = Path.Combine(settingsService.RootPath, "TractDelineation", "Delineation", "DelineationRasters");
+            string trFolder = Path.Combine(settingsService.RootPath, "TractDelineation", "Tracts");
 
             if (!Directory.Exists(@PermissiveTractProject))
             {
@@ -176,6 +178,14 @@ namespace MapWizard.ViewModel
             if (!Directory.Exists(evidenceDataFolder))
             {
                 Directory.CreateDirectory(evidenceDataFolder);
+            }
+
+            if (!Directory.Exists(trFolder))
+            {
+                Directory.CreateDirectory(trFolder);
+                string DummyFolder = Path.Combine(trFolder, "Dummy");
+                Directory.CreateDirectory(DummyFolder);
+                File.WriteAllText(Path.Combine(DummyFolder, "Dummy.txt"), "This is a dummy tract folder, which can be used to run tools without a reference to an existing tract");
             }
 
             string param_json = projectFolder + "\\permissive_tract_input_params.json";
@@ -213,8 +223,7 @@ namespace MapWizard.ViewModel
                         Arcsdm = inputParams.ArcSdm,
                         ConfidenceLevel = inputParams.ConfidenceLevel
                     };
-                    FindTractIDs();  // Gets the tractID names from PermissiveTractTool's Delineation folder.
-
+            
                 }
                 catch (Exception ex)
                 {
@@ -250,6 +259,7 @@ namespace MapWizard.ViewModel
             ShowClassRasters = false;
             ShowSaveTract = false;
 
+            FindTractIDs();  // Gets the tractID names from PermissiveTractTool's Delineation folder.
             upDateTractBoundaryList();
         }
 
@@ -365,6 +375,10 @@ namespace MapWizard.ViewModel
         /// Delete generated boundary files
         /// </summary>
         public RelayCommand DeleteBoundariesCommand { get; }
+        /// <summary>
+        /// Find all tracts which are generated
+        /// </summary>
+        public RelayCommand FindTractsCmd { get; }
         /// <summary>
         /// Tract changed in classification process
         /// </summary>
@@ -509,6 +523,11 @@ namespace MapWizard.ViewModel
         }
 
 
+        private void FindTracts()
+        {
+            FindTractIDs();
+        }
+
         private void TractChanged()
         {
             //viewModelLocator.DepositDensityViewModel.Model.SelectedTract = Model.SelectedTract;
@@ -531,19 +550,28 @@ namespace MapWizard.ViewModel
             }
             try
             {
+                ShowGenTracts = false;
                 string tmpString = "DelineationRaster_";
                 int start = boundaryFile.IndexOf(tmpString);
                 start += tmpString.Length;
                 tmpString = ".pdf";
                 int end = boundaryFile.IndexOf(tmpString);
                 boundaryValue = boundaryFile.Substring(start, end - start);
+                model.TractBoundaryValues = boundaryValue;
                 string outputFolder = projectFolder + @"\Delineation\temp\" + model.DelID.ToString() + @"\";
 
-                if (!Directory.Exists(@outputFolder))
+                if (Directory.Exists(outputFolder))
+                {
+                    //Delete all files from the Directory
+                    foreach (string file in Directory.GetFiles(outputFolder))
+                    {
+                        File.Delete(file);
+                    }
+                }
+                else
                 {
                     Directory.CreateDirectory(@outputFolder);
                 }
-
 
 
                 //Generate polygon
@@ -596,6 +624,7 @@ namespace MapWizard.ViewModel
                          inputParams.InRasterList,
                          inputParams.OutRaster
                      );
+
 
                     PermissiveTractResult permissiveTractResult = default(PermissiveTractResult);
                     IsBusy = true;
@@ -709,6 +738,14 @@ namespace MapWizard.ViewModel
         {
             try
             {
+
+                if (model.SelectedTract == null || model.SelectedTract == "")
+                {
+                    dialogService.ShowNotification("You must select Tract!", "Error");
+                    return;
+                }
+
+
                 string rasterFile = selectedClassificationRaster.ToString();
                 string tmpString = ".pdf";
                 int end = rasterFile.IndexOf(tmpString);
@@ -723,7 +760,7 @@ namespace MapWizard.ViewModel
                 }
 
                 string sourceFile = fName + ".img";
-                string classFile = targetFolder + @"\" + Model.SelectedTract + "_CL" + Model.ClassificationId + ".img";
+                string classFile = targetFolder + @"\" + Model.SelectedTract + "_" + Model.ClassificationId + ".img";
 
                 bool copyFile = true;
                 //Check if target file exists, ask user if replaced or renamed
@@ -736,10 +773,10 @@ namespace MapWizard.ViewModel
                 {
                     File.Copy(sourceFile, classFile, true);
                     sourceFile = fName + ".img.aux.xml";
-                    string targetFile = targetFolder + @"\" + Model.SelectedTract + "_CL" + Model.ClassificationId + ".img.aux.xml";
+                    string targetFile = targetFolder + @"\" + Model.SelectedTract + "_" + Model.ClassificationId + ".img.aux.xml";
                     File.Copy(sourceFile, targetFile, true);
                     sourceFile = fName + ".pdf";
-                    targetFile = targetFolder + @"\" + Model.SelectedTract + "_CL" + Model.ClassificationId + ".pdf";
+                    targetFile = targetFolder + @"\" + Model.SelectedTract + "_" + Model.ClassificationId + ".pdf";
                     File.Copy(sourceFile, targetFile, true);
                     Process.Start(targetFile);
 
@@ -945,6 +982,25 @@ namespace MapWizard.ViewModel
                 dialogService.ShowNotification("Run failed. The python path is not valid.", "Error");
                 viewModelLocator.SettingsViewModel.WriteLogText("Run failed. The python path is not valid.", "Error");
             }
+
+            string outputFolder = projectFolder + "\\Classification\\Temp\\";
+            string outputRaster = outputFolder + "ClassificationRaster_" + model.ClassificationId + ".img";
+            string outputPdf = outputFolder + "ClassificationRaster_" + model.ClassificationId + ".pdf";
+
+            if (IsFileAvailable(outputRaster))
+            {
+                dialogService.ShowNotification("Classification raster file, "+ outputRaster + " is open, close it or change Classification ID!", "Error");
+                return;
+
+            }
+
+            if (IsFileAvailable(outputPdf))
+            {
+                dialogService.ShowNotification("Classification pdf file, " + outputPdf + " is open, close it or change Classification ID!", "Error");
+                return;
+
+            }
+
 
             string method = "classification";
 
@@ -1188,6 +1244,12 @@ namespace MapWizard.ViewModel
         {
             logger.Info("-->{0}", this.GetType().Name);
 
+            if (model.DelRasterFolderWofe == null || model.DelRasterFolderWofe == "")
+            {
+                dialogService.ShowNotification("Destination folder cannot be null!", "Error");
+                return;
+            }
+
             string[] wt = Model.WofEWeightsType.Split(',');
             if (model.EvidenceRasterlist.Count == wt.Length)
             {
@@ -1201,6 +1263,8 @@ namespace MapWizard.ViewModel
                 {
                     dialogService.ShowNotification("Run failed. The python path is not valid.", "Error");
                 }
+
+                
 
                 string method = "wofe";
 
@@ -1839,7 +1903,8 @@ namespace MapWizard.ViewModel
                 updateFuzzyFolder();
                 List<string> files = dialogService.OpenFilesDialog("", "All files (*.*)|*.*", true, true, settingsService.RootPath);
 
-                if (!string.IsNullOrEmpty(files.ToString()))
+                //if (!string.IsNullOrEmpty(files.ToString()))
+                if (files != null)
                 {
                     // model.InRasterList = files;
                     foreach (string f in files)
@@ -1855,9 +1920,7 @@ namespace MapWizard.ViewModel
                 logger.Error(ex, "Failed to show OpenFilesDialog");
                 dialogService.ShowNotification("Failed to select input file.", "Error");
             }
-            finally
-            {
-            }
+           
         }
 
         /// <summary>
@@ -1871,7 +1934,7 @@ namespace MapWizard.ViewModel
                 updateFuzzyFolder();
                 List<string> files = dialogService.OpenFilesDialog(evidenceDataFolder, "All files (*.*)|*.*", true, true, settingsService.RootPath);
 
-                if (!string.IsNullOrEmpty(files.ToString()))
+                if (files != null)
                 {
                     model.InRasterList = files;
                 }
@@ -1881,9 +1944,7 @@ namespace MapWizard.ViewModel
                 logger.Error(ex, "Failed to show OpenFileDialog");
                 dialogService.ShowNotification("Failed to select input file.", "Error");
             }
-            finally
-            {
-            }
+           
         }
 
         /// <summary>
@@ -1895,7 +1956,7 @@ namespace MapWizard.ViewModel
             {
                 string prfile = dialogService.OpenFileDialog(delineationFolder, "All files (*.*)|*.*", true, true, settingsService.RootPath);
 
-                if (!string.IsNullOrEmpty(prfile.ToString()))
+                if (!string.IsNullOrEmpty(prfile))
                 {
                     model.ProspectivityRaster = prfile;
 
@@ -1906,9 +1967,7 @@ namespace MapWizard.ViewModel
                 logger.Error(ex, "Failed to show OpenFileDialog");
                 dialogService.ShowNotification("Failed to select input file.", "Error");
             }
-            finally
-            {
-            }
+            
         }
 
         /// <summary>
@@ -1920,7 +1979,7 @@ namespace MapWizard.ViewModel
             {
                 string drfile = dialogService.OpenFileDialog(projectFolder + @"\Delineation", "Raster files (*.img)|*.img", true, true, settingsService.RootPath);
 
-                if (!string.IsNullOrEmpty(drfile.ToString()))
+                if (!string.IsNullOrEmpty(drfile))
                 {
                     string destFolder = Path.Combine(projectFolder, "Classification", "ClassificationRasters");
                     if (!Directory.Exists(destFolder))
@@ -1939,9 +1998,7 @@ namespace MapWizard.ViewModel
                 logger.Error(ex, "Failed to show OpenFileDialog");
                 dialogService.ShowNotification("Failed to select input file.", "Error");
             }
-            finally
-            {
-            }
+           
         }
 
         /// <summary>
@@ -1953,7 +2010,7 @@ namespace MapWizard.ViewModel
             {
                 string tpfile = dialogService.OpenFileDialog(fileFolder, "Shape file (*.shp)|*.shp", true, true, settingsService.RootPath);
 
-                if (!string.IsNullOrEmpty(tpfile.ToString()))
+                if (!string.IsNullOrEmpty(tpfile))
                 {
                     model.TrainingPoints = tpfile;
                 }
@@ -1963,9 +2020,7 @@ namespace MapWizard.ViewModel
                 logger.Error(ex, "Failed to show OpenFileDialog");
                 dialogService.ShowNotification("Failed to select input file.", "Error");
             }
-            finally
-            {
-            }
+           
         }
 
         /// <summary>
@@ -1977,7 +2032,7 @@ namespace MapWizard.ViewModel
             {
                 string maskfile = dialogService.OpenFileDialog(fileFolder, "Shape file (*.shp)|*.shp", true, true, settingsService.RootPath);
 
-                if (!string.IsNullOrEmpty(maskfile.ToString()))
+                if (!string.IsNullOrEmpty(maskfile))
                 {
                     model.MaskRaster = maskfile;
                 }
@@ -1987,9 +2042,7 @@ namespace MapWizard.ViewModel
                 logger.Error(ex, "Failed to show OpenFileDialog");
                 dialogService.ShowNotification("Failed to select input file.", "Error");
             }
-            finally
-            {
-            }
+            
         }
 
         /// <summary>
@@ -2001,9 +2054,9 @@ namespace MapWizard.ViewModel
             {
                 string polygonFile = dialogService.OpenFileDialog(fileFolder, "Shape file (*.shp)|*.shp", true, true, settingsService.RootPath);
 
-                if (!string.IsNullOrEmpty(polygonFile.ToString()))
+                if (!string.IsNullOrEmpty(polygonFile))
                 {
-                    model.PathToTractPolygon = polygonFile;
+                        model.PathToTractPolygon = polygonFile;
                 }
             }
             catch (Exception ex)
@@ -2011,9 +2064,7 @@ namespace MapWizard.ViewModel
                 logger.Error(ex, "Failed to show OpenFileDialog");
                 dialogService.ShowNotification("Failed to select input file.", "Error");
             }
-            finally
-            {
-            }
+        
         }
 
 
@@ -2056,7 +2107,7 @@ namespace MapWizard.ViewModel
                 //List<string> files = dialogService.OpenFilesDialog(evidenceDataFolder, "All files (*.*)|*.*", true, true, settingsService.RootPath);
                 List<string> evidencefiles = new List<string>();
 
-                if (!string.IsNullOrEmpty(files.ToString()))
+                if (files != null)
                 {
                     fileFolder = Path.GetDirectoryName(files[0]);
 
@@ -2122,9 +2173,7 @@ namespace MapWizard.ViewModel
                 logger.Error(ex, "Failed to show OpenFilesDialog");
                 dialogService.ShowNotification("Failed to select input files.", "Error");
             }
-            finally
-            {
-            }
+           
         }
 
         /// <summary>
@@ -2136,7 +2185,7 @@ namespace MapWizard.ViewModel
             {
                 string f = dialogService.OpenFileDialog("", "All files (*.*)|*.*", true, true, settingsService.RootPath);
 
-                if (!string.IsNullOrEmpty(f.ToString()))
+                if (!string.IsNullOrEmpty(f))
                 {
                     model.EvidenceLayerFile = f;
                 }
@@ -2146,9 +2195,7 @@ namespace MapWizard.ViewModel
                 logger.Error(ex, "Failed to show OpenFileDialog");
                 dialogService.ShowNotification("Failed to select input file.", "Error");
             }
-            finally
-            {
-            }
+            
         }
 
 
@@ -2174,9 +2221,7 @@ namespace MapWizard.ViewModel
                 logger.Error(ex, "Failed to show FolderBrowserDialog");
                 dialogService.ShowNotification("Failed to select input folder.", "Error");
             }
-            finally
-            {
-            }
+           
         }
         /// <summary>
         /// Save file to filesystem.
@@ -2202,9 +2247,7 @@ namespace MapWizard.ViewModel
                 logger.Error(ex, "Failed to show SaveDileDialog");
                 dialogService.ShowNotification("Failed to save file.", "Error");
             }
-            finally
-            {
-            }
+            
         }
         /// <summary>
         /// Save tract polygon to filesystem.
@@ -2223,6 +2266,14 @@ namespace MapWizard.ViewModel
                 //Copy tract polygonfile to destination
                 string filename = Path.GetFileName(model.PathToTractPolygon);
                 File.Copy(model.PathToTractPolygon, tractFolder + @"\" + "TR" + model.IdOfTract + ".shp", true);
+                //Copy tract polygonfile.xml to destination
+                string tmp_filename = model.PathToTractPolygon+".xml";
+                File.Copy(tmp_filename, tractFolder + @"\" + "TR" + model.IdOfTract + ".shp.xml", true);
+                //Copy tract polygonfile.shx to destination
+                tmp_filename = tmp_filename.Replace(".shp.xml", ".shx");
+                File.Copy(tmp_filename, tractFolder + @"\" + "TR" + model.IdOfTract + ".shx", true);
+
+
 
                 string path = tractFolder + "/TractExplanation.txt";
                 File.WriteAllText(path, model.ExplanationOfTract);
@@ -2237,9 +2288,7 @@ namespace MapWizard.ViewModel
                 dialogService.ShowNotification("Failed to save tract.", "Error");
                 viewModelLocator.SettingsViewModel.WriteLogText("Failed to save tract in Permissive Tract tool.", "Error");
             }
-            finally
-            {
-            }
+            
         }
         /// <summary>
         /// Save final tract files to filesystem.
@@ -2269,9 +2318,9 @@ namespace MapWizard.ViewModel
 
                 //Copy delineation raster
                 FileInfo mF = new FileInfo(sourceFolder + @"\DelineationRaster_" + Model.DelID + ".img");
-                mF.CopyTo(tractFolder + "\\TR" + Model.DelID + ".img", true);
+                mF.CopyTo(tractFolder + "\\DelineationRaster_" + Model.TractBoundaryValues + ".img", true);
                 mF = new FileInfo(sourceFolder + @"\DelineationRaster_" + Model.DelID + ".img.aux.xml");
-                mF.CopyTo(tractFolder + "\\TR" + Model.DelID + ".img.aux.xml", true);
+                mF.CopyTo(tractFolder + "\\DelineationRaster_" + Model.TractBoundaryValues + ".img.aux.xml", true);
 
                 //Copy delineation polygon
                 if (area != "")
@@ -2301,13 +2350,13 @@ namespace MapWizard.ViewModel
 
                 //other files
                 mF = new FileInfo(sourceFolder + @"\DelineationPolygons_" + Model.DelID + "_distribution.pdf");
-                mF.CopyTo(tractFolder + @"\DelineationPolygons_" + Model.DelID + "_distribution.pdf", true);
+                mF.CopyTo(tractFolder + @"\DelineationPolygons_" + Model.TractBoundaryValues + "_cdf.pdf", true);
                 mF = new FileInfo(sourceFolder + @"\DelineationPolygons_" + Model.DelID + "_statistics.txt");
-                mF.CopyTo(tractFolder + @"\DelineationPolygons_" + Model.DelID + "_statistics.txt", true);
+                mF.CopyTo(tractFolder + @"\DelineationPolygons_" + Model.TractBoundaryValues + "_stats.txt", true);
                 mF = new FileInfo(sourceFolder + @"\DelineationSummary" + Model.DelID + ".txt");
-                mF.CopyTo(tractFolder + @"\DelineationSummary" + Model.DelID + ".txt", true);
+                mF.CopyTo(tractFolder + @"\TR" + Model.DelID + "_stats.txt", true);
                 mF = new FileInfo(sourceFolder + @"\TractAreaCdf" + Model.DelID + ".pdf");
-                mF.CopyTo(tractFolder + @"\TractAreaCdf" + Model.DelID + ".pdf", true);
+                mF.CopyTo(tractFolder + @"\TR" + Model.DelID + "_cdf.pdf", true);
 
                 //Copy delineation raster info file
                 int li = Model.ProspectivityRaster.LastIndexOf("\\");
@@ -2318,17 +2367,13 @@ namespace MapWizard.ViewModel
                 foreach (string file in rasterFiles)
                 {
                     FileInfo mFile = new FileInfo(file);
-                    mFile.CopyTo(tractFolder + "\\" + mFile.Name, true);
+                    mFile.CopyTo(tractFolder + "\\" + "DelineationRasterExplanation.txt", true);
                 }
 
-                //Delete other temp files
-                /*List<String> tmpFiles = Directory
-                  .GetFiles(sourceFolder, "*.*", SearchOption.TopDirectoryOnly).ToList();
-                foreach (string file in tmpFiles)
-                {
-                    FileInfo mFile = new FileInfo(file);
-                    mFile.Delete();
-                }*/
+                //copy original delineation raster file
+                mF = new FileInfo(Model.ProspectivityRaster);
+                mF.CopyTo(tractFolder + "\\DelineationRaster.img", true);
+
 
                 Directory.Delete(sourceFolder, true);
 
@@ -2543,6 +2588,25 @@ namespace MapWizard.ViewModel
                 }
             }
             updateTractIDsToModels();
+        }
+
+
+        private bool IsFileAvailable(string filename)
+        {
+            bool Locked = false;
+            try
+            {
+                if (File.Exists(filename))
+                {
+                    File.Delete(filename);
+                }
+            }
+            catch
+            {
+                Locked = true;
+            }
+           
+            return Locked;
         }
     }
 }

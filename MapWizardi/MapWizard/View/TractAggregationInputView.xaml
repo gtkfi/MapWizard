@@ -197,7 +197,7 @@
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
                             <!-- Another ItemControl inside the another. -->
-                            <ItemsControl x:Name="Items" HorizontalAlignment="Left" ItemsSource="{Binding Path=TractPairColumn, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                            <ItemsControl x:Name="Items"  HorizontalAlignment="Left" ItemsSource="{Binding Path=TractPairColumn, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
                                 <ItemsControl.ItemsPanel>
                                     <ItemsPanelTemplate>
                                         <UniformGrid Rows="1"/>
@@ -211,6 +211,7 @@
                                                     <Style.Triggers>
                                                         <DataTrigger Binding="{Binding IsTitle}" Value="False">
                                                             <Setter Property="ContentTemplate" Value="{StaticResource MatrixIndex}" />
+                                                            <Setter Property="Width" Value="200" />
                                                         </DataTrigger>
                                                         <DataTrigger Binding="{Binding IsTitle}" Value="True">
                                                             <Setter Property="ContentTemplate" Value="{StaticResource MatrixTitle}" />

@@ -390,9 +390,6 @@ namespace MapWizard.ViewModel
             var thisRow="";
             TractAggregationDataModel tr;
             TractAggregationDataModel tc;
-            //csv.AppendLine();
-            //var testi = Model.TractPairRow;
-            //foreach()
             for (int i=0;i<Model.TractPairRow.Count; i++)
             {
                 tr = Model.TractPairRow[i];
@@ -406,55 +403,32 @@ namespace MapWizard.ViewModel
                         {
                             thisRow = thisRow + (thisRow == "" ? (thisRow = tc.TractName) : (thisRow = (tc.TractName)));
                         }
-                        else 
+                        else if (tc.TractText != null)
                         {
-
-                            //thisRow += tc.TractText;
-                            if (tc.TractText != null)
-                            {
-                                thisRow += (tc.TractText).Replace(",", ".");
-                            }
+                            thisRow += (tc.TractText).Replace(",", ".");
                         }
                     }
                     thisRow += ",";
-                }
-                //foreach (TractAggregationDataModel tc in tr.TractPairColumn)
-                //{
-                //    if (tc.IsTitle == true)
-                //    {
-                //        thisRow = thisRow + (thisRow == "" ? (thisRow = tc.TractName) : (thisRow = (tc.TractName)));
-                //    }
-                //    else
-                //        thisRow += tc.TractText;
-                //    thisRow += ",";
-                //    //thisRow= thisRow+( thisRow==""? (thisRow = tc.TractText) : (thisRow = ("," + tc.TractText)));               
-
+                }                           
                 thisRow = thisRow.Remove(thisRow.Length - 1, 1);
 
-                csv.AppendLine(thisRow);//tr.tractpaircolumneista tractText)              
+                csv.AppendLine(thisRow);          
                 thisRow = "";
 
             }
-
-          
+        
             //kato et se errori kans heittää täällä exceptionin. ja että tulee kunnon virheviestit. ei niin että menee ajoon asti ja ajossa tulee joku kryptinen "input file not found" herja
             string filePath = Path.Combine(settingsService.RootPath, "TractAggregation","CorrelationMatrix.csv");
             File.WriteAllText(filePath, csv.ToString());
-            //yah.! sit se T1T2T3 litania tiedosto pitäs vielä kirjottaa myös
-            
-            //ja ne tractPmf.rds filut löytyy undisc dep selected resultseista, per träkti
-            return filePath;
-               
-               
-   
+
+            return filePath;                          
         }
         /// <summary>
         /// Get TractIDs.
         /// </summary>
         public string CombineTractPMFs()
         {
-            //Model.TractIDCollection.Clear();
-            //Model.TractIDCollection = new ObservableCollection<TractAggregationDataModel>();
+
             var pmfString = "";
             var tractCsvPath = "";
             StringBuilder csv = new StringBuilder();
@@ -471,17 +445,7 @@ namespace MapWizard.ViewModel
                         pmfString = File.ReadAllText(tractCsvPath);
                         int indexToCutFrom = pmfString.IndexOf("\r\n");
                         pmfString = pmfString.Substring(indexToCutFrom + 2, pmfString.Length - indexToCutFrom - 2);
-                        //pmfString = pmfString.Split(new string[] { "\r\n" }, StringSplitOptions.None)[1];
                         csv.Append(pmfString);
-                        //foreach (DirectoryInfo dir in di.GetDirectories())
-                        //{
-                        //    TractAggregationDataModel item = new TractAggregationDataModel
-                        //    {
-                        //        TractName = dir.Name,
-                        //        ChooseTract = false
-                        //    };
-                        //    Model.TractIDCollection.Add(item);  // Get TractID by getting the name of the directory.
-                        //}
                     }
                 }
                 
@@ -505,7 +469,6 @@ namespace MapWizard.ViewModel
                 {
                     Model.CorrelationMatrix=CreateCorrelationMatrix();//ilimota jos ei oo selectedresulttia
                     Model.ProbDistFile=CombineTractPMFs(); //nyt tosiaan toimii vaan selectedresulteille. is this OK?
-                    //pitäs asettaa sit modelin filet oikein.
                 }
                 else if (Model.CreateInputFile == true)
                 {
@@ -544,7 +507,6 @@ namespace MapWizard.ViewModel
                     TractAggregationTool tool = new TractAggregationTool();
                     TractAggregationResult tractAggregationResult = default(TractAggregationResult);
                     logger.Info("calling TractAggregationTool.Execute(inputParams)");
-                    //tonnageResult = tool.Execute(inputParams) as GradeTonnageResult;
                     tractAggregationResult = tool.Execute(inputParams) as TractAggregationResult;
                     Result.TractAggregationSummary = tractAggregationResult.TractAggregationSummary;
                 });
@@ -560,15 +522,15 @@ namespace MapWizard.ViewModel
                 using (StreamReader sr = new StreamReader(Path.Combine(Path.Combine(settingsService.RootPath, "TractAggregation", "AggResults", "AGG" + Model.TractCombinationName, "TractCorrelations.csv"))))
                 {
                   
-                    var headers=sr.ReadLine();
-                    File.WriteAllText(filePath, headers.Substring(1));
-                }
-                    
-                //pyydä nimi luotavalle tract kombinaatiolle
-
-                //^ talleta kaikki tulokset ton nimiseen alihakemistoon
-
-                //kirjota se suamarin TractsAggregated.csv tiedosto saman nimiseen alikansioon tract delineationin alle tms(tractdelineation / tracts / AGG<ID>)
+                    var headers=sr.ReadLine();//elik tästä pitäs tulla full pathit eikä pelkät otsikot.
+                    if (headers[0] == ',')
+                        headers = headers.Substring(1);
+                    var headerArray = headers.Split(',');
+                    for(int i=0;i<headerArray.Length; i++)
+                        headerArray[i]= Path.Combine(settingsService.RootPath, "TractDelineation", "Tracts", headerArray[i]);
+                    var combinedHeaderArray = string.Join(",", headerArray);
+                    File.WriteAllText(filePath, combinedHeaderArray);
+                }              
             }
             catch (Exception ex)
             {

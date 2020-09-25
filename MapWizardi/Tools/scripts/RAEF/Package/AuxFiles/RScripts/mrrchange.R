@@ -20,9 +20,9 @@ MRRSelect <- gdroplist((MRRList), container = baseW0 )
 obj <- gbutton(text = "Continue", container=baseW0,
 	handler = function(h,...)
 	{
-	MRRSelect <<- svalue(MRRSelect)
-	MRRSValue <<- svalue(MRRSelect)
-	label1 <<- paste ("Current value for ", MRRSelect, " is ", MRRSValue, sep="")
+	MRRSelect <<- get(MRRSelect)
+	MRRget <<- get(MRRSelect)
+	label1 <<- paste ("Current value for ", MRRSelect, " is ", MRRget, sep="")
 	lbl <- glabel(label1, container = baseW0)
 	lbl <- glabel("", container = baseW0)
 	lbl <- glabel("Enter a MRR number below [fraction]", container = baseW0)
@@ -31,7 +31,7 @@ obj <- gbutton(text = "Continue", container=baseW0,
 	obj <- gbutton(text = "Submit", container=baseW0,
 	handler = function(h,...)
 		{
-		MRREnter1 <<- svalue(MRREnter1)
+		MRREnter1 <<- get(MRREnter1)
 		MRREnter1 <<-as.double(MRREnter1)
 		mrrcount <<- 1
 		for (cc in MRRList)

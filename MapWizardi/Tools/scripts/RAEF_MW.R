@@ -11,7 +11,7 @@
 
 #######################################################################
 
-library(gWidgets)
+#library(gWidgets)
 #library(gWidgetstcltk)
 library(dplyr)
 library(reshape)
@@ -1051,7 +1051,7 @@ for (gh in ListCNames)
 	{
 	zG<<- paste ("OreV","_",ListGradeNames[G1],sep="")
 	zG <<- sub("._pct", '', zG)
-	VPEC <<- ( 0.90715 * (svalue(CVList[G1])) * svalue(MRRList [G1]) * (svalue(ListGradeNames[G1]) / 100) )
+	VPEC <<- ( 0.90715 * (get(CVList[G1])) * get(MRRList [G1]) * (get(ListGradeNames[G1]) / 100) )
 	assign(zG,VPEC, env =.GlobalEnv)
 	OVPECList <<- c(OVPECList,zG)
 	G1 <<- G1 + 1
@@ -1062,47 +1062,47 @@ for (gh in ListCNames)
 ## Confirming save of values for print out 
 if(NumGrades0 == 1)
 	{
-OVPEC1 <- svalue(OVPECList[1])
+OVPEC1 <- get(OVPECList[1])
 	}
 
 if(NumGrades0 == 2)
 	{
-OVPEC1 <- svalue(OVPECList[1])
-OVPEC2 <- svalue(OVPECList[2])
+OVPEC1 <- get(OVPECList[1])
+OVPEC2 <- get(OVPECList[2])
 }
 
 if(NumGrades0 == 3)
 	{
-OVPEC1 <- svalue(OVPECList[1])
-OVPEC2 <- svalue(OVPECList[2])
-OVPEC3 <- svalue(OVPECList[3])
+OVPEC1 <- get(OVPECList[1])
+OVPEC2 <- get(OVPECList[2])
+OVPEC3 <- get(OVPECList[3])
 	}
 
 if(NumGrades0 == 4)
 	{
-OVPEC1 <- svalue(OVPECList[1])
-OVPEC2 <- svalue(OVPECList[2])
-OVPEC3 <- svalue(OVPECList[3])
-OVPEC4 <- svalue(OVPECList[4])
+OVPEC1 <- get(OVPECList[1])
+OVPEC2 <- get(OVPECList[2])
+OVPEC3 <- get(OVPECList[3])
+OVPEC4 <- get(OVPECList[4])
 	}
 
 if(NumGrades0 == 5)
 	{
-OVPEC1 <- svalue(OVPECList[1])
-OVPEC2 <- svalue(OVPECList[2])
-OVPEC3 <- svalue(OVPECList[3])
-OVPEC4 <- svalue(OVPECList[4])
-OVPEC5 <- svalue(OVPECList[5])
+OVPEC1 <- get(OVPECList[1])
+OVPEC2 <- get(OVPECList[2])
+OVPEC3 <- get(OVPECList[3])
+OVPEC4 <- get(OVPECList[4])
+OVPEC5 <- get(OVPECList[5])
 	}
 
 if(NumGrades0 == 6)
 	{
-OVPEC1 <- svalue(OVPECList[1])
-OVPEC2 <- svalue(OVPECList[2])
-OVPEC3 <- svalue(OVPECList[3])
-OVPEC4 <- svalue(OVPECList[4])
-OVPEC5 <- svalue(OVPECList[5])
-OVPEC6 <- svalue(OVPECList[6])
+OVPEC1 <- get(OVPECList[1])
+OVPEC2 <- get(OVPECList[2])
+OVPEC3 <- get(OVPECList[3])
+OVPEC4 <- get(OVPECList[4])
+OVPEC5 <- get(OVPECList[5])
+OVPEC6 <- get(OVPECList[6])
 	}
 	
 #######################################################################
@@ -1113,7 +1113,7 @@ RecListWONone <<-c()
 CountRecWON <<- 0
 for (m8 in MRRList)
 {
-varm8 <<- svalue(m8)
+varm8 <<- get(m8)
 if (varm8 >= 0)
 {
 RecListWONone <<- c(RecListWONone ,m8)
@@ -1124,7 +1124,7 @@ CountRecWON <<- CountRecWON + 1
 OreVListWONone <<-c()
 for (ovWN in OVPECList)
 {
-varm8 <<- svalue(ovWN)
+varm8 <<- get(ovWN)
 if (varm8 >= 0)
 {
 OreVListWONone <<- c(OreVListWONone ,ovWN )
@@ -1134,13 +1134,13 @@ OreVListWONone <<- c(OreVListWONone ,ovWN )
 ### confirming save of values for print out 
 if(CountRecWON == 1)
 	{
-OVPEC1b <- svalue(OreVListWONone[1])
+OVPEC1b <- get(OreVListWONone[1])
 	}
 
 if(CountRecWON == 2)
 	{
-OVPEC1b <- svalue(OreVListWONone[1])
-OVPEC2b <- svalue(OreVListWONone[2])
+OVPEC1b <- get(OreVListWONone[1])
+OVPEC2b <- get(OreVListWONone[2])
 
 if (OVPEC1b > OVPEC2b) 
 {	
@@ -1166,9 +1166,9 @@ OL<<- OreVListWONone[2]
 
 if(CountRecWON == 3)
 	{
-OVPEC1b <- svalue(OreVListWONone[1])
-OVPEC2b <- svalue(OreVListWONone[2])
-OVPEC3b <- svalue(OreVListWONone[3])
+OVPEC1b <- get(OreVListWONone[1])
+OVPEC2b <- get(OreVListWONone[2])
+OVPEC3b <- get(OreVListWONone[3])
 
 if (OVPEC1b > OVPEC2b) 
 {	
@@ -1213,10 +1213,10 @@ OL<<- OreVListWONone[3]
 
 if(CountRecWON == 4)
 	{
-OVPEC1b <- svalue(OreVListWONone[1])
-OVPEC2b <- svalue(OreVListWONone[2])
-OVPEC3b <- svalue(OreVListWONone[3])
-OVPEC4b <- svalue(OreVListWONone[4])
+OVPEC1b <- get(OreVListWONone[1])
+OVPEC2b <- get(OreVListWONone[2])
+OVPEC3b <- get(OreVListWONone[3])
+OVPEC4b <- get(OreVListWONone[4])
 
 if (OVPEC1b > OVPEC2b) 
 {	
@@ -1291,11 +1291,11 @@ OL<<- OreVListWONone[4]
 
 if(CountRecWON == 5)
 	{
-OVPEC1b <- svalue(OreVListWONone[1])
-OVPEC2b <- svalue(OreVListWONone[2])
-OVPEC3b <- svalue(OreVListWONone[3])
-OVPEC4b <- svalue(OreVListWONone[4])
-OVPEC5b <- svalue(OreVListWONone[5])
+OVPEC1b <- get(OreVListWONone[1])
+OVPEC2b <- get(OreVListWONone[2])
+OVPEC3b <- get(OreVListWONone[3])
+OVPEC4b <- get(OreVListWONone[4])
+OVPEC5b <- get(OreVListWONone[5])
 
 if (OVPEC1b > OVPEC2b) 
 {	
@@ -1410,12 +1410,12 @@ OL<<- OreVListWONone[5]
 
 if(CountRecWON == 6)
 	{
-OVPEC1b <- svalue(OreVListWONone[1])
-OVPEC2b <- svalue(OreVListWONone[2])
-OVPEC3b <- svalue(OreVListWONone[3])
-OVPEC4b <- svalue(OreVListWONone[4])
-OVPEC5b <- svalue(OreVListWONone[5])
-OVPEC6b <- svalue(OreVListWONone[6])
+OVPEC1b <- get(OreVListWONone[1])
+OVPEC2b <- get(OreVListWONone[2])
+OVPEC3b <- get(OreVListWONone[3])
+OVPEC4b <- get(OreVListWONone[4])
+OVPEC5b <- get(OreVListWONone[5])
+OVPEC6b <- get(OreVListWONone[6])
 
 if (OVPEC1b > OVPEC2b) 
 {	
@@ -1591,12 +1591,12 @@ numL <<- 1
 for (gg9 in OreGradeV) 
 {
 a <<- MRRList [numL]
-f <<- svalue(a)
+f <<- get(a)
 b <<- CVList[numL] 
 c0 <<- ListGradeNames[numL]
 
-g <<- svalue(b)
-d <<- svalue(c0)
+g <<- get(b)
+d <<- get(c0)
 e <<- (d /100) 
 MATH1 <<-(f * g * e) 
 assign(gg9, MATH1, env = .GlobalEnv)
@@ -1607,7 +1607,7 @@ OreV <<- 0
 OreV1  <<- 0
 for (gg99 in OreGradeV) 
 {
-OreV1 <<- OreV1 + svalue(gg99)
+OreV1 <<- OreV1 + get(gg99)
 }
 
 OreV <<-  0.90715 * OreV1 
@@ -1615,7 +1615,7 @@ OldV <<- OreV
 
 if (MillChoice ==  "3-Product Flotation (Omit lowest value commodity)")
 {
-OreV <<- (OreV - svalue(OL))
+OreV <<- (OreV - get(OL))
 }
 
 if (MillChoice == "3-Product Flotation (Omit lowest value commodity)") 
@@ -1787,7 +1787,7 @@ if (!exists("CV_Cu"))
 		if(k == "Cu")
 			{
 			val1 <<- MR22[2,countC]
-			g22 <<- (svalue(MR22[[2,1]]))
+			g22 <<- ((MR22[[2,1]]))
 			gnew <<- as.numeric(levels(droplevels(g22)))
 			c111 <<- gnew
 			}
@@ -1797,14 +1797,14 @@ if (!exists("CV_Cu"))
 
 if (exists("CV_Cu"))
 {
-c111 <<- svalue(CV_Cu)
+c111 <<- CV_Cu
 }
 
 c1010 <<- as.double(c111)
 
 if (exists("MRR_Cu"))
 {
-c222 <<- svalue(MRR_Cu)
+c222 <<- MRR_Cu
 }
 
 if (!exists("MRR_Cu"))
@@ -2672,7 +2672,7 @@ for (u in ListGradeNames)
 {
 u1 <- sub("_pct", 'Tons', u)
 z<<- paste ("Contained_",u1,sep="")
-d1 <- (Ton * (svalue(u)/100))
+d1 <- (Ton * (get(u)/100))
 assign(z, d1, env = .GlobalEnv) 
 CList <<- c(CList,z)
 }
@@ -2847,10 +2847,10 @@ if (BestMMethod == "Open Pit")
 			{
 			u1 <- sub("_pct", 'Tons', u)
 			z0 <<- paste ("Recovered_",u1,sep="")
-			Gradev <<- svalue(u)
+			Gradev <<- get(u)
 			MRRa <<- MRRList [CN]  
-			MRRv <<- svalue(MRRa)  ## Records MRR value for the current grade
-			UUU <<- svalue(u)
+			MRRv <<- get(MRRa)  ## Records MRR value for the current grade
+			UUU <<- get(u)
 			d299 <<- 0
 			assign(z0, d299, env = .GlobalEnv) 
 			RList00 <<- c(RList00 ,z0) 
@@ -2862,10 +2862,10 @@ if (BestMMethod == "Open Pit")
 			{
 			u1 <- sub("_pct", 'Tons', u)
 			z0 <<- paste ("Recovered_",u1,sep="")
-			Gradev <<- svalue(u)
+			Gradev <<- get(u)
 			MRRa <<- MRRList [CN]  
-			MRRv <<- svalue(MRRa)  ## Records MRR value for the current grade
-			UUU <<- svalue(u)
+			MRRv <<- get(MRRa)  ## Records MRR value for the current grade
+			UUU <<- get(u)
 			d299 <<- (RF * MRRv * UUU * (Ton/100) )
 			assign(z0, d299, env = .GlobalEnv) 
 			RList00 <<- c(RList00 ,z0) 
@@ -2886,10 +2886,10 @@ if (BestMMethod == "Block Caving")
 			{
 			u1 <- sub("_pct", 'Tons', u)
 			z0 <<- paste ("Recovered_",u1,sep="")
-			Gradev <<- svalue(u)
+			Gradev <<- get(u)
 			MRRa <<- MRRList [CN]  
-			MRRv <<- svalue(MRRa)  ## Records MRR value for the current grade
-			UUU <<- svalue(u)
+			MRRv <<- get(MRRa)  ## Records MRR value for the current grade
+			UUU <<- get(u)
 			d299 <<- 0
 			assign(z0, d299, env = .GlobalEnv) 
 			RList00 <<- c(RList00 ,z0) 
@@ -2900,10 +2900,10 @@ if (BestMMethod == "Block Caving")
 			{
 			u1 <- sub("_pct", 'Tons', u)
 			z0 <<- paste ("Recovered_",u1,sep="")
-			Gradev <<- svalue(u)
+			Gradev <<- get(u)
 			MRRa <<- MRRList [CN]  
-			MRRv <<- svalue(MRRa)  ## Records MRR value for the current grade
-			UUU <<- svalue(u)
+			MRRv <<- get(MRRa)  ## Records MRR value for the current grade
+			UUU <<- get(u)
 			d299 <<- (RF * MRRv * UUU * (Ton/100) )
 			assign(z0, d299, env = .GlobalEnv) 
 			RList00 <<- c(RList00 ,z0) 
@@ -2924,10 +2924,10 @@ if (BestMMethod == "Room-and-Pillar")
 			{
 			u1 <- sub("_pct", 'Tons', u)
 			z0 <<- paste ("Recovered_",u1,sep="")
-			Gradev <<- svalue(u)
+			Gradev <<- get(u)
 			MRRa <<- MRRList [CN]  
-			MRRv <<- svalue(MRRa)  ## Records MRR value for the current grade
-			UUU <<- svalue(u)
+			MRRv <<- get(MRRa)  ## Records MRR value for the current grade
+			UUU <<- get(u)
 			d299 <<- 0
 			assign(z0, d299, env = .GlobalEnv) 
 			RList00 <<- c(RList00 ,z0) 
@@ -2938,10 +2938,10 @@ if (BestMMethod == "Room-and-Pillar")
 			{
 			u1 <- sub("_pct", 'Tons', u)
 			z0 <<- paste ("Recovered_",u1,sep="")
-			Gradev <<- svalue(u)
+			Gradev <<- get(u)
 			MRRa <<- MRRList [CN]  
-			MRRv <<- svalue(MRRa)  ## Records MRR value for the current grade
-			UUU <<- svalue(u)
+			MRRv <<- get(MRRa)  ## Records MRR value for the current grade
+			UUU <<- get(u)
 			d299 <<- (RF * MRRv * UUU * (Ton/100) )
 			assign(z0, d299, env = .GlobalEnv) 
 			RList00 <<- c(RList00 ,z0) 
@@ -2962,10 +2962,10 @@ if (BestMMethod == "Vertical Crater Retreat")
 			{
 			u1 <- sub("_pct", 'Tons', u)
 			z0 <<- paste ("Recovered_",u1,sep="")
-			Gradev <<- svalue(u)
+			Gradev <<- get(u)
 			MRRa <<- MRRList [CN]  
-			MRRv <<- svalue(MRRa)  ## Records MRR value for the current grade
-			UUU <<- svalue(u)
+			MRRv <<- get(MRRa)  ## Records MRR value for the current grade
+			UUU <<- get(u)
 			d299 <<- 0
 			assign(z0, d299, env = .GlobalEnv) 
 			RList00 <<- c(RList00 ,z0) 
@@ -2977,10 +2977,10 @@ if (BestMMethod == "Vertical Crater Retreat")
 			{
 			u1 <- sub("_pct", 'Tons', u)
 			z0 <<- paste ("Recovered_",u1,sep="")
-			Gradev <<- svalue(u)
+			Gradev <<- get(u)
 			MRRa <<- MRRList [CN]  
-			MRRv <<- svalue(MRRa)  ## Records MRR value for the current grade
-			UUU <<- svalue(u)
+			MRRv <<- get(MRRa)  ## Records MRR value for the current grade
+			UUU <<- get(u)
 			d299 <<- (RF * MRRv * UUU * (Ton/100) )
 			assign(z0, d299, env = .GlobalEnv) 
 			RList00 <<- c(RList00 ,z0) 
@@ -3009,7 +3009,7 @@ GList <- c()
 for (u in ListGradeNames) 
 {
 z<<- paste(u,"Grade",sep="")
-assign(z,svalue(u) , env = .GlobalEnv) 
+assign(z,get(u) , env = .GlobalEnv) 
 GList <<- c(GList ,z)
 }
 
@@ -3025,7 +3025,7 @@ CountRecWON <<- 0
 
 for (m8 in MRRList)
 {
-varm8 <<- svalue(m8)
+varm8 <<- get(m8)
 
 if (varm8 >= 0)
 {
@@ -3038,7 +3038,7 @@ OreVListWONone <<-c()
 
 for (ovWN in OVPECList)
 {
-varm8 <<- svalue(ovWN)
+varm8 <<- get(ovWN)
 
 if (varm8 >= 0)
 {
@@ -3049,31 +3049,31 @@ OreVListWONone <<- c(OreVListWONone ,ovWN )
 ## Confirming save of values for print out 
 if(NumGrades0 == 1)
 	{
-Grade0001 <-  svalue(ListGradeNames[1])
-Con0001 <- svalue(CList[1])
-Rec0001 <- svalue(RList00[1])
-OVPEC1 <- svalue(OVPECList[1])
+Grade0001 <-  get(ListGradeNames[1])
+Con0001 <- get(CList[1])
+Rec0001 <- get(RList00[1])
+OVPEC1 <- get(OVPECList[1])
 	}
 
 if(NumGrades0 == 2)
 	{
-Grade0001 <-  svalue(ListGradeNames[1])
-Grade0002 <-  svalue(ListGradeNames[2])
+Grade0001 <-  get(ListGradeNames[1])
+Grade0002 <-  get(ListGradeNames[2])
 
-Con0001 <- svalue(CList[1])
-Con0002 <- svalue(CList[2])
+Con0001 <- get(CList[1])
+Con0002 <- get(CList[2])
 
-Rec0001 <- svalue(RList00[1])
-Rec0002 <- svalue(RList00[2])
+Rec0001 <- get(RList00[1])
+Rec0002 <- get(RList00[2])
 
-OVPEC1 <- svalue(OVPECList[1])
-OVPEC2 <- svalue(OVPECList[2])
+OVPEC1 <- get(OVPECList[1])
+OVPEC2 <- get(OVPECList[2])
 	}
 
 if(CountRecWON == 2)
 	{
-	OVPEC1b <- svalue(OreVListWONone[1])
-	OVPEC2b <- svalue(OreVListWONone[2])
+	OVPEC1b <- get(OreVListWONone[1])
+	OVPEC2b <- get(OreVListWONone[2])
 	if (OVPEC1b > OVPEC2b) 
 		{	
 		OH<<- OreVListWONone[1]
@@ -3110,28 +3110,28 @@ if(CountRecWON == 2)
 
 if(NumGrades0 == 3)
 	{
-Grade0001 <-  svalue(ListGradeNames[1])
-Grade0002 <-  svalue(ListGradeNames[2])
-Grade0003 <-  svalue(ListGradeNames[3])
+Grade0001 <-  get(ListGradeNames[1])
+Grade0002 <-  get(ListGradeNames[2])
+Grade0003 <-  get(ListGradeNames[3])
 
-Con0001 <- svalue(CList[1])
-Con0002 <- svalue(CList[2])
-Con0003 <- svalue(CList[3])
+Con0001 <- get(CList[1])
+Con0002 <- get(CList[2])
+Con0003 <- get(CList[3])
 
-Rec0001 <- svalue(RList00 [1])
-Rec0002 <- svalue(RList00[2])
-Rec0003 <- svalue(RList00[3])
+Rec0001 <- get(RList00 [1])
+Rec0002 <- get(RList00[2])
+Rec0003 <- get(RList00[3])
 
-OVPEC1 <- svalue(OVPECList[1])
-OVPEC2 <- svalue(OVPECList[2])
-OVPEC3 <- svalue(OVPECList[3])
+OVPEC1 <- get(OVPECList[1])
+OVPEC2 <- get(OVPECList[2])
+OVPEC3 <- get(OVPECList[3])
 	}
 
 if(CountRecWON == 3)
 	{
-	OVPEC1b <- svalue(OreVListWONone[1])
-	OVPEC2b <- svalue(OreVListWONone[2])
-	OVPEC3b <- svalue(OreVListWONone[3])
+	OVPEC1b <- get(OreVListWONone[1])
+	OVPEC2b <- get(OreVListWONone[2])
+	OVPEC3b <- get(OreVListWONone[3])
 	
 	if (OVPEC1b > OVPEC2b) 
 		{	
@@ -3286,33 +3286,33 @@ if(CountRecWON == 3)
 
 if(NumGrades0 == 4)
 	{
-Grade0001 <-  svalue(ListGradeNames[1])
-Grade0002 <-  svalue(ListGradeNames[2])
-Grade0003 <-  svalue(ListGradeNames[3])
-Grade0004 <-  svalue(ListGradeNames[4])
+Grade0001 <-  get(ListGradeNames[1])
+Grade0002 <-  get(ListGradeNames[2])
+Grade0003 <-  get(ListGradeNames[3])
+Grade0004 <-  get(ListGradeNames[4])
 	
-Con0001 <- svalue(CList[1])
-Con0002 <- svalue(CList[2])
-Con0003 <- svalue(CList[3])
-Con0004 <- svalue(CList[4])
+Con0001 <- get(CList[1])
+Con0002 <- get(CList[2])
+Con0003 <- get(CList[3])
+Con0004 <- get(CList[4])
 
-Rec0001 <<- svalue(RList00[1])
-Rec0002 <<- svalue(RList00[2])
-Rec0003 <<- svalue(RList00[3])
-Rec0004 <<- svalue(RList00[4])
+Rec0001 <<- get(RList00[1])
+Rec0002 <<- get(RList00[2])
+Rec0003 <<- get(RList00[3])
+Rec0004 <<- get(RList00[4])
 
-OVPEC1 <- svalue(OVPECList[1])
-OVPEC2 <- svalue(OVPECList[2])
-OVPEC3 <- svalue(OVPECList[3])
-OVPEC4 <- svalue(OVPECList[4])
+OVPEC1 <- get(OVPECList[1])
+OVPEC2 <- get(OVPECList[2])
+OVPEC3 <- get(OVPECList[3])
+OVPEC4 <- get(OVPECList[4])
 	}
 	
 if(CountRecWON == 4)
 	{
-	OVPEC1b <- svalue(OreVListWONone[1])
-	OVPEC2b <- svalue(OreVListWONone[2])
-	OVPEC3b <- svalue(OreVListWONone[3])
-	OVPEC4b <- svalue(OreVListWONone[4])
+	OVPEC1b <- get(OreVListWONone[1])
+	OVPEC2b <- get(OreVListWONone[2])
+	OVPEC3b <- get(OreVListWONone[3])
+	OVPEC4b <- get(OreVListWONone[4])
 	
 	if (OVPEC1b > OVPEC2b) 
 		{	
@@ -4093,38 +4093,38 @@ if(CountRecWON == 4)
 
 if(NumGrades0 == 5)
 	{
-Grade0001 <-  svalue(ListGradeNames[1])
-Grade0002 <-  svalue(ListGradeNames[2])
-Grade0003 <-  svalue(ListGradeNames[3])
-Grade0004 <-  svalue(ListGradeNames[4])
-Grade0005 <-  svalue(ListGradeNames[5])
+Grade0001 <-  get(ListGradeNames[1])
+Grade0002 <-  get(ListGradeNames[2])
+Grade0003 <-  get(ListGradeNames[3])
+Grade0004 <-  get(ListGradeNames[4])
+Grade0005 <-  get(ListGradeNames[5])
 	
-Con0001 <- svalue(CList[1])
-Con0002 <- svalue(CList[2])
-Con0003 <- svalue(CList[3])
-Con0004 <- svalue(CList[4])
-Con0005 <- svalue(CList[5])
+Con0001 <- get(CList[1])
+Con0002 <- get(CList[2])
+Con0003 <- get(CList[3])
+Con0004 <- get(CList[4])
+Con0005 <- get(CList[5])
 
-Rec0001 <<- svalue(RList00[1])
-Rec0002 <<- svalue(RList00[2])
-Rec0003 <<- svalue(RList00[3])
-Rec0004 <<- svalue(RList00[4])
-Rec0005 <<- svalue(RList00[5])
+Rec0001 <<- get(RList00[1])
+Rec0002 <<- get(RList00[2])
+Rec0003 <<- get(RList00[3])
+Rec0004 <<- get(RList00[4])
+Rec0005 <<- get(RList00[5])
 
-OVPEC1 <- svalue(OVPECList[1])
-OVPEC2 <- svalue(OVPECList[2])
-OVPEC3 <- svalue(OVPECList[3])
-OVPEC4 <- svalue(OVPECList[4])
-OVPEC5 <- svalue(OVPECList[5])
+OVPEC1 <- get(OVPECList[1])
+OVPEC2 <- get(OVPECList[2])
+OVPEC3 <- get(OVPECList[3])
+OVPEC4 <- get(OVPECList[4])
+OVPEC5 <- get(OVPECList[5])
 	}
 
 if(CountRecWON == 5)
 	{
-	OVPEC1b <- svalue(OreVListWONone[1])
-	OVPEC2b <- svalue(OreVListWONone[2])
-	OVPEC3b <- svalue(OreVListWONone[3])
-	OVPEC4b <- svalue(OreVListWONone[4])
-	OVPEC5b <- svalue(OreVListWONone[5])
+	OVPEC1b <- get(OreVListWONone[1])
+	OVPEC2b <- get(OreVListWONone[2])
+	OVPEC3b <- get(OreVListWONone[3])
+	OVPEC4b <- get(OreVListWONone[4])
+	OVPEC5b <- get(OreVListWONone[5])
 	
 if (OVPEC1b > OVPEC2b) 
 {	
@@ -8924,43 +8924,43 @@ OL<<- OreVListWONone[5]
 
 if(NumGrades0 == 6)
 	{
-Grade0001 <-  svalue(ListGradeNames[1])
-Grade0002 <-  svalue(ListGradeNames[2])
-Grade0003 <-  svalue(ListGradeNames[3])
-Grade0004 <-  svalue(ListGradeNames[4])
-Grade0005 <-  svalue(ListGradeNames[5])
-Grade0006 <-  svalue(ListGradeNames[6])
+Grade0001 <-  get(ListGradeNames[1])
+Grade0002 <-  get(ListGradeNames[2])
+Grade0003 <-  get(ListGradeNames[3])
+Grade0004 <-  get(ListGradeNames[4])
+Grade0005 <-  get(ListGradeNames[5])
+Grade0006 <-  get(ListGradeNames[6])
 	
-Con0001 <- svalue(CList[1])
-Con0002 <- svalue(CList[2])
-Con0003 <- svalue(CList[3])
-Con0004 <- svalue(CList[4])
-Con0005 <- svalue(CList[5])
-Con0006 <- svalue(CList[6])
+Con0001 <- get(CList[1])
+Con0002 <- get(CList[2])
+Con0003 <- get(CList[3])
+Con0004 <- get(CList[4])
+Con0005 <- get(CList[5])
+Con0006 <- get(CList[6])
 
-Rec0001 <<- svalue(RList00[1])
-Rec0002 <<- svalue(RList00[2])
-Rec0003 <<- svalue(RList00[3])
-Rec0004 <<- svalue(RList00[4])
-Rec0005 <<- svalue(RList00[5])
-Rec0006 <<- svalue(RList00[6])
+Rec0001 <<- get(RList00[1])
+Rec0002 <<- get(RList00[2])
+Rec0003 <<- get(RList00[3])
+Rec0004 <<- get(RList00[4])
+Rec0005 <<- get(RList00[5])
+Rec0006 <<- get(RList00[6])
 
-OVPEC1 <- svalue(OVPECList[1])
-OVPEC2 <- svalue(OVPECList[2])
-OVPEC3 <- svalue(OVPECList[3])
-OVPEC4 <- svalue(OVPECList[4])
-OVPEC5 <- svalue(OVPECList[5])
-OVPEC6 <- svalue(OVPECList[6])
+OVPEC1 <- get(OVPECList[1])
+OVPEC2 <- get(OVPECList[2])
+OVPEC3 <- get(OVPECList[3])
+OVPEC4 <- get(OVPECList[4])
+OVPEC5 <- get(OVPECList[5])
+OVPEC6 <- get(OVPECList[6])
 	}
 	
 if(CountRecWON == 6)
 	{
-	OVPEC1b <- svalue(OreVListWONone[1])
-	OVPEC2b <- svalue(OreVListWONone[2])
-	OVPEC3b <- svalue(OreVListWONone[3])
-	OVPEC4b <- svalue(OreVListWONone[4])
-	OVPEC5b <- svalue(OreVListWONone[5])
-	OVPEC6b <- svalue(OreVListWONone[6])
+	OVPEC1b <- get(OreVListWONone[1])
+	OVPEC2b <- get(OreVListWONone[2])
+	OVPEC3b <- get(OreVListWONone[3])
+	OVPEC4b <- get(OreVListWONone[4])
+	OVPEC5b <- get(OreVListWONone[5])
+	OVPEC6b <- get(OreVListWONone[6])
 	
 if (OVPEC1b > OVPEC2b) 
 {	

@@ -22,8 +22,9 @@ namespace MapWizard.Model
         public ObservableCollection<string> perTypes = new ObservableCollection<string>() { "Count %", "Metal %" };
         // Not always initialized the same way.
         private string lastRunDate = "Last Run: Never";
+        private string lastRunTract = "Tract: not run";
         private int runStatus = 2; // 0=error, 1=success, 2=not run yet.
-        private string monteCarloResultTable = "";
+        private string monteCarloResultTable = "Please select Monte Carlo simulation";
         private string selectedMetal;
         private string selectedMetalIndex;
         private string metalsToCalculate;
@@ -258,6 +259,21 @@ namespace MapWizard.Model
                 if (value == lastRunDate) return;
                 lastRunDate = value;
                 RaisePropertyChanged("LastRunDate");
+            }
+        }
+
+        /// <summary>
+        /// Last run tractid.
+        /// </summary>
+        /// <returns>Date.</returns>
+        public string LastRunTract
+        {
+            get { return lastRunTract; }
+            set
+            {
+                if (value == lastRunTract) return;
+                lastRunTract = value;
+                RaisePropertyChanged("LastRunTract");
             }
         }
 

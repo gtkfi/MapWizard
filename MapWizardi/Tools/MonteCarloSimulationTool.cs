@@ -54,6 +54,15 @@ namespace MapWizard.Tools
             get { return GetValue<string>("TractId"); }
             set { Add<string>("TractId", value); }
         }
+
+        /// <summary>
+        /// Last run selected tract 
+        /// </summary>
+        public string LastRunTract
+        {
+            get { return GetValue<string>("LastRunTract"); }
+            set { Add<string>("LastRunTract", value); }
+        }
     }
 
     /// <summary>

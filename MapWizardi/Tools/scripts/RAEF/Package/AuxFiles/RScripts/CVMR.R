@@ -65,9 +65,9 @@ while (CVw < (CVl + 1))
 for (CVObj in CVList)
 {
 	print (CVObj)
-	print (svalue(CVObj))
+	print (get(CVObj))
 	sw <<- 1
-	if (svalue(CVObj) == -999)
+	if (get(CVObj) == -999)
 
 		{
 		#gmessage("There are missing commodity values, please correct them before continuing, by filling out the next dialogs", title="message",icon =  "error") 
@@ -87,7 +87,7 @@ for (CVObj in CVList)
 		container= CVinput ,
 		handler = function(h,...)
 			{
-			assign(CVObj, as.double(svalue(CVe)), env = .GlobalEnv)
+			assign(CVObj, as.double(get(CVe)), env = .GlobalEnv)
 			sw <<- 1
 			dispose(CVinput)
 			})
@@ -108,7 +108,7 @@ while (sw ==2){ print ("waiting for user input")}
 for (CVObj in CVList)
 {
 	print (CVObj)
-	print (svalue(CVObj))
+	print (get(CVObj))
 }
 
 
@@ -232,7 +232,7 @@ if (MillChoice == "Customize Mill Options")
 	MillNum<<- 13   ## base number for mill number temproarily 
 	for (hh in MillCList)
 		{
-		zz <<- svalue(hh)
+		zz <<- get(hh)
 		print (zz)
 		cn0 <<- sub("Mill", '', hh)
 		print (cn0)
@@ -512,10 +512,10 @@ if (MillChoice == "Customize Mill Options")
 			KO2 <<- gedit("Power log for operating cost",width = 30,container = MRinput )
 			obj <- gbutton(text   = "Submit User Define Mill",container= MRinput ,handler = function(h,...)
 					{
-					#assign(MRObj, as.double(svalue(MRe)), env = .GlobalEnv)
+					#assign(MRObj, as.double(get(MRe)), env = .GlobalEnv)
 					sw <<- 1
-					UDName1 <<- svalue(UDName1)	
-					MRe <<- svalue (MRe)
+					UDName1 <<- get(UDName1)	
+					MRe <<- get (MRe)
 					MRei <<- as.numeric(MRe)
 				
 					numset <- 1
@@ -529,10 +529,10 @@ if (MillChoice == "Customize Mill Options")
 							}
 						numset <- (numset + 1)
 						}	
-					KC1 <<- svalue(KC1)
-					KC2 <<- svalue(KC2)
-					KO1 <<- svalue(KO1)
-					KO2 <<- svalue(KO2)
+					KC1 <<- get(KC1)
+					KC2 <<- get(KC2)
+					KO1 <<- get(KO1)
+					KO2 <<- get(KO2)
 					dispose(MRinput)
 					})
 			while (sw ==2)
@@ -551,7 +551,7 @@ for (MRObj in MRRList)
 	name112 <<- sub("MRR_", "", MRObj)
 	print (name112)
 	sw <<- 1
-	svMR <<- svalue(MRObj)
+	svMR <<- get(MRObj)
 	if (svMR  == -999)
 		{
 		sw <<- 2
@@ -570,7 +570,7 @@ for (MRObj in MRRList)
 		container= MRinput ,
 		handler = function(h,...)
 			{
-			assign(MRObj, as.double(svalue(MRe0)), env = .GlobalEnv)
+			assign(MRObj, as.double(get(MRe0)), env = .GlobalEnv)
 			sw <<- 1
 			dispose(MRinput)
 			})

@@ -25,7 +25,7 @@ lbl_data_frame_name <- glabel(
 
 obj <- gfilebrowse("Select folder ",type = "selectdir", cont=baseW)
 addhandlerchanged(obj, handler=function(h,...) 
-	InputFolder1 <<- svalue(h$obj))
+	InputFolder1 <<- get(h$obj))
 obj <- gbutton(
 	text   = "Launch Resource Assessment Economic Filter",
       container=baseW,
@@ -82,7 +82,7 @@ lbl_data_frame_name <- glabel(
 
 obj <- gfilebrowse("Select folder ",type = "selectdir", cont=input2)
 addhandlerchanged(obj, handler=function(h,...) 
-	wdir1 <<- svalue(h$obj))
+	wdir1 <<- get(h$obj))
 
 obj <- gbutton(
 
@@ -115,7 +115,7 @@ testname1<<- gedit("test name",width = 13,container = input2)
 ## create continue button 1 - user inputs 
 obj <<- gbutton(text = "Continue - User Inputs",container=input2, handler = function(h,...)
 	{
-	SimFile <<-svalue(SimFile)
+	SimFile <<-get(SimFile)
 	
 #################################
 ## User input- Intervals dialog  --  after "continue 1 " button clicked 
@@ -123,7 +123,7 @@ obj <<- gbutton(text = "Continue - User Inputs",container=input2, handler = func
 	
 	input5 <- gframe("",horizontal= FALSE, container=input)
 	
-	TN1 <<- svalue(testname1)
+	TN1 <<- get(testname1)
 	OutF1 <<- paste("EF_02_Output_",TN1,".csv", sep = "")
 
 ##############################
@@ -161,12 +161,12 @@ lbl_data_frame_name <- glabel("Tract Area [sqKm]?", container = input5)
 obj <- gbutton(text   = "Continue",container=input5, 
 	handler = function(h,...)
 	{
-	DTy <<- svalue(DTy)
-	int1 <<- strtoi(svalue(NumCat ))
-	NumCat <<- strtoi(svalue(NumCat))
-	MinTot <<- strtoi(svalue(MinTot ))
-	MaxTot <<- strtoi(svalue(MaxTot ))
-	TA1 <<- strtoi(svalue(TA1 ))
+	DTy <<- get(DTy)
+	int1 <<- strtoi(get(NumCat ))
+	NumCat <<- strtoi(get(NumCat))
+	MinTot <<- strtoi(get(MinTot ))
+	MaxTot <<- strtoi(get(MaxTot ))
+	TA1 <<- strtoi(get(TA1 ))
 	lbl_data_frame_name <- glabel("Enter Min/Max/Factor for each interval",container = input5 )
 ## lists 
 	MinList <<- c()
@@ -263,45 +263,45 @@ Per4 <<- 0
 ## saves the interval information - based on how many intervals
 	if (int1 == 1) 
 		{
-		Min1 <<- strtoi(svalue(ObjMin1))
-		Max1 <<- strtoi(svalue(ObjMax1))
-		Per1 <<- as.double(svalue(ObjPer1))
+		Min1 <<- strtoi(get(ObjMin1))
+		Max1 <<- strtoi(get(ObjMax1))
+		Per1 <<- as.double(get(ObjPer1))
 		}
 	if (int1 == 2) 
 		{
-		Min1 <<- strtoi(svalue(ObjMin1))
-		Max1 <<- strtoi(svalue(ObjMax1))
-		Per1 <<- as.double(svalue(ObjPer1))
-		Min2 <<- strtoi(svalue(ObjMin2))
-		Max2 <<- strtoi(svalue(ObjMax2))
-		Per2 <<- as.double(svalue(ObjPer2))
+		Min1 <<- strtoi(get(ObjMin1))
+		Max1 <<- strtoi(get(ObjMax1))
+		Per1 <<- as.double(get(ObjPer1))
+		Min2 <<- strtoi(get(ObjMin2))
+		Max2 <<- strtoi(get(ObjMax2))
+		Per2 <<- as.double(get(ObjPer2))
 		}
 	if (int1 == 3) 
 		{
-		Min1 <<- strtoi(svalue(ObjMin1))
-		Max1 <<- strtoi(svalue(ObjMax1))
-		Per1 <<- as.double(svalue(ObjPer1))
-		Min2 <<- strtoi(svalue(ObjMin2))
-		Max2 <<- strtoi(svalue(ObjMax2))
-		Per2 <<- as.double(svalue(ObjPer2))
-		Min3 <<- strtoi(svalue(ObjMin3))
-		Max3 <<- strtoi(svalue(ObjMax3))
-		Per3 <<- as.double(svalue(ObjPer3))		
+		Min1 <<- strtoi(get(ObjMin1))
+		Max1 <<- strtoi(get(ObjMax1))
+		Per1 <<- as.double(get(ObjPer1))
+		Min2 <<- strtoi(get(ObjMin2))
+		Max2 <<- strtoi(get(ObjMax2))
+		Per2 <<- as.double(get(ObjPer2))
+		Min3 <<- strtoi(get(ObjMin3))
+		Max3 <<- strtoi(get(ObjMax3))
+		Per3 <<- as.double(get(ObjPer3))		
 		}
 	if (int1 == 4) 
 		{
-		Min1 <<- strtoi(svalue(ObjMin1))
-		Max1 <<- strtoi(svalue(ObjMax1))
-		Per1 <<- as.double(svalue(ObjPer1))
-		Min2 <<- strtoi(svalue(ObjMin2))
-		Max2 <<- strtoi(svalue(ObjMax2))
-		Per2 <<- as.double(svalue(ObjPer2))
-		Min3 <<- strtoi(svalue(ObjMin3))
-		Max3 <<- strtoi(svalue(ObjMax3))
-		Per3 <<- as.double(svalue(ObjPer3))	
-		Min4 <<- strtoi(svalue(ObjMin4))
-		Max4 <<- strtoi(svalue(ObjMax4))
-		Per4 <<- as.double(svalue(ObjPer4))	
+		Min1 <<- strtoi(get(ObjMin1))
+		Max1 <<- strtoi(get(ObjMax1))
+		Per1 <<- as.double(get(ObjPer1))
+		Min2 <<- strtoi(get(ObjMin2))
+		Max2 <<- strtoi(get(ObjMax2))
+		Per2 <<- as.double(get(ObjPer2))
+		Min3 <<- strtoi(get(ObjMin3))
+		Max3 <<- strtoi(get(ObjMax3))
+		Per3 <<- as.double(get(ObjPer3))	
+		Min4 <<- strtoi(get(ObjMin4))
+		Max4 <<- strtoi(get(ObjMax4))
+		Per4 <<- as.double(get(ObjPer4))	
 		}
 
 
@@ -359,9 +359,9 @@ Per4 <<- 0
 	obj <- gbutton(text   = "Submit Mine Methods and Mill Type", container=input5, 
 	handler = function(h,...)
 	{
-	MineTypes <<- svalue(MT )
-	#DTy <<- svalue (DTy)
-	MillT <<- svalue(MillType) 
+	MineTypes <<- get(MT )
+	#DTy <<- get (DTy)
+	MillT <<- get(MillType) 
 	MineMethod <<- MineTypes
 	## creates environment check box
 	
@@ -411,7 +411,7 @@ PVD3 <<- 0
 	obj <- gbutton(text   = "Continue", container=input7, 
 	handler = function(h,...)
 	{
-	ECh <<- svalue(EnvType)
+	ECh <<- get(EnvType)
 
 	
 
@@ -445,8 +445,8 @@ OCIF <<- 1.00
 ## creats calculation and submission dialog 
 #################################################
 
-	EnvT <<- svalue(EnvType)
-	dpy <<- as.double(svalue(days))
+	EnvT <<- get(EnvType)
+	dpy <<- as.double(get(days))
 
 ###########################################################
 ## creates submit button - and runs the processes 
@@ -473,7 +473,7 @@ obj <- gbutton(
       container= input5cc ,
       handler = function(h,...)
 	{	
-	MSC <<- as.double(svalue(ObjMSC))
+	MSC <<- as.double(get(ObjMSC))
 	}
 	)
 	}
@@ -490,7 +490,7 @@ obj <- gbutton(
       container= input5cc ,
       handler = function(h,...)
 	{	
-	IF <<- as.double(svalue(ObjOCIF))
+	IF <<- as.double(get(ObjOCIF))
 	}
 	)
 	}
@@ -507,7 +507,7 @@ obj <- gbutton(
       container= input5cc ,
       handler = function(h,...)
 	{	
-	IF <<- as.double(svalue(ObjCCIF))
+	IF <<- as.double(get(ObjCCIF))
 	}
 	)
 	}
@@ -525,7 +525,7 @@ obj <- gbutton(
 	
 	##add econ file siumlation file input addres
 
-	ECh <<- svalue(EnvType)
+	ECh <<- get(EnvType)
 
 	RS1 <- rbind (date2,time2, SimFile, WD, TN1, NumCat, Min1, Max1, Per1, Min2, Max2, Per2, Min3, Max3, Per3, Min4, Max4, Per4, DTy, MineMethod[1], MineMethod[2], MineMethod[3], MillT[1],MillT[2], dpy, ECh[1],ECh[2], MSC, CCIF, OCIF, TA1    )
 	rownames(RS1) <- c("Date", "Time", "Econ Filter File", "Working Directory", "Test Name", "Number of Depth Intervals", "Min1", "Max1", "Per1", "Min2", "Max2", "Per2", "Min3", "Max3", "Per3", "Min4", "Max4", "Per4","Deposit Type", "Mine Method 1", "Mine Method 2", "Mine Method 3","Mill Type 1 ", "Mill Type 2 ","Days of Operation", "Environment Choice 1 ","Liner?", "MSC", "Cap Cost Inflation Factor", "Operating Cost Inflation Factor", "Area")
@@ -1200,7 +1200,7 @@ for (z7 in GCVList)
 g777 <<- paste("CMMRR",z7,"._pct",sep="")
 if (COA == g777 )
 {
-MRValue000 <<- svalue(COA)
+MRValue000 <<- get(COA)
 MRValue000 <<- as.double(MRValue000)
 assign(g777, MRValue000,env = .GlobalEnv)
 MRUseList <<- c(MRUseList,g777)
@@ -1225,7 +1225,7 @@ for (u in CVS[1,])
 
 z7777 <<- paste ("CV_",u,sep="")
 a1 <<-CVS[2,un]
-a2  <<- svalue(a1)
+a2  <<- get(a1)
 a3 <<- matrix(unlist(a2))
 a4 <<- as.double(a3)
 
@@ -1249,7 +1249,7 @@ gg00 <<- paste("CV_",z5,sep="")
 
 if (u0000 == gg00)
 {
-h000 <<- svalue(u0000)
+h000 <<- get(u0000)
 assign(gg00, h000, env = .GlobalEnv)  
 CVUseList <<- c(CVUseList , gg00) 
 }
@@ -1278,7 +1278,7 @@ for (gh in CVUseList)
 	{
 	zG<<- paste ("OreV","_",ListGradeNames[G1],sep="")
 	zG <<- sub("._pct", '', zG)
-	VPEC <<- ( 0.90715 * (svalue(CVUseList[G1])) * svalue(MRUseList[G1]) * (svalue(ListGradeNames[G1]) / 100) )
+	VPEC <<- ( 0.90715 * (get(CVUseList[G1])) * get(MRUseList[G1]) * (get(ListGradeNames[G1]) / 100) )
 	assign(zG,VPEC, env =.GlobalEnv)
 	OVPECList <<- c(OVPECList,zG)
 	G1 <<- G1 + 1
@@ -1302,12 +1302,12 @@ numL <<- 1
 for (gg9 in OreGradeV) 
 {
 a <<- MRUseList[numL]
-f <<- svalue(a)
+f <<- get(a)
 b <<- CVUseList[numL] 
 c0 <<- ListGradeNames[numL]
 
-g <<- svalue(b)
-d <<- svalue(c0)
+g <<- get(b)
+d <<- get(c0)
 e <<- (d /100) 
 MATH1 <<-(f * g * e) 
 assign(gg9, MATH1, env = .GlobalEnv)
@@ -1319,7 +1319,7 @@ OreV <<- 0
 OreV1  <<- 0
 for (gg99 in OreGradeV) 
 {
-OreV1 <<- OreV1 + svalue(gg99)
+OreV1 <<- OreV1 + get(gg99)
 }
 
 OreV <<-  0.90715 * OreV1 
@@ -1330,9 +1330,9 @@ OreV <<-  0.90715 * OreV1
 ##############################################
 
 C000 <<- CVList[1] 
-c111 <<- svalue(C000)
+c111 <<- get(C000)
 c1010 <<- as.double(c111)
-c222 <<- svalue(CMMRRCu._pct)
+c222 <<- get(CMMRRCu._pct)
 CuEQ <<- (100 * (1/0.90715)* OreV / ( c222 * c1010) )
 
 
@@ -2199,7 +2199,7 @@ for (u in ListGradeNames)
 {
 u1 <- sub("_pct", 'Tons', u)
 z<<- paste ("Contained_",u1,sep="")
-d1 <- (Ton * (svalue(u)/100))
+d1 <- (Ton * (get(u)/100))
 assign(z, d1, env = .GlobalEnv) 
 CList <<- c(CList,z)
 }
@@ -2387,11 +2387,11 @@ for (u in ListGradeNames)
 
 u1 <- sub("_pct", 'Tons', u)
 z0 <<- paste ("Recovered_",u1,sep="")
-Gradev <<- svalue(u)
+Gradev <<- get(u)
 
 MRRa <<- MRUseList[CN]  
-MRRv <<- svalue(MRRa)  ## Records MRR value for the current grade
-UUU <<- svalue(u)
+MRRv <<- get(MRRa)  ## Records MRR value for the current grade
+UUU <<- get(u)
 
 d299 <<- (RF * MRRv * UUU * (Ton/100) )
 assign(z0, d299, env = .GlobalEnv) 
@@ -2411,13 +2411,13 @@ for (u in ListGradeNames)
 {
 u1 <- sub("_pct", 'Tons', u)
 z<<- paste ("Recovered_",u1,sep="")
-Gradev <<- svalue(u)
+Gradev <<- get(u)
 
 MRRa <<- MRUseList[CN]  
-MRRv <<- svalue(MRRa)  ## Records MRR value for the current grade
+MRRv <<- get(MRRa)  ## Records MRR value for the current grade
 
 
-d2 <- (RF * MRRv * svalue(u) * (Ton/100) )
+d2 <- (RF * MRRv * get(u) * (Ton/100) )
 assign(z, d2, env = .GlobalEnv) 
 RList00 <- c(RList00 ,z)
 CN =CN + 1
@@ -2437,13 +2437,13 @@ for (u in ListGradeNames)
 {
 u1 <- sub("_pct", 'Tons', u)
 z<<- paste ("Recovered_",u1,sep="")
-Gradev <<- svalue(u)
+Gradev <<- get(u)
 
 MRRa <<- MRUseList[CN]  
-MRRv <<- svalue(MRRa)  ## Records MRR value for the current grade
+MRRv <<- get(MRRa)  ## Records MRR value for the current grade
 
 
-d2 <- (RF * MRRv * svalue(u) * (Ton/100) )
+d2 <- (RF * MRRv * get(u) * (Ton/100) )
 assign(z, d2, env = .GlobalEnv) 
 RList00 <- c(RList00 ,z)
 CN =CN + 1
@@ -2477,7 +2477,7 @@ for (u in ListGradeNames)
 {
 z<<- paste(u,"Grade",sep="")
 
-assign(z,svalue(u) , env = .GlobalEnv) 
+assign(z,get(u) , env = .GlobalEnv) 
 GList <<- c(GList ,z)
 }
 
@@ -2487,30 +2487,30 @@ GList <<- c(GList ,z)
 
 if(NumGrades0 == 1)
 	{
-Grade0001 <-  svalue(ListGradeNames[1])
-Con0001 <- svalue(cList0[1])
-Rec0001 <- svalue(rList0[1])
-OVPEC1 <- svalue(OVPECList[1])
+Grade0001 <-  get(ListGradeNames[1])
+Con0001 <- get(cList0[1])
+Rec0001 <- get(rList0[1])
+OVPEC1 <- get(OVPECList[1])
 	}
 
 
 if(NumGrades0 == 2)
 	{
-Grade0001 <-  svalue(ListGradeNames[1])
-Grade0002 <-  svalue(ListGradeNames[2])
+Grade0001 <-  get(ListGradeNames[1])
+Grade0002 <-  get(ListGradeNames[2])
 
 
 	
-Con0001 <- svalue(CList[1])
-Con0002 <- svalue(CList[2])
+Con0001 <- get(CList[1])
+Con0002 <- get(CList[2])
 
 
-Rec0001 <- svalue(RList00[1])
-Rec0002 <- svalue(RList00[2])
+Rec0001 <- get(RList00[1])
+Rec0002 <- get(RList00[2])
 
 
-OVPEC1 <- svalue(OVPECList[1])
-OVPEC2 <- svalue(OVPECList[2])
+OVPEC1 <- get(OVPECList[1])
+OVPEC2 <- get(OVPECList[2])
 
 
 
@@ -2539,24 +2539,24 @@ OL<<- OVPECList[2]
 
 if(NumGrades0 == 3)
 	{
-Grade0001 <-  svalue(ListGradeNames[1])
-Grade0002 <-  svalue(ListGradeNames[2])
-Grade0003 <-  svalue(ListGradeNames[3])
+Grade0001 <-  get(ListGradeNames[1])
+Grade0002 <-  get(ListGradeNames[2])
+Grade0003 <-  get(ListGradeNames[3])
 
 	
-Con0001 <- svalue(CList[1])
-Con0002 <- svalue(CList[2])
-Con0003 <- svalue(CList[3])
+Con0001 <- get(CList[1])
+Con0002 <- get(CList[2])
+Con0003 <- get(CList[3])
 
 
-Rec0001 <- svalue(RList00[1])
-Rec0002 <- svalue(RList00[2])
-Rec0003 <- svalue(RList00[3])
+Rec0001 <- get(RList00[1])
+Rec0002 <- get(RList00[2])
+Rec0003 <- get(RList00[3])
 
 
-OVPEC1 <- svalue(OVPECList[1])
-OVPEC2 <- svalue(OVPECList[2])
-OVPEC3 <- svalue(OVPECList[3])
+OVPEC1 <- get(OVPECList[1])
+OVPEC2 <- get(OVPECList[2])
+OVPEC3 <- get(OVPECList[3])
 
 
 
@@ -2607,25 +2607,25 @@ OL<<- OVPECList[3]
 
 if(NumGrades0 == 4)
 	{
-Grade0001 <-  svalue(ListGradeNames[1])
-Grade0002 <-  svalue(ListGradeNames[2])
-Grade0003 <-  svalue(ListGradeNames[3])
-Grade0004 <-  svalue(ListGradeNames[4])
+Grade0001 <-  get(ListGradeNames[1])
+Grade0002 <-  get(ListGradeNames[2])
+Grade0003 <-  get(ListGradeNames[3])
+Grade0004 <-  get(ListGradeNames[4])
 	
-Con0001 <- svalue(CList[1])
-Con0002 <- svalue(CList[2])
-Con0003 <- svalue(CList[3])
-Con0004 <- svalue(CList[4])
+Con0001 <- get(CList[1])
+Con0002 <- get(CList[2])
+Con0003 <- get(CList[3])
+Con0004 <- get(CList[4])
 
-Rec0001 <<- svalue(RList00[1])
-Rec0002 <<- svalue(RList00[2])
-Rec0003 <<- svalue(RList00[3])
-Rec0004 <<- svalue(RList00[4])
+Rec0001 <<- get(RList00[1])
+Rec0002 <<- get(RList00[2])
+Rec0003 <<- get(RList00[3])
+Rec0004 <<- get(RList00[4])
 
-OVPEC1 <- svalue(OVPECList[1])
-OVPEC2 <- svalue(OVPECList[2])
-OVPEC3 <- svalue(OVPECList[3])
-OVPEC4 <- svalue(OVPECList[4])
+OVPEC1 <- get(OVPECList[1])
+OVPEC2 <- get(OVPECList[2])
+OVPEC3 <- get(OVPECList[3])
+OVPEC4 <- get(OVPECList[4])
 
 
 if (OVPEC1 > OVPEC2) 
@@ -2708,45 +2708,45 @@ OL<<- OVPECList[4]
 
 if(NumGrades0 == 5)
 	{
-Grade0001 <-  svalue(ListGradeNames[1])
-Grade0002 <-  svalue(ListGradeNames[2])
-Grade0003 <-  svalue(ListGradeNames[3])
-Grade0004 <-  svalue(ListGradeNames[4])
-Grade0005 <-  svalue(ListGradeNames[5])	
+Grade0001 <-  get(ListGradeNames[1])
+Grade0002 <-  get(ListGradeNames[2])
+Grade0003 <-  get(ListGradeNames[3])
+Grade0004 <-  get(ListGradeNames[4])
+Grade0005 <-  get(ListGradeNames[5])	
 
-Con0001 <- svalue(cList0[1])
-Con0002 <- svalue(cList0[2])
-Con0003 <- svalue(cList0[3])
-Con0004 <- svalue(cList0[4])
-Con0005 <- svalue(cList0[5])
+Con0001 <- get(cList0[1])
+Con0002 <- get(cList0[2])
+Con0003 <- get(cList0[3])
+Con0004 <- get(cList0[4])
+Con0005 <- get(cList0[5])
 
-Rec0001 <- svalue(RList00[1])
-Rec0002 <- svalue(RList00[2])
-Rec0003 <- svalue(RList00[3])
-Rec0004 <- svalue(RList00[4])
-Rec0005 <- svalue(RList00[5])
+Rec0001 <- get(RList00[1])
+Rec0002 <- get(RList00[2])
+Rec0003 <- get(RList00[3])
+Rec0004 <- get(RList00[4])
+Rec0005 <- get(RList00[5])
 	}
 
 if(NumGrades0 == 5)
 	{
-Grade0001 <-  svalue(ListGradeNames[1])
-Grade0002 <-  svalue(ListGradeNames[2])
-Grade0003 <-  svalue(ListGradeNames[3])
-Grade0004 <-  svalue(ListGradeNames[4])
-Grade0005 <-  svalue(ListGradeNames[5])	
-Grade0006 <-  svalue(ListGradeNames[6])	
-Con0001 <- svalue(cList0[1])
-Con0002 <- svalue(cList0[2])
-Con0003 <- svalue(cList0[3])
-Con0004 <- svalue(cList0[4])
-Con0005 <- svalue(cList0[5])
-Con0006 <- svalue(cList0[6])
-Rec0001 <- svalue(rList0[1])
-Rec0002 <- svalue(rList0[2])
-Rec0003 <- svalue(rList0[3])
-Rec0004 <- svalue(rList0[4])
-Rec0005 <- svalue(rList0[5])
-Rec0006 <- svalue(rList0[6])
+Grade0001 <-  get(ListGradeNames[1])
+Grade0002 <-  get(ListGradeNames[2])
+Grade0003 <-  get(ListGradeNames[3])
+Grade0004 <-  get(ListGradeNames[4])
+Grade0005 <-  get(ListGradeNames[5])	
+Grade0006 <-  get(ListGradeNames[6])	
+Con0001 <- get(cList0[1])
+Con0002 <- get(cList0[2])
+Con0003 <- get(cList0[3])
+Con0004 <- get(cList0[4])
+Con0005 <- get(cList0[5])
+Con0006 <- get(cList0[6])
+Rec0001 <- get(rList0[1])
+Rec0002 <- get(rList0[2])
+Rec0003 <- get(rList0[3])
+Rec0004 <- get(rList0[4])
+Rec0005 <- get(rList0[5])
+Rec0006 <- get(rList0[6])
 	}
 
 

@@ -132,6 +132,12 @@ namespace MapWizard.Tools
             get { return GetValue<string>("CustomExtensionFolder"); }
             set { Add<string>("CustomExtensionFolder", value); }
         }
+
+        public string LastRunTract
+        {
+            get { return GetValue<string>("LastRunTract"); }
+            set { Add<string>("LastRunTract", value); }
+        }
     }
 
     /// <summary>

@@ -164,6 +164,12 @@ namespace MapWizard.Tools
             get { return GetValue<string>("Output"); }
             internal set { Add<string>("Output", value); }
         }
+
+        public string Warnings
+        {
+            get { return GetValue<string>("Warnings"); }
+            internal set { Add<string>("Warnings", value); }
+        }
     }
 
 
@@ -255,11 +261,14 @@ namespace MapWizard.Tools
                         proc.BeginErrorReadLine();
                         procResult = proc.StandardOutput.ReadToEnd();
                         proc.Close();
+                        result.Warnings = "";
                         if (procErrors.Length > 1&& procErrors.ToLower().Contains("error")) //Don't throw exception over warnings or empty error message.
                         {
                             logger.Error(procErrors);
                             throw new Exception(" R script failed, check output for details.");
-                        }
+                        }                     
+                        else if (procErrors.Length>1 && procErrors.ToLower().Contains("the input grade-tonnage data file contains less than 20 deposits"))
+                            result.Warnings="The input grade - tonnage data file contains less than 20 deposits.This might reduce the representativeness of the generated pdfs.";
                         result.GradeSummary = File.ReadAllText(Path.Combine(gradeProject, "grade_summary.txt"));
                         result.GradePlot = Path.Combine(gradeProject, "grade_plot.jpeg");
                         logger.Trace("Grade tonnage return value: " + procResult);
@@ -309,11 +318,14 @@ namespace MapWizard.Tools
                         proc.BeginErrorReadLine();
                         procResult = proc.StandardOutput.ReadToEnd();
                         proc.Close();
-                        if (procErrors.Length > 1)
+                        result.Warnings = "";
+                        if (procErrors.Length > 1 && procErrors.ToLower().Contains("error"))
                         {
                             logger.Error(procErrors);
                             throw new Exception("R script failed. Check log file for details.");
                         }
+                        else if (procErrors.Length > 1 && procErrors.ToLower().Contains("the input grade-tonnage data file contains less than 20 deposits"))
+                            result.Warnings = "The input grade - tonnage data file contains less than 20 deposits.This might reduce the representativeness of the generated pdfs.";
                         logger.Trace("Grade Tonnage return value: " + procResult);
                         result.TonnageSummary = File.ReadAllText(Path.Combine(tonnageProject, "tonnage_summary.txt"));
                         result.TonnagePlot = Path.Combine(tonnageProject, "tonnage_plot.jpeg");

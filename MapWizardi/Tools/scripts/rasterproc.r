@@ -130,7 +130,7 @@ mask_raster_with_polygon<-function(inras,inPolyShp,outf_maskImg,outf_maskPdf) {
   polyg<-shapefile(inPolyShp)
   inras_masked<-mask(inras,polyg)
   pdf(outf_maskPdf,width=7,height=7*rangey/rangex)
-  plot(inras,col=topo.colors(10),xlim=xlimits,ylim=ylimits,cex.axis=0.7,legend=F)
+  plot(inras_masked,col=topo.colors(10),xlim=xlimits,ylim=ylimits,cex.axis=0.7,legend=F)
   graphics.off()
   writeRaster(inras_masked,filename=outf_maskImg,format="HFA",overwrite=TRUE)
 }

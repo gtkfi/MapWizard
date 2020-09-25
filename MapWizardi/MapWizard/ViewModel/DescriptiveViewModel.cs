@@ -660,6 +660,11 @@ namespace MapWizard.ViewModel
                                 Model.SubTextBoxList.Add(SubModel);
                                 subArrayIndex++;
                             }
+                            for (int i=0; i< subFieldCountArray[arrayIndex]; i++)
+                            {
+                                SubFieldEnumerator.MoveNext();
+                            }
+
                         }
                         else
                         {

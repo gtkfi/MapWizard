@@ -38,7 +38,7 @@ namespace MapWizard.ViewModel
         private readonly ISettingsService settingsService;
         private MonteCarloSimulationModel model;
         private MonteCarloSimulationResultModel result;
-        private ViewModelLocator viewModelLocator=new ViewModelLocator();
+        private ViewModelLocator viewModelLocator = new ViewModelLocator();
 
         /// <summary>
         /// Initializes an instance of MonteCarloSimulationViewModel Class.
@@ -54,6 +54,7 @@ namespace MapWizard.ViewModel
             viewModelLocator = new ViewModelLocator();
             result = new MonteCarloSimulationResultModel();
             RunToolCommand = new RelayCommand(RunTool, CanRunTool);
+            FindTractsCmd = new RelayCommand(FindTracts, CanRunTool);
             TractChangedCommand = new RelayCommand(TractChanged, CanRunTool);
             ShowModelDialog = new RelayCommand(OpenModelDialog, CanRunTool);
             SelectModelCommand = new RelayCommand(SelectResult, CanRunTool);
@@ -80,7 +81,8 @@ namespace MapWizard.ViewModel
                         GradePlot = inputParams.GradePlot,
                         TonnagePlot = inputParams.TonnagePlot,
                         NDepositsPmf = inputParams.NDepositsPmf,
-                        SelectedTract = inputParams.TractID
+                        SelectedTract = inputParams.TractID,
+                        LastRunTract = "Tract: " + inputParams.LastRunTract
                     };
                     FindTractIDs();  // Gets the tractID names from PermissiveTractTool's Delineation folder.
                     //FindMCSimTractIDs(); // Gets the tractID names from MCSim folder
@@ -124,6 +126,12 @@ namespace MapWizard.ViewModel
         /// </summary>
         /// @return Command.
         public RelayCommand RunToolCommand { get; }
+
+        /// <summary>
+        /// Find tracts command.
+        /// </summary>
+        /// @return Command.
+        public RelayCommand FindTractsCmd { get; }
 
         /// <summary>
         /// Tract change command.
@@ -254,7 +262,8 @@ namespace MapWizard.ViewModel
                 TonnagePlot = Model.TonnagePlot,
                 NDepositsPmf = Model.NDepositsPmf,
                 ExtensionFolder = Model.ExtensionFolder,
-                TractID = model.SelectedTract
+                TractID = model.SelectedTract,
+                LastRunTract = model.SelectedTract
             };
             // 2. Execute tool
             MonteCarloSimulationResult ddResult = default(MonteCarloSimulationResult);
@@ -280,6 +289,8 @@ namespace MapWizard.ViewModel
                 dialogService.ShowNotification("Monte Carlo simulation tool completed successfully.", "Success");
                 viewModelLocator.SettingsViewModel.WriteLogText("Monte Carlo simulation tool completed successfully.", "Success");
                 Model.LastRunDate = "Last Run: " + DateTime.Now.ToString("g");
+                Model.LastRunTract = "Tract: " + model.SelectedTract;
+
                 Model.RunStatus = 1;
             }
             catch (Exception ex)
@@ -433,6 +444,11 @@ namespace MapWizard.ViewModel
             }
         }
 
+        private void FindTracts()
+        {
+            FindTractIDs();
+        }
+
         /// <summary>
         /// Update which tract is chosen and get the tract spesific results.
         /// </summary>
@@ -492,7 +508,7 @@ namespace MapWizard.ViewModel
                 DirectoryInfo di = new DirectoryInfo(tractRootPath);
                 foreach (DirectoryInfo dir in di.GetDirectories())
                 {
-                        Model.TractIDNames.Add(dir.Name);  // Get TractID by getting the name of the directory.
+                    Model.TractIDNames.Add(dir.Name);  // Get TractID by getting the name of the directory.
                 }
             }
             else

@@ -133,6 +133,12 @@ namespace MapWizard.Tools
             get { return GetValue<string>("RaefRunName"); }
             set { Add<string>("RaefRunName", value); }
         }
+
+        public string LastRunTract
+        {
+            get { return GetValue<string>("LastRunTract"); }
+            set { Add<string>("LastRunTract", value); }
+        }
     }
 
     /// <summary>

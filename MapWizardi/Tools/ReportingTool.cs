@@ -324,8 +324,8 @@ namespace MapWizard.Tools
             document.InsertParagraph().InsertPageBreakAfterSelf();
             paragraph = input.DepositType + " ASSESMENT FOR TRACT " + "'" + input.SelectedTract + "' " + input.Country + "\r\n";
             document.InsertParagraph(paragraph).FontSize(16).Bold();
-            paragraph = "Deposit type: " + input.DepositType;
-            document.InsertParagraph(paragraph).FontSize(10);
+            //paragraph = "Deposit type: " + input.DepositType;
+            //document.InsertParagraph(paragraph).FontSize(10);
             paragraph = input.Authors + "\r\n";
             document.InsertParagraph(paragraph).FontSize(10);
             paragraph = "Deposit type: " + input.DepositType;
@@ -334,15 +334,15 @@ namespace MapWizard.Tools
             document.InsertParagraph(paragraph).FontSize(10);
             paragraph = "Grade-tonnage model: " + input.GTModelName + "\r\n";
             document.InsertParagraph(paragraph).FontSize(10);
-            paragraph = input.SelectedTract;
+            paragraph = "Permissive tract " + input.SelectedTract;
             document.InsertParagraph(paragraph).FontSize(10);
-            paragraph = input.AsDate;
+            paragraph = "Assesment date: " + input.AsDate;
             document.InsertParagraph(paragraph).FontSize(10);
-            paragraph = input.AsDepth;
+            paragraph = "Assesment depth: " + input.AsDepth;
             document.InsertParagraph(paragraph).FontSize(10);
-            paragraph = input.AsLeader;
+            paragraph = "Assesment team leader: " + input.AsLeader;
             document.InsertParagraph(paragraph).FontSize(10);
-            paragraph = input.AsTeamMembers + "\r\n\r\n";
+            paragraph = "Assesment team members: " + input.AsTeamMembers + "\r\n\r\n";
             document.InsertParagraph(paragraph).FontSize(10);
             paragraph = "Estimated number of undiscovered deposits" + "\r\n";
             document.InsertParagraph(paragraph).FontSize(14).Bold();
@@ -919,7 +919,12 @@ namespace MapWizard.Tools
                 {
                     if (input.IsRaefDone == "Yes" && file.Name.Contains("EF_01_Parameters_")) //Path.Combine(input.Env.RootPath, "EconFilter", "RAEF", "SelectedResult", "EF_01_Parameters_C.csv")
                     {
-                        paragraph = "Appendix 3";
+                        paragraph = "Appendix 3"+"\r\n";
+                        
+                        document.InsertParagraph(paragraph).FontSize(14).Bold();
+                        paragraph = "";
+
+                        paragraph = "Parameters used in the RAEF economic filter run";
                         document.InsertParagraph(paragraph).FontSize(14).Bold();
                         paragraph = "";
                         using (TextReader fileReader = File.OpenText(file.FullName))

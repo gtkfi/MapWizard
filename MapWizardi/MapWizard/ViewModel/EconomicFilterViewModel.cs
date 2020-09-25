@@ -92,7 +92,8 @@ namespace MapWizard.ViewModel
                         ScreenerExtensionFolder = inputParams.ScreenerExtensionFolder,  // TAGGED: Raef extension folder?
                         RaefPresetFile = inputParams.RaefPresetFile,
                         RaefEconFilterFile = inputParams.RaefEconFilterFile,
-                        RaefRunName = inputParams.RaefRunName
+                        RaefRunName = inputParams.RaefRunName,
+                        LastRunTract = "Tract: "+inputParams.LastRunTract
                     };
                 }
                 catch (Exception ex)
@@ -265,7 +266,8 @@ namespace MapWizard.ViewModel
                 RaefEconFilterFile = Model.RaefEconFilterFile,
                 RaefEmpiricalModel = Model.RaefEmpiricalModel.ToString(),
                 RaefGtmFile = Model.RaefGTMFile,
-                RaefRunName = Model.RaefRunName
+                RaefRunName = Model.RaefRunName,
+                LastRunTract = Model.SelectedTract
                 //voi tähän tuleekin sitten aika paljon lisää tavaraa... :)
             };
             // 2. Execute tool
@@ -298,6 +300,7 @@ namespace MapWizard.ViewModel
                 dialogService.ShowNotification("Economic Filter tool completed successfully", "Success");
                 viewModelLocator.SettingsViewModel.WriteLogText("Economic Filter tool completed successfully", "Success");
                 Model.LastRunDate = "Last Run: " + DateTime.Now.ToString("g");
+                Model.LastRunTract = "Tract: " + Model.SelectedTract;
                 Model.RunStatus = 1;
             }
             catch (Exception ex)
@@ -305,6 +308,7 @@ namespace MapWizard.ViewModel
                 logger.Error(ex, "Failed to execute REngine() script");
                 dialogService.ShowNotification("Run failed. Check output for details.\r\n- Are all input parameters correct?\r\n- Are all input files valid? \r\n- Are all input and output files closed?", "Error");
                 viewModelLocator.SettingsViewModel.WriteLogText("Economic Filter tool run failed. Check output for details.\r\n- Are all input parameters correct?\r\n- Are all input files valid? \r\n- Are all input and output files closed?", "Error");
+                Model.LastRunTract = "Tract: " + Model.SelectedTract;
                 Model.RunStatus = 0;
             }
             finally

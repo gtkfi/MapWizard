@@ -286,8 +286,10 @@ namespace MapWizard.ViewModel
                 }
                 string lastRunFile = Path.Combine(Path.Combine(inputParams.Env.RootPath, "GTModel", "GradeTonnage_last_run.lastrun"));
                 File.Create(lastRunFile).Close();
-                dialogService.ShowNotification("GradeTonnageTool completed successfully.", "Success");
+                dialogService.ShowNotification("GradeTonnageTool completed successfully.", "Success");               
                 viewModelLocator.SettingsViewModel.WriteLogText("GradeTonnageTool completed successfully", "Success");
+                if(tonnageResult.Warnings.Length>0)
+                    viewModelLocator.SettingsViewModel.WriteLogText(tonnageResult.Warnings, "Warning");
                 Model.LastRunDate = "Last Run: " + DateTime.Now.ToString("g");
                 Model.RunStatus = 1;
             }

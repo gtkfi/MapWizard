@@ -89,7 +89,8 @@ namespace MapWizard.ViewModel
                         CustomExtensionFolder = "",
                         EstimateRationale = inputParams.EstRationaleTXT,
                         MARK3EstimateRationale = inputParams.Mark3EstRationaleTXT,
-                        CustomEstimateRationale = inputParams.CustomEstRationaleTXT
+                        CustomEstimateRationale = inputParams.CustomEstRationaleTXT,
+                        LastRunTract = inputParams.LastRunTract
                     };
                 }
                 catch (Exception ex)
@@ -306,7 +307,9 @@ namespace MapWizard.ViewModel
                 TractID = Model.SelectedTract,
                 NegBinomialExtensionFolder = Model.NegBinomialExtensionFolder,
                 Mark3ExtensionFolder = Model.Mark3ExtensionFolder,
-                CustomExtensionFolder = Model.CustomExtensionFolder
+                CustomExtensionFolder = Model.CustomExtensionFolder,
+                LastRunTract = "Tract: "+Model.SelectedTract
+
             };
             // 2. Execute tool
             UndiscoveredDepositsResult ddResult = default(UndiscoveredDepositsResult);
@@ -364,6 +367,7 @@ namespace MapWizard.ViewModel
                 dialogService.ShowNotification("UndiscoveredDepositsTool completed successfully", "Success");
                 viewModelLocator.SettingsViewModel.WriteLogText("UndiscoveredDepositsTool completed successfully", "Success");
                 Model.LastRunDate = "Last Run: " + DateTime.Now.ToString("g");
+                Model.LastRunTract = "Tract: " + model.SelectedTract;
                 Model.RunStatus = 1;
             }
             catch (Exception ex)

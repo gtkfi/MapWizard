@@ -25,7 +25,7 @@ namespace MapWizard.Model
         private int seed = 1;
         private string pdfType = "Normal";
         private string isTruncated = "FALSE";
-        private int minDeposits = 30;
+        private int minDeposits = 20;
         private int randSamples = 1000000;
         private string folder;
         private string runGrade = "false";

@@ -290,6 +290,7 @@ namespace MapWizard.Tools
                     document.PageLayout.Orientation = Orientation.Portrait;
                     WriteInputs(input, document);
                     WriteUndiscoveredDeposits(input, document);
+                    WriteMonteCarlo(input, document);
                     WriteEconomicFilter(input, document);
                     WriteAppendixes(input, document);
                     document.Save();
@@ -336,8 +337,8 @@ namespace MapWizard.Tools
             Paragraph severalParagraphs = document.InsertParagraph("Figure 1. ").Bold();
             severalParagraphs.Append("Location of tract " + input.SelectedTractCombination + ".");
             document.InsertParagraph().InsertPageBreakAfterSelf();
-            paragraph = input.DepositType + " ASSESMENT FOR TRACT " + "'" + input.SelectedTract + "' " + input.Country + "\r\n";
-            document.InsertParagraph(paragraph).FontSize(16).Bold();
+            //paragraph = input.DepositType + " ASSESMENT FOR TRACT " + "\'" + input.SelectedTract + "\' " + input.Country + "\r\n";
+            //document.InsertParagraph(paragraph).FontSize(16).Bold();
             paragraph = input.AssesmentTitle + "\r\n";
             document.InsertParagraph(paragraph).FontSize(13);
             paragraph = input.Authors + "\r\n";
@@ -347,16 +348,9 @@ namespace MapWizard.Tools
             paragraph = "Descriptive model: " + input.DescModelName;
             document.InsertParagraph(paragraph).FontSize(10);
             paragraph = "Grade-tonnage model: " + input.GTModelName + "\r\n";
+            
             document.InsertParagraph(paragraph).FontSize(10);
-            paragraph = "Assessment date: " + input.AsDate;
-            document.InsertParagraph(paragraph).FontSize(10);
-            paragraph = "Assessment depth: " + input.AsDepth;
-            document.InsertParagraph(paragraph).FontSize(10);
-            paragraph = "Assessment team leader: " + input.AsLeader;
-            document.InsertParagraph(paragraph).FontSize(10);
-            paragraph = "Assessment team members: " + input.AsTeamMembers + "\r\n";
-            document.InsertParagraph(paragraph).FontSize(10);
-            paragraph = "List of tracts included in the assessment:";
+            paragraph = "List of permissive tracts:";//tracts included in the assessment:";
             document.InsertParagraph(paragraph).FontSize(10);
             string tractFile = Path.Combine(input.Env.RootPath, "TractDelineation", "Tracts", input.SelectedTractCombination, "TractsAggregated.csv");
             if (File.Exists(tractFile))
@@ -370,6 +364,15 @@ namespace MapWizard.Tools
                 }
             }
             paragraph = "\r\n\r\n";
+            document.InsertParagraph(paragraph).FontSize(10);
+            paragraph = "Assessment date: " + input.AsDate;
+            document.InsertParagraph(paragraph).FontSize(10);
+            paragraph = "Assessment depth: " + input.AsDepth;
+            document.InsertParagraph(paragraph).FontSize(10);
+            paragraph = "Assessment team leader: " + input.AsLeader;
+            document.InsertParagraph(paragraph).FontSize(10);
+            paragraph = "Assessment team members: " + input.AsTeamMembers + "\r\n";
+
             document.InsertParagraph(paragraph);
             paragraph = "Estimated number of undiscovered deposits" + "\r\n";
             document.InsertParagraph(paragraph).FontSize(14).Bold();
@@ -546,7 +549,8 @@ namespace MapWizard.Tools
         /// <param name="tractID">Selected tractID.</param>
         private void WriteEconomicFilter(ReportingAssesmentInputParams input, DocX document)
         {
-            string paragraph = "Estimated total undiscovered resources in the permissive tracts" + "\r\n";
+            //string paragraph = "Estimated total undiscovered resources in the permissive tracts" + "\r\n";
+            string paragraph = "Estimated economic portion of the total undiscovered resources" + "\r\n";
             Paragraph severalParagraphs = null;
             document.InsertParagraph(paragraph).FontSize(14).Bold();
             if (Directory.Exists(Path.Combine(input.Env.RootPath, "EconFilter", "RAEF", input.SelectedTractCombination, "SelectedResult")))
@@ -773,6 +777,44 @@ namespace MapWizard.Tools
                         }
                     }
                 }
+            }
+        }
+
+        private void WriteMonteCarlo(ReportingAssesmentInputParams input, DocX document)
+        {
+            
+            string paragraph = "Estimated total undiscovered resources in '" + input.SelectedTractCombination + "' permissive tract" + "\r\n";
+            Paragraph severalParagraphs = null;
+            document.InsertParagraph(paragraph).FontSize(14).Bold();
+            if (File.Exists(Path.Combine(input.Env.RootPath, "MCSim", input.SelectedTractCombination, "SelectedResult", "summary.txt")))
+            {
+                severalParagraphs = document.InsertParagraph("Table 4. ").Bold();
+                severalParagraphs.Append(File.ReadAllText(Path.Combine(input.Env.RootPath, "MCSim", input.SelectedTractCombination, "SelectedResult", "summary.txt")) + "\r\n").Font(new Font("Consolas")).FontSize(10);
+            }
+            if (File.Exists(Path.Combine(input.Env.RootPath, "MCSim", input.SelectedTractCombination, "SelectedResult", "plot.jpeg")))
+            {
+                var img = document.AddImage(Path.Combine(input.Env.RootPath, "MCSim", input.SelectedTractCombination, "SelectedResult", "plot.jpeg"));
+                Picture p = img.CreatePicture(600, 605);
+                paragraph = "";
+                Paragraph par = document.InsertParagraph(paragraph);
+                par.AppendPicture(p);
+                par.Append("\r\n");
+                severalParagraphs = document.InsertParagraph("Figure 3. ").Bold();
+                severalParagraphs.Append("Univariate, marginal, probability density functions(A) and univariate, marginal, complementary" +
+                    " cumulative distribution functions (B) for the total ore and mineral resource tonnages in all " +
+                    "undiscovered deposits within the permissive tract '" + input.SelectedTractCombination + "'." + "\r\n");
+            }
+            if (File.Exists(Path.Combine(input.Env.RootPath, "MCSim", input.SelectedTractCombination, "SelectedResult", "plotMarginals.jpeg")))
+            {
+                var img = document.AddImage(Path.Combine(input.Env.RootPath, "MCSim", input.SelectedTractCombination, "SelectedResult", "plotMarginals.jpeg"));
+                Picture p = img.CreatePicture(600, 605);
+                paragraph = "";
+                Paragraph par = document.InsertParagraph(paragraph);
+                par.AppendPicture(p);
+                par.Append("\r\n");
+                severalParagraphs = document.InsertParagraph("Figure 4. ").FontSize(10).Bold();
+                severalParagraphs.Append("Univariate and bivariate marginal distributions for the ore and mineral resource tonnages" +
+                    " in all undiscovered deposits within the permissive tract '" + input.SelectedTractCombination + "'." + "\r\n");
             }
         }
     }

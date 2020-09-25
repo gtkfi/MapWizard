@@ -274,7 +274,6 @@ namespace MapWizard.Tools
         }
 
 
-
     }
 
     /// <summary>
@@ -324,6 +323,7 @@ namespace MapWizard.Tools
             get { return GetValue<string>("TresholdValues"); }
             internal set { Add<string>("TresholdValues", value); }
         }
+
     }
 
     /// <summary>
@@ -410,24 +410,6 @@ namespace MapWizard.Tools
                     Directory.CreateDirectory(outputFolder);
                 }
 
-                /*  string[] boundaryList = input.BoundaryValues.Split(',');
-                  foreach (string boundary in boundaryList)
-                  {*/
-
-                /*
-                # Input:
-                # outPolyP = the input polygon shape file
-                # minarea = minimum are of saved polygons
-                # cleanPolyShpP = entire path and filename to output cleaned polygons
-                # cleanPolyShpF = output cleaned polygons file name base (without .shp
-                outPolyP < -args[1]
-                minarea < -args[2]
-                cleanPolyShpP < -args[3]
-                cleanPolyShpF < -args[4]
-                outCleanStatTxt < -args[5]
-                outCleanDistPdf < -args[6]
-                pgon_clean < -poly_clean(outPolyP, minarea, cleanPolyShpP, cleanPolyShpF, outCleanStatTxt, outCleanDistPdf)*/
-
                 string inputPolygon = input.TractPolygonFile;
                 string minArea = input.MinArea;
                 double area = Convert.ToDouble(minArea);
@@ -483,14 +465,7 @@ namespace MapWizard.Tools
                 //mask raster with polygon before calculate treshold
                 maskRasterWPolygon(input, result);
 
-                //Get RScript folder from registry
-                Microsoft.Win32.RegistryKey regKey = null;
-                regKey = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\R-core\R");
-                string[] nameList = regKey.GetSubKeyNames();
-                RegistryKey subKey = regKey.OpenSubKey(nameList[0]);
-                string rInstallationFolder = subKey.GetValue("InstallPath").ToString();
-                string rScriptExecutablePath = rInstallationFolder + "\\bin\\RScript.exe";
-
+                string rScriptExecutablePath = input.Env.RPath;
                 string procResult = string.Empty;
 
 
@@ -559,13 +534,7 @@ namespace MapWizard.Tools
 
         private PermissiveTractResult maskRasterWPolygon(PermissiveTractInputParams input, PermissiveTractResult result)
         {
-            Microsoft.Win32.RegistryKey regKey = null;
-            regKey = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\R-core\R");
-            string[] nameList = regKey.GetSubKeyNames();
-            RegistryKey subKey = regKey.OpenSubKey(nameList[0]);
-            string rInstallationFolder = subKey.GetValue("InstallPath").ToString();
-            string rScriptExecutablePath = rInstallationFolder + "\\bin\\RScript.exe";
-
+            string rScriptExecutablePath = input.Env.RPath;
             string procResult = string.Empty;
 
             var info = new ProcessStartInfo();
@@ -582,7 +551,7 @@ namespace MapWizard.Tools
 
 
             string inputRaster = input.DelineationRaster;
-            string inputMask = projectFolder + "\\Tracts\\TR" + input.DelID + "\\TR" + input.DelID + ".shp";
+            string inputMask = input.MaskRaster;
             string outputRaster = outputFolder + "maskedRaster" + input.DelID + ".img";
             string outputPdf = outputFolder + "maskedRaster" + input.DelID + ".pdf";
 
@@ -627,14 +596,7 @@ namespace MapWizard.Tools
             else
             {
 
-                //Get RScript folder from registry
-                Microsoft.Win32.RegistryKey regKey = null;
-                regKey = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\R-core\R");
-                string[] nameList = regKey.GetSubKeyNames();
-                RegistryKey subKey = regKey.OpenSubKey(nameList[0]);
-                string rInstallationFolder = subKey.GetValue("InstallPath").ToString();
-                string rScriptExecutablePath = rInstallationFolder + "\\bin\\RScript.exe";
-
+                string rScriptExecutablePath = input.Env.RPath;
                 string procResult = string.Empty;
 
                 var info = new ProcessStartInfo();
@@ -657,7 +619,15 @@ namespace MapWizard.Tools
                 string tresholds = input.TresholdValues;
                 string outputRaster = outputFolder + "ClassificationRaster_" + input.ClassificationId + ".img";
                 string outputPdf = outputFolder + "ClassificationRaster_" + input.ClassificationId + ".pdf";
-                info.Arguments = "\"" + rCodeFilePath + "\" " + input.DelineationRaster + " " + tresholds + " " + outputRaster + " " + outputPdf;
+
+                string delineationRaster = projectFolder + "\\Classification\\Temp\\" + "maskedRaster" + input.DelID + ".img";
+
+                if (!File.Exists(delineationRaster))
+                {
+                    delineationRaster = input.DelineationRaster;
+                }
+
+                info.Arguments = "\"" + rCodeFilePath + "\" " + delineationRaster + " " + tresholds + " " + outputRaster + " " + outputPdf;
                 info.RedirectStandardInput = false;
                 info.RedirectStandardOutput = true;
                 info.RedirectStandardError = true;
@@ -670,7 +640,6 @@ namespace MapWizard.Tools
                     proc.Start();
                     StreamReader errorReader = proc.StandardError;
                     StreamReader myStreamReader = proc.StandardOutput;
-                    //string errors = errorReader.ReadToEnd();
                     string stream = myStreamReader.ReadToEnd();
                     procResult = proc.StandardOutput.ReadToEnd();
                     proc.Close();
@@ -779,8 +748,9 @@ namespace MapWizard.Tools
                     string polyOutput = outputFolder + "DelineationPolygons_" + boundary.ToString();
                     string polyOutputF = "DelineationPolygons_" + boundary.ToString();
                     string boundariesOnEvidence = outputFolder + "BoundariesOnEvidence_" + boundary.ToString() + ".pdf";
+                    string rasterFile = outputFolder + "DelineationRaster_" + boundary.ToString() + ".img";
 
-                    info.Arguments = "\"" + rCodeFilePath + "\" \"" + input.ProspectivityRasterFile + "\" \"" + discrOutput + "\" \"" + polyOutput + "\" \"" + polyOutputF
+                    info.Arguments = "\"" + rCodeFilePath + "\" \"" + rasterFile + "\" \"" + discrOutput + "\" \"" + polyOutput + "\" \"" + polyOutputF
                         + "\" \"" + boundary + "\" \"" + input.EvidenceLayerFile + "\" \"" + boundariesOnEvidence;
                     info.RedirectStandardInput = false;
                     info.RedirectStandardOutput = true;
@@ -867,7 +837,6 @@ namespace MapWizard.Tools
                 string evidence_raster_layers = "";
                 string evidence_weight_tables = "";
                 string cellsize = "200";
-                //string arcsdm_path = System.AppDomain.CurrentDomain.BaseDirectory.Replace(@"\", @"/") + "scripts/ArcSDMToolbox/ArcSDM.pyt";
                 string arcsdm_path = System.AppDomain.CurrentDomain.BaseDirectory + "scripts\\ArcSDMToolbox\\ArcSDM.pyt";
                 string[] Weights = input.WofEWeightsType.Split(',');
                 int raster = 0;
@@ -879,6 +848,7 @@ namespace MapWizard.Tools
                 parameters += "./scripts/WofeCreateMask.pyw";
                 parameters += " " + ws; //workspace
                 parameters += " " + input.MaskRaster;//mask
+                logger.Trace("Mask parameters:" + parameters);
                 string python = @input.PythonPath;
                 string myPythonApp = parameters;
 
@@ -891,14 +861,10 @@ namespace MapWizard.Tools
                 Process myProcess = new Process();
                 myProcess.StartInfo = myProcessStartInfo;
 
-                //Console.WriteLine("Calling Python script with arguments {0}, {1} and {2}", input.EnvPath, str, input.OutRaster);
                 myProcess.Start();
                 StreamReader errorReader = myProcess.StandardError;
                 StreamReader myStreamReader = myProcess.StandardOutput;
-                //string ErrorValue = errorReader.ReadToEnd();
-                //logger.Trace("ErrorValue runPythonscript:" + ErrorValue);
-
-                //string returnValue = myProcess.StandardOutput.ReadToEnd();
+       
                 string returnValue = myStreamReader.ReadToEnd();
                 logger.Trace("ReturnValue WofeCreateMask:" + returnValue);
                 myProcess.WaitForExit();
@@ -922,7 +888,7 @@ namespace MapWizard.Tools
                     parameters += " " + input.MaskRaster;//mask
                     parameters += " " + input.TrainingPoints;// training sites
                     parameters += " " + "\"" + arcsdm_path + "\"";
-                    parameters += " " + getWeight(Weights[raster].Trim()); //"Ascending"; //Weights type
+                    parameters += " " + getWeight(Weights[raster].Trim()); //Weights type
                     parameters += " " + input.ConfidenceLevel; //Confidence level
                     parameters += " " + input.UnitArea; //Unit area
                     logger.Trace("Evidence parameters:" + parameters);
@@ -963,8 +929,6 @@ namespace MapWizard.Tools
                 //If weight calculation not succeeded, show message and exit calculation 
                 if (calWeightMessage != "")
                 {
-                    //MessageBox.Show("Raster: " + er + "\n\n" + calculateWeightResult + "\n\n" + "Dataset must be improved!", "Dataset fail!");
-                    //MessageBox.Show(calWeightMessage, "Dataset fail!");
                     logger.Error(calculateWeightResult + "\n\n" + "Dataset must be improved!", "Dataset fail!");
                     throw new Exception("Wofe weigth calculation failed, dataset must be improved!");
                 }
@@ -1008,14 +972,9 @@ namespace MapWizard.Tools
             Process myProcess = new Process();
             myProcess.StartInfo = myProcessStartInfo;
 
-            //Console.WriteLine("Calling Python script with arguments {0}, {1} and {2}", input.EnvPath, str, input.OutRaster);
             myProcess.Start();
             StreamReader errorReader = myProcess.StandardError;
             StreamReader myStreamReader = myProcess.StandardOutput;
-            //string ErrorValue = errorReader.ReadToEnd();
-            //logger.Trace("ErrorValue runPythonscript:" + ErrorValue);
-
-            //string errValue = errorReader.ReadToEnd();
             string returnValue = myStreamReader.ReadToEnd();
             logger.Trace("ReturnValue:" + returnValue);
             myProcess.WaitForExit();
@@ -1109,7 +1068,6 @@ namespace MapWizard.Tools
             StreamReader myStreamReader = myProcess.StandardOutput;
             string returnValue = myStreamReader.ReadToEnd();
             string errReturnValue = errorReader.ReadToEnd();
-            //MessageBox.Show(returnValue, "returnValue");
             logger.Trace("Permissive Tract script return value:" + returnValue);
             myProcess.WaitForExit();
             myProcess.Close();
@@ -1120,24 +1078,7 @@ namespace MapWizard.Tools
 
         }
 
-        /// <summary>
-        /// TODO
-        /// </summary>
-        /// <param name="input">Input parameters.</param>
-        /// <returns>Result of executing Calculate Weight.</returns>
-        private PermissiveTractResult CalculateWeights(PermissiveTractInputParams input, PermissiveTractResult result)
-        {
-            return result;
-        }
 
-        /// <summary>
-        /// TODO
-        /// </summary>
-        /// <param name="input">Input parameters.</param>
-        /// <returns>Result of executing Calculate Response.</returns>
-        private PermissiveTractResult CalculateResponse(PermissiveTractInputParams input, PermissiveTractResult result)
-        {
-            return result;
-        }
+
     }
 }

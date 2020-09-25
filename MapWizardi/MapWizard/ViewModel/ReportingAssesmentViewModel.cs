@@ -9,6 +9,7 @@ using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace MapWizard.ViewModel
@@ -335,6 +336,8 @@ namespace MapWizard.ViewModel
         /// </summary>
         public void FindTractIDs()
         {
+            var tractIDCollection = Model.TractIDCollection;
+            var tractIDNames = Model.TractIDNames;
             Model.TractIDCollection = new ObservableCollection<ReportingAssesmentModel>();
             Model.TractIDCollection.Clear();
             Model.TractIDNames = new ObservableCollection<string>();
@@ -357,6 +360,11 @@ namespace MapWizard.ViewModel
                         Model.TractIDNames.Add(dir.Name);
                     }
                 }
+            }
+            if (Model.TractIDNames.SequenceEqual(tractIDNames))
+            {
+                Model.TractIDCollection = tractIDCollection;
+                Model.TractIDNames = tractIDNames;
             }
             else
             {

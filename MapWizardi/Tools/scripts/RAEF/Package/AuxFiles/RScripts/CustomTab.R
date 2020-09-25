@@ -106,8 +106,8 @@ obj <- gbutton(
 	{ 
 		for (cvb in MillCList)
 			{
-			CMValue1 <- svalue(cvb)
-			assign(cvb,svalue(CMValue1), env = .GlobalEnv)
+			CMValue1 <- get(cvb)
+			assign(cvb,get(CMValue1), env = .GlobalEnv)
 			}
  	dispose(CustomWindow )
 	})

@@ -47,14 +47,14 @@
                             </WrapPanel>
                         </RadioButton>
                         <Separator Width="325" Margin="0,35,0,35"></Separator>
-                        <Label Margin="15,10" FontWeight="Bold" FontSize="18">R Path</Label>
-                        <RadioButton GroupName="R_Group" Margin="15,10"  IsChecked="{Binding Model.RLocationDefault, Mode=TwoWay}">
+                        <Label Margin="15,10" FontWeight="Bold" FontSize="18">R Path:</Label>
+                        <!-- RadioButton GroupName="R_Group" Margin="15,10"  IsChecked="{Binding Model.RLocationDefault, Mode=TwoWay}"-->
                             <WrapPanel>
-                                <TextBlock Text="Default:" FontSize="14" Margin="5,5,5,5"/>
-                                <TextBlock FontSize="14" Text="{Binding Model.RPathDefault}" Margin="5,5,5,5" TextWrapping="Wrap"/>
+                                <!--TextBlock Text="Default:" FontSize="14" Margin="5,5,5,5"/-->
+                                <TextBlock FontSize="14" Text="{Binding Model.RPathDefault}" Margin="15,5,5,5" TextWrapping="Wrap"/>
                             </WrapPanel>
-                        </RadioButton>
-                        <RadioButton GroupName="R_Group" Margin="15,10"  IsChecked="{Binding Model.RLocationDefault, Converter={StaticResource ReverseBooleanConverter}, Mode=TwoWay}">
+                        <!--/RadioButton -->
+                        <!-- RadioButton GroupName="R_Group" Margin="15,10"  IsChecked="{Binding Model.RLocationDefault, Converter={StaticResource ReverseBooleanConverter}, Mode=TwoWay}">
                             <WrapPanel>
                                 <TextBlock Text="Custom" FontSize="14" Margin="5,5,5,5"/>
                                 <Button  FontSize="14" 
@@ -69,7 +69,7 @@
                                     </Button.ToolTip>
                                 </Button>
                             </WrapPanel>
-                        </RadioButton>
+                        </RadioButton -->
                         <Button
                         DataContext="{Binding Path=SettingsViewModel, Source={StaticResource Locator}}"    
                         Command="{Binding SaveSettingsCommand}"    

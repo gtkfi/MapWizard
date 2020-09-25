@@ -62,9 +62,9 @@ while (CVw < (CVl + 1))
 for (CVObj in CVList)
 {
 	print (CVObj)
-	print (svalue(CVObj))
+	print (get(CVObj))
 	sw <<- 1
-	if (svalue(CVObj) == -999)
+	if (get(CVObj) == -999)
 
 		{
 		#gmessage("There are missing commodity values, please correct them before continuing, by filling out the next dialogs", title="message",icon =  "error") 
@@ -84,7 +84,7 @@ for (CVObj in CVList)
 		container= CVinput ,
 		handler = function(h,...)
 			{
-			assign(CVObj, as.double(svalue(CVe)), env = .GlobalEnv)
+			assign(CVObj, as.double(get(CVe)), env = .GlobalEnv)
 			sw <<- 1
 			dispose(CVinput)
 			}
@@ -109,7 +109,7 @@ while (sw ==2){ print ("waiting for user input")}
 for (CVObj in CVList)
 {
 	print (CVObj)
-	print (svalue(CVObj))
+	print (get(CVObj))
 }
 
 
@@ -225,7 +225,7 @@ MRRList <<- c(MRRList, MRRa )
 	MillNum<<- 13   ## base number for mill number temproarily 
 for (hh in MillCList)
 {
-	zz <<- svalue(hh)
+	zz <<- get(hh)
 	print (zz)
 	cn0 <<- sub("Mill", '', hh)
 	print (cn0)
@@ -408,7 +408,7 @@ if (MillChoice == "User Define")
 		container= MRinput ,
 		handler = function(h,...)
 			{
-			assign(MRObj, as.double(svalue(MRe)), env = .GlobalEnv)
+			assign(MRObj, as.double(get(MRe)), env = .GlobalEnv)
 			sw <<- 1
 			dispose(MRinput)
 			})
@@ -431,9 +431,9 @@ if (MillChoice != "User Define")
 for (MRObj in MRRList)
 {
 	print (MRObj)
-	print (svalue(MRObj))
+	print (get(MRObj))
 	sw <<- 1
-	if (svalue(MRObj) == -999)
+	if (get(MRObj) == -999)
 		{
 		sw <<- 2
 		print ( "TRUE")
@@ -451,7 +451,7 @@ for (MRObj in MRRList)
 		container= MRinput ,
 		handler = function(h,...)
 			{
-			assign(MRObj, as.double(svalue(MRe)), env = .GlobalEnv)
+			assign(MRObj, as.double(get(MRe)), env = .GlobalEnv)
 			sw <<- 1
 			dispose(MRinput)
 			}
@@ -476,7 +476,7 @@ while (sw ==2){ print ("waiting for user input")}
 for (MRObj in MRRList)
 {
 	print (MRObj)
-	print (svalue(MRObj))
+	print (get(MRObj))
 }
 
 #gmessage("All data has been checked and confirmed", title="message",icon =  "info") 
