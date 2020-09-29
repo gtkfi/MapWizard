@@ -2272,8 +2272,12 @@ namespace MapWizard.ViewModel
                 //Copy tract polygonfile.shx to destination
                 tmp_filename = tmp_filename.Replace(".shp.xml", ".shx");
                 File.Copy(tmp_filename, tractFolder + @"\" + "TR" + model.IdOfTract + ".shx", true);
-
-
+                //Copy tract polygonfile.dbf to destination
+                tmp_filename = tmp_filename.Replace(".shx", ".dbf");
+                File.Copy(tmp_filename, tractFolder + @"\" + "TR" + model.IdOfTract + ".dbf", true);
+                //Copy tract polygonfile.prj to destination
+                tmp_filename = tmp_filename.Replace(".dbf", ".prj");
+                File.Copy(tmp_filename, tractFolder + @"\" + "TR" + model.IdOfTract + ".prj", true);
 
                 string path = tractFolder + "/TractExplanation.txt";
                 File.WriteAllText(path, model.ExplanationOfTract);
