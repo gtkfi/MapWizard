@@ -340,18 +340,18 @@ namespace MapWizard.Tools
             //paragraph = input.DepositType + " ASSESMENT FOR TRACT " + "\'" + input.SelectedTract + "\' " + input.Country + "\r\n";
             //document.InsertParagraph(paragraph).FontSize(16).Bold();
             paragraph = input.AssesmentTitle + "\r\n";
-            document.InsertParagraph(paragraph).FontSize(13);
+            document.InsertParagraph(paragraph).FontSize(16).Bold();
             paragraph = input.Authors + "\r\n";
-            document.InsertParagraph(paragraph).FontSize(10);
+            document.InsertParagraph(paragraph).FontSize(11);
             paragraph = "Deposit type: " + input.DepositType;
-            document.InsertParagraph(paragraph).FontSize(10);
+            document.InsertParagraph(paragraph).FontSize(11);
             paragraph = "Descriptive model: " + input.DescModelName;
-            document.InsertParagraph(paragraph).FontSize(10);
+            document.InsertParagraph(paragraph).FontSize(11);
             paragraph = "Grade-tonnage model: " + input.GTModelName + "\r\n";
             
-            document.InsertParagraph(paragraph).FontSize(10);
+            document.InsertParagraph(paragraph).FontSize(11);
             paragraph = "List of permissive tracts:";//tracts included in the assessment:";
-            document.InsertParagraph(paragraph).FontSize(10);
+            document.InsertParagraph(paragraph).FontSize(11);
             string tractFile = Path.Combine(input.Env.RootPath, "TractDelineation", "Tracts", input.SelectedTractCombination, "TractsAggregated.csv");
             if (File.Exists(tractFile))
             {
@@ -360,17 +360,17 @@ namespace MapWizard.Tools
                 foreach (var tract in tractList)
                 {
                     paragraph = tract;
-                    document.InsertParagraph(paragraph).FontSize(10);
+                    document.InsertParagraph(paragraph).FontSize(11);
                 }
             }
             paragraph = "\r\n\r\n";
-            document.InsertParagraph(paragraph).FontSize(10);
+            document.InsertParagraph(paragraph).FontSize(11);
             paragraph = "Assessment date: " + input.AsDate;
-            document.InsertParagraph(paragraph).FontSize(10);
+            document.InsertParagraph(paragraph).FontSize(11);
             paragraph = "Assessment depth: " + input.AsDepth;
-            document.InsertParagraph(paragraph).FontSize(10);
+            document.InsertParagraph(paragraph).FontSize(11);
             paragraph = "Assessment team leader: " + input.AsLeader;
-            document.InsertParagraph(paragraph).FontSize(10);
+            document.InsertParagraph(paragraph).FontSize(11);
             paragraph = "Assessment team members: " + input.AsTeamMembers + "\r\n";
 
             document.InsertParagraph(paragraph);
@@ -560,7 +560,7 @@ namespace MapWizard.Tools
                 {
                     if (input.IsRaefDone == "Yes" && file.Name.Contains("EF_04_Contained_Stats_")) //Path.Combine(input.Env.RootPath, "EconFilter", "RAEF", "SelectedResult", "EF_04_Contained_Stats_C.csv")
                     {
-                        severalParagraphs = document.InsertParagraph("Table 5. ").FontSize(10).Bold();
+                        severalParagraphs = document.InsertParagraph("Table 5. ").FontSize(11).Bold();
                         severalParagraphs.Append("Estimated economic portion of the undiscovered resources" + "\r\n");
                         paragraph = "";
                         using (TextReader fileReader = File.OpenText(file.FullName)) //Path.Combine(input.Env.RootPath, "EconFilter", "RAEF", "SelectedResult", "EF_04_Contained_Stats_C.csv")
@@ -613,7 +613,7 @@ namespace MapWizard.Tools
             }
             else
             {
-                paragraph = "Estimated economic portion of the total undiscovered resources in " + input.SelectedTractCombination + " permissive tract. " + "\r\n";
+                //paragraph = "Estimated economic portion of the total undiscovered resources in " + input.SelectedTractCombination + " permissive tract. " + "\r\n";
                 document.InsertParagraph(paragraph);
                 paragraph = "Economic filter was not run for the tract. " + "\r\n";
                 document.InsertParagraph(paragraph);
@@ -635,19 +635,27 @@ namespace MapWizard.Tools
                 document.InsertParagraph(paragraph).FontSize(14).Bold();
                 paragraph = "Desciptive model for " + input.DepositType + "(" + input.DescModelName + ")\r\n";
                 document.InsertParagraph(paragraph).FontSize(14).Bold();
+
                 if (File.Exists(input.DescModel))
                 {
-                    using (var paraDocument = DocX.Load(input.DescModel))
+                    using (var reportDocument = DocX.Load(input.DescModel))
                     {
-                        if (paraDocument != null)
-                        {
-                            foreach (var para in paraDocument.Paragraphs)
-                            {
-                                document.InsertParagraph(para);
-                            }
-                        }
+                        document.InsertDocument(reportDocument, true);
                     }
                 }
+                //if (File.Exists(input.DescModel))
+                //{
+                //    using (var paraDocument = DocX.Load(input.DescModel))
+                //    {
+                //        if (paraDocument != null)
+                //        {
+                //            foreach (var para in paraDocument.Paragraphs)
+                //            {
+                //                document.InsertParagraph(para);
+                //            }
+                //        }
+                //    }
+                //}
             }
             if (input.AddGradeTon == "True" && Directory.Exists(input.GTModel))
             {
@@ -660,7 +668,7 @@ namespace MapWizard.Tools
                 if (File.Exists(paragraph))
                 {
                     paragraph = File.ReadAllText(paragraph);
-                    document.InsertParagraph(paragraph).FontSize(10).Font(new Font("Consolas"));
+                    document.InsertParagraph(paragraph).FontSize(11).Font(new Font("Calibri"));
                 }
                 paragraph = Path.Combine(input.GTModel, "grade_plot.jpeg");
                 if (File.Exists(paragraph))
@@ -675,13 +683,13 @@ namespace MapWizard.Tools
                         " function representing the grades. In A, the vertical red lines at the plot bottom represent the log-ratios" +
                         " calculated from the grade and tonnage model. In B, the red dots constitute empirical cumulative distribution" +
                         " function for the log-ratios calculated from the grade and tonnage model." + "\r\n";
-                    document.InsertParagraph(paragraph).FontSize(10);
+                    document.InsertParagraph(paragraph).FontSize(11);
                 }
                 paragraph = Path.Combine(input.GTModel, "tonnage_summary.txt");
                 if (File.Exists(paragraph))
                 {
                     paragraph = File.ReadAllText(paragraph);
-                    document.InsertParagraph(paragraph).FontSize(10).Font(new Font("Consolas"));
+                    document.InsertParagraph(paragraph).FontSize(11).Font(new Font("Calibri"));
                 }
                 paragraph = Path.Combine(input.GTModel, "tonnage_plot.jpeg");
                 if (File.Exists(paragraph))
@@ -697,7 +705,7 @@ namespace MapWizard.Tools
                         " lines at the bottom represent the ore tonnages from the grade and tonnage model. B: Corresponding cumulative " +
                         "distribution function(solid line). The red dots constitute the empirical cumulative distribution function " +
                         "for the ore tonnages from the grade and tonnage model." + "\r\n";
-                    document.InsertParagraph(paragraph).FontSize(10);
+                    document.InsertParagraph(paragraph).FontSize(11);
                 }
             }
             if (Directory.Exists(Path.Combine(input.Env.RootPath, "EconFilter", "RAEF", input.SelectedTractCombination, "SelectedResult")))
@@ -812,7 +820,7 @@ namespace MapWizard.Tools
                 Paragraph par = document.InsertParagraph(paragraph);
                 par.AppendPicture(p);
                 par.Append("\r\n");
-                severalParagraphs = document.InsertParagraph("Figure 4. ").FontSize(10).Bold();
+                severalParagraphs = document.InsertParagraph("Figure 4. ").FontSize(11).Bold();
                 severalParagraphs.Append("Univariate and bivariate marginal distributions for the ore and mineral resource tonnages" +
                     " in all undiscovered deposits within the permissive tract '" + input.SelectedTractCombination + "'." + "\r\n");
             }

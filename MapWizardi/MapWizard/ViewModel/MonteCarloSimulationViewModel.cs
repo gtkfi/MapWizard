@@ -60,6 +60,7 @@ namespace MapWizard.ViewModel
             SelectModelCommand = new RelayCommand(SelectResult, CanRunTool);
             SelectGradeObjectCommand = new RelayCommand(SelectGradeObject, CanRunTool);
             SelectTonnageObjectCommand = new RelayCommand(SelectTonnageObject, CanRunTool);
+            SelectGradeTonnageObjectCommand = new RelayCommand(SelectGradeTonnageObject, CanRunTool);
             SelectNDepositsPmfObjectCommand = new RelayCommand(SelectNDepositsPmfObject, CanRunTool);
             OpenResultExcelObjectCommand = new RelayCommand(OpenResultExcelObject, CanRunTool);
             OpenTotalTonnagePlotCommand = new RelayCommand(OpenTotalTonnagePlot, CanRunTool);
@@ -164,6 +165,12 @@ namespace MapWizard.ViewModel
         public RelayCommand SelectTonnageObjectCommand { get; }
 
         /// <summary>
+        /// Select Grade-Tonnage Object command.
+        /// </summary>
+        /// @return Command.
+        public RelayCommand SelectGradeTonnageObjectCommand { get; }
+
+        /// <summary>
         /// Select NDepositsPmf Object command.
         /// </summary>
         /// @return Command.
@@ -226,6 +233,19 @@ namespace MapWizard.ViewModel
         /// </summary>
         private async void RunTool()
         {
+            if(!Model.GradePlot.Contains("Please select") && Model.TonnagePlot.Contains("Please select"))
+            {
+                dialogService.ShowNotification("Cannot run when only Grade object is defined!", "Error");
+                return;
+            }
+
+            if (Model.TonnagePlot.Contains("Please select") && Model.GradeTonnagePlot.Contains("Please select"))
+            {
+                dialogService.ShowNotification("Please select Grade and Tonnage objects OR Tonnage object OR GradeTonnage object!", "Error");
+                return;
+            }
+
+
             Result.TotalTonPlot = null;
             Result.MarginalPlot = null;
             logger.Info("-->{0}", this.GetType().Name);
@@ -260,6 +280,7 @@ namespace MapWizard.ViewModel
 
                 GradePlot = Model.GradePlot,
                 TonnagePlot = Model.TonnagePlot,
+                GradeTonnagePlot = Model.GradeTonnagePlot,
                 NDepositsPmf = Model.NDepositsPmf,
                 ExtensionFolder = Model.ExtensionFolder,
                 TractID = model.SelectedTract,
@@ -528,6 +549,10 @@ namespace MapWizard.ViewModel
                 if (!string.IsNullOrEmpty(objectFile))
                 {
                     Model.GradePlot = objectFile.Replace("\\", "/");
+                    Model.GradeTonnagePlot = "";
+                }
+                else {
+                    Model.GradePlot = "";
                 }
             }
             catch (Exception ex)
@@ -549,6 +574,11 @@ namespace MapWizard.ViewModel
                 if (!string.IsNullOrEmpty(objectFile))
                 {
                     Model.TonnagePlot = objectFile.Replace("\\", "/");
+                    Model.GradeTonnagePlot = "";
+                }
+                else
+                {
+                    Model.TonnagePlot = "";
                 }
             }
             catch (Exception ex)
@@ -556,6 +586,33 @@ namespace MapWizard.ViewModel
                 logger.Error(ex, "Failed to show OpenFileDialog");
                 dialogService.ShowNotification("Failed to select input file", "Error");
                 viewModelLocator.SettingsViewModel.WriteLogText("Failed to select input file for Tonnage Object in Monte Carlo Simulation tool.", "Error");
+            }
+        }
+
+        /// <summary>
+        /// Select grade-tonnange object.
+        /// </summary>
+        private void SelectGradeTonnageObject()
+        {
+            try
+            {
+                string objectFile = dialogService.OpenFileDialog(Path.Combine(settingsService.RootPath, "GTModel", "SelectedResult"), "RDS files|*.rds;", true, true, settingsService.RootPath);
+                if (!string.IsNullOrEmpty(objectFile))
+                {
+                    Model.GradeTonnagePlot = objectFile.Replace("\\", "/");
+                    Model.GradePlot = "";
+                    Model.TonnagePlot = "";
+                }
+                else
+                {
+                    Model.GradeTonnagePlot = "";
+                }
+            }
+            catch (Exception ex)
+            {
+                logger.Error(ex, "Failed to show OpenFileDialog");
+                dialogService.ShowNotification("Failed to select input file", "Error");
+                viewModelLocator.SettingsViewModel.WriteLogText("Failed to select input file for Grade-Tonnage Object in Monte Carlo Simulation tool.", "Error");
             }
         }
 

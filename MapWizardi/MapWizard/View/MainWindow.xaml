@@ -24,7 +24,7 @@
                         <ColumnDefinition Width="*"></ColumnDefinition>
                         <ColumnDefinition Width="*"></ColumnDefinition>
                     </Grid.ColumnDefinitions>
-                    <TextBlock FontFamily="Font Awesome 5 Free Regular" FontSize="16" Text=" " Grid.Column="0"></TextBlock>
+                    <TextBlock FontFamily="{StaticResource FontAwesome}" FontSize="16" Text=" " Grid.Column="0"></TextBlock>
                     <TextBlock Grid.Column="1">Settings</TextBlock>
                 </Grid>
             </Button>

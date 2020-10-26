@@ -46,7 +46,7 @@
                         </ComboBox>
                     </WrapPanel>
                     <WrapPanel Margin="10,20,20, 20">
-                        <TextBlock MinWidth="250" FontSize="18" Text="Select economic filter file:" Margin="0,0,0,5" VerticalAlignment="Center" HorizontalAlignment="Left"></TextBlock>
+                        <TextBlock MinWidth="250" FontSize="18" Text="Select simulated deposits file" Margin="0,0,0,5" VerticalAlignment="Center" HorizontalAlignment="Left"></TextBlock>
                         <Button Margin="50,0,0,0" FontSize="18" Content="{Binding Model.RaefEconFilterFile, Converter={StaticResource FilePathToFileNameConverter}}" MinWidth="150" MaxWidth="250" HorizontalAlignment="Center" Command="{Binding SelectRaefEconFilterFileCommand}" Style="{StaticResource AccentedSquareButtonStyle}" mah:ControlsHelper.ContentCharacterCasing="Normal">
                             <Button.ToolTip>
                                 <TextBlock Text="{Binding Model.RaefEconFilterFile}"></TextBlock>
@@ -54,13 +54,12 @@
                         </Button>
                     </WrapPanel>
                     <TextBlock>Run type</TextBlock>
-                    <RadioButton Name="batchYesRadioButton" GroupName="runtype">Use preset parameters</RadioButton>
-                    <RadioButton Name="batchNoRadioButton" GroupName="runtype" IsChecked="{Binding Model.UseRaefInputParams, Mode=TwoWay}">Input parameters in GUI</RadioButton>
+                    <RadioButton Name="batchYesRadioButton" GroupName="runtype">Batch run</RadioButton>
+                    <RadioButton Name="batchNoRadioButton" GroupName="runtype" IsChecked="{Binding Model.UseRaefInputParams, Mode=TwoWay}">Interactive run</RadioButton>
                     <RadioButton Name="EmpiricalModeRadioButton" GroupName="runtype" IsChecked="{Binding Model.RaefEmpiricalModel, Mode=TwoWay}">Empirical mode</RadioButton>
                     <!--Tähän lisäksi empirical mode.-->
                         <WrapPanel Visibility="{Binding ElementName=EmpiricalModeRadioButton, Path=IsChecked, Converter={StaticResource BoolToCollapsedVisibilityConverter}}">
                             <StackPanel>
-                                <TextBlock Margin="40"> Empirical Mode:</TextBlock>
                             <Button Content="{Binding Model.RaefGTMFile, Converter={StaticResource FilePathToFileNameConverter}}" Command="{Binding SelectGTMFileCommand}" Style="{StaticResource AccentedSquareButtonStyle}" mah:ControlsHelper.ContentCharacterCasing="Normal"></Button>
                                 <!--GTM Model (onko tämä rade tonnagen tulos? vai monte sarlo tulos? vai permissive trakt tulos?-->
                                 <TextBlock> Run name:</TextBlock>
@@ -69,18 +68,19 @@
                             </StackPanel>
                         </WrapPanel>
 
-                        <StackPanel Visibility="{Binding ElementName=batchNoRadioButton,Path=IsChecked,Converter={StaticResource BoolToCollapsedVisibilityConverter}}">
-                        <TextBlock Margin="40"> input GUI....</TextBlock>
+                    <StackPanel Visibility="{Binding ElementName=batchNoRadioButton,Path=IsChecked,Converter={StaticResource BoolToCollapsedVisibilityConverter}}">
                         <WrapPanel>
                             <StackPanel>
                                 <TextBlock>Run name</TextBlock>
                                 <TextBox Text="{Binding Model.RaefRunName}"></TextBox>
-                                <TextBlock>Area</TextBlock>
+                                <TextBlock>Tract area (km2)</TextBlock>
                                 <TextBox Text="{Binding Model.RaefArea}"></TextBox>
-                                <TextBlock>Depth intervals</TextBlock>
+                                <TextBlock>Number of depth intervals of undiscovered deposits</TextBlock>
+                                
                                 <!--<TextBox Text="{Binding Model.RaefDepthIntervals}"></TextBox>-->
                                 <mah:NumericUpDown Minimum="1" Maximum="4" Value="{Binding Model.RaefDepthIntervals}"></mah:NumericUpDown>
                                 <!--<Slider Minimum="1" Maximum="4" Value="{Binding Model.RaefDepthIntervals}"></Slider>-->
+                                <TextBlock>Minimum and maximum depth of each interval and fraction of deposits within the interval</TextBlock>
                                 <TextBlock>Min1</TextBlock>
                                 <TextBox Text="{Binding Model.RaefMin1}"></TextBox>
                                 <!--sitten oikeastaan se näitten näyttäminen niin että depth intervalsin perusteella nämä näkyviin.-->
@@ -123,7 +123,7 @@
                                 <!--<TextBlock>Mine method</TextBlock>-->
                                 <!--Selected programmatically-->
                                 <!--<TextBox Text="{Binding Model.RaefMineMethod}"></TextBox>-->
-                                <TextBlock>Mill type 1</TextBlock>
+                                <TextBlock>Mill method</TextBlock>
                                 <ComboBox ItemsSource="{Binding Model.RaefMillType1OptionsCollection}" SelectedItem="{Binding Model.RaefMillType1}"></ComboBox>
                                 <!--<TextBlock>Jos mill typeksi valittu Custom, näytä alla oleva.</TextBlock>
                                 <TextBlock>make sure että tract file valittu että voit syätääp näitä tulevia optioita</TextBlock>
@@ -145,11 +145,11 @@
                                 <RadioButton GroupName="daysOfOperation">260</RadioButton>
 
                                 <TextBlock>Waste management options</TextBlock>
-                                <TextBlock>Env. choice 1</TextBlock>
+                                <TextBlock>Tailings pond and dam</TextBlock>
                                 <!--tää ja liner on waste management options-->
                                 <CheckBox IsChecked="{Binding Model.RaefEnvChoice1, Mode=OneWayToSource}"></CheckBox>
                                 <!--<TextBox Text="{Binding Model.RaefEnvChoice1}"/>-->
-                                <TextBlock>Liner</TextBlock>
+                                <TextBlock>Tailings pond liner</TextBlock>
                                 <CheckBox IsChecked="{Binding Model.RaefLiner, Mode=OneWayToSource}"></CheckBox>
 
 
@@ -189,7 +189,7 @@
                     </StackPanel>
                     
                     <WrapPanel Visibility="{Binding ElementName=batchYesRadioButton,Path=IsChecked,Converter={StaticResource BoolToVisibilityConverter}}" Margin="10,20,20, 20">
-                        <TextBlock MinWidth="250" FontSize="18" Text="Select RAEF preset file:" Margin="0,0,0,5" VerticalAlignment="Center" HorizontalAlignment="Left"></TextBlock>
+                        <TextBlock MinWidth="250" FontSize="18" Text="Select batch run parameter file" Margin="0,0,0,5" VerticalAlignment="Center" HorizontalAlignment="Left"></TextBlock>
                         <Button Margin="50,0,0,0" FontSize="18" Content="{Binding Model.RaefPresetFile, Converter={StaticResource FilePathToFileNameConverter}}" MinWidth="150" MaxWidth="250" HorizontalAlignment="Center" Command="{Binding SelectRaefPresetFileCommand}" Style="{StaticResource AccentedSquareButtonStyle}" mah:ControlsHelper.ContentCharacterCasing="Normal">
                             <Button.ToolTip>
                                 <TextBlock Text="{Binding Model.RaefPresetFile}"></TextBlock>

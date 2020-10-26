@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.28307.489
+VisualStudioVersion = 15.0.28307.1000
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MapWizard", "MapWizard\MapWizard.csproj", "{E0539959-14D6-4BDA-A910-9DFD1DDA2E62}"
 	ProjectSection(ProjectDependencies) = postProject
@@ -12,7 +12,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tools", "Tools\Tools.csproj
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests", "ToolsTests\Tests.csproj", "{89C5141C-2D8E-4B5D-A1E0-8C8C22BE8ED2}"
 EndProject
-Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "MapWizardInstaller", "MapWizardInstaller\MapWizardInstaller.vdproj", "{028A57C5-4C90-45C7-A429-08FF10C3A6E6}"
+Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "MapWizardSetup", "MapWizardSetup\MapWizardSetup.vdproj", "{A73F2BBF-5435-4F7C-A24E-8E0EB8B80EF3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -134,50 +134,31 @@ Global
 		{89C5141C-2D8E-4B5D-A1E0-8C8C22BE8ED2}.SingleImage|ARM.ActiveCfg = Release|Any CPU
 		{89C5141C-2D8E-4B5D-A1E0-8C8C22BE8ED2}.SingleImage|x64.ActiveCfg = Release|Any CPU
 		{89C5141C-2D8E-4B5D-A1E0-8C8C22BE8ED2}.SingleImage|x86.ActiveCfg = Release|Any CPU
-		{028A57C5-4C90-45C7-A429-08FF10C3A6E6}.CD_ROM|Any CPU.ActiveCfg = Release
-		{028A57C5-4C90-45C7-A429-08FF10C3A6E6}.CD_ROM|ARM.ActiveCfg = Release
-		{028A57C5-4C90-45C7-A429-08FF10C3A6E6}.CD_ROM|x64.ActiveCfg = Release
-		{028A57C5-4C90-45C7-A429-08FF10C3A6E6}.CD_ROM|x86.ActiveCfg = Release
-		{028A57C5-4C90-45C7-A429-08FF10C3A6E6}.Debug|Any CPU.ActiveCfg = Debug
-		{028A57C5-4C90-45C7-A429-08FF10C3A6E6}.Debug|Any CPU.Build.0 = Debug
-		{028A57C5-4C90-45C7-A429-08FF10C3A6E6}.Debug|ARM.ActiveCfg = Debug
-		{028A57C5-4C90-45C7-A429-08FF10C3A6E6}.Debug|x64.ActiveCfg = Debug
-		{028A57C5-4C90-45C7-A429-08FF10C3A6E6}.Debug|x86.ActiveCfg = Debug
-		{028A57C5-4C90-45C7-A429-08FF10C3A6E6}.DVD-5|Any CPU.ActiveCfg = Debug
-		{028A57C5-4C90-45C7-A429-08FF10C3A6E6}.DVD-5|ARM.ActiveCfg = Debug
-		{028A57C5-4C90-45C7-A429-08FF10C3A6E6}.DVD-5|x64.ActiveCfg = Debug
-		{028A57C5-4C90-45C7-A429-08FF10C3A6E6}.DVD-5|x86.ActiveCfg = Debug
-		{028A57C5-4C90-45C7-A429-08FF10C3A6E6}.Release|Any CPU.ActiveCfg = Release
-		{028A57C5-4C90-45C7-A429-08FF10C3A6E6}.Release|ARM.ActiveCfg = Release
-		{028A57C5-4C90-45C7-A429-08FF10C3A6E6}.Release|x64.ActiveCfg = Release
-		{028A57C5-4C90-45C7-A429-08FF10C3A6E6}.Release|x86.ActiveCfg = Release
-		{028A57C5-4C90-45C7-A429-08FF10C3A6E6}.SingleImage|Any CPU.ActiveCfg = Release
-		{028A57C5-4C90-45C7-A429-08FF10C3A6E6}.SingleImage|ARM.ActiveCfg = Release
-		{028A57C5-4C90-45C7-A429-08FF10C3A6E6}.SingleImage|x64.ActiveCfg = Release
-		{028A57C5-4C90-45C7-A429-08FF10C3A6E6}.SingleImage|x86.ActiveCfg = Release
+		{A73F2BBF-5435-4F7C-A24E-8E0EB8B80EF3}.CD_ROM|Any CPU.ActiveCfg = Release
+		{A73F2BBF-5435-4F7C-A24E-8E0EB8B80EF3}.CD_ROM|ARM.ActiveCfg = Release
+		{A73F2BBF-5435-4F7C-A24E-8E0EB8B80EF3}.CD_ROM|x64.ActiveCfg = Release
+		{A73F2BBF-5435-4F7C-A24E-8E0EB8B80EF3}.CD_ROM|x86.ActiveCfg = Release
+		{A73F2BBF-5435-4F7C-A24E-8E0EB8B80EF3}.Debug|Any CPU.ActiveCfg = Debug
+		{A73F2BBF-5435-4F7C-A24E-8E0EB8B80EF3}.Debug|ARM.ActiveCfg = Debug
+		{A73F2BBF-5435-4F7C-A24E-8E0EB8B80EF3}.Debug|x64.ActiveCfg = Debug
+		{A73F2BBF-5435-4F7C-A24E-8E0EB8B80EF3}.Debug|x86.ActiveCfg = Debug
+		{A73F2BBF-5435-4F7C-A24E-8E0EB8B80EF3}.DVD-5|Any CPU.ActiveCfg = Debug
+		{A73F2BBF-5435-4F7C-A24E-8E0EB8B80EF3}.DVD-5|ARM.ActiveCfg = Debug
+		{A73F2BBF-5435-4F7C-A24E-8E0EB8B80EF3}.DVD-5|x64.ActiveCfg = Debug
+		{A73F2BBF-5435-4F7C-A24E-8E0EB8B80EF3}.DVD-5|x86.ActiveCfg = Debug
+		{A73F2BBF-5435-4F7C-A24E-8E0EB8B80EF3}.Release|Any CPU.ActiveCfg = Release
+		{A73F2BBF-5435-4F7C-A24E-8E0EB8B80EF3}.Release|ARM.ActiveCfg = Release
+		{A73F2BBF-5435-4F7C-A24E-8E0EB8B80EF3}.Release|x64.ActiveCfg = Release
+		{A73F2BBF-5435-4F7C-A24E-8E0EB8B80EF3}.Release|x86.ActiveCfg = Release
+		{A73F2BBF-5435-4F7C-A24E-8E0EB8B80EF3}.SingleImage|Any CPU.ActiveCfg = Release
+		{A73F2BBF-5435-4F7C-A24E-8E0EB8B80EF3}.SingleImage|ARM.ActiveCfg = Release
+		{A73F2BBF-5435-4F7C-A24E-8E0EB8B80EF3}.SingleImage|x64.ActiveCfg = Release
+		{A73F2BBF-5435-4F7C-A24E-8E0EB8B80EF3}.SingleImage|x86.ActiveCfg = Release
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {1F585604-2F8B-4217-BA54-084AE47309E4}
-	EndGlobalSection
-	GlobalSection(TeamFoundationVersionControl) = preSolution
-		SccNumberOfProjects = 5
-		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
-		SccTeamFoundationServer = https://gtkkoodit.visualstudio.com/
-		SccLocalPath0 = .
-		SccProjectUniqueName1 = MapWizard\\MapWizard.csproj
-		SccProjectName1 = MapWizard
-		SccLocalPath1 = MapWizard
-		SccProjectUniqueName2 = Tools\\Tools.csproj
-		SccProjectName2 = Tools
-		SccLocalPath2 = Tools
-		SccProjectUniqueName3 = ToolsTests\\Tests.csproj
-		SccProjectName3 = ToolsTests
-		SccLocalPath3 = ToolsTests
-		SccProjectUniqueName4 = MapWizardInstaller\\MapWizardInstaller.vdproj
-		SccProjectName4 = MapWizardInstaller
-		SccLocalPath4 = MapWizardInstaller
 	EndGlobalSection
 EndGlobal

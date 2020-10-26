@@ -105,7 +105,7 @@ print.Simulation <- function(object, filename) {
 #'
 #' @export
 #'
-Simulation <- function(oPmf, oTonPdf, oGradePdf,
+Simulation <- function(oPmf, oTonPdf, oGradePdf, oTonGradePdf, # Changed: added parameter oTonGradePdf
                        seed = NULL, nSimulations = 20000) {
 
   if(nSimulations < 2500) {
@@ -126,10 +126,17 @@ Simulation <- function(oPmf, oTonPdf, oGradePdf,
   # Get all of the random samples simultaneously.
   # It is done this way because repeated calls to getRandomSamples can
   # require a lot of time.
-  rsTonPdf <- getRandomSamples(oTonPdf, nTotalDep, seed = seed)
-
-  if(!missing(oGradePdf)){
-    rsGradePdf <- getRandomSamples(oGradePdf, nTotalDep, seed = seed)
+  
+  # Changed: !missing(oTonGradePdf) if clause added
+  if (!missing(oTonGradePdf)) {
+    rsTonGradePdf<-getRandomSamples(oTonGradePdf, nTotalDep,seed=seed)
+    rsTonPdf<-rsTonGradePdf[,1]
+    rsGradePdf<-rsTonGradePdf[,-1]
+  } else {
+    rsTonPdf <- getRandomSamples(oTonPdf, nTotalDep, seed = seed)
+    if(!missing(oGradePdf)){
+      rsGradePdf <- getRandomSamples(oGradePdf, nTotalDep, seed = seed)
+    }
   }
 
   # Construct the container for the deposit simulations
@@ -139,8 +146,14 @@ Simulation <- function(oPmf, oTonPdf, oGradePdf,
     nRows <- nTotalDep
   }
 
-  if(!missing(oGradePdf)){
+  if(!missing(oTonGradePdf)) { # Changed: added this if clause for oTonGradePdf
     colNames <- c("Simulation Index",
+                  "Number of Deposits",
+                  "Sim Deposit Index",
+                  colnames(rsTonGradePdf))
+  } else {
+    if(!missing(oGradePdf)) {
+      colNames <- c("Simulation Index",
                   "Number of Deposits",
                   "Sim Deposit Index",
                   oTonPdf$matName,
@@ -150,6 +163,7 @@ Simulation <- function(oPmf, oTonPdf, oGradePdf,
                   "Number of Deposits",
                   "Sim Deposit Index",
                   oTonPdf$matName)
+    }
   }
 
 
@@ -168,7 +182,7 @@ Simulation <- function(oPmf, oTonPdf, oGradePdf,
       rowIndex <- rowIndex + 1
     } else {
       for(i3 in 1:nDeposits){
-        if(!missing(oGradePdf)){
+        if(!missing(oGradePdf)|!missing(oTonGradePdf)){ # Changed: added condition oTonGradePdf
           ds[rowIndex, ] <- c(simIndex, nDeposits, i3,
                               rsTonPdf[rsIndex], rsGradePdf[rsIndex, ])
         } else {

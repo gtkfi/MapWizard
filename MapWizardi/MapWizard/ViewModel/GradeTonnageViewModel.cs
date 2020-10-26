@@ -225,6 +225,7 @@ namespace MapWizard.ViewModel
                 ExtensionFolder = Model.ExtensionFolder,
                 RunGrade = Model.RunGrade,
                 RunTonnage = Model.RunTonnage,
+                RunGradeTonnage = Model.RunGradeTonnage,
                 ModelType = Model.ModelType
             };
             logger.Trace(
@@ -278,6 +279,7 @@ namespace MapWizard.ViewModel
                     Result.GradePlotBitMap = BitmapFromUri(tonnageResult.GradePlot);
                     Result.GradeSummary = tonnageResult.GradeSummary;
                     Result.GradePdf = tonnageResult.GradePdf;
+                    Result.GradeTonnagePlot = tonnageResult.GradeTonnagePlot;
                 });
                 var modelFolder = Path.Combine(inputParams.Env.RootPath, "GTModel", Model.ExtensionFolder);
                 if (!Model.ModelNames.Contains(modelFolder))

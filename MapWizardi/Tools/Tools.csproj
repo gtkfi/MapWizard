@@ -16245,10 +16245,7 @@
     <Content Include="scripts\R-3.6.0\Tcl\lib\Tktable2.11\tktable.py" />
     <Content Include="scripts\R-3.6.0\Tcl\lib\Tktable2.11\Tktable211.dll" />
     <Content Include="scripts\R-3.6.0\unins000.exe" />
-    <Content Include="scripts\R-3.6.3_base.exe" />
-    <Content Include="scripts\R-3.6.3_lib1.exe" />
-    <Content Include="scripts\R-3.6.3_lib2.exe" />
-    <Content Include="scripts\R-3.6.3_lib3.exe" />
+    <Content Include="scripts\R-3.6.3.exe" />
     <Content Include="scripts\WofeCreateMask.pyw">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -24088,6 +24085,10 @@
     <None Include="scripts\R-3.6.0\tests\utf8-regex.R" />
     <None Include="scripts\R-3.6.0\tests\WinUnicode.dat" />
     <None Include="scripts\R-3.6.0\unins000.dat" />
+    <None Include="scripts\R-3.6.3.7z.001" />
+    <None Include="scripts\R-3.6.3.7z.002" />
+    <None Include="scripts\R-3.6.3.7z.003" />
+    <None Include="scripts\R-3.6.3.7z.004" />
     <None Include="scripts\RaefEmpModel.r">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
@@ -24362,6 +24363,18 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <Content Include="scripts\rasterproc_wrapper_polygon.r">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="scripts\TonGradeWrapper.R">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="scripts\TonGradePdf.R">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="scripts\TotTonOutCMT.R">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="scripts\TotTonOutGT.R">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <None Include="scripts\UndiscoveredDeposits\example.csv">

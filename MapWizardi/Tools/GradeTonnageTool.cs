@@ -94,6 +94,14 @@ namespace MapWizard.Tools
             set { Add<string>("RunTonnage", value); }
         }
         /// <summary>
+        /// Whether to run grade-tonnage calculation.
+        /// </summary>
+        public string RunGradeTonnage
+        {
+            get { return GetValue<string>("RunGradeTonnage"); }
+            set { Add<string>("RunGradeTonnage", value); }
+        }
+        /// <summary>
         /// Extension folder name.
         /// </summary>
         public string ExtensionFolder
@@ -157,6 +165,15 @@ namespace MapWizard.Tools
             internal set { Add<string>("TonnageSummary", value); }
         }
         /// <summary>
+        /// Displays the probability density function that represents the ore tonnage in an undiscovered deposit and the corresponding cumulative distribution function. 
+        /// </summary>
+        public string GradeTonnagePlot
+        {
+            get { return GetValue<string>("GradeTonnagePlot"); }
+            internal set { Add<string>("GradeTonnagePlot", value); }
+        }
+      
+        /// <summary>
         /// Tool output.
         /// </summary>
         public string Output
@@ -200,6 +217,7 @@ namespace MapWizard.Tools
             var path = System.AppDomain.CurrentDomain.BaseDirectory.Replace(@"\", @"/");
             var rGradePath = path + "scripts/GradeWrapper.R";
             var rTonnagePath = path + "scripts/TonnageWrapper.R";
+            var rGradeTonnagePath = path + "scripts/TonGradeWrapper.R";
             var workingDir = System.AppDomain.CurrentDomain.BaseDirectory.Replace(@"\", @"/");
             workingDir = workingDir + "scripts";
             workingDir.Replace(@"\n", @"");
@@ -262,13 +280,13 @@ namespace MapWizard.Tools
                         procResult = proc.StandardOutput.ReadToEnd();
                         proc.Close();
                         result.Warnings = "";
-                        if (procErrors.Length > 1&& procErrors.ToLower().Contains("error")) //Don't throw exception over warnings or empty error message.
+                        if (procErrors.Length > 1 && procErrors.ToLower().Contains("error")) //Don't throw exception over warnings or empty error message.
                         {
                             logger.Error(procErrors);
                             throw new Exception(" R script failed, check output for details.");
-                        }                     
-                        else if (procErrors.Length>1 && procErrors.ToLower().Contains("the input grade-tonnage data file contains less than 20 deposits"))
-                            result.Warnings="The input grade - tonnage data file contains less than 20 deposits.This might reduce the representativeness of the generated pdfs.";
+                        }
+                        else if (procErrors.Length > 1 && procErrors.ToLower().Contains("the input grade-tonnage data file contains less than 20 deposits"))
+                            result.Warnings = "The input grade - tonnage data file contains less than 20 deposits.This might reduce the representativeness of the generated pdfs.";
                         result.GradeSummary = File.ReadAllText(Path.Combine(gradeProject, "grade_summary.txt"));
                         result.GradePlot = Path.Combine(gradeProject, "grade_plot.jpeg");
                         logger.Trace("Grade tonnage return value: " + procResult);
@@ -327,7 +345,10 @@ namespace MapWizard.Tools
                         else if (procErrors.Length > 1 && procErrors.ToLower().Contains("the input grade-tonnage data file contains less than 20 deposits"))
                             result.Warnings = "The input grade - tonnage data file contains less than 20 deposits.This might reduce the representativeness of the generated pdfs.";
                         logger.Trace("Grade Tonnage return value: " + procResult);
-                        result.TonnageSummary = File.ReadAllText(Path.Combine(tonnageProject, "tonnage_summary.txt"));
+                        if (File.Exists(Path.Combine(tonnageProject, "tonnage_summary.txt")))
+                        {
+                            result.TonnageSummary = File.ReadAllText(Path.Combine(tonnageProject, "tonnage_summary.txt"));
+                        }
                         result.TonnagePlot = Path.Combine(tonnageProject, "tonnage_plot.jpeg");
                     }
                 }
@@ -352,7 +373,69 @@ namespace MapWizard.Tools
                 {
                 }
             }
+            if (input.RunGradeTonnage == "True")  //Run grade-tonnage
+            {
+                try
+                {
+                    string inputFileDest = Path.Combine(gradeProject, "GT_InputFile.csv");
+                    File.Copy(input.CSVPath, Path.Combine(gradeProject, "GT_InputFile.csv"), true);
+                    gradeProject = Path.Combine(inputParams.Env.RootPath, "GTModel", input.ExtensionFolder);
+                    var info = new ProcessStartInfo();
+                    info.FileName = rScriptExecutablePath;
+                    string rProjectPath = gradeProject.Replace("\\", "/");
+                    info.Arguments = "\"" + rGradeTonnagePath + "\" \"" + input.CSVPath + "\" " + input.Seed + " " + input.PDFType + " " + input.IsTruncated + " " + input.MinDepositCount + " " + input.RandomSampleCount + " \"" + rProjectPath + "\" \"" + workingDir + "\"";
+
+                    info.RedirectStandardInput = false;
+                    info.RedirectStandardOutput = true;
+                    info.RedirectStandardError = true;
+                    info.UseShellExecute = false;
+                    info.CreateNoWindow = true;
+                    info.WorkingDirectory = path + "scripts/";
+                    using (var proc = new Process())
+                    {
+                        proc.StartInfo = info;
+                        proc.Start();
+                        string procErrors = "";
+                        proc.ErrorDataReceived += new DataReceivedEventHandler((sender, e) =>  //Use DataReceivedEventHandler to read error data, simply using proc.StandardError would sometimes freeze, due to buffer filling up
+                        {
+                            if (!String.IsNullOrEmpty(e.Data))
+                            {
+                                procErrors += (e.Data);
+                            }
+                        });
+                        proc.BeginErrorReadLine();
+                        procResult = proc.StandardOutput.ReadToEnd();
+                        proc.Close();
+                        result.Warnings = "";
+                        if (procErrors.Length > 1 && procErrors.ToLower().Contains("error")) //Don't throw exception over warnings or empty error message.
+                        {
+                            logger.Error(procErrors);
+                            throw new Exception(" R script failed, check output for details.");
+                        }
+                        else if (procErrors.Length > 1 && procErrors.ToLower().Contains("the input grade-tonnage data file contains less than 20 deposits"))
+                            result.Warnings = "The input grade - tonnage data file contains less than 20 deposits.This might reduce the representativeness of the generated pdfs.";
+                        //grade results
+                        result.GradeSummary = File.ReadAllText(Path.Combine(gradeProject, "grade_summary.txt"));
+                        result.GradePlot = Path.Combine(gradeProject, "grade_plot.jpeg");
+                        //tonnage results
+                        if (File.Exists(Path.Combine(gradeProject, "tonnage_summary.txt")))
+                        {
+                            result.TonnageSummary = File.ReadAllText(Path.Combine(gradeProject, "tonnage_summary.txt"));
+                        }
+                        result.TonnagePlot = Path.Combine(gradeProject, "tonnage_plot.jpeg");
+                        //grade-tonnage results
+                        result.GradeTonnagePlot = Path.Combine(gradeProject, "tongrade_plot.jpeg");
+                        logger.Trace("Grade tonnage return value: " + procResult);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    //throw new Exception("Failed to excecute Grade tool: " + ex);
+                }
+            }
+
             return result;
         }
+
     }
 }

@@ -30,6 +30,7 @@ namespace MapWizard.Model
         private string folder;
         private string runGrade = "false";
         private string runTonnage = "false";
+        private string runGradeTonnage = "false";
         private string modelType = "GT";
         private string extensionFolder = "";
 
@@ -360,6 +361,26 @@ namespace MapWizard.Model
                     value = "false";
                 }
                 Set<string>(() => this.RunTonnage, ref runTonnage, value);
+            }
+        }
+
+        /// <summary>
+        /// Run Grade-Tonnage tool.
+        /// </summary>
+        /// @return Run Grade-Tonnage tool.
+        public string RunGradeTonnage
+        {
+            get
+            {
+                return runGradeTonnage;
+            }
+            set
+            {
+                if (value == null)
+                {
+                    value = "false";
+                }
+                Set<string>(() => this.RunGradeTonnage, ref runGradeTonnage, value);
             }
         }
 

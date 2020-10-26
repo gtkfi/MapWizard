@@ -8,7 +8,7 @@
     <Application.Resources>
 
         <ResourceDictionary>
-            
+            <FontFamily x:Key="FontAwesome">/fonts/fontawesome-webfont.ttf#FontAwesome</FontFamily>
             <Style x:Key="homeicons">
                 <Setter Property="Control.Background" Value="red" />
                 <Setter Property="Control.Foreground" Value="red" />
@@ -17,7 +17,6 @@
             <BooleanToVisibilityConverter x:Key="Bool2Visibility" />
             <Thickness x:Key="inputsmargin" Bottom="0" Top="0"></Thickness>
             <vm:ViewModelLocator x:Key="Locator" d:IsDataSource="True" xmlns:vm="clr-namespace:MapWizard.ViewModel" />
-
             <ResourceDictionary.MergedDictionaries>
                 <!-- MahApps.Metro resource dictionaries. Make sure that all file names are Case Sensitive! -->
                 <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Controls.xaml" />
@@ -29,7 +28,9 @@
                 <ResourceDictionary Source="pack://application:,,,/Dragablz;component/themes/mahapps.xaml" />
                 <!-- ToastNotifications -->
                 <ResourceDictionary Source="pack://application:,,,/ToastNotifications.Messages;component/Themes/Default.xaml" />
+                
             </ResourceDictionary.MergedDictionaries>
+            
         </ResourceDictionary>
 
     </Application.Resources>

@@ -20,6 +20,7 @@ namespace MapWizard.Model
         private int runStatus = 2; // 0=error, 1=success, 2=not run yet.
         private string gradePlot = "Please select Grade object";
         private string tonnagePlot = "Please select Tonnage object";
+        private string gradeTonnagePlot = "Please select Joint Grade-Tonnage object";
         private string nDepositsPmf = "Please select NDepositsPmf object";
         private ObservableCollection<string> tractIDNames = new ObservableCollection<string>();
         private string selectedTract;
@@ -162,7 +163,7 @@ namespace MapWizard.Model
             }
             set
             {
-                if (value == null)
+                if (value == null || value == "")
                 {
                     value = "Please select Grade object";
                 }
@@ -182,11 +183,31 @@ namespace MapWizard.Model
             }
             set
             {
-                if (value == null)
+                if (value == null || value == "")
                 {
                     value = "Please select Tonnage object";
                 }
                 Set<string>(() => this.TonnagePlot, ref tonnagePlot, value);
+            }
+        }
+
+        /// <summary>
+        /// Grade-Tonnage Pdf.
+        /// </summary>
+        /// @return Grade-Tonnage Pdf.
+        public string GradeTonnagePlot
+        {
+            get
+            {
+                return gradeTonnagePlot;
+            }
+            set
+            {
+                if (value == null || value == "")
+                {
+                    value = "Please select Joint Grade-Tonnage object";
+                }
+                Set<string>(() => this.GradeTonnagePlot, ref gradeTonnagePlot, value);
             }
         }
 

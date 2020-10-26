@@ -301,7 +301,8 @@ namespace MapWizard.ViewModel
                                 {                                   
                                     column = new TractAggregationDataModel();  // New column where tract pair information will be added.
                                     column.TractPairColumn.Clear();
-                                    column.TractName = item.TractName + " - " + tractIDEnumerator.Current.TractName;
+                                    //column.TractName = item.TractName + " - " + tractIDEnumerator.Current.TractName;
+                                    column.TractName = "";
                                     column.IsVisible = true;
                                     if (item.TractName == tractIDEnumerator.Current.TractName)
                                     {
@@ -319,7 +320,8 @@ namespace MapWizard.ViewModel
                                     if (tractIDEnumerator.Current.ChooseTract == true)
                                     {                 
                                         TractAggregationDataModel newColumn = new TractAggregationDataModel();  // New column where tract pair information will be added.
-                                        newColumn.TractName = item.TractName + " - " + tractIDEnumerator.Current.TractName;
+                                        //newColumn.TractName = item.TractName + " - " + tractIDEnumerator.Current.TractName;
+                                        newColumn.TractName = "";
                                         newColumn.IsVisible = true;
                                         if (item.TractName == tractIDEnumerator.Current.TractName)
                                         {

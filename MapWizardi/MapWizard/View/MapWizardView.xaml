@@ -80,7 +80,7 @@
                             <ColumnDefinition Width="*"/>
                             <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
-                        <TextBlock Style="{StaticResource ButtonBlockStyle}" FontFamily="/Resources/fontawesome/otfs/#Font Awesome 5 Free Regular 400" FontSize="16" Text="" Grid.Column="0"></TextBlock>
+                        <TextBlock Style="{StaticResource ButtonBlockStyle}" FontFamily="{StaticResource FontAwesome}" FontSize="16" Text="" Grid.Column="0"></TextBlock>
                     </Grid>
                 </Button>
             </StatusBarItem>
@@ -91,7 +91,7 @@
                     <StackPanel>
                         <StackPanel Orientation="Vertical" Style="{StaticResource StackPanelStyle}">
                             <TextBlock  Text="Descriptive Model" Foreground="Blue"/>
-                            <TextBlock DataContext="{Binding Source={StaticResource Locator}, Path=DescriptiveViewModel}">Status: <Span FontFamily="/Resources/fontawesome/otfs/#Font Awesome 5 Free Regular 400" Foreground="{Binding CurrentModel.RunStatus, Converter={StaticResource ToolStatusColorConverter}}" FontSize="14"  ><Run Text="{Binding CurrentModel.RunStatus, Converter={StaticResource ToolStatusSymbolConverter}}"/></Span></TextBlock>
+                            <TextBlock DataContext="{Binding Source={StaticResource Locator}, Path=DescriptiveViewModel}">Status: <Span FontFamily="{StaticResource FontAwesome}" Foreground="{Binding CurrentModel.RunStatus, Converter={StaticResource ToolStatusColorConverter}}" FontSize="14"  ><Run Text="{Binding CurrentModel.RunStatus, Converter={StaticResource ToolStatusSymbolConverter}}"/></Span></TextBlock>
                             <TextBlock DataContext="{Binding Source={StaticResource Locator}, Path=DescriptiveViewModel}" Style="{StaticResource SmallTextStyle}" Text="{Binding CurrentModel.LastRunDate}"></TextBlock>
                         </StackPanel>
                         <Separator Style="{StaticResource SeparatorStyle}"/>
@@ -104,7 +104,7 @@
                     <StackPanel>
                         <StackPanel Orientation="Vertical" Style="{StaticResource StackPanelStyle}">
                             <TextBlock Text="Grade-Tonnage model" Foreground="Blue" />
-                            <TextBlock DataContext="{Binding Source={StaticResource Locator}, Path=GradeTonnageViewModel}">Status: <Span FontFamily="/Resources/fontawesome/otfs/#Font Awesome 5 Free Regular 400" Foreground="{Binding Model.RunStatus, Converter={StaticResource ToolStatusColorConverter}}" FontSize="14"  ><Run Text="{Binding Model.RunStatus, Converter={StaticResource ToolStatusSymbolConverter}}"/></Span></TextBlock>
+                            <TextBlock DataContext="{Binding Source={StaticResource Locator}, Path=GradeTonnageViewModel}">Status: <Span FontFamily="{StaticResource FontAwesome}" Foreground="{Binding Model.RunStatus, Converter={StaticResource ToolStatusColorConverter}}" FontSize="14"  ><Run Text="{Binding Model.RunStatus, Converter={StaticResource ToolStatusSymbolConverter}}"/></Span></TextBlock>
                             <TextBlock DataContext="{Binding Source={StaticResource Locator}, Path=GradeTonnageViewModel}" Style="{StaticResource SmallTextStyle}" Text="{Binding Model.LastRunDate}"></TextBlock>
                         </StackPanel>
                         <Separator Style="{StaticResource SeparatorStyle}"></Separator>
@@ -117,7 +117,7 @@
                     <StackPanel>
                         <StackPanel Orientation="Vertical" Style="{StaticResource StackPanelStyle}">
                             <TextBlock Text="Tract delineation" Foreground="Blue" />
-                            <TextBlock DataContext="{Binding Source={StaticResource Locator}, Path=PermissiveTractViewModel}">Status: <Span FontFamily="/Resources/fontawesome/otfs/#Font Awesome 5 Free Regular 400" Foreground="{Binding RunStatus, Converter={StaticResource ToolStatusColorConverter}}" FontSize="14"  ><Run Text="{Binding RunStatus, Converter={StaticResource ToolStatusSymbolConverter}}"/></Span></TextBlock>
+                            <TextBlock DataContext="{Binding Source={StaticResource Locator}, Path=PermissiveTractViewModel}">Status: <Span FontFamily="{StaticResource FontAwesome}" Foreground="{Binding RunStatus, Converter={StaticResource ToolStatusColorConverter}}" FontSize="14"  ><Run Text="{Binding RunStatus, Converter={StaticResource ToolStatusSymbolConverter}}"/></Span></TextBlock>
                             <TextBlock DataContext="{Binding Source={StaticResource Locator}, Path=PermissiveTractViewModel}" Style="{StaticResource SmallTextStyle}" Text="{Binding LastRunDate}"></TextBlock>
                         </StackPanel>
                         <Separator Style="{StaticResource SeparatorStyle}"/>
@@ -130,7 +130,7 @@
                     <StackPanel>
                         <StackPanel Orientation="Vertical" Style="{StaticResource StackPanelStyle}">
                             <TextBlock Text="Undiscovered deposits" Foreground="Blue" />
-                            <TextBlock DataContext="{Binding Source={StaticResource Locator}, Path=UndiscoveredDepositsViewModel}">Status: <Span FontFamily="/Resources/fontawesome/otfs/#Font Awesome 5 Free Regular 400" Foreground="{Binding Model.RunStatus, Converter={StaticResource ToolStatusColorConverter}}" FontSize="14"  ><Run Text="{Binding Model.RunStatus, Converter={StaticResource ToolStatusSymbolConverter}}"/></Span></TextBlock>
+                            <TextBlock DataContext="{Binding Source={StaticResource Locator}, Path=UndiscoveredDepositsViewModel}">Status: <Span FontFamily="{StaticResource FontAwesome}" Foreground="{Binding Model.RunStatus, Converter={StaticResource ToolStatusColorConverter}}" FontSize="14"  ><Run Text="{Binding Model.RunStatus, Converter={StaticResource ToolStatusSymbolConverter}}"/></Span></TextBlock>
                             <TextBlock DataContext="{Binding Source={StaticResource Locator}, Path=UndiscoveredDepositsViewModel}" Style="{StaticResource SmallTextStyle}" Text="{Binding Model.LastRunDate}"></TextBlock>
                             <TextBlock DataContext="{Binding Source={StaticResource Locator}, Path=UndiscoveredDepositsViewModel}" Style="{StaticResource SmallTextStyle}" Text="{Binding Model.LastRunTract}"></TextBlock>
                         </StackPanel>
@@ -144,7 +144,7 @@
                     <StackPanel>
                         <StackPanel Orientation="Vertical" Style="{StaticResource StackPanelStyle}">
                             <TextBlock Text="Monte Carlo simulation" Foreground="Blue" />
-                            <TextBlock DataContext="{Binding Source={StaticResource Locator}, Path=MonteCarloSimulationViewModel}">Status: <Span FontFamily="/Resources/fontawesome/otfs/#Font Awesome 5 Free Regular 400" Foreground="{Binding Model.RunStatus, Converter={StaticResource ToolStatusColorConverter}}" FontSize="14"  ><Run Text="{Binding Model.RunStatus, Converter={StaticResource ToolStatusSymbolConverter}}"/></Span></TextBlock>
+                            <TextBlock DataContext="{Binding Source={StaticResource Locator}, Path=MonteCarloSimulationViewModel}">Status: <Span FontFamily="{StaticResource FontAwesome}" Foreground="{Binding Model.RunStatus, Converter={StaticResource ToolStatusColorConverter}}" FontSize="14"  ><Run Text="{Binding Model.RunStatus, Converter={StaticResource ToolStatusSymbolConverter}}"/></Span></TextBlock>
                             <TextBlock DataContext="{Binding Source={StaticResource Locator}, Path=MonteCarloSimulationViewModel}" Style="{StaticResource SmallTextStyle}" Text="{Binding Model.LastRunDate}"></TextBlock>
                             <TextBlock DataContext="{Binding Source={StaticResource Locator}, Path=MonteCarloSimulationViewModel}" Style="{StaticResource SmallTextStyle}" Text="{Binding Model.LastRunTract}"></TextBlock>
                         </StackPanel>
@@ -158,7 +158,7 @@
                     <StackPanel>
                         <StackPanel Orientation="Vertical" Style="{StaticResource StackPanelStyle}">
                             <TextBlock  Text="Economic filter" Foreground="Blue"/>
-                            <TextBlock DataContext="{Binding Source={StaticResource Locator}, Path=EconomicFilterViewModel}">Status: <Span FontFamily="/Resources/fontawesome/otfs/#Font Awesome 5 Free Regular 400" Foreground="{Binding Model.RunStatus, Converter={StaticResource ToolStatusColorConverter}}" FontSize="14"  ><Run Text="{Binding Model.RunStatus, Converter={StaticResource ToolStatusSymbolConverter}}"/></Span></TextBlock>
+                            <TextBlock DataContext="{Binding Source={StaticResource Locator}, Path=EconomicFilterViewModel}">Status: <Span FontFamily="{StaticResource FontAwesome}" Foreground="{Binding Model.RunStatus, Converter={StaticResource ToolStatusColorConverter}}" FontSize="14"  ><Run Text="{Binding Model.RunStatus, Converter={StaticResource ToolStatusSymbolConverter}}"/></Span></TextBlock>
                             <TextBlock DataContext="{Binding Source={StaticResource Locator}, Path=EconomicFilterViewModel}" Style="{StaticResource SmallTextStyle}" Text="{Binding Model.LastRunDate}"></TextBlock>
                             <TextBlock DataContext="{Binding Source={StaticResource Locator}, Path=EconomicFilterViewModel}" Style="{StaticResource SmallTextStyle}" Text="{Binding Model.LastRunTract}"></TextBlock>
                         </StackPanel>
@@ -172,7 +172,7 @@
                     <StackPanel>
                         <StackPanel Orientation="Vertical" Style="{StaticResource StackPanelStyle}">
                             <TextBlock Text="Aggregate tract results" Foreground="Blue" />
-                            <TextBlock DataContext="{Binding Source={StaticResource Locator}, Path=TractAggregationViewModel}">Status: <Span FontFamily="/Resources/fontawesome/otfs/#Font Awesome 5 Free Regular 400" Foreground="{Binding Model.RunStatus, Converter={StaticResource ToolStatusColorConverter}}" FontSize="14"  ><Run Text="{Binding Model.RunStatus, Converter={StaticResource ToolStatusSymbolConverter}}"/></Span></TextBlock>
+                            <TextBlock DataContext="{Binding Source={StaticResource Locator}, Path=TractAggregationViewModel}">Status: <Span FontFamily="{StaticResource FontAwesome}" Foreground="{Binding Model.RunStatus, Converter={StaticResource ToolStatusColorConverter}}" FontSize="14"  ><Run Text="{Binding Model.RunStatus, Converter={StaticResource ToolStatusSymbolConverter}}"/></Span></TextBlock>
                             <TextBlock DataContext="{Binding Source={StaticResource Locator}, Path=TractAggregationViewModel}" Style="{StaticResource SmallTextStyle}" Text="{Binding Model.LastRunDate}"></TextBlock>
                         </StackPanel>
                         <Separator Style="{StaticResource SeparatorStyle}"/>
@@ -185,7 +185,7 @@
                     <StackPanel>
                         <StackPanel Orientation="Vertical" Style="{StaticResource StackPanelStyle}">
                             <TextBlock Text="Reporting" Foreground="Blue" />
-                            <TextBlock DataContext="{Binding Source={StaticResource Locator}, Path=ReportingViewModel}">Status: <Span FontFamily="/Resources/fontawesome/otfs/#Font Awesome 5 Free Regular 400" Foreground="{Binding Model.RunStatus, Converter={StaticResource ToolStatusColorConverter}}" FontSize="14"  ><Run Text="{Binding Model.RunStatus, Converter={StaticResource ToolStatusSymbolConverter}}"/></Span></TextBlock>
+                            <TextBlock DataContext="{Binding Source={StaticResource Locator}, Path=ReportingViewModel}">Status: <Span FontFamily="{StaticResource FontAwesome}" Foreground="{Binding Model.RunStatus, Converter={StaticResource ToolStatusColorConverter}}" FontSize="14"  ><Run Text="{Binding Model.RunStatus, Converter={StaticResource ToolStatusSymbolConverter}}"/></Span></TextBlock>
                             <TextBlock DataContext="{Binding Source={StaticResource Locator}, Path=ReportingViewModel}" Style="{StaticResource SmallTextStyle}" Text="{Binding Model.LastRunDate}"></TextBlock>
                         </StackPanel>
                         <Separator Style="{StaticResource SeparatorStyle}"/>

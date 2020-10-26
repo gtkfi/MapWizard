@@ -12,6 +12,7 @@ namespace MapWizard.Model
         private ImageSource tonnagePlotBitMap;
         private string gradePlot;
         private string tonnagePlot;
+        private string gradeTonnagePlot;
         private string gradePDF;
         private string tonnagePDF;
         private string tonnageSummary;
@@ -84,6 +85,24 @@ namespace MapWizard.Model
         }
 
         /// <summary>
+        /// Grade-Tonnage plot.
+        /// </summary>
+        /// @return Tonnage plot.
+        public string GradeTonnagePlot
+        {
+            get
+            {
+                return gradeTonnagePlot;
+            }
+            set
+            {
+                Set<string>(() => this.GradeTonnagePlot, ref gradeTonnagePlot, value);
+            }
+        }
+
+
+
+        /// <summary>
         /// Grade PDF.
         /// </summary>
         /// @return Grade PDF.
@@ -147,6 +166,7 @@ namespace MapWizard.Model
             }
         }
 
+        
         /// <summary>
         /// Output.
         /// </summary>

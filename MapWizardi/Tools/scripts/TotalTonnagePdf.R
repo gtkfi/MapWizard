@@ -497,7 +497,7 @@ summary.TotalTonnagePdf <- function(object, nDigits = 3) {
 #'
 #' @export
 #'
-TotalTonnagePdf <- function(oSimulation, oPmf, oTonPdf, oGradePdf) {
+TotalTonnagePdf <- function(oSimulation, oPmf, oTonPdf, oGradePdf,oTonGradePdf) { # Changed: added oTonGradePdf
 
   nCols <- ncol(oSimulation$deposits)
   if(nCols > 4) {
@@ -535,13 +535,19 @@ TotalTonnagePdf <- function(oSimulation, oPmf, oTonPdf, oGradePdf) {
   }
 
   # Generate random samples of the total ore and resource tonnages
-  if(!missing(oGradePdf)){
+  if(!missing(oTonGradePdf)){ # Changed: added if clause for oTonGradePdf
     # omit the gangue
-    rs <- cbind(oTonPdf$rs, oTonPdf$rs * oGradePdf$rs[, -ncol(oGradePdf$rs), drop = FALSE])
+    rs <- cbind(oTonGradePdf$rs[,1], oTonGradePdf$rs[,1] * oTonGradePdf$rs[,c(-1,-ncol(oTonGradePdf$rs)), drop = FALSE])
   } else {
-    rs <- as.matrix(oTonPdf$rs, ncol = 1)
+    if(!missing(oGradePdf)){
+      # omit the gangue
+      rs <- cbind(oTonPdf$rs, oTonPdf$rs * oGradePdf$rs[, -ncol(oGradePdf$rs), drop = FALSE])
+    } else {
+      rs <- as.matrix(oTonPdf$rs, ncol = 1)
+    }
+    colnames(rs)[1] <- oTonPdf$matName
   }
-  colnames(rs)[1] <- oTonPdf$matName
+  
 
   # mean ore and resource tonnage
   mu <- colMeans(rs)

@@ -548,11 +548,20 @@ namespace MapWizard.ViewModel
         {
             try
             {
-                string textFile = dialogService.OpenFileDialog("", "Word Document|*.docx", true, true, settingsService.RootPath);
+                string textFile = dialogService.OpenFileDialog("", "Word Document|*.docx|CSV file|*.csv", true, true, settingsService.RootPath);
                 if (!string.IsNullOrEmpty(textFile))
                 {
-                    IsFileValid(textFile);
-                    Model.KnownDepositsFile = textFile;
+                    if (textFile.EndsWith(".csv"))
+                    {
+                        ReportingTool.ReadCsvToDocXWrapper(textFile, Path.Combine(settingsService.RootPath, "Reporting", "KnownDepositsTempFile.docx"));//Tälle metodille pitää antaa vielä spesifinen filenametosavewith, joka annetaan jokasen näitten filetypejen mukaan omanlaisensta. ja sit vaatii myös tietty pathin.
+                        Model.KnownDepositsFile = textFile;
+                        //Unfortunately this work is now done twice, but this is still the better option. 
+                    }
+                    else
+                    {
+                        IsFileValid(textFile);
+                        Model.KnownDepositsFile = textFile;
+                    }
                 }
             }
             catch (Exception ex)
@@ -569,11 +578,19 @@ namespace MapWizard.ViewModel
         {
             try
             {
-                string textFile = dialogService.OpenFileDialog("", "Word Document|*.docx", true, true, settingsService.RootPath);
+                string textFile = dialogService.OpenFileDialog("", "Word Document|*.docx|CSV file|*.csv", true, true, settingsService.RootPath);
                 if (!string.IsNullOrEmpty(textFile))
                 {
-                    IsFileValid(textFile);
-                    Model.ProspectsOccurencesFile = textFile;
+                    if (textFile.EndsWith(".csv"))
+                    {
+                        ReportingTool.ReadCsvToDocXWrapper(textFile, Path.Combine(settingsService.RootPath, "Reporting", "ProspectsOccurencesTempFile.docx"));//Tälle metodille pitää antaa vielä spesifinen filenametosavewith, joka annetaan jokasen näitten filetypejen mukaan omanlaisensta. ja sit vaatii myös tietty pathin.
+                        Model.ProspectsOccurencesFile = textFile;
+                    }
+                    else
+                    {
+                        IsFileValid(textFile);
+                        Model.ProspectsOccurencesFile = textFile;
+                    }
                 }
             }
             catch (Exception ex)
@@ -588,13 +605,20 @@ namespace MapWizard.ViewModel
         /// </summary>
         private void SelectExplorationFile()
         {
+            
             try
             {
-                string textFile = dialogService.OpenFileDialog("", "Word Document|*.docx", true, true, settingsService.RootPath);
+                string textFile = dialogService.OpenFileDialog("", "Word Document|*.docx|CSV file|*.csv", true, true, settingsService.RootPath);//"JPG|*.jpg;*.jpeg|PNG|*.png|TIFF|*.tif;*.tiff"
                 if (!string.IsNullOrEmpty(textFile))
                 {
-                    IsFileValid(textFile);
-                    Model.ExplorationFile = textFile;
+                    if (textFile.EndsWith(".csv")){
+                        ReportingTool.ReadCsvToDocXWrapper(textFile,Path.Combine(settingsService.RootPath, "Reporting", "ExplorationTempFile.docx"));//Tälle metodille pitää antaa vielä spesifinen filenametosavewith, joka annetaan jokasen näitten filetypejen mukaan omanlaisensta. ja sit vaatii myös tietty pathin.
+                        Model.ExplorationFile = textFile;
+                    }
+                    else { 
+                        IsFileValid(textFile);//tässä kosahtaa.  csv pitäis hoitaa erillä tavalla.. eli jos csv, skippaa isFileValid, tai tee omat tsekit ja tee docx missä dokkarissa sisällä se taulukko, aseta se docx Model.ExplorationFile:ksi. sinänsä kätsy että voit työskennellä vaan tässä luokassa, ja varmaan riittää yks geneerinen metodi joka lukee taulukon ja tekee sen docx:n
+                        Model.ExplorationFile = textFile;
+                    }
                 }
             }
             catch (Exception ex)
@@ -604,6 +628,7 @@ namespace MapWizard.ViewModel
             }
         }
 
+        
         /// <summary>
         /// Select file from filesystem.
         /// </summary>
@@ -611,11 +636,19 @@ namespace MapWizard.ViewModel
         {
             try
             {
-                string textFile = dialogService.OpenFileDialog("", "Word Document|*.docx", true, true, settingsService.RootPath);
+                string textFile = dialogService.OpenFileDialog("", "Word Document|*.docx|CSV file|*.csv", true, true, settingsService.RootPath);
                 if (!string.IsNullOrEmpty(textFile))
                 {
-                    IsFileValid(textFile);
-                    Model.SourcesFile = textFile;
+                    if (textFile.EndsWith(".csv"))
+                    {
+                         ReportingTool.ReadCsvToDocXWrapper(textFile, Path.Combine(settingsService.RootPath, "Reporting", "SourcesTempFile.docx"));//Tälle metodille pitää antaa vielä spesifinen filenametosavewith, joka annetaan jokasen näitten filetypejen mukaan omanlaisensta. ja sit vaatii myös tietty pathin.
+                        Model.SourcesFile = textFile;
+                    }
+                    else
+                    {
+                        IsFileValid(textFile);
+                        Model.SourcesFile = textFile;
+                    }
                 }
             }
             catch (Exception ex)
@@ -632,14 +665,22 @@ namespace MapWizard.ViewModel
         {
             try
             {
-                string textFile = dialogService.OpenFileDialog("", "Word Document|*.docx", true, true, settingsService.RootPath);
+                string textFile = dialogService.OpenFileDialog("", "Word Document|*.docx|CSV file|*.csv", true, true, settingsService.RootPath);
                 if (!string.IsNullOrEmpty(textFile))
                 {
-                    using (var document = DocX.Load(textFile))
-                    {
-                        IsFileValid(textFile);
-                        Model.ReferencesFile = textFile;
-                    }
+                    //using (var document = DocX.Load(textFile))
+                    //{
+                        if (textFile.EndsWith(".csv"))
+                        {
+                            ReportingTool.ReadCsvToDocXWrapper(textFile, Path.Combine(settingsService.RootPath, "Reporting", "ReferencesTempFile.docx"));//Tälle metodille pitää antaa vielä spesifinen filenametosavewith, joka annetaan jokasen näitten filetypejen mukaan omanlaisensta. ja sit vaatii myös tietty pathin.
+                            Model.ReferencesFile = textFile;
+                        }
+                        else
+                        {
+                            IsFileValid(textFile);
+                            Model.ReferencesFile = textFile;
+                        }
+                    //}
                 }
             }
             catch (Exception ex)

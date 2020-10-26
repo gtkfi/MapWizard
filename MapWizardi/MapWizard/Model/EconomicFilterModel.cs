@@ -24,7 +24,7 @@ namespace MapWizard.Model
         private string lastRunDate = "Last Run: Never";
         private string lastRunTract = "Tract: not run";
         private int runStatus = 2; // 0=error, 1=success, 2=not run yet.
-        private string monteCarloResultTable = "Please select Monte Carlo simulation";
+        private string monteCarloResultTable = "Select file";
         private string selectedMetal;
         private string selectedMetalIndex;
         private string metalsToCalculate;
@@ -583,7 +583,7 @@ namespace MapWizard.Model
         public int RaefMax4 { get; set; } = 0;
         public double RaefFract4 { get; set; } = 0;
         private bool useRaefInputParams = true; //arvot GUI, Batch ja Empirical
-        private string raefGTMFile = "Select GTM file";
+        private string raefGTMFile = "Select grade-tonnage data file";
         private bool raefEmpiricalModel = false;
         public bool RaefEmpiricalModel
         {

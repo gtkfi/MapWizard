@@ -327,23 +327,23 @@ namespace MapWizard.Tools
             //paragraph = "Deposit type: " + input.DepositType;
             //document.InsertParagraph(paragraph).FontSize(10);
             paragraph = input.Authors + "\r\n";
-            document.InsertParagraph(paragraph).FontSize(10);
+            document.InsertParagraph(paragraph).FontSize(11);
             paragraph = "Deposit type: " + input.DepositType;
-            document.InsertParagraph(paragraph).FontSize(10);
+            document.InsertParagraph(paragraph).FontSize(11);
             paragraph = "Descriptive model: " + input.DescModelName;
-            document.InsertParagraph(paragraph).FontSize(10);
+            document.InsertParagraph(paragraph).FontSize(11);
             paragraph = "Grade-tonnage model: " + input.GTModelName + "\r\n";
-            document.InsertParagraph(paragraph).FontSize(10);
+            document.InsertParagraph(paragraph).FontSize(11);
             paragraph = "Permissive tract " + input.SelectedTract;
-            document.InsertParagraph(paragraph).FontSize(10);
+            document.InsertParagraph(paragraph).FontSize(11);
             paragraph = "Assesment date: " + input.AsDate;
-            document.InsertParagraph(paragraph).FontSize(10);
+            document.InsertParagraph(paragraph).FontSize(11);
             paragraph = "Assesment depth: " + input.AsDepth;
-            document.InsertParagraph(paragraph).FontSize(10);
+            document.InsertParagraph(paragraph).FontSize(11);
             paragraph = "Assesment team leader: " + input.AsLeader;
-            document.InsertParagraph(paragraph).FontSize(10);
+            document.InsertParagraph(paragraph).FontSize(11);
             paragraph = "Assesment team members: " + input.AsTeamMembers + "\r\n\r\n";
-            document.InsertParagraph(paragraph).FontSize(10);
+            document.InsertParagraph(paragraph).FontSize(11);
             paragraph = "Estimated number of undiscovered deposits" + "\r\n";
             document.InsertParagraph(paragraph).FontSize(14).Bold();
         }
@@ -525,7 +525,7 @@ namespace MapWizard.Tools
             if (File.Exists(Path.Combine(input.Env.RootPath, "MCSim", input.SelectedTract, "SelectedResult", "summary.txt")))
             {
                 severalParagraphs = document.InsertParagraph("Table 4. ").Bold();
-                severalParagraphs.Append(File.ReadAllText(Path.Combine(input.Env.RootPath, "MCSim", input.SelectedTract, "SelectedResult", "summary.txt")) + "\r\n").Font(new Font("Consolas")).FontSize(10);
+                severalParagraphs.Append(File.ReadAllText(Path.Combine(input.Env.RootPath, "MCSim", input.SelectedTract, "SelectedResult", "summary.txt")) + "\r\n").Font(new Font("Consolas")).FontSize(11);
             }
             if (File.Exists(Path.Combine(input.Env.RootPath, "MCSim", input.SelectedTract, "SelectedResult", "plot.jpeg")))
             {
@@ -548,7 +548,7 @@ namespace MapWizard.Tools
                 Paragraph par = document.InsertParagraph(paragraph);
                 par.AppendPicture(p);
                 par.Append("\r\n");
-                severalParagraphs = document.InsertParagraph("Figure 4. ").FontSize(10).Bold();
+                severalParagraphs = document.InsertParagraph("Figure 4. ").FontSize(11).Bold();
                 severalParagraphs.Append("Univariate and bivariate marginal distributions for the ore and mineral resource tonnages" +
                     " in all undiscovered deposits within the permissive tract '" + input.SelectedTract + "'." + "\r\n");
             }
@@ -572,7 +572,7 @@ namespace MapWizard.Tools
                 {
                     if (input.IsRaefDone == "Yes" && file.Name.Contains("EF_04_Contained_Stats_")) //Path.Combine(input.Env.RootPath, "EconFilter", "RAEF", "SelectedResult", "EF_04_Contained_Stats_C.csv")
                     {
-                        severalParagraphs = document.InsertParagraph("Table 5. ").FontSize(10).Bold();
+                        severalParagraphs = document.InsertParagraph("Table 5. ").FontSize(11).Bold();
                         severalParagraphs.Append("Estimated economic portion of the undiscovered resource within the permissive tract '" + input.SelectedTract + "'." + "\r\n");
                         paragraph = "";
                         using (TextReader fileReader = File.OpenText(file.FullName)) //Path.Combine(input.Env.RootPath, "EconFilter", "RAEF", "SelectedResult", "EF_04_Contained_Stats_C.csv")
@@ -649,73 +649,81 @@ namespace MapWizard.Tools
                 if (File.Exists(Path.Combine(tractCriteriaFolder, "TractExplanation.txt")))
                 {
                     paragraph = "Tract explanation:";
-                    document.InsertParagraph(paragraph).FontSize(10);
+                    document.InsertParagraph(paragraph).FontSize(12).Bold();
                     paragraph = File.ReadAllText(Path.Combine(tractCriteriaFolder, "TractExplanation.txt"));
-                    document.InsertParagraph(paragraph).FontSize(10);
+                    document.InsertParagraph(paragraph).FontSize(11);
                 }
                 if (File.Exists(Path.Combine(tractCriteriaFolder, "FuzzyRasterExplanation.txt")))
                 {
                     paragraph = "Fuzzy raster explanation:";
-                    document.InsertParagraph(paragraph).FontSize(10);
+                    document.InsertParagraph(paragraph).FontSize(12).Bold();
                     paragraph = File.ReadAllText(Path.Combine(tractCriteriaFolder, "FuzzyRasterExplanation.txt"));
-                    document.InsertParagraph(paragraph).FontSize(10);
+                    document.InsertParagraph(paragraph).FontSize(11);
                 }
                 if (File.Exists(Path.Combine(tractCriteriaFolder, "WofERasterExplanation.txt")))
                 {
                     paragraph = "WofE raster explanation:";
-                    document.InsertParagraph(paragraph).FontSize(10);
+                    document.InsertParagraph(paragraph).FontSize(12).Bold();
                     paragraph = File.ReadAllText(Path.Combine(tractCriteriaFolder, "WofERasterExplanation.txt"));
-                    document.InsertParagraph(paragraph).FontSize(10);
+                    document.InsertParagraph(paragraph).FontSize(11);
                 }
                 if (File.Exists(Path.Combine(tractCriteriaFolder, "DelineationExplanation.txt")))
                 {
                     paragraph = "Delineation explanation:";
-                    document.InsertParagraph(paragraph).FontSize(10);
+                    document.InsertParagraph(paragraph).FontSize(12).Bold();
                     paragraph = File.ReadAllText(Path.Combine(tractCriteriaFolder, "DelineationExplanation.txt"));
-                    document.InsertParagraph(paragraph).FontSize(10);
+                    document.InsertParagraph(paragraph).FontSize(11);
                 }
                 if (File.Exists(Path.Combine(tractCriteriaFolder, "CLRasterExplanation.txt")))
                 {
                     paragraph = "CL raster explanation:";
-                    document.InsertParagraph(paragraph).FontSize(10);
+                    document.InsertParagraph(paragraph).FontSize(12).Bold();
                     paragraph = File.ReadAllText(Path.Combine(tractCriteriaFolder, "CLRasterExplanation.txt"));
-                    document.InsertParagraph(paragraph).FontSize(10);
+                    document.InsertParagraph(paragraph).FontSize(11);
                 }
                 if (File.Exists(Path.Combine(tractCriteriaFolder, "FuzzyCLRasterExplanation.txt")))
                 {
                     paragraph = "Fuzzy CL raster explanation:";
-                    document.InsertParagraph(paragraph).FontSize(10);
+                    document.InsertParagraph(paragraph).FontSize(12).Bold();
                     paragraph = File.ReadAllText(Path.Combine(tractCriteriaFolder, "FuzzyCLRasterExplanation.txt"));
-                    document.InsertParagraph(paragraph).FontSize(10);
+                    document.InsertParagraph(paragraph).FontSize(11);
                 }
                 if (File.Exists(Path.Combine(tractCriteriaFolder, "WofECLRasterExplanation.txt")))
                 {
                     paragraph = "WofE CL raster explanation:";
-                    document.InsertParagraph(paragraph).FontSize(10);
+                    document.InsertParagraph(paragraph).FontSize(12).Bold();
                     paragraph = File.ReadAllText(Path.Combine(tractCriteriaFolder, "WofECLRasterExplanation.txt"));
-                    document.InsertParagraph(paragraph).FontSize(10);
+                    document.InsertParagraph(paragraph).FontSize(11);
                 }
                 if (File.Exists(Path.Combine(tractCriteriaFolder, "ClassificationExplanation.txt")))
                 {
                     paragraph = "Classification explanation:";
-                    document.InsertParagraph(paragraph).FontSize(10);
+                    document.InsertParagraph(paragraph).FontSize(12).Bold();
                     paragraph = File.ReadAllText(Path.Combine(tractCriteriaFolder, "ClassificationExplanation.txt"));
-                    document.InsertParagraph(paragraph).FontSize(10);
+                    document.InsertParagraph(paragraph).FontSize(11);
                 }
             }
             else
             {
                 paragraph = "Tract criteria not documented";
-                document.InsertParagraph(paragraph).FontSize(10);
+                document.InsertParagraph(paragraph).FontSize(11);
             }
             document.InsertParagraph("\r\n");
             paragraph = "Known deposits" + "\r\n";
             document.InsertParagraph(paragraph).FontSize(14).Bold();
-            Paragraph severalParagraphs = document.InsertParagraph("Table 6. ").FontSize(10).Bold();
+            Paragraph severalParagraphs = document.InsertParagraph("Table 6. ").FontSize(11).Bold();
             severalParagraphs.Append("Known '" + input.DepositType + "' deposits within the permissive tract '" + input.SelectedTract + "'." + "\r\n");
             if (File.Exists(input.KnownDepositsFile))
             {
-                using (var tableDocument = DocX.Load(input.KnownDepositsFile))
+                string knownDepositsFile;
+
+                if (input.KnownDepositsFile.EndsWith(".csv"))
+                {
+                    //jos tää on keissi, niin mennään alternate universeen, minkä jälkeen kaikki todisteet tuhotaan.
+                    knownDepositsFile = ReportingTool.ReadCsvToDocXWrapper(input.KnownDepositsFile, Path.Combine(input.Env.RootPath, "Reporting", "KnownDepositsTempFile.docx"));
+                }
+                else { knownDepositsFile = input.KnownDepositsFile; }
+                using (var tableDocument = DocX.Load(knownDepositsFile))
                 {
                     List<Table> tableList = tableDocument.Tables;
                     // Insert all tables of the file into a document.
@@ -729,15 +737,24 @@ namespace MapWizard.Tools
                         document.InsertTable(table);
                     }
                 }
+                if (input.KnownDepositsFile.EndsWith(".csv"))
+                    File.Delete(knownDepositsFile);
             }
             document.InsertParagraph("\r\n");
             paragraph = "Prospects, occurences" + "\r\n";
             document.InsertParagraph(paragraph).FontSize(14).Bold();
-            severalParagraphs = document.InsertParagraph("Table 7. ").FontSize(10).Bold();
+            severalParagraphs = document.InsertParagraph("Table 7. ").FontSize(11).Bold();
             severalParagraphs.Append("Known '" + input.DepositType + "' prospects and occurrences within the permissive tract '" + input.SelectedTract + "'." + "\r\n");
             if (File.Exists(input.ProspectsOccurencesFile))
             {
-                using (var tableDocument = DocX.Load(input.ProspectsOccurencesFile))
+                string prospectOccurencesFile;
+                if (input.ProspectsOccurencesFile.EndsWith(".csv"))
+                {
+                    //jos tää on keissi, niin mennään alternate universeen, minkä jälkeen kaikki todisteet tuhotaan.
+                    prospectOccurencesFile = ReportingTool.ReadCsvToDocXWrapper(input.ProspectsOccurencesFile, Path.Combine(input.Env.RootPath, "Reporting", "ProspectOccurencesFile.docx"));
+                }
+                else { prospectOccurencesFile = input.ProspectsOccurencesFile; }
+                using (var tableDocument = DocX.Load(prospectOccurencesFile))
                 {
                     // Insert all tables of the file into a document.
                     List<Table> tableList = tableDocument.Tables;
@@ -751,15 +768,25 @@ namespace MapWizard.Tools
                         document.InsertTable(table);
                     }
                 }
+                if (input.ProspectsOccurencesFile.EndsWith(".csv"))
+                    File.Delete(prospectOccurencesFile);
             }
             document.InsertParagraph("\r\n");
             paragraph = "Exploration history" + "\r\n";
             document.InsertParagraph(paragraph).FontSize(14).Bold();
-            severalParagraphs = document.InsertParagraph("Table 8. ").FontSize(10).Bold();
+            severalParagraphs = document.InsertParagraph("Table 8. ").FontSize(11).Bold();
             severalParagraphs.Append("Exploration history for the permissive tract '" + input.SelectedTract + "'." + "\r\n");
             if (File.Exists(input.ExplorationFile))
             {
-                using (var tableDocument = DocX.Load(input.ExplorationFile))
+                string explorationFile;
+
+                if (input.ExplorationFile.EndsWith(".csv"))
+                {
+                    //jos tää on keissi, niin mennään alternate universeen, minkä jälkeen kaikki todisteet tuhotaan.
+                    explorationFile = ReportingTool.ReadCsvToDocXWrapper(input.ExplorationFile, Path.Combine(input.Env.RootPath, "Reporting", "ExplorationTempFile.docx"));
+                }
+                else { explorationFile = input.ExplorationFile; }
+                using (var tableDocument = DocX.Load(explorationFile))
                 {
                     List<Table> tableList = tableDocument.Tables;
                     // Insert all tables of the file into a document.
@@ -773,15 +800,25 @@ namespace MapWizard.Tools
                         document.InsertTable(table);
                     }
                 }
+                if (input.ExplorationFile.EndsWith(".csv"))
+                    File.Delete(explorationFile);
             }
             document.InsertParagraph("\r\n");
             paragraph = "Sources of information" + "\r\n";
             document.InsertParagraph(paragraph).FontSize(14).Bold();
-            severalParagraphs = document.InsertParagraph("Table 9. ").FontSize(10).Bold();
+            severalParagraphs = document.InsertParagraph("Table 9. ").FontSize(11).Bold();
             severalParagraphs.Append("Principal sources of information used by the assessment team for the permissive tract '" + input.SelectedTract + "'." + "\r\n");
             if (File.Exists(input.SourcesFile))
             {
-                using (var tableDocument = DocX.Load(input.SourcesFile))
+                string sourcesFile;
+
+                if (input.SourcesFile.EndsWith(".csv"))
+                {
+                    //jos tää on keissi, niin mennään alternate universeen, minkä jälkeen kaikki todisteet tuhotaan.
+                    sourcesFile = ReportingTool.ReadCsvToDocXWrapper(input.SourcesFile, Path.Combine(input.Env.RootPath, "Reporting", "SourcesTempFile.docx"));
+                }
+                else { sourcesFile = input.SourcesFile; }
+                using (var tableDocument = DocX.Load(sourcesFile))
                 {
                     List<Table> tableList = tableDocument.Tables;
                     // Insert all tables of the file into a document.
@@ -795,6 +832,8 @@ namespace MapWizard.Tools
                         document.InsertTable(table);
                     }
                 }
+                if (input.SourcesFile.EndsWith(".csv"))
+                    File.Delete(sourcesFile);
             }
             document.InsertParagraph("\r\n");
             paragraph = "Rationale for the estimate of the number of undiscovered deposits" + "\r\n";
@@ -802,16 +841,24 @@ namespace MapWizard.Tools
             if (File.Exists(Path.Combine(input.Env.RootPath, "UndiscDep", input.SelectedTract, "SelectedResult", "EstRationale.txt")) && input.IsUndiscDepDone != "No")
             {
                 paragraph = File.ReadAllText(Path.Combine(input.Env.RootPath, "UndiscDep", input.SelectedTract, "SelectedResult", "EstRationale.txt")) + "\r\n";
-                document.InsertParagraph(paragraph).FontSize(10);
+                document.InsertParagraph(paragraph).FontSize(11);
             }
             paragraph = "References" + "\r\n";
             document.InsertParagraph(paragraph).FontSize(14).Bold();
             if (File.Exists(input.ReferencesFile))
             {
-                using (var tableDocument = DocX.Load(input.ReferencesFile))
+                string referencesFile;
+
+                if (input.ReferencesFile.EndsWith(".csv"))
+                {
+                    //jos tää on keissi, niin mennään alternate universeen, minkä jälkeen kaikki todisteet tuhotaan.
+                    referencesFile = ReportingTool.ReadCsvToDocXWrapper(input.ReferencesFile, Path.Combine(input.Env.RootPath, "Reporting", "ReferencesTempFile.docx"));
+                }
+                else { referencesFile = input.SourcesFile; }
+                using (var tableDocument = DocX.Load(referencesFile))
                 {
                     List<Table> tableList = tableDocument.Tables;
-                    if (DocX.Load(input.ReferencesFile) != null)
+                    if (DocX.Load(referencesFile) != null)
                     {
                         if (tableList.Count != 0)
                         {
@@ -828,13 +875,16 @@ namespace MapWizard.Tools
                         }
                         else
                         {
-                            foreach (var para in DocX.Load(input.ReferencesFile).Paragraphs)
+                            foreach (var para in DocX.Load(referencesFile).Paragraphs)
                             {
                                 document.InsertParagraph(para);
                             }
                         }
                     }
                 }
+                if (input.ReferencesFile.EndsWith(".csv"))
+                    File.Delete(referencesFile);
+
             }
         }
 
@@ -872,7 +922,7 @@ namespace MapWizard.Tools
                 if (File.Exists(paragraph))
                 {
                     paragraph = File.ReadAllText(paragraph);
-                    document.InsertParagraph(paragraph).FontSize(10).Font(new Font("Consolas"));
+                    document.InsertParagraph(paragraph).FontSize(11).Font(new Font("Consolas"));
                 }
                 paragraph = Path.Combine(input.GTModel, "grade_plot.jpeg");
                 if (File.Exists(paragraph))
@@ -887,13 +937,13 @@ namespace MapWizard.Tools
                         " function representing the grades. In A, the vertical red lines at the plot bottom represent the log-ratios" +
                         " calculated from the grade and tonnage model. In B, the red dots constitute empirical cumulative distribution" +
                         " function for the log-ratios calculated from the grade and tonnage model." + "\r\n";
-                    document.InsertParagraph(paragraph).FontSize(10);
+                    document.InsertParagraph(paragraph).FontSize(11);
                 }
                 paragraph = Path.Combine(input.GTModel, "tonnage_summary.txt");
                 if (File.Exists(paragraph))
                 {
                     paragraph = File.ReadAllText(paragraph);
-                    document.InsertParagraph(paragraph).FontSize(10).Font(new Font("Consolas"));
+                    document.InsertParagraph(paragraph).FontSize(11).Font(new Font("Consolas"));
                 }
                 paragraph = Path.Combine(input.GTModel, "tonnage_plot.jpeg");
                 if (File.Exists(paragraph))
@@ -909,7 +959,7 @@ namespace MapWizard.Tools
                         " lines at the bottom represent the ore tonnages from the grade and tonnage model. B: Corresponding cumulative " +
                         "distribution function(solid line). The red dots constitute the empirical cumulative distribution function " +
                         "for the ore tonnages from the grade and tonnage model." + "\r\n";
-                    document.InsertParagraph(paragraph).FontSize(10);
+                    document.InsertParagraph(paragraph).FontSize(11);
                 }
             }
             if (Directory.Exists(Path.Combine(input.Env.RootPath, "EconFilter", "RAEF", input.SelectedTract, "SelectedResult")))
@@ -971,6 +1021,64 @@ namespace MapWizard.Tools
                         document.InsertParagraph("\r\n");
                     }
                 }
+            }
+        }
+        public static string ReadCsvToDocXWrapper(string filename, string outfilepath)
+        {
+            DocX document = DocX.Create(outfilepath);//ja tähän tulee sit filename
+            FileInfo file = new FileInfo(filename);
+            string paragraph = "";
+            using (TextReader fileReader = File.OpenText(file.FullName))
+            {
+                using (var csv = new CsvReader(fileReader))
+                {
+                    
+                    csv.Configuration.HasHeaderRecord = false;
+                    csv.Configuration.BadDataFound = null;
+                    csv.Configuration.Delimiter = ";";//is this legit?
+                    Table t = null;//document.AddTable(1, 2);//tää pitää laskea.
+                    bool addToFirstRow = true;
+
+                    while (csv.Read())
+                    {
+                        for (int i = 0; csv.TryGetField<string>(i, out paragraph); i++)
+                        {
+                            string[] cellArray = paragraph.Split(',');
+                            if(t==null)
+                                t= document.AddTable(1, cellArray.Length);//dodii. tää alustaa taulukon ekalla kiekalla oikean levyseksi.
+                            var r = t.Rows[0];
+
+                            if (addToFirstRow == true)
+                            {
+                                r = t.Rows[0];
+                                addToFirstRow = false;
+                            }
+                            else
+                            {
+                                r = t.InsertRow();
+                            }
+                            int cellIndex = 0;
+                            // alla lisätään jutut taulukkoon. ja poistetaan hipsut.
+                            for (int j = 0; j < cellArray.Length; j++)
+                            {
+                                r.Cells[j].Paragraphs[0].Append(cellArray[j].Replace("\"",""));
+                            }
+                            //r.Cells[0].Paragraphs[0].Append(cellArray[0]).ReplaceText("\"", "");
+                            //r.Cells[1].Paragraphs[0].Append(cellArray[6]).ReplaceText("\"", "");
+                            //r.Cells[2].Paragraphs[0].Append(cellArray[7]).ReplaceText("\"", "");
+                            //r.Cells[3].Paragraphs[0].Append(cellArray[11]).ReplaceText("\"", "");
+                            //r.Cells[4].Paragraphs[0].Append(cellArray[15]).ReplaceText("\"", "");
+                            //r.Cells[5].Paragraphs[0].Append(cellArray[16]).ReplaceText("\"", "");
+                            //r.Cells[6].Paragraphs[0].Append(cellArray[1]).ReplaceText("\"", "");
+                            //r.Cells[7].Paragraphs[0].Append(cellArray[17]).ReplaceText("\"", "");
+                            //r.Cells[8].Paragraphs[0].Append(cellArray[18]).ReplaceText("\"", "");
+                            cellIndex++;
+                        }
+                    }
+                    document.InsertTable(t);
+                }
+                document.Save();
+                return outfilepath;
             }
         }
     }

@@ -5,31 +5,101 @@ source("NDepositsPmf.R")
 source("Metadata.R")
 source("GradePdf.R")
 source("TonnagePdf.R")
+source("TonGradePdf.R") # Changed: added
 source("TotalTonnagePdf.R")
+source("TotTonOutCMT.R")
+source("TotTonOutGT.R")
 source("Utilities.R")
 
-mcSimulation <- function(oPmfPath,oTonPath,oGradePath,oMetaPath,summaryOutput, plotPath, TractId){
+mcSimulation <- function(oPmfPath,oTonPath,oGradePath,oTonGradePath,oMetaPath,summaryOutput, plotPath, TractId){ # Changed: added oTonGradePath
+
+	print(oTonPath)
+	print(oGradePath)		
+	print(oTonGradePath)
+	oPmfIn <- readRDS(file = oPmfPath)
 	
-	oPmf <- readRDS(file = oPmfPath)
-	oTon <- readRDS(file = oTonPath)
-	oGrade <- readRDS(file = oGradePath)
-	oMeta <- readRDS(file = oMetaPath)
-	oSimulation <- Simulation(oPmf, oTon, oGrade, seed = getSeed(oMeta))
-	oTotalTonPdf <- TotalTonnagePdf(oSimulation, oPmf, oTon, oGrade)
+	#Check if oTonPath is available
+	tonAvailable <- !identical(oTonPath,"NA")
+	if(tonAvailable)
+	{
+	 print("tonAvailable") 
+	 oTonIn <- readRDS(file = oTonPath)
+	}
+	else {
+	 print("ton NOT Available")
+	 oTonIn <- NA
+	}
+	
+	#Check if oGradePath is available
+	gradeAvailable <- !identical(oGradePath,"NA")
+	if(gradeAvailable)
+	{
+	 print("gradeAvailable")
+	 oGradeIn <- readRDS(file = oGradePath)
+	}
+	else {
+	 print("grade NOT Available")
+	 oGradeIn <- NA
+	}
+
+	#Check if oTonGradePath is available
+	tongradeAvailable <- !identical(oTonGradePath,"NA")
+	if(tongradeAvailable)
+	{
+	 print("tonGradeAvailable")
+	 oTonGradeIn <- readRDS(file = oTonGradePath)
+	}
+	else {
+	 print("tonGrade NOT Available")
+	 oTonGradeIn <- NA
+	}
+
+	#oMetaIn <- readRDS(file = oMetaPath)
+	
+
+	#1) ONLY oTonGrade
+	if (tongradeAvailable)
+	{
+	  print("Joint grade and tonnage")
+	 oSimulation <- Simulation(oPmf=oPmfIn, oTonGradePdf=oTonGradeIn, seed = 123) # Changed: added oTonGrade
+	 oTotalTonPdf <- TotalTonnagePdf(oSimulation=oSimulation,  oPmf=oPmfIn, oTonGradePdf=oTonGradeIn) # Changed: added oTonGrade
+	}
+
+	#2) ONLY oTon oSimulation <- Simulation(oPmf=oPmfIn, oTonGradePdf=oTonGradeIn, seed = getSeed(oMetaIn)) # Changed: added oTonGrade
+	if (tonAvailable & !gradeAvailable)
+	{
+	 print("Only tonnage")
+	 oSimulation <- Simulation(oPmf=oPmfIn, oTonPdf=oTonIn, seed = 123) # Changed: added oTonGrade
+	 oTotalTonPdf <- TotalTonnagePdf(oSimulation=oSimulation,  oPmf=oPmfIn, oTonPdf=oTonIn) # Changed: added oTonGrade
+	}
+
+	#3) oTon & oGrade oSimulation <- Simulation(oPmf=oPmfIn, oTonGradePdf=oTonGradeIn, seed = getSeed(oMetaIn)) # Changed: added oTonGrade
+	if (tonAvailable && gradeAvailable)
+	{
+    print("Grade and tonnage")
+	  oSimulation <- Simulation(oPmf=oPmfIn, oTonPdf=oTonIn, oGradePdf=oGradeIn, seed = 123) # Changed: added oTonGrade
+	  oTotalTonPdf <- TotalTonnagePdf(
+	  oSimulation=oSimulation,  oPmf=oPmfIn, oTonPdf=oTonIn, oGradePdf=oGradeIn) # Changed: added oTonGrade
+	}
+
 	sink(summaryOutput)
 	summary(oTotalTonPdf)
 	sink()
 
+	graphics.off()
 	outfile <- paste(plotPath,"/plot.jpeg",sep="")
 	jpeg(outfile,width = 800, height = 800, pointsize = 12, quality = 75)
 	plot(oTotalTonPdf)
+	graphics.off()
 	outfile2 <- paste(plotPath,"/plotMarginals.jpeg",sep="")
 	jpeg(outfile2,width = 800, height = 800, pointsize = 12, quality = 75)
 	plotMarginals(oTotalTonPdf)
+	graphics.off()
 
 	outfile <- paste(plotPath,"/plot.tiff",sep="")
 	tiff(outfile,width = 2048, height = 2048)
 	plot(oTotalTonPdf,labelSize=20)
+	graphics.off()
 	outfile2 <- paste(plotPath,"/plotMarginals.tiff",sep="")
 	tiff(outfile2,width = 2048, height = 2048)
 	plotMarginals(oTotalTonPdf,labelSize=20)
@@ -45,412 +115,42 @@ mcSimulation <- function(oPmfPath,oTonPath,oGradePath,oMetaPath,summaryOutput, p
 	plotMarginals(oTotalTonPdf,labelSize=6)
 	dev.off()
 
-
-	
-	
-	#Create 05_SIM_EF.csv -file
-    setwd(plotPath)
-
 	#################################################################
 	#### Records simulation data file and temporarily saves it as a csv file.
 	#################################################################
 	testname1 <- TractId
- 	filename2 <<- paste(testname1,"_Datafile",".csv", sep = "")
-	print(oSimulation,filename2)
-
-	#################################################################
-	## Develops the Simulation result EF file, file EF_5
-	#################################################################
-	dat = read.csv(filename2, header = TRUE)
-	LD <- length(names(dat))   # length of the columns in the data
-
-	#### Saving variables for calcualtion of EF 05 file from the above data file 
-	SimI <- dat[1]
-	NumD <- dat[2]
-	SimDI <- dat[3]
-	Ore<- dat[4]
-	Gran<-dat[LD]
-	G1<- dat[5]
-	Grades0<- G1
-	Tons0<- (Ore*dat[5]/100)
-	g <- 6
-	TonsList<-c("Tons5")
-	GradesList<-c("G5")
-
-	for (nam in 6:LD)
-	{
-	print (nam)
-	var<- paste("G",nam,sep="")
-	print (var)
-	assign(var,dat[g])
-
-
-	######################################
-	####calculate the ton for each mineral 
-	#######################################
-	varTon<- paste("Ton",nam,sep="")
-	assign(varTon,((Ore*(get(var)))/100))
-	##combine the grades and tons 
-	TonsList<-c(TonsList,varTon)
-
-	#########################
-	### Saves the grades
-	#########################
-	GradesList<-c(GradesList,var)
-	Grades0 <- cbind(Grades0,get(var))
-	names(Grades0)<-GradesList
-	Tons0<- cbind(Tons0,get(varTon))
-	names(Tons0)<-TonsList
-	g <- g + 1
-	}
-
-	TbNames <- names(dat)
-	TbLen <- length(TbNames)
-	MinStop <- TbLen -1 
-	minerals<- TbNames[5:MinStop]
-	OreN<- TbNames[4]
-	NamesMins<- sub('.grade', '', minerals)
-
-	NamesBegin <- TbNames[1:3]
-	Gangue <- TbNames[TbLen]
-	Gan<- sub('.grade', '', Gangue)
-
-
-	#######################
-	##Creates a joint table 
-	#########################
-	Cont <- cbind(SimI, NumD, SimDI, Ore,Grades0,Gran,Tons0) 
-	lenCont1 <- length(Cont)
-
-	lenMins<- length(NamesMins)
-	ContMath <- 5 + lenMins - 1
-	ContEndM <- ContMath + 2
-	ContBegin <- Cont[1:4]
-	ContMins <- Cont[5: ContMath]
-	ContMath1 <- ContMath + lenMins
-	ContEnd <- Cont [ContEndM: lenCont1]
-	NewCont <- cbind(ContBegin,ContMins,ContEnd)
-	MinTons<- paste(NamesMins,'_MetricTons')
-	OreN<- sub(".tonnage", "_MetricTons",OreN)	
-	NamesMins<- paste(NamesMins,"_pct")
-
-	
-	NameList12Unformatted<- c(NamesBegin,OreN,NamesMins,Gan,MinTons ) 
-	formatHeader<-function(obj){gsub(".Grade....","",  obj)}
-	NameList12<-lapply(NameList12Unformatted,formatHeader)
-	#NameList12<- c(NamesBegin,OreN,NamesMins,Gan,MinTons ) 
-
-	lenCont2 <- length(NewCont)
-	con9 <- lenCont2 - 1
-	colnames(NewCont) <- NameList12 
-	NewCont <- NewCont[1:con9 ]
-
-	# save Robject
-	saveRDS(NewCont, file = paste(plotPath,"/mcObject.rds",sep=""))
-
-	#############################################################
-	## Saving the simulation results - 05 EF file to a csv file
-    #############################################################
+	#filename2 <<- paste(testname1,"_Datafile",".csv", sep = "")
+	filename2 <<- paste(plotPath,"/",testname1,"_Datafile",".csv", sep = "")
+	print(oSimulation,filename2) # grades are in percentages
 	filename5<<- paste(testname1,"_05_SIM_EF",".csv", sep = "")
-	#filename5<<- paste("Tract","_05_SIM_EF",".csv", sep = "")
-	write.csv(NewCont, file = filename5)
+	filename6 <<- paste(testname1,"_06_SIM_EF_Stats",".csv", sep = "")
+	filename7 <<- paste(testname1,"_07_SIM_Contained_Totals",".csv", sep = "")
+	filename8 <<-paste(testname1,"_08_SIM_Contained_Stats",".csv", sep = "")
 
-
-###07_SIM_Contained_Totals -code from MAPMARK
+	setwd(plotPath)
+		
+############   Changed from here on ########################
 	
-#################################################################
-#### Aggregation pivot calculcaiton, based on number of grades-   Contained Totals
-#################################################################
-## make a pivot table
-cols<- names(Cont)
-
-newtab<- Cont[1]  #creaitng a newtable so it can use consistent variable name
-xy<- 1
-LCont <- length(Cont)
-
-
-NewT <-Cont[1:3]
-NameT1 <- names(Cont[4])
-#####################################################
-## If statements based on number of grades- columns
-####################################################
-
-NewT <- cbind(NewT,Cont[4])
-colnames(NewT)<-c("SimIndex","NumDeposits","SimDepIndex","Tons1")
-Tb <- summarise(group_by(NewT,SimIndex),NumDep = mean(NumDeposits), Tons1 = sum(Tons1))
-
-
-
-
-##############################
-## Setting table column names
-#############################
-TbNames <- names(dat)
-
-countNNN <- length(TbNames)
-NamesTT<- sub('.tonnage', '_mT', TbNames )
-
-NamesNew <- c(NamesTT[1:2],NamesTT[4])
-
-colnames(Tb) <- NamesNew
-
-####################################################
-#### Writes aggregated sim contained totals csv file
-########################################################
-
-filename6 <<- paste(testname1,"_07_SIM_Contained_Totals",".csv", sep = "")
-write.csv(Tb, file = filename6)
-
-
-###06_SIM_EF_Stats -code from MAPMARK
-
-#################################################################
-## Simulation EF Stats
-#################################################################
-## sim model Stats
-Rsim<- read.csv(filename5) ### reads in the sim data results- ef 5 file
-
-
-v4NA <- na.omit(Rsim[5])
-v5<- unlist(v4NA)
-v5<- as.numeric(v5)
-
-#####################################
-## Create means for each variable
-##################################
-OMeans <- mean(v5)
-
-
-#################################################################
-## sim model max
-Rsim<- read.csv(filename5)
-v4NA <- na.omit(Rsim[5])
-v5<- unlist(v4NA)
-v5<- as.numeric(v5)
-####################################
-## Create max for each variable
-####################################
-OMaxs <- max(v5)
-
-
-#################################################################
-## sim model min
-Rsim<- read.csv(filename5)
-v4NA <- na.omit(Rsim[5])
-v5<- unlist(v4NA)
-v5<- as.numeric(v5)
-###############################
-## Create min for each variable
-##############################
-OMins <- min(v5)
-
-
-#################################################################
-## sim model median
-Rsim<- read.csv(filename5)
-v4NA <- na.omit(Rsim[5])
-v5<- unlist(v4NA)
-v5<- as.numeric(v5)
-###########################################
-## Create median for each variable
-########################################
-OMeds <- median(v5)
-#################################################################
-
-## sim model standard deviations
-Rsim<- read.csv(filename5)
-v4NA <- na.omit(Rsim[5])
-v5<- unlist(v4NA)
-v5<- as.numeric(v5)
-
-####################################
-## Create standard deviation for each variable
-#############################################
-OSds <- sd(v5)
-
-
-
-#################################################################
-## sim model Q99s
-Rsim<- read.csv(filename5)
-v4NA <- na.omit(Rsim[5])
-v5<- unlist(v4NA)
-v5<- as.numeric(v5)
-###########################################
-## 99 percentile for each variable
-##########################################
-Q99s <- quantile(v5, c(.99))
-
-
-
-#################################################################
-## sim model Q90s
-Rsim<- read.csv(filename5)
-v4NA <- na.omit(Rsim[5])
-v5<- unlist(v4NA)
-v5<- as.numeric(v5)
-###########################################
-## 90 percentile for each variable
-##########################################
-Q90s <- quantile(v5, c(.90))
-
-
-
-#################################################################
-## sim model Q80s
-Rsim<- read.csv(filename5)
-v4NA <- na.omit(Rsim[5])
-v5<- unlist(v4NA)
-v5<- as.numeric(v5)
-###########################################
-## 80 percentile for each variable
-##########################################
-Q80s <- quantile(v5, c(.80))
-#################################################################
-
-
-
-
-## sim model Q70s
-Rsim<- read.csv(filename5)
-v4NA <- na.omit(Rsim[5])
-v5<- unlist(v4NA)
-v5<- as.numeric(v5)
-###########################################
-## 70 percentile for each variable
-##########################################
-Q70s <- quantile(v5, c(.70))
-#################################################################
-
-
-
-
-## sim model Q60s
-Rsim<- read.csv(filename5)
-v4NA <- na.omit(Rsim[5])
-v5<- unlist(v4NA)
-v5<- as.numeric(v5)
-###########################################
-## 60 percentile for each variable
-##########################################
-Q60s <- quantile(v5, c(.60))
-#################################################################
-
-
-
-
-
-## sim model Q50s
-Rsim<- read.csv(filename5)
-v4NA <- na.omit(Rsim[5])
-v5<- unlist(v4NA)
-v5<- as.numeric(v5)
-###########################################
-## 50 percentile for each variable
-##########################################
-Q50s <- quantile(v5, c(.50))
-#################################################################
-
-
-
-
-
-
-## sim model Q40s
-Rsim<- read.csv(filename5)
-v4NA <- na.omit(Rsim[5])
-v5<- unlist(v4NA)
-v5<- as.numeric(v5)
-###########################################
-## 40 percentile for each variable
-##########################################
-Q40s <- quantile(v5, c(.40))
-#################################################################
-
-
-
-
-
-
-## sim model Q30s
-Rsim<- read.csv(filename5)
-v4NA <- na.omit(Rsim[5])
-v5<- unlist(v4NA)
-v5<- as.numeric(v5)
-###########################################
-## 30 percentile for each variable
-##########################################
-Q30s <- quantile(v5, c(.30))
-#################################################################
-
-
-
-
-
-## sim model Q20s
-Rsim<- read.csv(filename5)
-v4NA <- na.omit(Rsim[5])
-v5<- unlist(v4NA)
-v5<- as.numeric(v5)
-###########################################
-## 20 percentile for each variable
-##########################################
-Q20s <- quantile(v5, c(.20))
-
-
-
-
-
-#################################################################
-## sim  model Q10s
-Rsim<- read.csv(filename5)
-v4NA <- na.omit(Rsim[5])
-v5<- unlist(v4NA)
-v5<- as.numeric(v5)
-###########################################
-## 10 percentile for each variable
-##########################################
-Q10s <- quantile(v5, c(.10))
-
-
-
-
-
-#################################################################
-## Sim model Q01s
-Rsim<- read.csv(filename5)
-v4NA <- na.omit(Rsim[5])
-v5<- unlist(v4NA)
-v5<- as.numeric(v5)
-###########################################
-## 01 percentile for each variable
-##########################################
-Q01s <- quantile(v5, c(.01))
-
-#################################################################
-##Create stats list
-#################################################################
-StatsList <- cbind(OMeans,OMaxs,OMins,OMeds,OSds,Q01s, Q10s, Q20s, Q30s, Q40s, Q50s, Q60s, Q70s, Q80s, Q90s, Q99s)
-colnames(StatsList) <- c("Means", "Max", "Min", "Median", "STD", "P99", "P90", "P80", "P70", "P60", "P50", "P40", "P30", "P20", "P10", "P1")
-
-#Rsim<- read.csv(GTM)
-namelist5 <- names(Rsim)
-rownames(StatsList) <- namelist5[5]
-
-
-##############################################
-##Downlaod Sim stats to csv file
-############################################
-Stats1 <<- paste(testname1,"_06_SIM_EF_Stats",".csv", sep = "")
-write.csv(StatsList, file = Stats1, row.names=TRUE)
-
-
-
-
+# Create 05_SIM_EF.csv, 06_SIM_EF_Stats.csv, 07_SIM_EF_Contained_Totals.csv and files
+	if (tongradeAvailable|gradeAvailable) {	 
+	  print("Generate grade and tonnage EF outputs")
+	  TotTonOutGT(oSimulation$deposits,filename5,filename6,filename7,filename8)
+	} else if (tonAvailable&!gradeAvailable) {
+	  print("Generate tonnage EF outputs")
+	  TotTonOutCMT(oSimulation$deposits,filename5,filename6,filename7,filename8)
+	} else {
+# Return error. Is this needed?
+	}
 }
 
 args = commandArgs(trailingOnly = TRUE)
-mcSimulation(args[1],args[2],args[3],args[4],args[5],args[6],args[7])
+print(paste0("args:", args))
+print(paste0("args[1]:",args[1]))
+print(paste0("args[2]:",args[2]))
+print(paste0("args[3]:",args[3]))
+print(paste0("# of args:",length(args)))
+#mcSimulation(args[1],args[2],args[3],args[4],args[5],args[6],args[7],args[8])
+mcSimulation(args[1],args[2],args[3],args[4],args[5],args[6],args[7],args[8])
 
 
 

@@ -1,4 +1,4 @@
-﻿<UserControl x:Class="MapWizard.View.OldMainWindowView"
+﻿ <UserControl x:Class="MapWizard.View.OldMainWindowView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
@@ -44,7 +44,7 @@
                 <TextBlock FontFamily="Wingdings"  Text="1" FontSize="32"></TextBlock>
             </mah:Tile>
             <mah:Tile Title="New Project" Width="237" Height="217" Background="{DynamicResource AccentColorBrush}"  Grid.Column="1" Grid.Row="0" Command="{Binding OpenDialog}" ToolTip="Create a new MapWizard project">
-                <TextBlock FontFamily="/Resources/fontawesome/otfs/#Font Awesome 5 Free Regular 400" Text="" FontSize="48"></TextBlock>
+                <TextBlock FontFamily="{StaticResource FontAwesome}" Text="" FontSize="48"></TextBlock>
             </mah:Tile>
         </Grid>
         <Grid Grid.Row="1">

@@ -30,6 +30,14 @@ namespace MapWizard.Tools
             set { Add<string>("TonnagePlot", value); }
         }
         /// <summary>
+        /// Location of the R object (tongrade.rds) produced by the Grade-tonnage model tool.  The object contains the estimated probability density function of ore or metal tonnage. 
+        /// </summary>
+        public string GradeTonnagePlot
+        {
+            get { return GetValue<string>("GradeTonnagePlot"); }
+            set { Add<string>("GradeTonnagePlot", value); }
+        }
+        /// <summary>
         ///  Location of the R object (oPmf.rds) produced by the Undiscovered deposits tool. The object contains the estimated probability mass function of the number of undiscovered deposits. 
         /// </summary>
         public string NDepositsPmf
@@ -157,11 +165,14 @@ namespace MapWizard.Tools
             string rScriptExecutablePath = result.Env.RPath;
             string procResult = string.Empty;
             string tractName = input.TractID;
+            string tonnagePDF = input.TonnagePlot.Contains("Please select") ? "NA" : input.TonnagePlot;
+            string gradePDF = input.GradePlot.Contains("Please select") ?   "NA" : input.GradePlot;
+            string gradeTonnagePDF = input.GradeTonnagePlot.Contains("Please select") ? "NA" : input.GradeTonnagePlot;
 
             var info = new ProcessStartInfo();
             info.FileName = rScriptExecutablePath;
             info.WorkingDirectory = path + "scripts/";
-            info.Arguments = "\"" + rCodeFilePath + "\" \"" + input.NDepositsPmf + "\" \"" + input.TonnagePlot + "\" \"" + input.GradePlot + "\" \"" + scriptPath + "oMeta.rds" + "\" \"" + summaryTxt + "\" \"" + projectFolder + "\"";
+            info.Arguments = "\"" + rCodeFilePath + "\" \"" + input.NDepositsPmf + "\" \"" + tonnagePDF + "\" \"" + gradePDF + "\" \"" + gradeTonnagePDF + "\" \"" + scriptPath + "oMeta.rds" + "\" \"" + summaryTxt + "\" \"" + projectFolder + "\"";
             info.Arguments += " "+tractName;
             info.RedirectStandardInput = false;
             info.RedirectStandardOutput = true;

@@ -18,6 +18,20 @@ namespace MapWizard
       InitializeComponent();
     }
 
+        private void gradecheckbox_Checked(object sender, RoutedEventArgs e)
+        {
+            gradetonnagecheckbox.IsChecked = false;
+        }
 
+        private void tonnagecheckbox_Checked(object sender, RoutedEventArgs e)
+        {
+            gradetonnagecheckbox.IsChecked = false;
+        }
+
+        private void gradetonnagecheckbox_Checked(object sender, RoutedEventArgs e)
+        {
+            gradecheckbox.IsChecked = false;
+            tonnagecheckbox.IsChecked = false;
+        }
     }
 }

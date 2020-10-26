@@ -60,8 +60,9 @@
                 <TextBlock Text="Select tools to be executed" Margin="10" HorizontalAlignment="left" VerticalAlignment="Center"/>
             </WrapPanel>
             <WrapPanel Style="{StaticResource ValueColumn}" ToolTip="Estimate probability density functions for metal grades, ore tonnage or both.">
-                <CheckBox Name="gradecheckbox" IsChecked="{Binding Model.RunGrade}" Content="Grade" Margin="0,5,10,0" IsEnabled="{Binding Model.ModelType, Converter={StaticResource ModelTypeToBooleanConverter}}"/>
-                <CheckBox Name="tonnagecheckbox" IsChecked="{Binding Model.RunTonnage}" Content="Tonnage" Margin="0,5,0,0"/>
+                <CheckBox Name="gradecheckbox" IsChecked="{Binding Model.RunGrade}" Content="Grade" Margin="0,5,10,0" IsEnabled="{Binding Model.ModelType, Converter={StaticResource ModelTypeToBooleanConverter}}" Checked="gradecheckbox_Checked"/>
+                <CheckBox Name="tonnagecheckbox" IsChecked="{Binding Model.RunTonnage}" Content="Tonnage" Margin="0,5,0,0" Checked="tonnagecheckbox_Checked"/>
+                <CheckBox Name="gradetonnagecheckbox" IsChecked="{Binding Model.RunGradeTonnage}" Content="Joint Grade-Tonnage" Margin="5,5,0,0" IsEnabled="{Binding Model.ModelType, Converter={StaticResource ModelTypeToBooleanConverter}}" Checked="gradetonnagecheckbox_Checked"/>
             </WrapPanel>
         </UniformGrid>
         <UniformGrid  Rows="1" Columns="2" IsEnabled="{Binding Model.SelectedIndex, Converter={StaticResource SelectedIndexToBooleanConverter}}">
