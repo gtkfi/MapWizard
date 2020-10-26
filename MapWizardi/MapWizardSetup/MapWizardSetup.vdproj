@@ -27,6 +27,12 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_03F76B3F02414ED1B19E9082C226F40A"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_07113E7C9A21433FB3A5C5321224115D"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
@@ -2668,6 +2674,26 @@
             "TargetName" = "8:CVMRold2018.R"
             "Tag" = "8:"
             "Folder" = "8:_B7EA900CDAC74581BEA1A9948A4EE8F6"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_03F76B3F02414ED1B19E9082C226F40A"
+            {
+            "SourcePath" = "8:..\\MapWizard\\NLog.config"
+            "TargetName" = "8:NLog.config"
+            "Tag" = "8:"
+            "Folder" = "8:_B60440BA5E014AF4AF7320A0BBC39731"
             "Condition" = "8:"
             "Transitive" = "11:FALSE"
             "Vital" = "11:TRUE"
