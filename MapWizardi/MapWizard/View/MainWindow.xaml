@@ -10,7 +10,7 @@
         xmlns:service="clr-namespace:MapWizard.Service"
         xmlns:Dialog="clr-namespace:MahApps.Metro.Controls.Dialogs;assembly=MahApps.Metro"
         mc:Ignorable="d"
-        Title="Map Wizard 1.1.0" Height="768" Width="1024"
+        Title="Map Wizard 1.1.1" Height="768" Width="1024"
         DataContext="{Binding Source={StaticResource Locator}, Path=Main}" 
         GlowBrush="{DynamicResource AccentColorBrush}"
         TitleCaps="False"
