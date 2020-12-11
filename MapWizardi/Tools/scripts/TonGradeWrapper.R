@@ -4,7 +4,7 @@ source("Utilities.R")
 source("TonGradePdf.R")
 library("ggplot2")
 
-tongradePdf <- function(dataPath, seed, isTruncated, minNDeposits, nRandomSamples, folder) { 
+tongradePdf <- function(dataPath, seed, isTruncated, pdfType, minNDeposits, nRandomSamples, folder) { 
 # INPUT
 # dataPath: full path to input file (string)
 # seed: seed for random number generator (float)
@@ -30,6 +30,7 @@ tongradePdf <- function(dataPath, seed, isTruncated, minNDeposits, nRandomSample
   outobj <- TonGradePdf(in_data,
                        seed = seed,
                        isTruncated = isTruncated,
+                       pdfType=pdfType,
                        minNDeposits = minNDeposits,
                        nRandomSamples <- nRandomSamples)
   saveRDS(outobj, file = paste(folder,"tongrade.rds", sep="\\"))
@@ -60,8 +61,9 @@ tongradePdf <- function(dataPath, seed, isTruncated, minNDeposits, nRandomSample
 args = commandArgs(trailingOnly = TRUE)
 dataPath <- args[1]
 seed <- args[2]
+pdfType = args[3]
 isTruncated <- args[4]
 minNDeposits <- as.double(args[5])
 nRandomSamples <- as.integer(args[6])
 folder <- args[7]
-tongrade <- tongradePdf(dataPath, seed, isTruncated, minNDeposits, nRandomSamples, folder)
+tongrade <- tongradePdf(dataPath, seed, isTruncated, pdfType, minNDeposits, nRandomSamples, folder)

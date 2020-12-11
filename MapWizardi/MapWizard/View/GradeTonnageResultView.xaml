@@ -56,8 +56,8 @@
             <TabItem Header="Joint Grade-Tonnage plot">
                 <ScrollViewer Margin="0, 10, 6, 0" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Visible"  HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
                     <UniformGrid Rows="1" Columns="1">
-                        <Button Command="{Binding OpenTonnagePlotCommand}" Cursor="Hand" Background="Transparent" BorderBrush="Transparent">
-                            <Image Name="gradetonnageplot"  Source="{Binding Result.GradeTonnagePlot}"/>
+                        <Button Command="{Binding OpenGradeTonnagePlotCommand}" Cursor="Hand" Background="Transparent" BorderBrush="Transparent">
+                            <Image Name="gradetonnageplot"  Source="{Binding Result.GradeTonnagePlotBitMap}"/>
                         </Button>
                     </UniformGrid>
                 </ScrollViewer>

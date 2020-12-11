@@ -65,9 +65,6 @@ print.Simulation <- function(object, filename) {
 #' @param oGradePdf
 #' An object of class "GradePdf"
 #'
-#' @param seed
-#' Seed for the random number generator.
-#'
 #' @param nSimulations
 #' Number of simulations
 #'
@@ -105,9 +102,10 @@ print.Simulation <- function(object, filename) {
 #'
 #' @export
 #'
-Simulation <- function(oPmf, oTonPdf, oGradePdf, oTonGradePdf, # Changed: added parameter oTonGradePdf
-                       seed = NULL, nSimulations = 20000) {
-
+Simulation <- function(oPmf, oTonPdf, oGradePdf, oTonGradePdf,
+#                       nSimulations = 20000) {
+                        nSimulations = 10000) {
+    
   if(nSimulations < 2500) {
     warning( sprintf( "Function Simulation\n" ),
           sprintf( "The number of simulations should be\n" ),
@@ -127,15 +125,14 @@ Simulation <- function(oPmf, oTonPdf, oGradePdf, oTonGradePdf, # Changed: added 
   # It is done this way because repeated calls to getRandomSamples can
   # require a lot of time.
   
-  # Changed: !missing(oTonGradePdf) if clause added
   if (!missing(oTonGradePdf)) {
-    rsTonGradePdf<-getRandomSamples(oTonGradePdf, nTotalDep,seed=seed)
+    rsTonGradePdf<-getRandomSamples(oTonGradePdf, nTotalDep,seed=oTonGradePdf$seed)
     rsTonPdf<-rsTonGradePdf[,1]
     rsGradePdf<-rsTonGradePdf[,-1]
   } else {
-    rsTonPdf <- getRandomSamples(oTonPdf, nTotalDep, seed = seed)
+    rsTonPdf <- getRandomSamples(oTonPdf, nTotalDep, seed = oTonPdf$seed)
     if(!missing(oGradePdf)){
-      rsGradePdf <- getRandomSamples(oGradePdf, nTotalDep, seed = seed)
+      rsGradePdf <- getRandomSamples(oGradePdf, nTotalDep, seed = oGradePdf$seed)
     }
   }
 
@@ -146,7 +143,7 @@ Simulation <- function(oPmf, oTonPdf, oGradePdf, oTonGradePdf, # Changed: added 
     nRows <- nTotalDep
   }
 
-  if(!missing(oTonGradePdf)) { # Changed: added this if clause for oTonGradePdf
+  if(!missing(oTonGradePdf)) {
     colNames <- c("Simulation Index",
                   "Number of Deposits",
                   "Sim Deposit Index",
@@ -182,7 +179,7 @@ Simulation <- function(oPmf, oTonPdf, oGradePdf, oTonGradePdf, # Changed: added 
       rowIndex <- rowIndex + 1
     } else {
       for(i3 in 1:nDeposits){
-        if(!missing(oGradePdf)|!missing(oTonGradePdf)){ # Changed: added condition oTonGradePdf
+        if(!missing(oGradePdf)|!missing(oTonGradePdf)){
           ds[rowIndex, ] <- c(simIndex, nDeposits, i3,
                               rsTonPdf[rsIndex], rsGradePdf[rsIndex, ])
         } else {

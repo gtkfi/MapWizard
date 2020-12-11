@@ -50,6 +50,7 @@ namespace MapWizard.Model
         private List<string> delineationCleanFilelist;
         private ObservableCollection<string> tractIDNames = new ObservableCollection<string>();
         private string selectedTract;
+        private string fuzzySplitValue;
 
         /// <summary>
         /// Environment path.
@@ -80,7 +81,7 @@ namespace MapWizard.Model
                 Set<List<string>>(() => this.InRasterList, ref inrasterlist, value);
             }
         }
-        
+
         /// <summary>
         /// Out raster.
         /// </summary>
@@ -471,7 +472,7 @@ namespace MapWizard.Model
                 Set<string>(() => this.Arcsdm, ref arcsdm, value);
             }
         }
-        
+
         /// <summary>
         /// Confidence level for Calculate Weights.
         /// </summary>
@@ -487,7 +488,7 @@ namespace MapWizard.Model
             }
         }
 
-        
+
         /// <summary>
         /// Path to polygon layer (Delineation -> input tract polygon)
         /// </summary>
@@ -502,7 +503,7 @@ namespace MapWizard.Model
                 Set<string>(() => this.PathToTractPolygon, ref pathToTractPolygon, value);
             }
         }
-        
+
         /// <summary>
         /// Explanation of the tract
         /// </summary>
@@ -549,7 +550,7 @@ namespace MapWizard.Model
             }
         }
 
-      
+
         /// <summary>
         /// Final deliniation raster folder where fuzzy saves deliniation raster
         /// </summary>
@@ -596,7 +597,7 @@ namespace MapWizard.Model
             }
         }
 
-        
+
         /// <summary>
         /// Explanation Of mask polygon on WofE -process
         /// </summary>
@@ -612,7 +613,7 @@ namespace MapWizard.Model
             }
         }
 
-        
+
         /// <summary>
         /// Explanation Of training points on WofE -process
         /// </summary>
@@ -628,7 +629,7 @@ namespace MapWizard.Model
             }
         }
 
-        
+
         /// <summary>
         /// Cleaned delineation pdf -file
         /// </summary>
@@ -647,7 +648,6 @@ namespace MapWizard.Model
         /// <summary>
         /// TractID collection.
         /// </summary>
-        /// @return TractID collection.
         public ObservableCollection<string> TractIDNames
         {
             get
@@ -667,7 +667,6 @@ namespace MapWizard.Model
         /// <summary>
         /// Selected index of TractID Collection.
         /// </summary>
-        /// @return Index.
         public string SelectedTract
         {
             get
@@ -677,6 +676,26 @@ namespace MapWizard.Model
             set
             {
                 Set<string>(() => this.SelectedTract, ref selectedTract, value);
+            }
+        }
+
+
+        /// <summary>
+        /// Split value of Fuzzy raster process.
+        /// </summary>
+        public string FuzzySplitValue
+        {
+            get
+            {
+                return fuzzySplitValue;
+            }
+            set
+            {
+                if (value == null)
+                {
+                    value = "1";
+                }
+                Set<string>(() => this.FuzzySplitValue, ref fuzzySplitValue, value);
             }
         }
 

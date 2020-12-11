@@ -23,6 +23,7 @@ namespace MapWizard.Model
         private string lastRunDate = "Last Run: Never";
         private string csvPath = "Select Data";
         private int seed = 1;
+        private int tonnageSeed = 2;
         private string pdfType = "Normal";
         private string isTruncated = "FALSE";
         private int minDeposits = 20;
@@ -221,7 +222,7 @@ namespace MapWizard.Model
         }
 
         /// <summary>
-        /// Seed value.
+        /// Grade seed value.
         /// </summary>
         /// @return Seed value.
         public int Seed
@@ -233,6 +234,22 @@ namespace MapWizard.Model
             set
             {
                 Set<int>(() => this.Seed, ref seed, value);
+            }
+        }
+
+        /// <summary>
+        /// Tonnage seed value.
+        /// </summary>
+        /// @return Seed value.
+        public int TonnageSeed
+        {
+            get
+            {
+                return tonnageSeed;
+            }
+            set
+            {
+                Set<int>(() => this.TonnageSeed, ref tonnageSeed, value);
             }
         }
 

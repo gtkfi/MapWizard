@@ -60,7 +60,11 @@
         </UniformGrid>
         <UniformGrid  Rows="1" Columns="2">
             <WrapPanel Style="{StaticResource WrapPanel}">
-                <TextBlock HorizontalAlignment="left"  VerticalAlignment="Center" Text="Tract area (km2):"  Margin="10"/>
+                <TextBlock HorizontalAlignment="left"  VerticalAlignment="Center" Margin="10">
+                    <Run>Tract area (km</Run>
+                    <Run Typography.Variants="Superscript">2</Run>
+                    <Run>):</Run>
+                </TextBlock>
             </WrapPanel>
             <WrapPanel Style="{StaticResource ValueColumn}">
                 <TextBox Text="{Binding Model.AreaOfPermissiveTract}" FontSize="18" Width="90"  HorizontalAlignment="left" VerticalAlignment="Bottom" ToolTip="Area of the permissive tract for which the number of deposits is being estimated."/>

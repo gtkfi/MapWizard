@@ -7,6 +7,8 @@ using System.IO;
 using System.Linq;
 using System.Windows;
 using NLog;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace MapWizard.Tools
 {
@@ -273,6 +275,15 @@ namespace MapWizard.Tools
             set { Add<string>("ConfidenceLevel", value); }
         }
 
+        /// <summary>
+        /// Raster split value for fuzzy process
+        /// </summary>
+        public string FuzzySplitValue
+        {
+            get { return GetValue<string>("FuzzySplitValue"); }
+            set { Add<string>("FuzzySplitValue", value); }
+        }
+
 
     }
 
@@ -482,8 +493,8 @@ namespace MapWizard.Tools
                     Directory.CreateDirectory(outputFolder);
                 }
 
-                string delineationRaster = projectFolder + "\\Classification\\Temp\\" + "maskedRaster" + input.DelID + ".img";
-
+                //string delineationRaster = projectFolder + "\\Classification\\Temp\\" + "maskedRaster" + input.DelID + ".img";
+                string delineationRaster = projectFolder + "\\Classification\\Temp\\" + "maskedRaster.img";
                 if (!File.Exists(delineationRaster))
                 {
                     delineationRaster = input.DelineationRaster;
@@ -552,8 +563,22 @@ namespace MapWizard.Tools
 
             string inputRaster = input.DelineationRaster;
             string inputMask = input.MaskRaster;
-            string outputRaster = outputFolder + "maskedRaster" + input.DelID + ".img";
-            string outputPdf = outputFolder + "maskedRaster" + input.DelID + ".pdf";
+            //string outputRaster = outputFolder + "maskedRaster" + input.DelID + ".img";
+            //string outputPdf = outputFolder + "maskedRaster" + input.DelID + ".pdf";
+
+            string outputRaster = outputFolder + "maskedRaster.img";
+            string outputPdf = outputFolder + "maskedRaster.pdf";
+
+            if (File.Exists(outputRaster))
+            {
+                File.Delete(outputRaster);
+            }
+
+            if (File.Exists(outputPdf))
+            {
+                File.Delete(outputPdf);
+            }
+
 
             if (inputRaster != "" && inputMask != "")
             {
@@ -620,8 +645,8 @@ namespace MapWizard.Tools
                 string outputRaster = outputFolder + "ClassificationRaster_" + input.ClassificationId + ".img";
                 string outputPdf = outputFolder + "ClassificationRaster_" + input.ClassificationId + ".pdf";
 
-                string delineationRaster = projectFolder + "\\Classification\\Temp\\" + "maskedRaster" + input.DelID + ".img";
-
+                //string delineationRaster = projectFolder + "\\Classification\\Temp\\" + "maskedRaster" + input.DelID + ".img";
+                string delineationRaster = projectFolder + "\\Classification\\Temp\\" + "maskedRaster.img";
                 if (!File.Exists(delineationRaster))
                 {
                     delineationRaster = input.DelineationRaster;
@@ -814,11 +839,19 @@ namespace MapWizard.Tools
         /// <returns>Result of executing WofE.</returns>
         private PermissiveTractResult WofE(PermissiveTractInputParams input, PermissiveTractResult result)
         {
-
+           
             var outputfolder = projectFolder + @"\Delineation\WofE\EvidenceData\";
-            if (input.MethodId == "wofeClassification")
+
+           if (input.MethodId == "wofeClassification")
             {
                 outputfolder = projectFolder + @"\Classification\WofE\EvidenceData\";
+            }
+           
+            var outputTMPfolder = Path.Combine(outputfolder, "tmp_output");
+            
+            if (!Directory.Exists(outputTMPfolder))
+            {
+                Directory.CreateDirectory(outputTMPfolder);
             }
 
             if (!Directory.Exists(outputfolder))
@@ -832,168 +865,123 @@ namespace MapWizard.Tools
             }
             else
             {
-                string parameters = "";
-                string ws = outputfolder;//"C:\\data\\w2.gdb";
+                ProcessStartInfo myProcessStartInfo = new ProcessStartInfo();
+                Process myProcess = new Process();
+                myProcess.StartInfo = myProcessStartInfo;
                 string evidence_raster_layers = "";
-                string evidence_weight_tables = "";
-                string cellsize = "200";
-                string arcsdm_path = System.AppDomain.CurrentDomain.BaseDirectory + "scripts\\ArcSDMToolbox\\ArcSDM.pyt";
+                List<string> evidence_weight_tables = new List<string>();
                 string[] Weights = input.WofEWeightsType.Split(',');
                 int raster = 0;
                 string calculateWeightResult = "";
                 string calWeightMessage = "";
 
-                //Create mask from shp file
-                parameters = "";
-                parameters += "./scripts/WofeCreateMask.pyw";
-                parameters += " " + ws; //workspace
-                parameters += " " + input.MaskRaster;//mask
-                logger.Trace("Mask parameters:" + parameters);
-                string python = @input.PythonPath;
-                string myPythonApp = parameters;
-
-                ProcessStartInfo myProcessStartInfo = new ProcessStartInfo(python);
-                myProcessStartInfo.UseShellExecute = false;
-                myProcessStartInfo.RedirectStandardError = true;
-                myProcessStartInfo.RedirectStandardOutput = true;
-                myProcessStartInfo.Arguments = myPythonApp; // + " " + input.EnvPath + " " + " " + str +" foobar";// + " " + input.OutRaster;
-
-                Process myProcess = new Process();
-                myProcess.StartInfo = myProcessStartInfo;
-
-                myProcess.Start();
-                StreamReader errorReader = myProcess.StandardError;
-                StreamReader myStreamReader = myProcess.StandardOutput;
-       
-                string returnValue = myStreamReader.ReadToEnd();
-                logger.Trace("ReturnValue WofeCreateMask:" + returnValue);
-                myProcess.WaitForExit();
-                myProcess.Close();
-
-
                 foreach (string er in input.EvidenceRasterList)
                 {
-                    string rasterIn = er;
-                    parameters = "";
-                    parameters += "./scripts/WofeCalculateWeights.pyw";
-                    parameters += " " + ws; //workspace
-                    parameters += " " + rasterIn; //raster in
-
-                    //output
-                    string output = rasterIn.Split(new[] { '\\' }).Last();
-                    output = output.Split('.')[0];
-                    output += "_" + Weights[raster].Trim();
-                    parameters += " " + output;
-                    parameters += " " + cellsize; //cell size
-                    parameters += " " + input.MaskRaster;//mask
-                    parameters += " " + input.TrainingPoints;// training sites
-                    parameters += " " + "\"" + arcsdm_path + "\"";
-                    parameters += " " + getWeight(Weights[raster].Trim()); //Weights type
-                    parameters += " " + input.ConfidenceLevel; //Confidence level
-                    parameters += " " + input.UnitArea; //Unit area
-                    logger.Trace("Evidence parameters:" + parameters);
-                    calculateWeightResult = runPythonScript(input, result, parameters);
-                    if (calculateWeightResult.Contains("WARNING: No Contrast for type"))
+                    //Create WofeParameter.json
+                    try
                     {
-                        result.CalculateWeightsResult = "ERROR";
+                        JObject wofeParameters = new JObject(
+                        new JProperty("evidenceLayer", er),
+                        new JProperty("codeName", ""),
+                        new JProperty("trainingSites", input.TrainingPoints),
+                        new JProperty("maskLayer", input.MaskRaster),
+                        new JProperty("wType", getWeight(Weights[raster].Trim())),
+                        //new JProperty("wtstable", "testweights"),
+                        new JProperty("confidentContrast", Double.Parse(input.ConfidenceLevel)),
+                        new JProperty("unitArea", Double.Parse(input.UnitArea)),
+                        //new JProperty("MissingDataValue", "-99"),
+                        //new JProperty("workspace", outputTMPfolder)
+                        new JProperty("workspace", outputTMPfolder)
+                        );
 
-                        //Find type
-                        int startIndex = calculateWeightResult.IndexOf("WARNING: No Contrast for type");
-                        startIndex += 30;
-                        int endIndex = calculateWeightResult.IndexOf("satisfied the user defined confidence level");
-                        string tmpType = calculateWeightResult.Substring(startIndex, endIndex - startIndex);
-
-                        if (calWeightMessage == "")
-                        {
-                            calWeightMessage = "No contrast for confidence level " + input.ConfidenceLevel + " for the following evidence rasters and weight calculation types:";
-                        }
-                        calWeightMessage += "\n" + er + ": " + tmpType;
-
+                        File.WriteAllText(outputfolder + @"WofeParameterWeights.json", wofeParameters.ToString());
                     }
-                    else
+                    catch (Exception)
                     {
-                        if (result.CalculateWeightsResult != "ERROR")
-                        {
-                            result.CalculateWeightsResult += calculateWeightResult;
-                        }
+                        throw;
                     }
+
+                    //run calculateWeights
+                    string pathToExe = System.AppDomain.CurrentDomain.BaseDirectory.Replace(@"\", @"/");
+                    string Wofe2Exe = pathToExe + "scripts/WOFE_start/WOFE_start.exe"; 
+                    myProcessStartInfo = new ProcessStartInfo(Wofe2Exe);
+                    myProcessStartInfo.UseShellExecute = true;
+                    myProcessStartInfo.Arguments = outputfolder + @"WofeParameterWeights.json calcweights";// "C:\\Aineistoja\\MAP\\Fuzzy\\FuzzyParameter.json";
+                    myProcessStartInfo.WindowStyle = ProcessWindowStyle.Hidden;
+                    myProcess = new Process();
+                    myProcess.StartInfo = myProcessStartInfo;
+                    myProcess.Start();
+                    myProcess.WaitForExit();
+                    string retValue = myProcess.ExitCode.ToString();
+                    myProcess.Close();
+
+                    Console.WriteLine("Value received from script: " + retValue);
 
                     //for calculate response
                     evidence_raster_layers += evidence_raster_layers != "" ? ";" : "";
                     evidence_raster_layers += er;
-                    evidence_weight_tables += evidence_weight_tables != "" ? ";" : "";
-                    evidence_weight_tables += output;
+                    //evidence_weight_tables += evidence_weight_tables != "" ? ";" : "";
+                    string jsonFile = Path.Combine(outputTMPfolder, Path.GetFileNameWithoutExtension(er) + ".json");
+                    evidence_weight_tables.Add(jsonFile);
                     raster++;
-                }
 
-                //If weight calculation not succeeded, show message and exit calculation 
-                if (calWeightMessage != "")
+                    if (retValue != "0")
+                    {
+                        result.CalculateWeightsResult = "ERROR";
+                        return result;
+                    }
+                }
+                
+               
+
+                //create WofeParameterResponse.json
+                try
                 {
-                    logger.Error(calculateWeightResult + "\n\n" + "Dataset must be improved!", "Dataset fail!");
-                    throw new Exception("Wofe weigth calculation failed, dataset must be improved!");
-                }
+                    JObject wofeParameters = new JObject(
+                    new JProperty("evidenceLayers", input.EvidenceRasterList),
+                    new JProperty("maskLayer", input.MaskRaster),
+                    new JProperty("wtsTables", evidence_weight_tables),
+                    new JProperty("trainingSites", input.TrainingPoints),
+                    new JProperty("unitarea", Double.Parse(input.UnitArea)),
+                    new JProperty("postProbRaster", Path.Combine(outputfolder, "PostProb.tif")),
+                    new JProperty("stdDevRaster", Path.Combine(outputfolder, "StdDev.tif")),
+                    new JProperty("confRaster", Path.Combine(outputfolder, "confidence.tif")),
+                    new JProperty("ndvRaster", Path.Combine(outputfolder, "ndv.tif")),
+                    new JProperty("workspace", outputTMPfolder)
+                    );
 
-                parameters = "";
-                parameters += "./scripts/WofeCalculateResponse.pyw";
-                parameters += " " + ws; //workspace
-                parameters += " " + evidence_raster_layers; // raster in
-                parameters += " " + evidence_weight_tables; //output name
-                parameters += " " + cellsize; //cell size
-                parameters += " " + input.MaskRaster;// mask
-                parameters += " " + input.TrainingPoints;// training sites
-                parameters += " " + outputfolder;
-                parameters += " " + "\"" + arcsdm_path + "\"";
-                parameters += " " + input.UnitArea; //Unit area
-                logger.Trace("Response parameters:" + parameters);
-                result.CalculateResponsesResult = runPythonScript(input, result, parameters);
+                    File.WriteAllText(outputfolder + @"WofeParameterResponse.json", wofeParameters.ToString());
+                }
+                catch (Exception)
+                {
+                    throw;
+                }
+                //create run wofeResponse
+                var path = System.AppDomain.CurrentDomain.BaseDirectory.Replace(@"\", @"/");
+                string Wofe1Exe = path + "scripts/WOFE_start/WOFE_start.exe";
+                myProcessStartInfo = new ProcessStartInfo(Wofe1Exe);
+                myProcessStartInfo.UseShellExecute = true;
+                myProcessStartInfo.Arguments = outputfolder + @"WofeParameterResponse.json calcresponse";// "C:\\Aineistoja\\MAP\\Fuzzy\\FuzzyParameter.json";
+                myProcessStartInfo.WindowStyle = ProcessWindowStyle.Hidden;
+                myProcess = new Process();
+                myProcess.StartInfo = myProcessStartInfo;
+                myProcess.Start();
+                myProcess.WaitForExit();
+                string returnValue = myProcess.ExitCode.ToString();
+                myProcess.Close();
+
+                Console.WriteLine("Value received from script: " + returnValue);
+                if (returnValue != "0")
+                {
+                    result.CalculateWeightsResult = "ERROR";
+                    return result;
+                }
 
             }
             return result;
         }
 
-        /// <summary>
-        /// Method to run python script parameters with parameters.
-        /// </summary>
-        /// <param name="input"></param>
-        /// <param name="result"></param>
-        /// <param name="script"> script to run</param>
-        /// <returns></returns>
-        private string runPythonScript(PermissiveTractInputParams input, PermissiveTractResult result, string script)
-        {
-            string python = @input.PythonPath;
-            string myPythonApp = script;
-
-            ProcessStartInfo myProcessStartInfo = new ProcessStartInfo(python);
-            myProcessStartInfo.UseShellExecute = false;
-            myProcessStartInfo.RedirectStandardError = true;
-            myProcessStartInfo.RedirectStandardOutput = true;
-            myProcessStartInfo.Arguments = myPythonApp; // + " " + input.EnvPath + " " + " " + str +" foobar";// + " " + input.OutRaster;
-
-            Process myProcess = new Process();
-            myProcess.StartInfo = myProcessStartInfo;
-
-            myProcess.Start();
-            StreamReader errorReader = myProcess.StandardError;
-            StreamReader myStreamReader = myProcess.StandardOutput;
-            string returnValue = myStreamReader.ReadToEnd();
-            logger.Trace("ReturnValue:" + returnValue);
-            myProcess.WaitForExit();
-            myProcess.Close();
-
-            //WARNING: No Contrast for type Ascending satisfied the user defined confidence level 2.0
-            if (returnValue.Contains("WARNING: No Contrast for type"))
-            {
-                int start = returnValue.IndexOf("WARNING: No Contrast for type");
-                int stop = returnValue.IndexOf("Done creating table.");
-                string tmpReturn = returnValue.Substring(start, stop - start);
-                returnValue = tmpReturn;
-            }
-
-            Console.WriteLine("Value received from script: " + returnValue);
-            return returnValue;
-
-        }
-
+       
 
         /// <summary>
         /// Runs FuzzyOverlay with given parameters.
@@ -1046,30 +1034,43 @@ namespace MapWizard.Tools
                 input.EnvPath = input.EnvPath.Replace("\\", "/");
             }
 
-            string python = @input.PythonPath;
-            string myPythonApp = input.ScriptPath;
-            string str = string.Join(",", inRasters);
+         
+            //Create fuzzyParameter.json
+            try
+            {
+                JObject fuzzyParameters = new JObject(
+                new JProperty("workspace", outputfolder),
+                new JProperty("customfilename", input.FuzzyOutputFileName),
+                new JProperty("splitnumber", input.FuzzySplitValue),
+                new JProperty("method", input.FuzzyOverlayType),
+                new JProperty("gamma", input.FuzzyGammaValue),
+                new JProperty("rasters", inRasters)
+                );
 
-            ProcessStartInfo myProcessStartInfo = new ProcessStartInfo(python);
+                File.WriteAllText(outputfolder + @"FuzzyParameter.json", fuzzyParameters.ToString());
 
-            myProcessStartInfo.UseShellExecute = false;
-            myProcessStartInfo.RedirectStandardError = true;
-            myProcessStartInfo.RedirectStandardOutput = true;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
 
-            myProcessStartInfo.Arguments = myPythonApp + " " + outputfolder + " " + str + " " + outputfolder
-            + " " + input.FuzzyOverlayType + " " + input.FuzzyOutputFileName + " " + input.FuzzyGammaValue;
 
+
+            var path = System.AppDomain.CurrentDomain.BaseDirectory.Replace(@"\", @"/");
+            string fuzzyExe = path + "scripts/fuzzy_start/fuzzy_start.exe";
+            ProcessStartInfo myProcessStartInfo = new ProcessStartInfo(fuzzyExe);
+            myProcessStartInfo.UseShellExecute = true;
+            //myProcessStartInfo.RedirectStandardError = true;
+            //myProcessStartInfo.RedirectStandardOutput = true;
+            myProcessStartInfo.Arguments = outputfolder + @"FuzzyParameter.json";// "C:\\Aineistoja\\MAP\\Fuzzy\\FuzzyParameter.json";
+            myProcessStartInfo.WindowStyle = ProcessWindowStyle.Hidden;
             Process myProcess = new Process();
             myProcess.StartInfo = myProcessStartInfo;
 
-            Console.WriteLine("Calling Python script with arguments {0}, {1} and {2}", input.EnvPath, str, input.OutRaster);
             myProcess.Start();
-            StreamReader errorReader = myProcess.StandardError;
-            StreamReader myStreamReader = myProcess.StandardOutput;
-            string returnValue = myStreamReader.ReadToEnd();
-            string errReturnValue = errorReader.ReadToEnd();
-            logger.Trace("Permissive Tract script return value:" + returnValue);
             myProcess.WaitForExit();
+            string returnValue = myProcess.ExitCode.ToString();
             myProcess.Close();
 
             Console.WriteLine("Value received from script: " + returnValue);

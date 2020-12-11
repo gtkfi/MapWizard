@@ -10,6 +10,7 @@ namespace MapWizard.Model
     {
         private ImageSource gradePlotBitMap;
         private ImageSource tonnagePlotBitMap;
+        private ImageSource gradeTonnagePlotBitMap;
         private string gradePlot;
         private string tonnagePlot;
         private string gradeTonnagePlot;
@@ -49,6 +50,22 @@ namespace MapWizard.Model
             set
             {
                 Set<ImageSource>(() => this.TonnagePlotBitMap, ref tonnagePlotBitMap, value);
+            }
+        }
+
+        /// <summary>
+        /// Grade-Tonnage plot BitMap.
+        /// </summary>
+        /// @return ImageSource.
+        public ImageSource GradeTonnagePlotBitMap
+        {
+            get
+            {
+                return gradeTonnagePlotBitMap;
+            }
+            set
+            {
+                Set<ImageSource>(() => this.GradeTonnagePlotBitMap, ref gradeTonnagePlotBitMap, value);
             }
         }
 

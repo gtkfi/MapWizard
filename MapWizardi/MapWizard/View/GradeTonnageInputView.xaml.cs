@@ -20,12 +20,14 @@ namespace MapWizard
 
         private void gradecheckbox_Checked(object sender, RoutedEventArgs e)
         {
+            if (gradetonnagecheckbox != null)
             gradetonnagecheckbox.IsChecked = false;
         }
 
         private void tonnagecheckbox_Checked(object sender, RoutedEventArgs e)
         {
-            gradetonnagecheckbox.IsChecked = false;
+            if (gradetonnagecheckbox != null)
+                gradetonnagecheckbox.IsChecked = false;
         }
 
         private void gradetonnagecheckbox_Checked(object sender, RoutedEventArgs e)

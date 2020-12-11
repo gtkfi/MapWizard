@@ -90,7 +90,7 @@
         </UniformGrid>
         <UniformGrid Rows="1" Columns="2" Margin="0,2,0,2">
             <WrapPanel Style="{StaticResource WrapPanel}">
-                <TextBlock Text="Path to number-of-deposits pmf:" Margin="5" HorizontalAlignment="left" VerticalAlignment="Center"/>
+                <TextBlock TextWrapping="Wrap" Text="Number of deposits probability mass function:" Margin="5" HorizontalAlignment="left" VerticalAlignment="Center"/>
             </WrapPanel>
             <WrapPanel Margin="10" MaxHeight="50" HorizontalAlignment="left" VerticalAlignment="Center" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Auto">
                 <Button  FontSize="18" Content="{Binding Model.NDepositsPmf, Converter={StaticResource FilePathToFileNameConverter}}" FontWeight="Normal" mah:ButtonHelper.PreserveTextCase="True" Background="LightGray" BorderBrush="Black"

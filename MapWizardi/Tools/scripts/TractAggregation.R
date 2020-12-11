@@ -67,7 +67,7 @@ AggtEx.fn<-function(Exfn,UsrC,nt=2000){
 
 
 
-    squ[1,]<-c(nau,"Independent",t1)
+    squ[1,]<-c(nau,"Independent",round(t1,2))
  ###################################################
 squ1<-matrix(0,1,5)
 squ1[1,]<-c("Aggregated",1,t1[1:3])
@@ -153,7 +153,7 @@ filenameA<<- paste(RID,"Correlation.csv",sep="")
   Ags<-rowSums(ri[,1:nau])
    t1<-Sum.fn(Ags)
 
-   squ[3,]<-c(nau,"Dependent",t1)
+   squ[3,]<-c(nau,"Dependent",round(t1,2))
 #output
   squ<-as.data.frame(squ)
   names(squ)<-c("Tracts","Association","P90", "P50", "P10", "P05", "P01", "Mean", "Std_Dev", "CV")

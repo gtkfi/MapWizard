@@ -486,7 +486,7 @@ namespace MapWizard.ViewModel
                     TractCombinationName = Model.TractCombinationName
                 };
                 logger.Trace(
-                  "GradeTonnageInputParams:\n" +
+                  "TractAggregationInputParams:\n" +
                   "\tCorrelationMatrix: '{0}'\n" +
                   "\tProbDistFile: '{1}'\n" +
                   "\tWorkingDir: '{2}'\n" +

@@ -497,7 +497,7 @@ summary.TotalTonnagePdf <- function(object, nDigits = 3) {
 #'
 #' @export
 #'
-TotalTonnagePdf <- function(oSimulation, oPmf, oTonPdf, oGradePdf,oTonGradePdf) { # Changed: added oTonGradePdf
+TotalTonnagePdf <- function(oSimulation, oPmf, oTonPdf, oGradePdf,oTonGradePdf) {
 
   nCols <- ncol(oSimulation$deposits)
   if(nCols > 4) {
@@ -511,6 +511,7 @@ TotalTonnagePdf <- function(oSimulation, oPmf, oTonPdf, oGradePdf,oTonGradePdf) 
     tonnages <- oSimulation$deposits[, 4, drop = FALSE]
   }
 
+# The last simulation index in oSimulation is the number of simulations
   nSimulations <- tail(oSimulation$deposits[, "Simulation Index"], n = 1)
 
   totalTonnages <- matrix(0, nrow = nSimulations, ncol = ncol(tonnages))
@@ -518,6 +519,7 @@ TotalTonnagePdf <- function(oSimulation, oPmf, oTonPdf, oGradePdf,oTonGradePdf) 
 
   rowIndex <- 1
   simIndex <- 1
+# Compute total tonnages for each simulation
   while(simIndex <= nSimulations){
     N <- oSimulation$deposits[rowIndex, "Number of Deposits"]
     if(N == 0){
@@ -535,7 +537,7 @@ TotalTonnagePdf <- function(oSimulation, oPmf, oTonPdf, oGradePdf,oTonGradePdf) 
   }
 
   # Generate random samples of the total ore and resource tonnages
-  if(!missing(oTonGradePdf)){ # Changed: added if clause for oTonGradePdf
+  if(!missing(oTonGradePdf)){
     # omit the gangue
     rs <- cbind(oTonGradePdf$rs[,1], oTonGradePdf$rs[,1] * oTonGradePdf$rs[,c(-1,-ncol(oTonGradePdf$rs)), drop = FALSE])
   } else {

@@ -65,6 +65,7 @@ namespace MapWizard.ViewModel
             ShowModelDialog = new RelayCommand(OpenModelDialog, CanRunTool);
             OpenGradePlotCommand = new RelayCommand(OpenGradePlot, CanRunTool);
             OpenTonnagePlotCommand = new RelayCommand(OpenTonnagePlot, CanRunTool);
+            OpenGradeTonnagePlotCommand = new RelayCommand(OpenGradeTonnagePlot, CanRunTool);
             viewModelLocator = new ViewModelLocator();
             result = new GradeTonnageResultModel();
             GradeTonnageInputParams inputParams = new GradeTonnageInputParams();
@@ -88,10 +89,12 @@ namespace MapWizard.ViewModel
                         MinDepositCount = Convert.ToInt32(inputParams.MinDepositCount),
                         RandomSampleCount = Convert.ToInt32(inputParams.RandomSampleCount),
                         Seed = Convert.ToInt32(inputParams.Seed),
+                        TonnageSeed = Convert.ToInt32(inputParams.TonnageSeed),
                         Folder = inputParams.Folder,
                         ExtensionFolder = inputParams.ExtensionFolder,
                         RunGrade = inputParams.RunGrade,
                         RunTonnage = inputParams.RunTonnage,
+                        RunGradeTonnage = inputParams.RunGradeTonnage,
                         ModelType = inputParams.ModelType
                     };
                 }
@@ -168,6 +171,12 @@ namespace MapWizard.ViewModel
         public RelayCommand OpenTonnagePlotCommand { get; }
 
         /// <summary>
+        /// Open joint grade-tonnage plot command.
+        /// </summary>
+        /// @return Command.
+        public RelayCommand OpenGradeTonnagePlotCommand { get; }
+
+        /// <summary>
         /// Model for GradeTonnage.
         /// </summary>
         /// @return Model.
@@ -207,6 +216,15 @@ namespace MapWizard.ViewModel
         private async void RunTool()
         {
             logger.Info("-->{0}", this.GetType().Name);
+
+            if (Model.Seed == Model.TonnageSeed)
+            {
+                dialogService.ShowNotification("Grade Seed and Tonnage Seed cannot have the same value.", "Error");
+                viewModelLocator.SettingsViewModel.WriteLogText("Grade Seed and Tonnage Seed cannot have the same value.", "Error");
+                return;
+            }
+
+
             // 1. Collect input parameters
             string rootFolder = settingsService.RootPath;
             if (Model.UseModelName == false)
@@ -221,6 +239,7 @@ namespace MapWizard.ViewModel
                 MinDepositCount = Model.MinDepositCount.ToString(),
                 RandomSampleCount = Model.RandomSampleCount.ToString(),
                 Seed = Model.Seed.ToString(),
+                TonnageSeed = Model.TonnageSeed.ToString(),
                 Folder = rootFolder,
                 ExtensionFolder = Model.ExtensionFolder,
                 RunGrade = Model.RunGrade,
@@ -242,6 +261,7 @@ namespace MapWizard.ViewModel
               inputParams.MinDepositCount,
               inputParams.RandomSampleCount,
               inputParams.Seed,
+              inputParams.TonnageSeed,
               inputParams.Folder,
               inputParams.ModelType
             );
@@ -280,6 +300,7 @@ namespace MapWizard.ViewModel
                     Result.GradeSummary = tonnageResult.GradeSummary;
                     Result.GradePdf = tonnageResult.GradePdf;
                     Result.GradeTonnagePlot = tonnageResult.GradeTonnagePlot;
+                    Result.GradeTonnagePlotBitMap = BitmapFromUri(tonnageResult.GradeTonnagePlot);
                 });
                 var modelFolder = Path.Combine(inputParams.Env.RootPath, "GTModel", Model.ExtensionFolder);
                 if (!Model.ModelNames.Contains(modelFolder))
@@ -288,9 +309,9 @@ namespace MapWizard.ViewModel
                 }
                 string lastRunFile = Path.Combine(Path.Combine(inputParams.Env.RootPath, "GTModel", "GradeTonnage_last_run.lastrun"));
                 File.Create(lastRunFile).Close();
-                dialogService.ShowNotification("GradeTonnageTool completed successfully.", "Success");               
+                dialogService.ShowNotification("GradeTonnageTool completed successfully.", "Success");
                 viewModelLocator.SettingsViewModel.WriteLogText("GradeTonnageTool completed successfully", "Success");
-                if(tonnageResult.Warnings.Length>0)
+                if (tonnageResult.Warnings.Length > 0)
                     viewModelLocator.SettingsViewModel.WriteLogText(tonnageResult.Warnings, "Warning");
                 Model.LastRunDate = "Last Run: " + DateTime.Now.ToString("g");
                 Model.RunStatus = 1;
@@ -388,15 +409,57 @@ namespace MapWizard.ViewModel
                     string tonnage_summary = "";
                     string grade_summary = "";
                     Result.TonnagePlot = Path.Combine(folder, "tonnage_plot.jpeg");
-                    result.TonnagePlotBitMap = BitmapFromUri(Path.Combine(folder, "tonnage_plot.jpeg"));
-                    tonnage_summary = File.ReadAllText(Path.Combine(folder, "tonnage_summary.txt"));//TAGEGD
-                    Result.TonnageSummary = tonnage_summary;
-                    Result.TonnagePdf = Path.Combine(folder, "tonnage.rds");
+                    if (File.Exists(Result.TonnagePlot))
+                    {
+                        result.TonnagePlotBitMap = BitmapFromUri(Path.Combine(folder, "tonnage_plot.jpeg"));
+                    }
+                    else
+                    {
+                        result.TonnagePlotBitMap = null;
+                    }
+                    if (File.Exists(Path.Combine(folder, "tonnage_summary.txt")))
+                    {
+                        tonnage_summary = File.ReadAllText(Path.Combine(folder, "tonnage_summary.txt"));
+                        Result.TonnageSummary = tonnage_summary;
+                        Result.TonnagePdf = Path.Combine(folder, "tonnage.rds");
+                    }
+                    else
+                    {
+                        Result.TonnageSummary = null;
+                        Result.TonnagePdf = null;
+                    }
+
                     result.GradePlot = Path.Combine(folder, "grade_plot.jpeg");
-                    result.GradePlotBitMap = BitmapFromUri(Path.Combine(folder, "grade_plot.jpeg"));
-                    grade_summary = File.ReadAllText(Path.Combine(folder, "grade_summary.txt")); //TAGGED
-                    result.GradeSummary = grade_summary;
-                    result.GradePdf = Path.Combine(folder, "grade.rds");       //TAGGED  //tonnageResult.GradePdf; //Change name
+                    if (File.Exists(Result.GradePlot))
+                    {
+                        result.GradePlotBitMap = BitmapFromUri(Path.Combine(folder, "grade_plot.jpeg"));
+                    }
+                    else
+                    {
+                        result.GradePlotBitMap = null;
+                    }
+                    if (File.Exists(Path.Combine(folder, "grade_summary.txt")))
+                    {
+                        grade_summary = File.ReadAllText(Path.Combine(folder, "grade_summary.txt"));
+                        result.GradeSummary = grade_summary;
+                        result.GradePdf = Path.Combine(folder, "grade.rds");
+                    }
+                    else
+                    {
+                        result.GradeSummary = null;
+                        result.GradePdf = null;
+                    }
+
+                    result.GradeTonnagePlot = Path.Combine(folder, "tongrade_plot.jpeg");
+                    if (File.Exists(Result.GradeTonnagePlot))
+                    {
+                        result.GradeTonnagePlotBitMap = BitmapFromUri(Path.Combine(folder, "tongrade_plot.jpeg"));
+                    }
+                    else
+                    {
+                        result.GradeTonnagePlotBitMap = null;
+                    }
+
                     var gtRootPath = Path.Combine(settingsService.RootPath, "GTModel");
                     var gtGradePath = Path.Combine(gtRootPath); //TAGGED
                     var gtGradeDir = new DirectoryInfo(gtGradePath);
@@ -407,6 +470,7 @@ namespace MapWizard.ViewModel
                     {
                         Directory.CreateDirectory(gtRootPath);
                     }
+
                     foreach (FileInfo file in di.GetFiles())
                     {
                         file.Delete();
@@ -475,6 +539,29 @@ namespace MapWizard.ViewModel
         }
 
         /// <summary>
+        /// Open joint grade-tonnage image.
+        /// </summary>
+        private void OpenGradeTonnagePlot()
+        {
+            try
+            {
+                bool openFile = dialogService.MessageBoxDialog();
+                if (openFile == true)
+                {
+                    if (File.Exists(Result.GradeTonnagePlot))
+                    {
+                        Process.Start(Result.GradeTonnagePlot);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                logger.Error(ex, "Failed to open imagefile");
+                dialogService.ShowNotification("Failed to open imagefile.", "Error");
+            }
+        }
+
+        /// <summary>
         /// Select certain result.
         /// </summary>
         private void SelectResult()
@@ -510,7 +597,7 @@ namespace MapWizard.ViewModel
                     direk.Delete(true);
                 }
                 // Get files from selected model root folder and add them into SelectedResult folder.
-                foreach (FileInfo file2 in modelDirInfo.GetFiles()) 
+                foreach (FileInfo file2 in modelDirInfo.GetFiles())
                 {
                     var destPath = Path.Combine(selectedProjectFolder, file2.Name);
                     var sourcePath = Path.Combine(modelDirPath, file2.Name);
@@ -551,6 +638,7 @@ namespace MapWizard.ViewModel
                     Model.MinDepositCount = Convert.ToInt32(inputParams.MinDepositCount);
                     Model.RandomSampleCount = Convert.ToInt32(inputParams.RandomSampleCount);
                     Model.Seed = Convert.ToInt32(inputParams.Seed);
+                    Model.TonnageSeed = Convert.ToInt32(inputParams.TonnageSeed);
                     Model.Folder = inputParams.Folder;
                     Model.ExtensionFolder = inputParams.ExtensionFolder;
                     Model.RunGrade = inputParams.RunGrade;
@@ -558,7 +646,7 @@ namespace MapWizard.ViewModel
                     Model.ModelType = inputParams.ModelType;
                 }
                 // Update info to the Reporting tool.
-                if((File.Exists(Path.Combine(selectedProjectFolder, "grade_summary.txt")) && File.Exists(Path.Combine(selectedProjectFolder, "grade_plot.jpeg")))
+                if ((File.Exists(Path.Combine(selectedProjectFolder, "grade_summary.txt")) && File.Exists(Path.Combine(selectedProjectFolder, "grade_plot.jpeg")))
                     || (File.Exists(Path.Combine(selectedProjectFolder, "tonnage_summary.txt")) && File.Exists(Path.Combine(selectedProjectFolder, "tonnage_plot.jpeg"))))
                 {
                     viewModelLocator.ReportingViewModel.Model.GTModelPath = selectedProjectFolder;
@@ -675,6 +763,7 @@ namespace MapWizard.ViewModel
             var GTGradeSummary = Path.Combine(GTFolder, "grade_summary.txt");
             var GTTonnageSummary = Path.Combine(GTFolder, "tonnage_summary.txt");
             var GTTonnagePlot = Path.Combine(GTFolder, "tonnage_plot.jpeg");
+            var GTGradeTonnagePlot = Path.Combine(GTFolder, "tongrade_plot.jpeg");
             Model.RunStatus = 1;  // Set status to error if any of the files is not found.
             try
             {
@@ -725,6 +814,20 @@ namespace MapWizard.ViewModel
                 {
                     Result.TonnagePlot = null;
                     Result.TonnagePlotBitMap = null;
+                    if (Model.RunTonnage == "True")
+                    {
+                        Model.RunStatus = 0;
+                    }
+                }
+                if (File.Exists(GTGradeTonnagePlot))
+                {
+                    Result.GradeTonnagePlot = GTGradeTonnagePlot;
+                    Result.GradeTonnagePlotBitMap = BitmapFromUri(GTGradeTonnagePlot);
+                }
+                else
+                {
+                    Result.GradeTonnagePlot = null;
+                    Result.GradeTonnagePlotBitMap = null;
                     if (Model.RunTonnage == "True")
                     {
                         Model.RunStatus = 0;

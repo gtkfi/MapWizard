@@ -18,10 +18,10 @@ namespace MapWizard.Model
         private string lastRunDate = "Last Run: Never";
         private string lastRunTract = "Tract: not run";
         private int runStatus = 2; // 0=error, 1=success, 2=not run yet.
-        private string gradePlot = "Please select Grade object";
-        private string tonnagePlot = "Please select Tonnage object";
-        private string gradeTonnagePlot = "Please select Joint Grade-Tonnage object";
-        private string nDepositsPmf = "Please select NDepositsPmf object";
+        private string gradePlot = "Select grade pdf";
+        private string tonnagePlot = "Select tonnage pdf";
+        private string gradeTonnagePlot = "Select joint grade-tonnage pdf";
+        private string nDepositsPmf = "Select number of deposits pmf";
         private ObservableCollection<string> tractIDNames = new ObservableCollection<string>();
         private string selectedTract;
         private ObservableCollection<string> tractIDNamesFromMC = new ObservableCollection<string>();
@@ -165,7 +165,7 @@ namespace MapWizard.Model
             {
                 if (value == null || value == "")
                 {
-                    value = "Please select Grade object";
+                    value = "Select grade pdf";
                 }
                 Set<string>(() => this.GradePlot, ref gradePlot, value);
             }
@@ -185,7 +185,7 @@ namespace MapWizard.Model
             {
                 if (value == null || value == "")
                 {
-                    value = "Please select Tonnage object";
+                    value = "Select tonnage pdf";
                 }
                 Set<string>(() => this.TonnagePlot, ref tonnagePlot, value);
             }
@@ -205,7 +205,7 @@ namespace MapWizard.Model
             {
                 if (value == null || value == "")
                 {
-                    value = "Please select Joint Grade-Tonnage object";
+                    value = "Select joint grade-tonnage pdf";
                 }
                 Set<string>(() => this.GradeTonnagePlot, ref gradeTonnagePlot, value);
             }

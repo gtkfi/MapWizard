@@ -60,43 +60,50 @@ getRandomSamples.TonGradePdf <- function(object, nSamples, seed = NULL) {
   ##
   ## create the grade and tonnage model in the transformed domain
   ##
-  tGrades <- compositions::ilr(object$grades)
+  ilrBase <- compositions::ilrBase(D = ncol(object$grades))
+  tGrades <- compositions::ilr(object$grades, V = ilrBase)
   gatm_trans <- data.frame(log_tonnages = log10(object$gatm[,3]),ilr_grades = tGrades)
-  ##
-  ## construct the multivariate pdf that represents both the transformed grades and the
-  ## transformed tonnages. The pdf is a kernel density estimate with truncation.
-  ##
+##
+## construct the multivariate pdf that represents both the transformed grades and the
+## transformed tonnages. The pdf is a kernel density estimate with optional truncation.
+##
+  if(object$pdfType=="kde")  {
+    indices <- sample( 1:nrow(tGrades), N, replace=TRUE )
+    tmp <- table(indices)
+    uniqueIndices <- as.integer(names(tmp))
+    counts <- as.vector(tmp, mode = "integer")
   
-  indices <- sample( 1:nrow(tGrades), N, replace=TRUE )
-  tmp <- table(indices)
-  uniqueIndices <- as.integer(names(tmp))
-  counts <- as.vector(tmp, mode = "integer")
-  
-  theCov <- as.matrix(ks::Hpi(x = gatm_trans)) # plug-in bandwith for the multivariate distribution
+    theCov <- as.matrix(ks::Hpi(x = gatm_trans)) # plug-in bandwith for the multivariate distribution
 
-  rs_t <- matrix(NA_real_, nrow = N, ncol = ncol(gatm_trans),
-                 dimnames = list(NULL, colnames(gatm_trans)))
-  current_index <- 1L
-  for(i in seq_along(uniqueIndices)) {
-    index <- uniqueIndices[i]
-    rs_t[current_index:(current_index + counts[i] - 1), ] <- 
-      mvtnorm::rmvnorm(counts[i],
-                       mean = as.matrix(gatm_trans[index, ]),
-                       sigma = theCov)
-    current_index <- current_index + counts[i]
-  }
+    rs_t <- matrix(NA_real_, nrow = N, ncol = ncol(gatm_trans),
+                   dimnames = list(NULL, colnames(gatm_trans)))
+    current_index <- 1L
+    for(i in seq_along(uniqueIndices)) {
+      index <- uniqueIndices[i]
+      rs_t[current_index:(current_index + counts[i] - 1), ] <- 
+        mvtnorm::rmvnorm(counts[i],
+                         mean = as.matrix(gatm_trans[index, ]),
+                         sigma = theCov)
+      current_index <- current_index + counts[i]
+    }
     
+  } else {
+    rs_t <- mvtnorm::rmvnorm(N, mean = colMeans(gatm_trans),
+                                  sigma = cov(gatm_trans))
+  }
+  
   # Make the draws random
   rs_t <- rs_t[sample.int(N, size = N), ]
-    
+  
   # truncate using the convex hull
   if (object$isTruncated==TRUE) {
     indicator <- geometry::inhulln(geometry::convhulln(gatm_trans),rs_t)
-    rs_t <- rs_t[indicator == TRUE, ]    
+    rs_t <- rs_t[indicator == TRUE, ]
   }
   
   # convert back to grades and tonnages
-  rs<-cbind(10^rs_t[,1],unclass(compositions::ilrInv(rs_t[,-1])))
+  rs <- cbind(10^rs_t[,1],unclass(compositions::ilrInv(as.matrix(rs_t[,-1]), V = ilrBase)))
+
   colnames(rs) <- c(colnames(object$gatm)[3],colnames(object$grades))
   
   return(rs)
@@ -144,8 +151,9 @@ plot.TonGradePdf <- function(object, tg, isUsgsStyle = TRUE, labelSize=12) {
   }
 
   df.obs <- as.data.frame(cbind(object$gatm[,3],object$grades))
+  colnames(df.obs)[1]<-colnames(object$gatm)[3]
 
-  tongradeNames <- c(colnames(object$gatm[,3]),colnames(object$grades))
+  tongradeNames <- c(names(object$gatm)[3],colnames(object$grades))
   N_all <- length(tongradeNames)
 
   
@@ -160,14 +168,12 @@ plot.TonGradePdf <- function(object, tg, isUsgsStyle = TRUE, labelSize=12) {
     return(xLabel)
   }
   if (tg=="grade") {
-    N<-N_all-1
-    print(N)
+    N<-N_all
     count_upper <- 1
     count_lower <- N * (N - 1) / 2 + 1
 
     grid::grid.newpage()
     grid::pushViewport(grid::viewport(layout=grid::grid.layout(N,N)))
-
     for (i in 1:N) {
       for(j in 1:N) {
 
@@ -252,7 +258,6 @@ plot.TonGradePdf <- function(object, tg, isUsgsStyle = TRUE, labelSize=12) {
   
     grid::grid.newpage()
     grid::pushViewport(grid::viewport(layout=grid::grid.layout(1,2)))
-  
     p1 <- ggplot2::ggplot() +
           ggplot2::geom_histogram(ggplot2::aes_string(x = tongradeNames[1], y = "..density.."),
                                   data = df.rs, bins = 15,
@@ -286,7 +291,7 @@ plot.TonGradePdf <- function(object, tg, isUsgsStyle = TRUE, labelSize=12) {
             ggplot2::theme(plot.title = ggplot2::element_text(hjust = 0,
                                                              face = "italic"))
     }
-  
+    
     print(p1, vp=grid::viewport(layout.pos.row=1, layout.pos.col=1))
     print(p2, vp=grid::viewport(layout.pos.row=1, layout.pos.col=2))
     
@@ -302,24 +307,27 @@ plot.TonGradePdf <- function(object, tg, isUsgsStyle = TRUE, labelSize=12) {
     for (i in 1:(N_all-1)) {
       for(j in (i+1):N_all) {
 # Now only upper triangle filled
-      
-        df.rs.lr <- data.frame(lr = log(df.rs[, j] / df.rs[, i]))
-        df.obs.lr <- data.frame(lr = log(df.obs[, j] / df.obs[, i]))
+        # Uncomment the following rows if gangue is not to be logged. If the variation is very small
+        # This is not relevant.
+        df.rs.lg<-log(df.rs)
+#        meanrs<-colMeans(df.rs)
+#        print(meanrs)
+#        df.rs.lg[,meanrs>0.85&meanrs<=1]<-df.rs[,meanrs>0.85&meanrs<=1]
+        df.obs.lg<-log(df.obs)
+#        df.obs.lg[,meanrs>0.85&meanrs<=1]<-df.obs[,meanrs>0.85&meanrs<=1]
         
         xLabel <- tongradeNames[i]
         yLabel <- tongradeNames[j]
         
         p3 <- ggplot2::ggplot() +
-              ggplot2::geom_point(aes_string(x = tongradeNames[i], y = tongradeNames[j]),data = df.rs, colour = "red") +
-              ggplot2::geom_point(aes_string(x = tongradeNames[i], y = tongradeNames[j]),data = df.obs, colour = "black") +
-              ggplot2::scale_x_continuous(name = xLabel) +
-              ggplot2::ylab(yLabel)
+              ggplot2::geom_point(aes_string(x = tongradeNames[i], y = tongradeNames[j]),data = df.rs.lg, colour = "red") +
+              ggplot2::geom_point(aes_string(x = tongradeNames[i], y = tongradeNames[j]),data = df.obs.lg, colour = "black") +
+              ggplot2::scale_x_continuous(name = paste("Log(",xLabel,")")) +
+              ggplot2::ylab(paste("Log(",yLabel,")"))
           
         figLabel_index <- count_lower
         count_lower <- count_lower + 1
         
-#     }
-      
         if(isUsgsStyle) {
           p3 <- p3 + ggplot2::theme_bw()
         }
@@ -390,12 +398,17 @@ summary.TonGradePdf <- function(object, tg, nDigits = 3) {
       if(convertToPercent == TRUE){
         df <- df * 100
       }
-      print(signif(df, digits = nDigits))
+      if (df[5,1]>99.89) { # Print six decimals in case three sign digits produces value of 100 (usually gangue)
+        print(round(df, 6))
+      } else {
+        print(signif(df, digits = nDigits))
+      }
     }
 
     cat(sprintf("Summary comparison of the pdf representing the grades\n"))
     cat(sprintf("and the actual grades in the grade and tonnage model.\n"))
     cat(sprintf("------------------------------------------------------------\n"))
+    cat( sprintf( "Pdf type: %s\n", object$pdfType ))
     if(object$isTruncated) {
       cat( sprintf("Pdf is truncated at the lowest and the highest values\n"))
       cat( sprintf("of the grades in the grade and tonnage model.\n"))
@@ -423,10 +436,10 @@ summary.TonGradePdf <- function(object, tg, nDigits = 3) {
     cat(sprintf( "Compositional mean (reported in percent)\n"))
     cat(sprintf( "Column Gatm refers to the actual grades from the grade and tonnage\n"))
     cat(sprintf( "model; column Pdf refers to the pdf representing the grades.\n"))
-    df <- data.frame(Gatm = unclass(object$theGatmMean),
-                     Pdf = unclass(object$theMean))
+    df <- data.frame(Gatm = unclass(object$theGatmMeanG),
+                     Pdf = unclass(object$theMeanG))
     df <- df * 100
-    print(signif(df, digits = nDigits))   # SOMETHING WRONG HERE!!! SEE SUMMARY OUTPUT
+    print(signif(df, digits = nDigits))
 
     cat(sprintf("------------------------------------------------------------\n"))
 
@@ -590,6 +603,7 @@ summary.TonGradePdf <- function(object, tg, nDigits = 3) {
 TonGradePdf <- function(gatm,
                      seed = NULL,
                      isTruncated = FALSE,
+                     pdfType="kde",
                      minNDeposits = 20,
                      nRandomSamples = 1000000) {
   
@@ -630,7 +644,6 @@ TonGradePdf <- function(gatm,
                    ncol(gatm) - 3),
           call. = FALSE )
   }
-
   # Grades on the scale from 0 to 1, gangue column added
   tmp <- gatm[, -(1:3), drop = FALSE] / 100  # convert from percentages
   grades <- cbind(tmp, 1 - rowSums(tmp))
@@ -638,6 +651,8 @@ TonGradePdf <- function(gatm,
   colnames(grades) <- c(resourceNames, "gangue")
   rval <- list( gatm = gatm,
                 isTruncated = isTruncated,
+                pdfType=pdfType,
+                seed=seed,
                 grades = grades,
                 resourceNames = resourceNames,
                 theGatmMeanG = mean(compositions::acomp(grades), robust = FALSE),
@@ -648,13 +663,13 @@ TonGradePdf <- function(gatm,
 
 
   class(rval) <- "TonGradePdf"
-
-
-  rval$rs <- getRandomSamples(rval, nRandomSamples, seed = seed)
+  
+  rval$rs <- getRandomSamples(rval, nRandomSamples,seed = seed)
   rval$theMeanG <- mean(compositions::acomp(rval$rs[,-1]), robust = FALSE)
   rval$theVarG <- compositions::variation(compositions::acomp(rval$rs[,-1]),
                                          robust = FALSE)
   rval$theMeanT <- mean(rval$rs[,1])
+  
   rval$theSdT <- sd(rval$rs[,1])
   rval$devianceTon <- CalcDeviance(rval$rs[,1], rval$gatm[,3])
   rval$call <- sys.call()

@@ -10,7 +10,7 @@ econ_plot<-function(col,mc_res,plotd) {
   attr<-gsub(" ", "", names(mc_res), fixed = TRUE)
   names(mc_res)<-attr
   x<-unlist(mc_res[,attr[col],with=FALSE])
-  nsim<-max(mc_res[,"Simulation.Index"])
+  nsim<-max(mc_res[,"SimulationIndex"])
   nax<-which(!is.na(x)) # indicies of simulated deposits with tonnages !=NA for attr[col]
   x[-nax]<-0
   ndat<-length(x)
@@ -77,7 +77,7 @@ econ_stat<-function(perType,perc,mc_res,econp_res,elcol,outdir) {
   reord<-econp_res[[4]] # Iindices of simulated deposits arranged in decreasing order of tonnages
   attr<-gsub(" ", "", names(mc_res), fixed = TRUE) # Remove whitespace from header names
   names(mc_res)<-attr
-  tmp<-which(attr=="Simulation.Index")
+  tmp<-which(attr=="SimulationIndex")
   simind<-unlist(mc_res[,attr[tmp],with=FALSE])
   ordsimi<-simind[reord] # Order simulation indices with decreasing tonnage
   ele<-unlist(mc_res[,attr[elcol],with=FALSE])

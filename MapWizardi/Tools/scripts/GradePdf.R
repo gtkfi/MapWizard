@@ -474,7 +474,6 @@ GradePdf <- function(gatm,
                      isTruncated = FALSE,
                      minNDeposits = 20,
                      nRandomSamples = 1000000) {
-
   CheckModel(gatm, minNDeposits)
 
   if(!any(pdfType == c("kde", "normal"))) {
@@ -512,6 +511,7 @@ GradePdf <- function(gatm,
 
   rval <- list( gatm = gatm,
                 pdfType = pdfType,
+                seed=seed,
                 isTruncated = isTruncated,
                 grades = grades,
                 resourceNames = resourceNames,

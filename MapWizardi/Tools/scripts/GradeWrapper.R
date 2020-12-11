@@ -1,11 +1,12 @@
 # This includes the function TonnagePdf.R and Utilities.R (The latter checks that the input has enough data and no NULL values)
 source("GradePdf.R")
-source("TonnagePdf.R")
+#source("TonnagePdf.R") # Changed: ei tarvi tonnage paketissa
 source("Utilities.R")
 library("ggplot2")
 
-gradePdf <- function(dataPath, seed, pdfType, isTruncated, minNDeposits, nRandomSamples, folder, wd) {
-
+#gradePdf <- function(dataPath, seed, pdfType, isTruncated, minNDeposits, nRandomSamples, folder, wd) {
+gradePdf <- function(dataPath, seed, pdfType, isTruncated, minNDeposits, nRandomSamples, folder) { # Changed: wd pois
+    
     in_data <- read.csv(dataPath)
     # This calls the function TonnagePdf, in file TonnagePdf.R
     outobj <- GradePdf(in_data,
@@ -45,6 +46,6 @@ isTruncated <- args[4]
 minNDeposits <- args[5]
 nRandomSamples <- as.integer(args[6])
 folder <- args[7]
-wd <- args[8]
+# wd <- args[8] # Changed: voi poistaa
 
-grade <- gradePdf(dataPath, seed, pdfType, isTruncated, minNDeposits, nRandomSamples, folder, wd)
+grade <- gradePdf(dataPath, seed, pdfType, isTruncated, minNDeposits, nRandomSamples, folder)

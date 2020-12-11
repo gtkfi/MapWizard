@@ -39,12 +39,6 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_07501C0FC6AE46E789432EAED26B647D"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
         "MsmKey" = "8:_07659DAB06F44FD9B738E0B12F45431F"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
@@ -71,12 +65,6 @@
         {
         "MsmKey" = "8:_09C290A093A2F18EFDF13E065FED1097"
         "OwnerKey" = "8:_4CF59948D24A434E9D0917CB99F7E97A"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_0A878486F3404E8AB3FFB731CD77AB48"
-        "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -123,12 +111,6 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_131C42F63F9B4FF0A5684F051693B0D7"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
         "MsmKey" = "8:_1424089F5D0F7D52CE9386435DDACF89"
         "OwnerKey" = "8:_4CF59948D24A434E9D0917CB99F7E97A"
         "MsmSig" = "8:_UNDEFINED"
@@ -154,12 +136,6 @@
         "Entry"
         {
         "MsmKey" = "8:_1530C6ADFF68457FAD27C14465B94950"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_17D5E8C7560A4F10B08BD7E623DD7134"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -267,14 +243,20 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_24D140D2BF174E889EC8931467B8BE00"
+        "MsmKey" = "8:_26C44AE060364B09ACF579E2FC273E22"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_26C44AE060364B09ACF579E2FC273E22"
-        "OwnerKey" = "8:_UNDEFINED"
+        "MsmKey" = "8:_26C98F09040A53CD0BA39E6F195DCEEE"
+        "OwnerKey" = "8:_4CF59948D24A434E9D0917CB99F7E97A"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_26C98F09040A53CD0BA39E6F195DCEEE"
+        "OwnerKey" = "8:_62BBAAEA02BD37558824D812324C9631"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -297,7 +279,7 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_2891B3A2F7C74CE6A679D14075488F55"
+        "MsmKey" = "8:_2A04106F920F47B6B7C43CEBA3DF0379"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -316,7 +298,7 @@
         "Entry"
         {
         "MsmKey" = "8:_2DD6F36B9A812889C52AA520002737A7"
-        "OwnerKey" = "8:_CF45AB4FFE64C4D316346D935D5838C9"
+        "OwnerKey" = "8:_62BBAAEA02BD37558824D812324C9631"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -423,6 +405,24 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_37F6B2C262B9044293764A06BFCC1A35"
+        "OwnerKey" = "8:_4CF59948D24A434E9D0917CB99F7E97A"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_37F6B2C262B9044293764A06BFCC1A35"
+        "OwnerKey" = "8:_E3A0661DB36158F5E336E39F50B524BC"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_37F6B2C262B9044293764A06BFCC1A35"
+        "OwnerKey" = "8:_F5495F67E1E53158CE6749337FE387ED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_3856ACE03611435680C8B5A2683B402C"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
@@ -441,6 +441,12 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_3BFBED7EE4E04269B8A3F35DD1D4A420"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_3DA5B2552D3DE4E06E0A1C13DA42FDDF"
         "OwnerKey" = "8:_4CF59948D24A434E9D0917CB99F7E97A"
         "MsmSig" = "8:_UNDEFINED"
@@ -448,7 +454,7 @@
         "Entry"
         {
         "MsmKey" = "8:_3DA5B2552D3DE4E06E0A1C13DA42FDDF"
-        "OwnerKey" = "8:_73DC1A5545CA1CBE02F9259A071859A6"
+        "OwnerKey" = "8:_87B19D9C885D3A2DE2BCD349C2E783FD"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -495,6 +501,12 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_41BCFF63CC3E4AD4AD64B87E98BD751E"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_424AA745EA5441B59C128C43E1904684"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
@@ -525,18 +537,6 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_45DA17440B77EF346370DE152D6C1386"
-        "OwnerKey" = "8:_813D6A9721D62C28396A7371ACCC75BC"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_45DA17440B77EF346370DE152D6C1386"
-        "OwnerKey" = "8:_4CF59948D24A434E9D0917CB99F7E97A"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
         "MsmKey" = "8:_46C82A927BF4483186095BC46B967EF8"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
@@ -544,12 +544,6 @@
         "Entry"
         {
         "MsmKey" = "8:_477E4F4FAE3148129296B831D2E9B375"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_47A977C9874E4EE891376C617FEAD2AA"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -563,18 +557,6 @@
         {
         "MsmKey" = "8:_49A2195B1566397179821088A724C897"
         "OwnerKey" = "8:_4CF59948D24A434E9D0917CB99F7E97A"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_4AE7037379C44D6E90DABB8ADCD81765"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_4C292FE21CCD44AA869C800EF68FA8B8"
-        "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -616,7 +598,7 @@
         "Entry"
         {
         "MsmKey" = "8:_50F2D7A787C4208AE67D7A4139553466"
-        "OwnerKey" = "8:_73DC1A5545CA1CBE02F9259A071859A6"
+        "OwnerKey" = "8:_87B19D9C885D3A2DE2BCD349C2E783FD"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -633,7 +615,7 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_51F86B8A5FE040B0AE771E0D4A91B886"
+        "MsmKey" = "8:_522BC8ADD42143C788C51C9DF5BE3197"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -663,19 +645,7 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_56137542B3F44A4686F50BC04EC86D1E"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
         "MsmKey" = "8:_57752C8ED25C407CADC221A466360B1B"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_59DCD9C8CF004AF4A14E88DABE4A73C2"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -688,12 +658,6 @@
         "Entry"
         {
         "MsmKey" = "8:_5ADC29BE324F4F89AD4194D1217C3DF6"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_5AE250A32C6F4F25AA527E825423C0D6"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -725,18 +689,6 @@
         {
         "MsmKey" = "8:_5C245C16B90F462798D26D8FF8DFCD8B"
         "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_5C898525B128A89B1483F08D124BC64E"
-        "OwnerKey" = "8:_4CF59948D24A434E9D0917CB99F7E97A"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_5C898525B128A89B1483F08D124BC64E"
-        "OwnerKey" = "8:_CF45AB4FFE64C4D316346D935D5838C9"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -777,8 +729,8 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_61653EAD00434895814FF6C45FD5708E"
-        "OwnerKey" = "8:_UNDEFINED"
+        "MsmKey" = "8:_62BBAAEA02BD37558824D812324C9631"
+        "OwnerKey" = "8:_4CF59948D24A434E9D0917CB99F7E97A"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -831,6 +783,12 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_6A4C7B403124499CB61945FA1ED576CF"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_6A8B1089206F31BA4C07D9F2E85EFACF"
         "OwnerKey" = "8:_4CF59948D24A434E9D0917CB99F7E97A"
         "MsmSig" = "8:_UNDEFINED"
@@ -838,7 +796,7 @@
         "Entry"
         {
         "MsmKey" = "8:_6A8B1089206F31BA4C07D9F2E85EFACF"
-        "OwnerKey" = "8:_73DC1A5545CA1CBE02F9259A071859A6"
+        "OwnerKey" = "8:_87B19D9C885D3A2DE2BCD349C2E783FD"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -868,7 +826,7 @@
         "Entry"
         {
         "MsmKey" = "8:_6C2819117103973D556098712ACAC136"
-        "OwnerKey" = "8:_CF45AB4FFE64C4D316346D935D5838C9"
+        "OwnerKey" = "8:_62BBAAEA02BD37558824D812324C9631"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -909,19 +867,7 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_6FBE1629BE604E73A53E9ED7FDBED3A8"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
         "MsmKey" = "8:_703CD227BD8C45E78E7391AC880FF398"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_70E0FD8530544A6C80BE3251387E1E97"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -945,31 +891,7 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_73DC1A5545CA1CBE02F9259A071859A6"
-        "OwnerKey" = "8:_981537D68D7EB353FD709BC54FAFEB79"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_73DC1A5545CA1CBE02F9259A071859A6"
-        "OwnerKey" = "8:_4CF59948D24A434E9D0917CB99F7E97A"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_74E11E1BD53544EFAAE89D434BBEC81C"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
         "MsmKey" = "8:_7614D1B7EF0D4ADAB5650F79D6EA300F"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_763D8B2C4B574E9DBBCFC37DB0CCA42C"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -1006,12 +928,6 @@
         "Entry"
         {
         "MsmKey" = "8:_7A5CD882C34847A5AA580D16D7B05947"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_7C4CB587DC834425AFCEB20C710730DC"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -1071,12 +987,6 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_7F993558B1C04680875CD6F45F37CD0A"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
         "MsmKey" = "8:_801049EA6F07409A97300386A735C2D5"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
@@ -1095,49 +1005,13 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_8109D895AF0D4A7CB43E8F6E8F337274"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_813D6A9721D62C28396A7371ACCC75BC"
-        "OwnerKey" = "8:_4CF59948D24A434E9D0917CB99F7E97A"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_813D6A9721D62C28396A7371ACCC75BC"
-        "OwnerKey" = "8:_CF45AB4FFE64C4D316346D935D5838C9"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
         "MsmKey" = "8:_81428E61AB264D577E2F92A50E87399E"
         "OwnerKey" = "8:_4CF59948D24A434E9D0917CB99F7E97A"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_829C89A45B2C4BB9962CE6C876373638"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
         "MsmKey" = "8:_83866EE90BC3440B93496A081A87DE37"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_842871CFC0A64D58B9BBC9906D61A058"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_8557FDDF98734E2BA71DFD9C9529D2B9"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -1155,31 +1029,25 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_87B19D9C885D3A2DE2BCD349C2E783FD"
+        "OwnerKey" = "8:_E916DC39045F1CA11F5C5A0E0F0A8F15"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_87B19D9C885D3A2DE2BCD349C2E783FD"
+        "OwnerKey" = "8:_4CF59948D24A434E9D0917CB99F7E97A"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_87EA7202F5C7441F84568539CD32C73B"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_88629122339E4C0F898E1B9E4B7F8303"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
         "MsmKey" = "8:_894CF84C9B0B4EBD86FC2764E795392B"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_89B4C15DBA964030A5BC92B3E8FF7670"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_89CDC06EA7D0468C961E15FDCF27D723"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -1197,25 +1065,7 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_8CDE5F33623B485D93379CA9D583E2B3"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_8D3AF074DAB64AB59753187B9C6A7116"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
         "MsmKey" = "8:_8D758A45EE36452F8A564EBAD9D18A6F"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_8E3B4B82E6054B118E87295A7B75B366"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -1234,18 +1084,6 @@
         "Entry"
         {
         "MsmKey" = "8:_8F26894BF1434AA1B649276E0A7AC99A"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_8F588AAF7B1E489C831A1E83BFB16524"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_9062C2E955F24A4D9CD6419BAE0C13B4"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -1275,25 +1113,7 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_93E1D28BE4DB49E49F4E39858FFB1D01"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_947BC89787434161B06C61D9E65157AB"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
         "MsmKey" = "8:_9485EFAFD5A847CB97C1B8604D2E4575"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_95DD20D06E504249AA86A36509A78E11"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -1313,24 +1133,6 @@
         {
         "MsmKey" = "8:_977A5C67BAD44C5A8FD582FE57F1D702"
         "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_98096EFAABA04ADD8FB33D0FD5CBBFA5"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_981537D68D7EB353FD709BC54FAFEB79"
-        "OwnerKey" = "8:_4CF59948D24A434E9D0917CB99F7E97A"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_981537D68D7EB353FD709BC54FAFEB79"
-        "OwnerKey" = "8:_CF45AB4FFE64C4D316346D935D5838C9"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -1359,12 +1161,6 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_9B9F4DEB0047422B8F4B46C93C1CE700"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
         "MsmKey" = "8:_9C953269EA8F47CFA3A78295D910AEA4"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
@@ -1377,38 +1173,8 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_9EC7ADBFE3984ABBB5861F0FC81FA0E9"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_9FE39B9F3B6F4CD4BEC5252E55F2FCCE"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_A00B80C296E84B88A5646CA3A647F6B3"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
         "MsmKey" = "8:_A108ACD730F59C62E283A03B873048F6"
         "OwnerKey" = "8:_4CF59948D24A434E9D0917CB99F7E97A"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_A1FE5536BCF74251AECB92194A019FE7"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_A27A864C396F4855BA331DA44B2C051A"
-        "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -1515,12 +1281,6 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_AF4F23A778A74E02AFACCA039C20F489"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
         "MsmKey" = "8:_B03BA0037F28358D8D25B8B50DF00EC7"
         "OwnerKey" = "8:_4CF59948D24A434E9D0917CB99F7E97A"
         "MsmSig" = "8:_UNDEFINED"
@@ -1528,12 +1288,6 @@
         "Entry"
         {
         "MsmKey" = "8:_B04D7B1162654BDF9F861A1B6E50DE97"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_B0E418A28FFB45729FCE095685F521A0"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -1551,18 +1305,6 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_B24BC849890142E79D6D0C652B91A7F6"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_B2F50AC2D4B9439EBD570238A68935BD"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
         "MsmKey" = "8:_B4C1127E92354D31942E4C37844B12D3"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
@@ -1575,43 +1317,7 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_B6BEA381AEE8456DB84DDBD8A44FAE41"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_B7B7546CDD5C40F3B4C457B6EB55D4FE"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_B8CED958F12B4695AB937BD44631C2CC"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
         "MsmKey" = "8:_B94661D2E02D4E53AE33A76EFBD23EA1"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_BB4AF6914C4A4269B5319992DA06A63D"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_BD8DC7B5927240FC9F64E56B18FA9DBE"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_BE915FD21ACB4842B227E4DC6408567D"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -1629,19 +1335,7 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_C3F0FDA14D1541C3BB8E19C3A0A10709"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
         "MsmKey" = "8:_C4B29C9DD8DF4018BC77CD4B01F39F20"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_C4CEEB3552D84DFFB150C4C312943732"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -1665,12 +1359,6 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_C83010995ED1453BA791A9DA74BFAA34"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
         "MsmKey" = "8:_C908A3E2222CBFD097A2CC96644E1CDD"
         "OwnerKey" = "8:_4CF59948D24A434E9D0917CB99F7E97A"
         "MsmSig" = "8:_UNDEFINED"
@@ -1683,62 +1371,8 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_CA5EE2D1AF3B4035B5633BFB34B95BE4"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_CA7F91CC5D3646C5A57EEF7809A4B773"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_CB066758F0B22DCCFCBB992666075751"
-        "OwnerKey" = "8:_4CF59948D24A434E9D0917CB99F7E97A"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_CB066758F0B22DCCFCBB992666075751"
-        "OwnerKey" = "8:_45DA17440B77EF346370DE152D6C1386"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_CB066758F0B22DCCFCBB992666075751"
-        "OwnerKey" = "8:_813D6A9721D62C28396A7371ACCC75BC"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_CC5D047AC07746548E3F621CBC192717"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_CD13623B0139411583CFA6168B7E1261"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_CDDD31B58A4D4A93A37AF6F57112B75D"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
         "MsmKey" = "8:_CF226412DD4C47CABA5B45A539CF70C8"
         "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_CF45AB4FFE64C4D316346D935D5838C9"
-        "OwnerKey" = "8:_4CF59948D24A434E9D0917CB99F7E97A"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -1797,18 +1431,6 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_D74EDE84971B4B0B9CEAC4FD9379BA12"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_D8DD55F43C0C4892AF317F95942FA83C"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
         "MsmKey" = "8:_D90903F6E14B45DA80122AC8B55BA2EF"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
@@ -1845,18 +1467,6 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_DC8DF8A82CAF42978D9EABEA611A49D7"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_DD1D23FEA36E4B1098E401264A78B9D8"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
         "MsmKey" = "8:_DD516F376328C5DE62ED609FF67F812B"
         "OwnerKey" = "8:_4CF59948D24A434E9D0917CB99F7E97A"
         "MsmSig" = "8:_UNDEFINED"
@@ -1875,12 +1485,6 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_DE5393C3EB024D13AD0A1FCE52039F41"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
         "MsmKey" = "8:_DEC7ADD70F514A23977A172C0B91B650"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
@@ -1888,12 +1492,6 @@
         "Entry"
         {
         "MsmKey" = "8:_DF6A916718FD481886CA6079486A1AAE"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_E1164F35DE3F4EF2BC903E34E16ECEEE"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -1911,6 +1509,18 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_E3A0661DB36158F5E336E39F50B524BC"
+        "OwnerKey" = "8:_F5495F67E1E53158CE6749337FE387ED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_E3A0661DB36158F5E336E39F50B524BC"
+        "OwnerKey" = "8:_4CF59948D24A434E9D0917CB99F7E97A"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_E46CA6A0A8664959A13021963272F3CA"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
@@ -1918,12 +1528,6 @@
         "Entry"
         {
         "MsmKey" = "8:_E5E2687AA425478DAB2C069642C12662"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_E656E99D70DA4DD49C8D7DD407A7F52D"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -1947,20 +1551,20 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_E9B43C77C0AC495DAAEDF0F68C6DD416"
-        "OwnerKey" = "8:_UNDEFINED"
+        "MsmKey" = "8:_E916DC39045F1CA11F5C5A0E0F0A8F15"
+        "OwnerKey" = "8:_4CF59948D24A434E9D0917CB99F7E97A"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_E916DC39045F1CA11F5C5A0E0F0A8F15"
+        "OwnerKey" = "8:_62BBAAEA02BD37558824D812324C9631"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
         "MsmKey" = "8:_EBC8FB2D478360E8694FDD3C37A25DD7"
         "OwnerKey" = "8:_4CF59948D24A434E9D0917CB99F7E97A"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_EBD4834B50754DCE8DBE93021E44DCA8"
-        "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -2007,13 +1611,19 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_F62F662A87BA40458DFEA3D3FA4501CA"
-        "OwnerKey" = "8:_UNDEFINED"
+        "MsmKey" = "8:_F5495F67E1E53158CE6749337FE387ED"
+        "OwnerKey" = "8:_4CF59948D24A434E9D0917CB99F7E97A"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_F6D6EE6E1B4B4DCE9EBD4F7D29726DDE"
+        "MsmKey" = "8:_F5495F67E1E53158CE6749337FE387ED"
+        "OwnerKey" = "8:_62BBAAEA02BD37558824D812324C9631"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_F62F662A87BA40458DFEA3D3FA4501CA"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -2049,12 +1659,6 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_FA3369DA53FF4DE9B78ADC583CE3E347"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
         "MsmKey" = "8:_FB1F2AC762165EC7D7532C3E674A168D"
         "OwnerKey" = "8:_4CF59948D24A434E9D0917CB99F7E97A"
         "MsmSig" = "8:_UNDEFINED"
@@ -2063,12 +1667,6 @@
         {
         "MsmKey" = "8:_FB1F2AC762165EC7D7532C3E674A168D"
         "OwnerKey" = "8:_9B6B7F64EEEF525868DD4340E8ABC7B7"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_FB497E40ACD744BB86FB4EF4AAABED2A"
-        "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -2116,37 +1714,37 @@
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_CF45AB4FFE64C4D316346D935D5838C9"
+        "OwnerKey" = "8:_62BBAAEA02BD37558824D812324C9631"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_813D6A9721D62C28396A7371ACCC75BC"
+        "OwnerKey" = "8:_F5495F67E1E53158CE6749337FE387ED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_45DA17440B77EF346370DE152D6C1386"
+        "OwnerKey" = "8:_E3A0661DB36158F5E336E39F50B524BC"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_5C898525B128A89B1483F08D124BC64E"
+        "OwnerKey" = "8:_26C98F09040A53CD0BA39E6F195DCEEE"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_CB066758F0B22DCCFCBB992666075751"
+        "OwnerKey" = "8:_37F6B2C262B9044293764A06BFCC1A35"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_981537D68D7EB353FD709BC54FAFEB79"
+        "OwnerKey" = "8:_E916DC39045F1CA11F5C5A0E0F0A8F15"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -2611,6 +2209,20 @@
     {
         "CustomAction"
         {
+            "{4AA51A2D-7D85-4A59-BA75-B0809FC8B380}:_7C7C95214416400EBD75610C3FF745F6"
+            {
+            "Name" = "8:fuzzy_and_wofe.exe"
+            "Condition" = "8:"
+            "Object" = "8:_6A4C7B403124499CB61945FA1ED576CF"
+            "FileType" = "3:2"
+            "InstallAction" = "3:1"
+            "Arguments" = "8:/Install -y"
+            "EntryPoint" = "8:"
+            "Sequence" = "3:2"
+            "Identifier" = "8:_45B49929_F36E_444D_A10C_269C788148D4"
+            "InstallerClass" = "11:FALSE"
+            "CustomActionData" = "8:"
+            }
             "{4AA51A2D-7D85-4A59-BA75-B0809FC8B380}:_BC0BE5E3E2784182AA9AC8B9BBB651A2"
             {
             "Name" = "8:R-3.6.3.exe"
@@ -2714,26 +2326,6 @@
             "TargetName" = "8:plot_131864854606004680.jpeg"
             "Tag" = "8:"
             "Folder" = "8:_6604B9825A0D4D96948F287A3DC6CADC"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_07501C0FC6AE46E789432EAED26B647D"
-            {
-            "SourcePath" = "8:..\\Tools\\scripts\\ArcSDMToolbox\\arcsdm\\exceptions.py"
-            "TargetName" = "8:exceptions.py"
-            "Tag" = "8:"
-            "Folder" = "8:_FCFCD30928CF401F8F72119C6D41C502"
             "Condition" = "8:"
             "Transitive" = "11:FALSE"
             "Vital" = "11:TRUE"
@@ -2879,26 +2471,6 @@
             "Register" = "3:1"
             "Exclude" = "11:FALSE"
             "IsDependency" = "11:TRUE"
-            "IsolateTo" = "8:"
-            }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_0A878486F3404E8AB3FFB731CD77AB48"
-            {
-            "SourcePath" = "8:..\\Tools\\scripts\\ArcSDMToolbox\\arcsdm\\floatingrasterclass.pyc"
-            "TargetName" = "8:floatingrasterclass.pyc"
-            "Tag" = "8:"
-            "Folder" = "8:_FCFCD30928CF401F8F72119C6D41C502"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_0B1BABC0E7A3401FA0C20FC49C894DB2"
@@ -3052,26 +2624,6 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_131C42F63F9B4FF0A5684F051693B0D7"
-            {
-            "SourcePath" = "8:..\\Tools\\scripts\\ArcSDMToolbox\\arcsdm\\__init__.py"
-            "TargetName" = "8:__init__.py"
-            "Tag" = "8:"
-            "Folder" = "8:_FCFCD30928CF401F8F72119C6D41C502"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
             "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_1424089F5D0F7D52CE9386435DDACF89"
             {
             "AssemblyRegister" = "3:1"
@@ -3140,26 +2692,6 @@
             "TargetName" = "8:Run1_01234SimMatrixPlot.eps"
             "Tag" = "8:"
             "Folder" = "8:_94E2DFEBA1A34C6AB320D068A1B1152D"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_17D5E8C7560A4F10B08BD7E623DD7134"
-            {
-            "SourcePath" = "8:..\\Tools\\scripts\\ArcSDMToolbox\\arcsdm\\tocfuzzification.py"
-            "TargetName" = "8:tocfuzzification.py"
-            "Tag" = "8:"
-            "Folder" = "8:_FCFCD30928CF401F8F72119C6D41C502"
             "Condition" = "8:"
             "Transitive" = "11:FALSE"
             "Vital" = "11:TRUE"
@@ -3518,26 +3050,6 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_24D140D2BF174E889EC8931467B8BE00"
-            {
-            "SourcePath" = "8:..\\Tools\\scripts\\ArcSDMToolbox\\arcsdm\\debug_ptvs.py"
-            "TargetName" = "8:debug_ptvs.py"
-            "Tag" = "8:"
-            "Folder" = "8:_FCFCD30928CF401F8F72119C6D41C502"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_26C44AE060364B09ACF579E2FC273E22"
             {
             "SourcePath" = "8:..\\Tools\\scripts\\RAEF\\Package\\MapMark4Results\\Run1_01234_03_PMF_Probs.csv"
@@ -3556,6 +3068,37 @@
             "Register" = "3:1"
             "Exclude" = "11:FALSE"
             "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_26C98F09040A53CD0BA39E6F195DCEEE"
+            {
+            "AssemblyRegister" = "3:1"
+            "AssemblyIsInGAC" = "11:FALSE"
+            "AssemblyAsmDisplayName" = "8:Newtonsoft.Json, Version=11.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL"
+                "ScatterAssemblies"
+                {
+                    "_26C98F09040A53CD0BA39E6F195DCEEE"
+                    {
+                    "Name" = "8:Newtonsoft.Json.dll"
+                    "Attributes" = "3:512"
+                    }
+                }
+            "SourcePath" = "8:Newtonsoft.Json.dll"
+            "TargetName" = "8:"
+            "Tag" = "8:"
+            "Folder" = "8:_B60440BA5E014AF4AF7320A0BBC39731"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_271313F1051C4EF8B80B6F23F9EA9B17"
@@ -3629,12 +3172,12 @@
             "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_2891B3A2F7C74CE6A679D14075488F55"
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_2A04106F920F47B6B7C43CEBA3DF0379"
             {
-            "SourcePath" = "8:..\\Tools\\scripts\\ArcSDMToolbox\\arcsdm\\ModelTrain.py"
-            "TargetName" = "8:ModelTrain.py"
+            "SourcePath" = "8:..\\Tools\\scripts\\fuzzy_and_wofe.7z.003"
+            "TargetName" = "8:fuzzy_and_wofe.7z.003"
             "Tag" = "8:"
-            "Folder" = "8:_FCFCD30928CF401F8F72119C6D41C502"
+            "Folder" = "8:_5955BCA4B47B4E34BF97FE9BF56DCF5B"
             "Condition" = "8:"
             "Transitive" = "11:FALSE"
             "Vital" = "11:TRUE"
@@ -4044,6 +3587,37 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_37F6B2C262B9044293764A06BFCC1A35"
+            {
+            "AssemblyRegister" = "3:1"
+            "AssemblyIsInGAC" = "11:FALSE"
+            "AssemblyAsmDisplayName" = "8:DynamicInterop, Version=0.8.1.0, Culture=neutral, processorArchitecture=MSIL"
+                "ScatterAssemblies"
+                {
+                    "_37F6B2C262B9044293764A06BFCC1A35"
+                    {
+                    "Name" = "8:DynamicInterop.dll"
+                    "Attributes" = "3:512"
+                    }
+                }
+            "SourcePath" = "8:DynamicInterop.dll"
+            "TargetName" = "8:"
+            "Tag" = "8:"
+            "Folder" = "8:_B60440BA5E014AF4AF7320A0BBC39731"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:TRUE"
+            "IsolateTo" = "8:"
+            }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_3856ACE03611435680C8B5A2683B402C"
             {
             "SourcePath" = "8:..\\Tools\\scripts\\DepPlotGeneral.R"
@@ -4113,6 +3687,26 @@
             "Register" = "3:1"
             "Exclude" = "11:FALSE"
             "IsDependency" = "11:TRUE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_3BFBED7EE4E04269B8A3F35DD1D4A420"
+            {
+            "SourcePath" = "8:..\\Tools\\scripts\\fuzzy_and_wofe.7z.004"
+            "TargetName" = "8:fuzzy_and_wofe.7z.004"
+            "Tag" = "8:"
+            "Folder" = "8:_5955BCA4B47B4E34BF97FE9BF56DCF5B"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
             "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_3DA5B2552D3DE4E06E0A1C13DA42FDDF"
@@ -4257,6 +3851,26 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_41BCFF63CC3E4AD4AD64B87E98BD751E"
+            {
+            "SourcePath" = "8:..\\Tools\\scripts\\fuzzy_and_wofe.7z.002"
+            "TargetName" = "8:fuzzy_and_wofe.7z.002"
+            "Tag" = "8:"
+            "Folder" = "8:_5955BCA4B47B4E34BF97FE9BF56DCF5B"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_424AA745EA5441B59C128C43E1904684"
             {
             "SourcePath" = "8:..\\Tools\\scripts\\rasterproc_wrapper_polygon.r"
@@ -4379,37 +3993,6 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_45DA17440B77EF346370DE152D6C1386"
-            {
-            "AssemblyRegister" = "3:1"
-            "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:RDotNet.NativeLibrary, Version=1.7.0.0, Culture=neutral, processorArchitecture=MSIL"
-                "ScatterAssemblies"
-                {
-                    "_45DA17440B77EF346370DE152D6C1386"
-                    {
-                    "Name" = "8:RDotNet.NativeLibrary.dll"
-                    "Attributes" = "3:512"
-                    }
-                }
-            "SourcePath" = "8:RDotNet.NativeLibrary.dll"
-            "TargetName" = "8:"
-            "Tag" = "8:"
-            "Folder" = "8:_B60440BA5E014AF4AF7320A0BBC39731"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:TRUE"
-            "IsolateTo" = "8:"
-            }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_46C82A927BF4483186095BC46B967EF8"
             {
             "SourcePath" = "8:..\\Tools\\scripts\\.Rhistory"
@@ -4436,26 +4019,6 @@
             "TargetName" = "8:PlotOV.R"
             "Tag" = "8:"
             "Folder" = "8:_B7EA900CDAC74581BEA1A9948A4EE8F6"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_47A977C9874E4EE891376C617FEAD2AA"
-            {
-            "SourcePath" = "8:..\\Tools\\scripts\\ArcSDMToolbox\\arcsdm\\roctool.py"
-            "TargetName" = "8:roctool.py"
-            "Tag" = "8:"
-            "Folder" = "8:_FCFCD30928CF401F8F72119C6D41C502"
             "Condition" = "8:"
             "Transitive" = "11:FALSE"
             "Vital" = "11:TRUE"
@@ -4519,46 +4082,6 @@
             "Register" = "3:1"
             "Exclude" = "11:FALSE"
             "IsDependency" = "11:TRUE"
-            "IsolateTo" = "8:"
-            }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_4AE7037379C44D6E90DABB8ADCD81765"
-            {
-            "SourcePath" = "8:..\\Tools\\scripts\\ArcSDMToolbox\\arcsdm\\floatingrasterclass.py"
-            "TargetName" = "8:floatingrasterclass.py"
-            "Tag" = "8:"
-            "Folder" = "8:_FCFCD30928CF401F8F72119C6D41C502"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_4C292FE21CCD44AA869C800EF68FA8B8"
-            {
-            "SourcePath" = "8:..\\Tools\\scripts\\ArcSDMToolbox\\arcsdm\\categoricalmembership.pyc"
-            "TargetName" = "8:categoricalmembership.pyc"
-            "Tag" = "8:"
-            "Folder" = "8:_FCFCD30928CF401F8F72119C6D41C502"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_4E7079F24EF64E23A425714C16694233"
@@ -4703,12 +4226,12 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_51F86B8A5FE040B0AE771E0D4A91B886"
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_522BC8ADD42143C788C51C9DF5BE3197"
             {
-            "SourcePath" = "8:..\\Tools\\scripts\\ArcSDMToolbox\\arcsdm\\logisticregression.py"
-            "TargetName" = "8:logisticregression.py"
+            "SourcePath" = "8:..\\Tools\\scripts\\fuzzy_and_wofe.7z.001"
+            "TargetName" = "8:fuzzy_and_wofe.7z.001"
             "Tag" = "8:"
-            "Folder" = "8:_FCFCD30928CF401F8F72119C6D41C502"
+            "Folder" = "8:_5955BCA4B47B4E34BF97FE9BF56DCF5B"
             "Condition" = "8:"
             "Transitive" = "11:FALSE"
             "Vital" = "11:TRUE"
@@ -4814,52 +4337,12 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_56137542B3F44A4686F50BC04EC86D1E"
-            {
-            "SourcePath" = "8:..\\Tools\\scripts\\ArcSDMToolbox\\arcsdm\\MulticlassSplit.py"
-            "TargetName" = "8:MulticlassSplit.py"
-            "Tag" = "8:"
-            "Folder" = "8:_FCFCD30928CF401F8F72119C6D41C502"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_57752C8ED25C407CADC221A466360B1B"
             {
             "SourcePath" = "8:..\\Tools\\scripts\\IndataGeneral.csv"
             "TargetName" = "8:IndataGeneral.csv"
             "Tag" = "8:"
             "Folder" = "8:_5955BCA4B47B4E34BF97FE9BF56DCF5B"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_59DCD9C8CF004AF4A14E88DABE4A73C2"
-            {
-            "SourcePath" = "8:..\\Tools\\scripts\\ArcSDMToolbox\\arcsdm\\rescale_raster.pyc"
-            "TargetName" = "8:rescale_raster.pyc"
-            "Tag" = "8:"
-            "Folder" = "8:_FCFCD30928CF401F8F72119C6D41C502"
             "Condition" = "8:"
             "Transitive" = "11:FALSE"
             "Vital" = "11:TRUE"
@@ -4911,26 +4394,6 @@
             "TargetName" = "8:GTK_logo.jpg"
             "Tag" = "8:"
             "Folder" = "8:_8FC895C4D94F4E71909165B269AFFD0E"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_5AE250A32C6F4F25AA527E825423C0D6"
-            {
-            "SourcePath" = "8:..\\Tools\\scripts\\ArcSDMToolbox\\arcsdm\\grand_wofe_lr.py"
-            "TargetName" = "8:grand_wofe_lr.py"
-            "Tag" = "8:"
-            "Folder" = "8:_FCFCD30928CF401F8F72119C6D41C502"
             "Condition" = "8:"
             "Transitive" = "11:FALSE"
             "Vital" = "11:TRUE"
@@ -5054,37 +4517,6 @@
             "Register" = "3:1"
             "Exclude" = "11:FALSE"
             "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_5C898525B128A89B1483F08D124BC64E"
-            {
-            "AssemblyRegister" = "3:1"
-            "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:Newtonsoft.Json, Version=11.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL"
-                "ScatterAssemblies"
-                {
-                    "_5C898525B128A89B1483F08D124BC64E"
-                    {
-                    "Name" = "8:Newtonsoft.Json.dll"
-                    "Attributes" = "3:512"
-                    }
-                }
-            "SourcePath" = "8:Newtonsoft.Json.dll"
-            "TargetName" = "8:"
-            "Tag" = "8:"
-            "Folder" = "8:_B60440BA5E014AF4AF7320A0BBC39731"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_5CE9B709925542D8AA0B02A214CC3F76"
@@ -5218,12 +4650,23 @@
             "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_61653EAD00434895814FF6C45FD5708E"
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_62BBAAEA02BD37558824D812324C9631"
             {
-            "SourcePath" = "8:..\\Tools\\scripts\\ArcSDMToolbox\\arcsdm\\missingdatavar_func.py"
-            "TargetName" = "8:missingdatavar_func.py"
+            "AssemblyRegister" = "3:1"
+            "AssemblyIsInGAC" = "11:FALSE"
+            "AssemblyAsmDisplayName" = "8:Tools, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL"
+                "ScatterAssemblies"
+                {
+                    "_62BBAAEA02BD37558824D812324C9631"
+                    {
+                    "Name" = "8:Tools.dll"
+                    "Attributes" = "3:512"
+                    }
+                }
+            "SourcePath" = "8:Tools.dll"
+            "TargetName" = "8:"
             "Tag" = "8:"
-            "Folder" = "8:_FCFCD30928CF401F8F72119C6D41C502"
+            "Folder" = "8:_B60440BA5E014AF4AF7320A0BBC39731"
             "Condition" = "8:"
             "Transitive" = "11:FALSE"
             "Vital" = "11:TRUE"
@@ -5235,7 +4678,7 @@
             "PackageAs" = "3:1"
             "Register" = "3:1"
             "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
+            "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_64E18C4AEA1C4996B8F59E0B765F38E9"
@@ -5386,6 +4829,26 @@
             "TargetName" = "8:Run1_01234TonPdfPlot.eps"
             "Tag" = "8:"
             "Folder" = "8:_94E2DFEBA1A34C6AB320D068A1B1152D"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_6A4C7B403124499CB61945FA1ED576CF"
+            {
+            "SourcePath" = "8:..\\Tools\\scripts\\fuzzy_and_wofe.exe"
+            "TargetName" = "8:fuzzy_and_wofe.exe"
+            "Tag" = "8:"
+            "Folder" = "8:_5955BCA4B47B4E34BF97FE9BF56DCF5B"
             "Condition" = "8:"
             "Transitive" = "11:FALSE"
             "Vital" = "11:TRUE"
@@ -5626,52 +5089,12 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_6FBE1629BE604E73A53E9ED7FDBED3A8"
-            {
-            "SourcePath" = "8:..\\Tools\\scripts\\NDepositsPmf_JT.R"
-            "TargetName" = "8:NDepositsPmf_JT.R"
-            "Tag" = "8:"
-            "Folder" = "8:_5955BCA4B47B4E34BF97FE9BF56DCF5B"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_703CD227BD8C45E78E7391AC880FF398"
             {
             "SourcePath" = "8:..\\Tools\\scripts\\RAEF\\Package\\MapMark4Results\\Run1_01234_07_SIM_Contained_Totals.csv"
             "TargetName" = "8:Run1_01234_07_SIM_Contained_Totals.csv"
             "Tag" = "8:"
             "Folder" = "8:_94E2DFEBA1A34C6AB320D068A1B1152D"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_70E0FD8530544A6C80BE3251387E1E97"
-            {
-            "SourcePath" = "8:..\\Tools\\scripts\\ArcSDMToolbox\\arcsdm\\config.py"
-            "TargetName" = "8:config.py"
-            "Tag" = "8:"
-            "Folder" = "8:_FCFCD30928CF401F8F72119C6D41C502"
             "Condition" = "8:"
             "Transitive" = "11:FALSE"
             "Vital" = "11:TRUE"
@@ -5746,83 +5169,12 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_73DC1A5545CA1CBE02F9259A071859A6"
-            {
-            "AssemblyRegister" = "3:1"
-            "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:System.ValueTuple, Version=4.0.2.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL"
-                "ScatterAssemblies"
-                {
-                    "_73DC1A5545CA1CBE02F9259A071859A6"
-                    {
-                    "Name" = "8:System.ValueTuple.dll"
-                    "Attributes" = "3:512"
-                    }
-                }
-            "SourcePath" = "8:System.ValueTuple.dll"
-            "TargetName" = "8:"
-            "Tag" = "8:"
-            "Folder" = "8:_B60440BA5E014AF4AF7320A0BBC39731"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:TRUE"
-            "IsolateTo" = "8:"
-            }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_74E11E1BD53544EFAAE89D434BBEC81C"
-            {
-            "SourcePath" = "8:..\\Tools\\scripts\\ArcSDMToolbox\\arcsdm\\combine_outputnnfiles.py"
-            "TargetName" = "8:combine_outputnnfiles.py"
-            "Tag" = "8:"
-            "Folder" = "8:_FCFCD30928CF401F8F72119C6D41C502"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_7614D1B7EF0D4ADAB5650F79D6EA300F"
             {
             "SourcePath" = "8:..\\Tools\\scripts\\DepositDensity\\porphyryPlot.jpeg"
             "TargetName" = "8:porphyryPlot.jpeg"
             "Tag" = "8:"
             "Folder" = "8:_065A645DDA2444658D4D80645829C03C"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_763D8B2C4B574E9DBBCFC37DB0CCA42C"
-            {
-            "SourcePath" = "8:..\\Tools\\scripts\\ArcSDMToolbox\\arcsdm\\areafrequency.pyc"
-            "TargetName" = "8:areafrequency.pyc"
-            "Tag" = "8:"
-            "Folder" = "8:_FCFCD30928CF401F8F72119C6D41C502"
             "Condition" = "8:"
             "Transitive" = "11:FALSE"
             "Vital" = "11:TRUE"
@@ -5954,26 +5306,6 @@
             "TargetName" = "8:TonnagePdf.R"
             "Tag" = "8:"
             "Folder" = "8:_5955BCA4B47B4E34BF97FE9BF56DCF5B"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_7C4CB587DC834425AFCEB20C710730DC"
-            {
-            "SourcePath" = "8:..\\Tools\\scripts\\ArcSDMToolbox\\arcsdm\\acterbergchengci.pyc"
-            "TargetName" = "8:acterbergchengci.pyc"
-            "Tag" = "8:"
-            "Folder" = "8:_FCFCD30928CF401F8F72119C6D41C502"
             "Condition" = "8:"
             "Transitive" = "11:FALSE"
             "Vital" = "11:TRUE"
@@ -6121,26 +5453,6 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_7F993558B1C04680875CD6F45F37CD0A"
-            {
-            "SourcePath" = "8:..\\Tools\\scripts\\ArcSDMToolbox\\ArcSDM.pyt"
-            "TargetName" = "8:ArcSDM.pyt"
-            "Tag" = "8:"
-            "Folder" = "8:_8B3C54CB7A3943B5ADFF4829564B1582"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_801049EA6F07409A97300386A735C2D5"
             {
             "SourcePath" = "8:..\\Tools\\scripts\\RAEF\\Package\\AuxFiles\\RScripts\\DS1e.R"
@@ -6201,57 +5513,6 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_8109D895AF0D4A7CB43E8F6E8F337274"
-            {
-            "SourcePath" = "8:..\\Tools\\scripts\\ArcSDMToolbox\\arcsdm\\ApplyFilter.py"
-            "TargetName" = "8:ApplyFilter.py"
-            "Tag" = "8:"
-            "Folder" = "8:_FCFCD30928CF401F8F72119C6D41C502"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_813D6A9721D62C28396A7371ACCC75BC"
-            {
-            "AssemblyRegister" = "3:1"
-            "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:RDotNet, Version=1.7.0.0, Culture=neutral, processorArchitecture=MSIL"
-                "ScatterAssemblies"
-                {
-                    "_813D6A9721D62C28396A7371ACCC75BC"
-                    {
-                    "Name" = "8:RDotNet.dll"
-                    "Attributes" = "3:512"
-                    }
-                }
-            "SourcePath" = "8:RDotNet.dll"
-            "TargetName" = "8:"
-            "Tag" = "8:"
-            "Folder" = "8:_B60440BA5E014AF4AF7320A0BBC39731"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:TRUE"
-            "IsolateTo" = "8:"
-            }
             "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_81428E61AB264D577E2F92A50E87399E"
             {
             "AssemblyRegister" = "3:1"
@@ -6283,72 +5544,12 @@
             "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_829C89A45B2C4BB9962CE6C876373638"
-            {
-            "SourcePath" = "8:..\\Tools\\scripts\\ArcSDMToolbox\\arcsdm\\arcsdm_version.txt"
-            "TargetName" = "8:arcsdm_version.txt"
-            "Tag" = "8:"
-            "Folder" = "8:_FCFCD30928CF401F8F72119C6D41C502"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_83866EE90BC3440B93496A081A87DE37"
             {
             "SourcePath" = "8:..\\Tools\\scripts\\R-3.6.3.exe"
             "TargetName" = "8:R-3.6.3.exe"
             "Tag" = "8:"
             "Folder" = "8:_5955BCA4B47B4E34BF97FE9BF56DCF5B"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_842871CFC0A64D58B9BBC9906D61A058"
-            {
-            "SourcePath" = "8:..\\Tools\\scripts\\ArcSDMToolbox\\arcsdm\\logisticregression.pyc"
-            "TargetName" = "8:logisticregression.pyc"
-            "Tag" = "8:"
-            "Folder" = "8:_FCFCD30928CF401F8F72119C6D41C502"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_8557FDDF98734E2BA71DFD9C9529D2B9"
-            {
-            "SourcePath" = "8:..\\Tools\\scripts\\ArcSDMToolbox\\arcsdm\\common.py"
-            "TargetName" = "8:common.py"
-            "Tag" = "8:"
-            "Folder" = "8:_FCFCD30928CF401F8F72119C6D41C502"
             "Condition" = "8:"
             "Transitive" = "11:FALSE"
             "Vital" = "11:TRUE"
@@ -6403,6 +5604,37 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_87B19D9C885D3A2DE2BCD349C2E783FD"
+            {
+            "AssemblyRegister" = "3:1"
+            "AssemblyIsInGAC" = "11:FALSE"
+            "AssemblyAsmDisplayName" = "8:System.ValueTuple, Version=4.0.2.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL"
+                "ScatterAssemblies"
+                {
+                    "_87B19D9C885D3A2DE2BCD349C2E783FD"
+                    {
+                    "Name" = "8:System.ValueTuple.dll"
+                    "Attributes" = "3:512"
+                    }
+                }
+            "SourcePath" = "8:System.ValueTuple.dll"
+            "TargetName" = "8:"
+            "Tag" = "8:"
+            "Folder" = "8:_B60440BA5E014AF4AF7320A0BBC39731"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:TRUE"
+            "IsolateTo" = "8:"
+            }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_87EA7202F5C7441F84568539CD32C73B"
             {
             "SourcePath" = "8:..\\Tools\\scripts\\RAEF\\Package\\AuxFiles\\RScripts\\dcat1a.R"
@@ -6423,72 +5655,12 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_88629122339E4C0F898E1B9E4B7F8303"
-            {
-            "SourcePath" = "8:..\\Tools\\scripts\\ArcSDMToolbox\\arcsdm\\weight_boosting.py"
-            "TargetName" = "8:weight_boosting.py"
-            "Tag" = "8:"
-            "Folder" = "8:_FCFCD30928CF401F8F72119C6D41C502"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_894CF84C9B0B4EBD86FC2764E795392B"
             {
             "SourcePath" = "8:..\\Tools\\scripts\\RAEF\\Package\\AuxFiles\\RScripts\\CustomTab_old3.R"
             "TargetName" = "8:CustomTab_old3.R"
             "Tag" = "8:"
             "Folder" = "8:_B7EA900CDAC74581BEA1A9948A4EE8F6"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_89B4C15DBA964030A5BC92B3E8FF7670"
-            {
-            "SourcePath" = "8:..\\Tools\\scripts\\ArcSDMToolbox\\arcsdm\\somtool.py"
-            "TargetName" = "8:somtool.py"
-            "Tag" = "8:"
-            "Folder" = "8:_FCFCD30928CF401F8F72119C6D41C502"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_89CDC06EA7D0468C961E15FDCF27D723"
-            {
-            "SourcePath" = "8:..\\Tools\\scripts\\ArcSDMToolbox\\arcsdm\\sitereduction.pyc"
-            "TargetName" = "8:sitereduction.pyc"
-            "Tag" = "8:"
-            "Folder" = "8:_FCFCD30928CF401F8F72119C6D41C502"
             "Condition" = "8:"
             "Transitive" = "11:FALSE"
             "Vital" = "11:TRUE"
@@ -6543,72 +5715,12 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_8CDE5F33623B485D93379CA9D583E2B3"
-            {
-            "SourcePath" = "8:..\\Tools\\scripts\\ArcSDMToolbox\\arcsdm\\config.pyc"
-            "TargetName" = "8:config.pyc"
-            "Tag" = "8:"
-            "Folder" = "8:_FCFCD30928CF401F8F72119C6D41C502"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_8D3AF074DAB64AB59753187B9C6A7116"
-            {
-            "SourcePath" = "8:..\\Tools\\scripts\\ArcSDMToolbox\\arcsdm\\general_func.py"
-            "TargetName" = "8:general_func.py"
-            "Tag" = "8:"
-            "Folder" = "8:_FCFCD30928CF401F8F72119C6D41C502"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_8D758A45EE36452F8A564EBAD9D18A6F"
             {
             "SourcePath" = "8:..\\Tools\\scripts\\RAEF\\Package\\MapMark4Results\\Run1_01234SimTotalPlot.eps"
             "TargetName" = "8:Run1_01234SimTotalPlot.eps"
             "Tag" = "8:"
             "Folder" = "8:_94E2DFEBA1A34C6AB320D068A1B1152D"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_8E3B4B82E6054B118E87295A7B75B366"
-            {
-            "SourcePath" = "8:..\\Tools\\scripts\\FuzzyOverlay.pyw"
-            "TargetName" = "8:FuzzyOverlay.pyw"
-            "Tag" = "8:"
-            "Folder" = "8:_5955BCA4B47B4E34BF97FE9BF56DCF5B"
             "Condition" = "8:"
             "Transitive" = "11:FALSE"
             "Vital" = "11:TRUE"
@@ -6669,46 +5781,6 @@
             "TargetName" = "8:ToolTabStyle.xaml"
             "Tag" = "8:"
             "Folder" = "8:_05C48C2F62484691803312F0BABD2ABC"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_8F588AAF7B1E489C831A1E83BFB16524"
-            {
-            "SourcePath" = "8:..\\Tools\\scripts\\WofeCalculateWeights.pyw"
-            "TargetName" = "8:WofeCalculateWeights.pyw"
-            "Tag" = "8:"
-            "Folder" = "8:_5955BCA4B47B4E34BF97FE9BF56DCF5B"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_9062C2E955F24A4D9CD6419BAE0C13B4"
-            {
-            "SourcePath" = "8:..\\Tools\\scripts\\ArcSDMToolbox\\arcsdm\\__init__.pyc"
-            "TargetName" = "8:__init__.pyc"
-            "Tag" = "8:"
-            "Folder" = "8:_FCFCD30928CF401F8F72119C6D41C502"
             "Condition" = "8:"
             "Transitive" = "11:FALSE"
             "Vital" = "11:TRUE"
@@ -6814,72 +5886,12 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_93E1D28BE4DB49E49F4E39858FFB1D01"
-            {
-            "SourcePath" = "8:..\\Tools\\scripts\\ArcSDMToolbox\\arcsdm\\sitereduction.py"
-            "TargetName" = "8:sitereduction.py"
-            "Tag" = "8:"
-            "Folder" = "8:_FCFCD30928CF401F8F72119C6D41C502"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_947BC89787434161B06C61D9E65157AB"
-            {
-            "SourcePath" = "8:..\\Tools\\scripts\\ArcSDMToolbox\\arcsdm\\nninputfiles.pyc"
-            "TargetName" = "8:nninputfiles.pyc"
-            "Tag" = "8:"
-            "Folder" = "8:_FCFCD30928CF401F8F72119C6D41C502"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_9485EFAFD5A847CB97C1B8604D2E4575"
             {
             "SourcePath" = "8:..\\Tools\\scripts\\RAEF\\Package\\AuxFiles\\RScripts\\DStatR.R"
             "TargetName" = "8:DStatR.R"
             "Tag" = "8:"
             "Folder" = "8:_B7EA900CDAC74581BEA1A9948A4EE8F6"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_95DD20D06E504249AA86A36509A78E11"
-            {
-            "SourcePath" = "8:..\\Tools\\scripts\\ArcSDMToolbox\\arcsdm\\nninputfiles.py"
-            "TargetName" = "8:nninputfiles.py"
-            "Tag" = "8:"
-            "Folder" = "8:_FCFCD30928CF401F8F72119C6D41C502"
             "Condition" = "8:"
             "Transitive" = "11:FALSE"
             "Vital" = "11:TRUE"
@@ -6943,57 +5955,6 @@
             "Register" = "3:1"
             "Exclude" = "11:FALSE"
             "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_98096EFAABA04ADD8FB33D0FD5CBBFA5"
-            {
-            "SourcePath" = "8:..\\Tools\\scripts\\ArcSDMToolbox\\arcsdm\\calculateweights.py"
-            "TargetName" = "8:calculateweights.py"
-            "Tag" = "8:"
-            "Folder" = "8:_FCFCD30928CF401F8F72119C6D41C502"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_981537D68D7EB353FD709BC54FAFEB79"
-            {
-            "AssemblyRegister" = "3:1"
-            "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:CsvHelper, Version=12.0.0.0, Culture=neutral, PublicKeyToken=8c4959082be5c823, processorArchitecture=MSIL"
-                "ScatterAssemblies"
-                {
-                    "_981537D68D7EB353FD709BC54FAFEB79"
-                    {
-                    "Name" = "8:CsvHelper.dll"
-                    "Attributes" = "3:512"
-                    }
-                }
-            "SourcePath" = "8:CsvHelper.dll"
-            "TargetName" = "8:"
-            "Tag" = "8:"
-            "Folder" = "8:_B60440BA5E014AF4AF7320A0BBC39731"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_985F1FEF00C74A57B372900B02D93391"
@@ -7067,26 +6028,6 @@
             "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_9B9F4DEB0047422B8F4B46C93C1CE700"
-            {
-            "SourcePath" = "8:..\\Tools\\scripts\\ArcSDMToolbox\\arcsdm\\workarounds_93.py"
-            "TargetName" = "8:workarounds_93.py"
-            "Tag" = "8:"
-            "Folder" = "8:_FCFCD30928CF401F8F72119C6D41C502"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_9C953269EA8F47CFA3A78295D910AEA4"
             {
             "SourcePath" = "8:..\\Tools\\scripts\\RAEF\\Package\\AuxFiles\\RScripts\\PlotOV103018.R"
@@ -7113,66 +6054,6 @@
             "TargetName" = "8:TotalTonnagePdf.R"
             "Tag" = "8:"
             "Folder" = "8:_5955BCA4B47B4E34BF97FE9BF56DCF5B"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_9EC7ADBFE3984ABBB5861F0FC81FA0E9"
-            {
-            "SourcePath" = "8:..\\Tools\\scripts\\ArcSDMToolbox\\arcsdm\\partition_inputnnfiles.py"
-            "TargetName" = "8:partition_inputnnfiles.py"
-            "Tag" = "8:"
-            "Folder" = "8:_FCFCD30928CF401F8F72119C6D41C502"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_9FE39B9F3B6F4CD4BEC5252E55F2FCCE"
-            {
-            "SourcePath" = "8:..\\Tools\\scripts\\ArcSDMToolbox\\arcsdm\\grand_wofe_lr.pyc"
-            "TargetName" = "8:grand_wofe_lr.pyc"
-            "Tag" = "8:"
-            "Folder" = "8:_FCFCD30928CF401F8F72119C6D41C502"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_A00B80C296E84B88A5646CA3A647F6B3"
-            {
-            "SourcePath" = "8:..\\Tools\\scripts\\ArcSDMToolbox\\arcsdm\\AdaboostBestParameters.py"
-            "TargetName" = "8:AdaboostBestParameters.py"
-            "Tag" = "8:"
-            "Folder" = "8:_FCFCD30928CF401F8F72119C6D41C502"
             "Condition" = "8:"
             "Transitive" = "11:FALSE"
             "Vital" = "11:TRUE"
@@ -7216,46 +6097,6 @@
             "Register" = "3:1"
             "Exclude" = "11:FALSE"
             "IsDependency" = "11:TRUE"
-            "IsolateTo" = "8:"
-            }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_A1FE5536BCF74251AECB92194A019FE7"
-            {
-            "SourcePath" = "8:..\\Tools\\scripts\\ArcSDMToolbox\\arcsdm\\rescale_raster.py"
-            "TargetName" = "8:rescale_raster.py"
-            "Tag" = "8:"
-            "Folder" = "8:_FCFCD30928CF401F8F72119C6D41C502"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_A27A864C396F4855BA331DA44B2C051A"
-            {
-            "SourcePath" = "8:..\\Tools\\scripts\\ArcSDMToolbox\\arcsdm\\exceptions.pyc"
-            "TargetName" = "8:exceptions.pyc"
-            "Tag" = "8:"
-            "Folder" = "8:_FCFCD30928CF401F8F72119C6D41C502"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_A3355F145AF84E36AA922D43DC745784"
@@ -7604,26 +6445,6 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_AF4F23A778A74E02AFACCA039C20F489"
-            {
-            "SourcePath" = "8:..\\Tools\\scripts\\ArcSDMToolbox\\arcsdm\\categoricalreclass.py"
-            "TargetName" = "8:categoricalreclass.py"
-            "Tag" = "8:"
-            "Folder" = "8:_FCFCD30928CF401F8F72119C6D41C502"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
             "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_B03BA0037F28358D8D25B8B50DF00EC7"
             {
             "AssemblyRegister" = "3:1"
@@ -7661,26 +6482,6 @@
             "TargetName" = "8:oMeta.rds"
             "Tag" = "8:"
             "Folder" = "8:_1774F9801E244FB18EADC3A8F24635AD"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_B0E418A28FFB45729FCE095685F521A0"
-            {
-            "SourcePath" = "8:..\\Tools\\scripts\\ArcSDMToolbox\\arcsdm\\acterbergchengci.py"
-            "TargetName" = "8:acterbergchengci.py"
-            "Tag" = "8:"
-            "Folder" = "8:_FCFCD30928CF401F8F72119C6D41C502"
             "Condition" = "8:"
             "Transitive" = "11:FALSE"
             "Vital" = "11:TRUE"
@@ -7746,46 +6547,6 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_B24BC849890142E79D6D0C652B91A7F6"
-            {
-            "SourcePath" = "8:..\\Tools\\scripts\\ArcSDMToolbox\\arcsdm\\nnoutputfiles.py"
-            "TargetName" = "8:nnoutputfiles.py"
-            "Tag" = "8:"
-            "Folder" = "8:_FCFCD30928CF401F8F72119C6D41C502"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_B2F50AC2D4B9439EBD570238A68935BD"
-            {
-            "SourcePath" = "8:..\\Tools\\scripts\\ArcSDMToolbox\\arcsdm\\EnrichPoints.py"
-            "TargetName" = "8:EnrichPoints.py"
-            "Tag" = "8:"
-            "Folder" = "8:_FCFCD30928CF401F8F72119C6D41C502"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_B4C1127E92354D31942E4C37844B12D3"
             {
             "SourcePath" = "8:..\\Tools\\scripts\\RAEF\\RAEF_MW_AGAIN - Copy.R"
@@ -7826,132 +6587,12 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_B6BEA381AEE8456DB84DDBD8A44FAE41"
-            {
-            "SourcePath" = "8:..\\Tools\\scripts\\ArcSDMToolbox\\arcsdm\\roctool.pyc"
-            "TargetName" = "8:roctool.pyc"
-            "Tag" = "8:"
-            "Folder" = "8:_FCFCD30928CF401F8F72119C6D41C502"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_B7B7546CDD5C40F3B4C457B6EB55D4FE"
-            {
-            "SourcePath" = "8:..\\Tools\\scripts\\ArcSDMToolbox\\arcsdm\\areafrequency.py"
-            "TargetName" = "8:areafrequency.py"
-            "Tag" = "8:"
-            "Folder" = "8:_FCFCD30928CF401F8F72119C6D41C502"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_B8CED958F12B4695AB937BD44631C2CC"
-            {
-            "SourcePath" = "8:..\\Tools\\scripts\\ArcSDMToolbox\\arcsdm\\workarounds_93.pyc"
-            "TargetName" = "8:workarounds_93.pyc"
-            "Tag" = "8:"
-            "Folder" = "8:_FCFCD30928CF401F8F72119C6D41C502"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_B94661D2E02D4E53AE33A76EFBD23EA1"
             {
             "SourcePath" = "8:..\\Tools\\scripts\\DepositDensity\\VMSplot.jpeg"
             "TargetName" = "8:VMSplot.jpeg"
             "Tag" = "8:"
             "Folder" = "8:_065A645DDA2444658D4D80645829C03C"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_BB4AF6914C4A4269B5319992DA06A63D"
-            {
-            "SourcePath" = "8:..\\Tools\\scripts\\ArcSDMToolbox\\arcsdm\\floatingrasterarray.pyc"
-            "TargetName" = "8:floatingrasterarray.pyc"
-            "Tag" = "8:"
-            "Folder" = "8:_FCFCD30928CF401F8F72119C6D41C502"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_BD8DC7B5927240FC9F64E56B18FA9DBE"
-            {
-            "SourcePath" = "8:..\\Tools\\scripts\\ArcSDMToolbox\\arcsdm\\calculateresponse.py"
-            "TargetName" = "8:calculateresponse.py"
-            "Tag" = "8:"
-            "Folder" = "8:_FCFCD30928CF401F8F72119C6D41C502"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_BE915FD21ACB4842B227E4DC6408567D"
-            {
-            "SourcePath" = "8:..\\Tools\\scripts\\FuzzyOverlay.py"
-            "TargetName" = "8:FuzzyOverlay.py"
-            "Tag" = "8:"
-            "Folder" = "8:_5955BCA4B47B4E34BF97FE9BF56DCF5B"
             "Condition" = "8:"
             "Transitive" = "11:FALSE"
             "Vital" = "11:TRUE"
@@ -8006,52 +6647,12 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_C3F0FDA14D1541C3BB8E19C3A0A10709"
-            {
-            "SourcePath" = "8:..\\Tools\\scripts\\Reclassify.pyw"
-            "TargetName" = "8:Reclassify.pyw"
-            "Tag" = "8:"
-            "Folder" = "8:_5955BCA4B47B4E34BF97FE9BF56DCF5B"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_C4B29C9DD8DF4018BC77CD4B01F39F20"
             {
             "SourcePath" = "8:..\\Tools\\scripts\\RAEF\\Package\\AuxFiles\\RScripts\\CustomTaboldbroken.R"
             "TargetName" = "8:CustomTaboldbroken.R"
             "Tag" = "8:"
             "Folder" = "8:_B7EA900CDAC74581BEA1A9948A4EE8F6"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_C4CEEB3552D84DFFB150C4C312943732"
-            {
-            "SourcePath" = "8:..\\Tools\\scripts\\ArcSDMToolbox\\arcsdm\\floatingrasterarray.py"
-            "TargetName" = "8:floatingrasterarray.py"
-            "Tag" = "8:"
-            "Folder" = "8:_FCFCD30928CF401F8F72119C6D41C502"
             "Condition" = "8:"
             "Transitive" = "11:FALSE"
             "Vital" = "11:TRUE"
@@ -8126,26 +6727,6 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_C83010995ED1453BA791A9DA74BFAA34"
-            {
-            "SourcePath" = "8:..\\Tools\\scripts\\ArcSDMToolbox\\arcsdm\\sdmvalues.py"
-            "TargetName" = "8:sdmvalues.py"
-            "Tag" = "8:"
-            "Folder" = "8:_FCFCD30928CF401F8F72119C6D41C502"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
             "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_C908A3E2222CBFD097A2CC96644E1CDD"
             {
             "AssemblyRegister" = "3:1"
@@ -8197,137 +6778,6 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_CA5EE2D1AF3B4035B5633BFB34B95BE4"
-            {
-            "SourcePath" = "8:..\\Tools\\scripts\\ArcSDMToolbox\\arcsdm\\calculateresponse.pyc"
-            "TargetName" = "8:calculateresponse.pyc"
-            "Tag" = "8:"
-            "Folder" = "8:_FCFCD30928CF401F8F72119C6D41C502"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_CA7F91CC5D3646C5A57EEF7809A4B773"
-            {
-            "SourcePath" = "8:..\\Tools\\scripts\\Reclassify.pyc"
-            "TargetName" = "8:Reclassify.pyc"
-            "Tag" = "8:"
-            "Folder" = "8:_5955BCA4B47B4E34BF97FE9BF56DCF5B"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_CB066758F0B22DCCFCBB992666075751"
-            {
-            "AssemblyRegister" = "3:1"
-            "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:DynamicInterop, Version=0.8.1.0, Culture=neutral, processorArchitecture=MSIL"
-                "ScatterAssemblies"
-                {
-                    "_CB066758F0B22DCCFCBB992666075751"
-                    {
-                    "Name" = "8:DynamicInterop.dll"
-                    "Attributes" = "3:512"
-                    }
-                }
-            "SourcePath" = "8:DynamicInterop.dll"
-            "TargetName" = "8:"
-            "Tag" = "8:"
-            "Folder" = "8:_B60440BA5E014AF4AF7320A0BBC39731"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:TRUE"
-            "IsolateTo" = "8:"
-            }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_CC5D047AC07746548E3F621CBC192717"
-            {
-            "SourcePath" = "8:..\\Tools\\scripts\\ArcSDMToolbox\\arcsdm\\ApplyModel.py"
-            "TargetName" = "8:ApplyModel.py"
-            "Tag" = "8:"
-            "Folder" = "8:_FCFCD30928CF401F8F72119C6D41C502"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_CD13623B0139411583CFA6168B7E1261"
-            {
-            "SourcePath" = "8:..\\Tools\\scripts\\ArcSDMToolbox\\arcsdm\\common.pyc"
-            "TargetName" = "8:common.pyc"
-            "Tag" = "8:"
-            "Folder" = "8:_FCFCD30928CF401F8F72119C6D41C502"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_CDDD31B58A4D4A93A37AF6F57112B75D"
-            {
-            "SourcePath" = "8:..\\Tools\\scripts\\ArcSDMToolbox\\arcsdm\\ModelValidation.py"
-            "TargetName" = "8:ModelValidation.py"
-            "Tag" = "8:"
-            "Folder" = "8:_FCFCD30928CF401F8F72119C6D41C502"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_CF226412DD4C47CABA5B45A539CF70C8"
             {
             "SourcePath" = "8:..\\Tools\\scripts\\UndiscoveredDeposits\\plot_131864938523642860.jpeg"
@@ -8346,37 +6796,6 @@
             "Register" = "3:1"
             "Exclude" = "11:FALSE"
             "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_CF45AB4FFE64C4D316346D935D5838C9"
-            {
-            "AssemblyRegister" = "3:1"
-            "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:Tools, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL"
-                "ScatterAssemblies"
-                {
-                    "_CF45AB4FFE64C4D316346D935D5838C9"
-                    {
-                    "Name" = "8:Tools.dll"
-                    "Attributes" = "3:512"
-                    }
-                }
-            "SourcePath" = "8:Tools.dll"
-            "TargetName" = "8:"
-            "Tag" = "8:"
-            "Folder" = "8:_B60440BA5E014AF4AF7320A0BBC39731"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_CF5B250424E24BA2A98A3ED330D3179A"
@@ -8572,46 +6991,6 @@
             "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_D74EDE84971B4B0B9CEAC4FD9379BA12"
-            {
-            "SourcePath" = "8:..\\Tools\\scripts\\WofeCreateMask.pyw"
-            "TargetName" = "8:WofeCreateMask.pyw"
-            "Tag" = "8:"
-            "Folder" = "8:_5955BCA4B47B4E34BF97FE9BF56DCF5B"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_D8DD55F43C0C4892AF317F95942FA83C"
-            {
-            "SourcePath" = "8:..\\Tools\\scripts\\ArcSDMToolbox\\arcsdm\\tocfuzzification.pyc"
-            "TargetName" = "8:tocfuzzification.pyc"
-            "Tag" = "8:"
-            "Folder" = "8:_FCFCD30928CF401F8F72119C6D41C502"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_D90903F6E14B45DA80122AC8B55BA2EF"
             {
             "SourcePath" = "8:..\\Tools\\scripts\\RAEF\\Package\\MapMark4Results\\Run1_01234_06_SIM_EF_Stats.csv"
@@ -8714,46 +7093,6 @@
             "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_DC8DF8A82CAF42978D9EABEA611A49D7"
-            {
-            "SourcePath" = "8:..\\Tools\\scripts\\ArcSDMToolbox\\arcsdm\\sdmvalues.pyc"
-            "TargetName" = "8:sdmvalues.pyc"
-            "Tag" = "8:"
-            "Folder" = "8:_FCFCD30928CF401F8F72119C6D41C502"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_DD1D23FEA36E4B1098E401264A78B9D8"
-            {
-            "SourcePath" = "8:..\\Tools\\scripts\\WofeCalculateResponse.pyw"
-            "TargetName" = "8:WofeCalculateResponse.pyw"
-            "Tag" = "8:"
-            "Folder" = "8:_5955BCA4B47B4E34BF97FE9BF56DCF5B"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
             "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_DD516F376328C5DE62ED609FF67F812B"
             {
             "AssemblyRegister" = "3:1"
@@ -8825,26 +7164,6 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_DE5393C3EB024D13AD0A1FCE52039F41"
-            {
-            "SourcePath" = "8:..\\Tools\\scripts\\ArcSDMToolbox\\arcsdm\\minisom.py"
-            "TargetName" = "8:minisom.py"
-            "Tag" = "8:"
-            "Folder" = "8:_FCFCD30928CF401F8F72119C6D41C502"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_DEC7ADD70F514A23977A172C0B91B650"
             {
             "SourcePath" = "8:..\\Tools\\scripts\\DepPlotUnitTest2.R"
@@ -8871,26 +7190,6 @@
             "TargetName" = "8:PlotOV_Old.R"
             "Tag" = "8:"
             "Folder" = "8:_B7EA900CDAC74581BEA1A9948A4EE8F6"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_E1164F35DE3F4EF2BC903E34E16ECEEE"
-            {
-            "SourcePath" = "8:..\\Tools\\scripts\\ArcSDMToolbox\\arcsdm\\CreateRandomPoints.py"
-            "TargetName" = "8:CreateRandomPoints.py"
-            "Tag" = "8:"
-            "Folder" = "8:_FCFCD30928CF401F8F72119C6D41C502"
             "Condition" = "8:"
             "Transitive" = "11:FALSE"
             "Vital" = "11:TRUE"
@@ -8956,6 +7255,37 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_E3A0661DB36158F5E336E39F50B524BC"
+            {
+            "AssemblyRegister" = "3:1"
+            "AssemblyIsInGAC" = "11:FALSE"
+            "AssemblyAsmDisplayName" = "8:RDotNet.NativeLibrary, Version=1.7.0.0, Culture=neutral, processorArchitecture=MSIL"
+                "ScatterAssemblies"
+                {
+                    "_E3A0661DB36158F5E336E39F50B524BC"
+                    {
+                    "Name" = "8:RDotNet.NativeLibrary.dll"
+                    "Attributes" = "3:512"
+                    }
+                }
+            "SourcePath" = "8:RDotNet.NativeLibrary.dll"
+            "TargetName" = "8:"
+            "Tag" = "8:"
+            "Folder" = "8:_B60440BA5E014AF4AF7320A0BBC39731"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:TRUE"
+            "IsolateTo" = "8:"
+            }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_E46CA6A0A8664959A13021963272F3CA"
             {
             "SourcePath" = "8:..\\Tools\\scripts\\RAEF\\Package\\AuxFiles\\RScripts\\CalcBE_old1118.R"
@@ -8982,26 +7312,6 @@
             "TargetName" = "8:RAEFReadMe2619.docx"
             "Tag" = "8:"
             "Folder" = "8:_94498F0DC5BA4A4D8AD2AC321EA2D03C"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_E656E99D70DA4DD49C8D7DD407A7F52D"
-            {
-            "SourcePath" = "8:..\\Tools\\scripts\\ArcSDMToolbox\\arcsdm\\symbolize.py"
-            "TargetName" = "8:symbolize.py"
-            "Tag" = "8:"
-            "Folder" = "8:_FCFCD30928CF401F8F72119C6D41C502"
             "Condition" = "8:"
             "Transitive" = "11:FALSE"
             "Vital" = "11:TRUE"
@@ -9076,12 +7386,23 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_E9B43C77C0AC495DAAEDF0F68C6DD416"
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_E916DC39045F1CA11F5C5A0E0F0A8F15"
             {
-            "SourcePath" = "8:..\\Tools\\scripts\\ArcSDMToolbox\\arcsdm\\symbolize.pyc"
-            "TargetName" = "8:symbolize.pyc"
+            "AssemblyRegister" = "3:1"
+            "AssemblyIsInGAC" = "11:FALSE"
+            "AssemblyAsmDisplayName" = "8:CsvHelper, Version=12.0.0.0, Culture=neutral, PublicKeyToken=8c4959082be5c823, processorArchitecture=MSIL"
+                "ScatterAssemblies"
+                {
+                    "_E916DC39045F1CA11F5C5A0E0F0A8F15"
+                    {
+                    "Name" = "8:CsvHelper.dll"
+                    "Attributes" = "3:512"
+                    }
+                }
+            "SourcePath" = "8:CsvHelper.dll"
+            "TargetName" = "8:"
             "Tag" = "8:"
-            "Folder" = "8:_FCFCD30928CF401F8F72119C6D41C502"
+            "Folder" = "8:_B60440BA5E014AF4AF7320A0BBC39731"
             "Condition" = "8:"
             "Transitive" = "11:FALSE"
             "Vital" = "11:TRUE"
@@ -9093,7 +7414,7 @@
             "PackageAs" = "3:1"
             "Register" = "3:1"
             "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
+            "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
             "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_EBC8FB2D478360E8694FDD3C37A25DD7"
@@ -9125,26 +7446,6 @@
             "Register" = "3:1"
             "Exclude" = "11:FALSE"
             "IsDependency" = "11:TRUE"
-            "IsolateTo" = "8:"
-            }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_EBD4834B50754DCE8DBE93021E44DCA8"
-            {
-            "SourcePath" = "8:..\\Tools\\scripts\\ArcSDMToolbox\\arcsdm\\logisticregression_test.py"
-            "TargetName" = "8:logisticregression_test.py"
-            "Tag" = "8:"
-            "Folder" = "8:_FCFCD30928CF401F8F72119C6D41C502"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_EE7967E6512C424BB9F494D70C83D317"
@@ -9289,12 +7590,23 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_F62F662A87BA40458DFEA3D3FA4501CA"
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_F5495F67E1E53158CE6749337FE387ED"
             {
-            "SourcePath" = "8:..\\Tools\\scripts\\RAEF\\Package\\AuxFiles\\Images\\bnrglobe3.gif"
-            "TargetName" = "8:bnrglobe3.gif"
+            "AssemblyRegister" = "3:1"
+            "AssemblyIsInGAC" = "11:FALSE"
+            "AssemblyAsmDisplayName" = "8:RDotNet, Version=1.7.0.0, Culture=neutral, processorArchitecture=MSIL"
+                "ScatterAssemblies"
+                {
+                    "_F5495F67E1E53158CE6749337FE387ED"
+                    {
+                    "Name" = "8:RDotNet.dll"
+                    "Attributes" = "3:512"
+                    }
+                }
+            "SourcePath" = "8:RDotNet.dll"
+            "TargetName" = "8:"
             "Tag" = "8:"
-            "Folder" = "8:_4DE967F0ECE946B3AF0861A6FA6A5EE4"
+            "Folder" = "8:_B60440BA5E014AF4AF7320A0BBC39731"
             "Condition" = "8:"
             "Transitive" = "11:FALSE"
             "Vital" = "11:TRUE"
@@ -9306,15 +7618,15 @@
             "PackageAs" = "3:1"
             "Register" = "3:1"
             "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
+            "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_F6D6EE6E1B4B4DCE9EBD4F7D29726DDE"
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_F62F662A87BA40458DFEA3D3FA4501CA"
             {
-            "SourcePath" = "8:..\\Tools\\scripts\\ArcSDMToolbox\\arcsdm\\categoricalreclass.pyc"
-            "TargetName" = "8:categoricalreclass.pyc"
+            "SourcePath" = "8:..\\Tools\\scripts\\RAEF\\Package\\AuxFiles\\Images\\bnrglobe3.gif"
+            "TargetName" = "8:bnrglobe3.gif"
             "Tag" = "8:"
-            "Folder" = "8:_FCFCD30928CF401F8F72119C6D41C502"
+            "Folder" = "8:_4DE967F0ECE946B3AF0861A6FA6A5EE4"
             "Condition" = "8:"
             "Transitive" = "11:FALSE"
             "Vital" = "11:TRUE"
@@ -9429,26 +7741,6 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_FA3369DA53FF4DE9B78ADC583CE3E347"
-            {
-            "SourcePath" = "8:..\\Tools\\scripts\\ArcSDMToolbox\\arcsdm\\categoricalmembership.py"
-            "TargetName" = "8:categoricalmembership.py"
-            "Tag" = "8:"
-            "Folder" = "8:_FCFCD30928CF401F8F72119C6D41C502"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
             "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_FB1F2AC762165EC7D7532C3E674A168D"
             {
             "AssemblyRegister" = "3:1"
@@ -9478,26 +7770,6 @@
             "Register" = "3:1"
             "Exclude" = "11:FALSE"
             "IsDependency" = "11:TRUE"
-            "IsolateTo" = "8:"
-            }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_FB497E40ACD744BB86FB4EF4AAABED2A"
-            {
-            "SourcePath" = "8:..\\Tools\\scripts\\ArcSDMToolbox\\arcsdm\\calculateweights.pyc"
-            "TargetName" = "8:calculateweights.pyc"
-            "Tag" = "8:"
-            "Folder" = "8:_FCFCD30928CF401F8F72119C6D41C502"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_FB4CAF5CDAFF47AAB752497B8746E491"
@@ -9672,7 +7944,7 @@
             }
             "{3C67513D-01DD-4637-8A68-80971EB9504F}:_B60440BA5E014AF4AF7320A0BBC39731"
             {
-            "DefaultLocation" = "8:[ProgramFilesFolder][Manufacturer]\\[ProductName]"
+            "DefaultLocation" = "8:[ProgramFilesFolder]\\[ProductName]"
             "Name" = "8:#1925"
             "AlwaysCreate" = "11:FALSE"
             "Condition" = "8:"
@@ -9753,28 +8025,6 @@
                             "Property" = "8:_8F40D9B3155341FA8463F3D5F24038A9"
                                 "Folders"
                                 {
-                                }
-                            }
-                            "{9EF0B969-E518-4E46-987F-47570745A589}:_8B3C54CB7A3943B5ADFF4829564B1582"
-                            {
-                            "Name" = "8:ArcSDMToolbox"
-                            "AlwaysCreate" = "11:FALSE"
-                            "Condition" = "8:"
-                            "Transitive" = "11:FALSE"
-                            "Property" = "8:_1EBFB7FB1FC54809B98F511E65D5C1A2"
-                                "Folders"
-                                {
-                                    "{9EF0B969-E518-4E46-987F-47570745A589}:_FCFCD30928CF401F8F72119C6D41C502"
-                                    {
-                                    "Name" = "8:arcsdm"
-                                    "AlwaysCreate" = "11:FALSE"
-                                    "Condition" = "8:"
-                                    "Transitive" = "11:FALSE"
-                                    "Property" = "8:_95B01A11675441DC918057594A80A7A6"
-                                        "Folders"
-                                        {
-                                        }
-                                    }
                                 }
                             }
                             "{9EF0B969-E518-4E46-987F-47570745A589}:_B955864473D34403901E72814BA893A7"
@@ -9896,15 +8146,15 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:MapWizard"
-        "ProductCode" = "8:{5ED8F1D9-CCDF-4059-831D-583CA20C93B5}"
-        "PackageCode" = "8:{4D27C358-F76F-4158-A6A5-F90CBA470C49}"
+        "ProductCode" = "8:{1A572EEB-CCFE-4278-A06C-531723B35CE7}"
+        "PackageCode" = "8:{2C555229-1052-4264-82DE-39CA8C9DF25D}"
         "UpgradeCode" = "8:{65FB7FC9-53F4-455B-806D-0693A8E56D49}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:FALSE"
-        "ProductVersion" = "8:1.0.80"
+        "ProductVersion" = "8:1.4"
         "Manufacturer" = "8:GTK"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:"
@@ -10432,7 +8682,7 @@
         {
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_4CF59948D24A434E9D0917CB99F7E97A"
             {
-            "SourcePath" = "8:..\\MapWizard\\obj\\Release\\MapWizard.exe"
+            "SourcePath" = "8:..\\MapWizard\\obj\\Debug\\MapWizard.exe"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_B60440BA5E014AF4AF7320A0BBC39731"

@@ -142,7 +142,7 @@
                 <UniformGrid HorizontalAlignment="Left" Width="600" Rows="1" Columns="2">
                     <WrapPanel></WrapPanel>
                     <WrapPanel Margin="0,35,0,0" Style="{StaticResource ValueColumn}">
-                        <TextBlock MinWidth="250" FontSize="18" TextWrapping="Wrap" Text="Only the tracts that have the result selected in the Undiscovered Deposits tool are selectable." VerticalAlignment="Center" HorizontalAlignment="Left">
+                        <TextBlock MinWidth="250" FontSize="18" TextWrapping="Wrap" Text="Only the tracts that have a result selected in the Undiscovered Deposits tool are selectable." VerticalAlignment="Center" HorizontalAlignment="Left">
                             </TextBlock>
                     </WrapPanel>
                 </UniformGrid>

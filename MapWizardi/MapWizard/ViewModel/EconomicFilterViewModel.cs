@@ -230,9 +230,14 @@ namespace MapWizard.ViewModel
         /// </summary>
         private async void RunTool()
         {
-            //TODO: laita tää myös kattoo onko kyseessä sreeneri...
+            
             if (Model.UseRaefInputParams == true && Model.TabIndex != 1 && Model.RaefEmpiricalModel == false)
-                Model.RaefPresetFile = WriteCsvFile(); //empirical checki tehään sitten tool puolella
+            {
+                Model.RaefPresetFile = WriteCsvFile();
+                if (Model.RaefPresetFile == "Choose file")
+                    return;
+            }
+                
 
             logger.Info("-->{0}", this.GetType().Name);
             if (Model.TabIndex == 1)
@@ -288,9 +293,15 @@ namespace MapWizard.ViewModel
                     if (ddResult.EcoTonHistogram != null)
                         Result.ScreenerHistogramBitMap = BitmapFromUri(ddResult.EcoTonHistogram);
                 });
-                var raefModelFolder = Path.Combine(input.Env.RootPath, "EconFilter", "RAEF", Model.SelectedTract);
-                Model.RaefModelNames.Clear();
-                FindRaefModelnames(raefModelFolder);  // Find saved results.
+
+                var raefModelFolder = "";
+                if (Model.TabIndex != 1)
+                {
+                    raefModelFolder = Path.Combine(input.Env.RootPath, "EconFilter", "RAEF", Model.SelectedTract);
+                    Model.RaefModelNames.Clear();
+                    FindRaefModelnames(raefModelFolder);
+                }
+                 // Find saved results.
                 //var screenerModelFolder = Path.Combine(input.Env.RootPath, "EconFilter", "Screener", Model.ScreenerExtensionFolder);
                 //if (!Model.ScreenerModelNames.Contains(screenerModelFolder))
                 //    Model.ScreenerModelNames.Add(screenerModelFolder);
@@ -554,7 +565,7 @@ namespace MapWizard.ViewModel
             catch (Exception e)
             {
                 logger.Error(e, "Failed to read metal index");
-                throw;
+                dialogService.ShowNotification("Failed to read metal index. Check output for details.", "Error");
                 //throw new Exception("Reading metal index failed: " + result, e);
             }
             return retValue;
@@ -943,7 +954,7 @@ namespace MapWizard.ViewModel
                 //Suggestion made by KyleMit
                 //var newLine = string.Format("{0},{1}", first, second);
                 //csv.AppendLine(
-                int maxDepth = Math.Max(Model.RaefMax1, Math.Max(Model.RaefMax2, Math.Max(Model.RaefMax3, Model.RaefMax4))); ;//c# math max on tymä eikä ota enempää kuin 2 kerralla, siksi tää hölmö ketju. joku linQ max ois myös olemassa ja vois toki olla ihan pelkkä > komparisooni mutta olkoon nyt näin.
+                int maxDepth = Math.Max(Model.RaefMax1, Math.Max(Model.RaefMax2, Math.Max(Model.RaefMax3, Model.RaefMax4)));//c# math max on tymä eikä ota enempää kuin 2 kerralla, siksi tää hölmö ketju. joku linQ max ois myös olemassa ja vois toki olla ihan pelkkä > komparisooni mutta olkoon nyt näin.
 
                 switch (Model.RaefDepositType)
                 { //check spelling for cases!
@@ -1093,7 +1104,7 @@ namespace MapWizard.ViewModel
                 //{
                 //    csv.AppendLine("41,\"Custom_Mill_Option6\"," + "\"" + Model.RaefCustomMillOption6 + "\"");
                 //}
-                string filePath = Path.Combine(settingsService.RootPath, "EconFilter", "RaefTest.csv");
+                string filePath = Path.Combine(settingsService.RootPath, "EconFilter", "RaefParams.csv");
                 File.WriteAllText(filePath, csv.ToString());//Tästä kovakoodit pois! johonki result folderiin kirjota tuo mihink kuuluuki.
                 return filePath;
                 //csv.AppendLine("42,\"CV_Cu", "3813.958"

@@ -221,7 +221,8 @@ namespace MapWizard.ViewModel
                         ClassificationId = inputParams.ClassificationId,
                         TrainingPoints = inputParams.TrainingPoints,
                         Arcsdm = inputParams.ArcSdm,
-                        ConfidenceLevel = inputParams.ConfidenceLevel
+                        ConfidenceLevel = inputParams.ConfidenceLevel,
+                        FuzzySplitValue = inputParams.FuzzySplitValue
                     };
             
                 }
@@ -260,7 +261,8 @@ namespace MapWizard.ViewModel
             ShowSaveTract = false;
 
             FindTractIDs();  // Gets the tractID names from PermissiveTractTool's Delineation folder.
-            upDateTractBoundaryList();
+            deleteBoundaryList();
+            deleteClassificationTemp();
         }
 
         /// <summary>
@@ -398,7 +400,7 @@ namespace MapWizard.ViewModel
         /// SUM —An increasive function.Use this when the combination of multiple evidence is more important or larger than any of the inputs alone.
         /// GAMMA —The algebraic product of the fuzzy Sum and fuzzy Product, both raised to the power of gamma.
         /// </summary>
-        public ObservableCollection<string> FuzzyOverlayTypeIDs { get; } = new ObservableCollection<string>() { "AND", "OR", "PRODUCT", "SUM", "GAMMA" };
+        public ObservableCollection<string> FuzzyOverlayTypeIDs { get; } = new ObservableCollection<string>() { "And", "Or", "Product", "Sum", "Gamma" };
         /// <summary>
         /// 
         /// </summary>
@@ -579,8 +581,7 @@ namespace MapWizard.ViewModel
                 {
                     logger.Info("-- >{0}", this.GetType().Name);
 
-                    string pythonPath = settingsService.PythonPath;// "C:\\Program Files\\ArcGIS\\Pro\\bin\\Python\\envs\\arcgispro-py3\\pythonw.exe";
-
+                    
                     var path = System.AppDomain.CurrentDomain.BaseDirectory;
                     var scriptPath = "scripts\\";
                     string method = "";
@@ -589,7 +590,6 @@ namespace MapWizard.ViewModel
 
                     PermissiveTractInputParams inputParams = new PermissiveTractInputParams
                     {
-                        PythonPath = pythonPath,
                         ScriptPath = scriptPath,
                         EnvPath = model.EnvPath,
                         InRasterList = model.InRasterList,
@@ -613,12 +613,10 @@ namespace MapWizard.ViewModel
 
                     logger.Trace(
                          "PermissiveTractInputParams:\n" +
-                         "\tPythonPath: '{0}'\n" +
-                         "\tScriptPath: '{1}'\n" +
-                         "\tEnvPath: '{2}'\n" +
-                         "\tInRasterList: '{3}'\n" +
-                         "\tOutRaster: '{4}'\n",
-                         inputParams.PythonPath,
+                         "\tScriptPath: '{0}'\n" +
+                         "\tEnvPath: '{1}'\n" +
+                         "\tInRasterList: '{2}'\n" +
+                         "\tOutRaster: '{3}'\n",
                          inputParams.ScriptPath,
                          inputParams.EnvPath,
                          inputParams.InRasterList,
@@ -882,21 +880,13 @@ namespace MapWizard.ViewModel
         {
             logger.Info("-->{0}", this.GetType().Name);
 
-            string pythonPath = settingsService.PythonPath;
-
             var path = System.AppDomain.CurrentDomain.BaseDirectory;
             var scriptPath = "scripts\\";
 
-            if (!File.Exists(@pythonPath))
-            {
-                dialogService.ShowNotification("Run failed. The python path is not valid.", "Error");
-                viewModelLocator.SettingsViewModel.WriteLogText("Run failed. The python path is not valid.", "Error");
-            }
-
+      
             string method = "calculatetreshold";
             PermissiveTractInputParams inputParams = new PermissiveTractInputParams
             {
-                PythonPath = pythonPath,
                 ScriptPath = scriptPath,
                 EnvPath = model.EnvPath,
                 InRasterList = model.InRasterList,
@@ -919,12 +909,10 @@ namespace MapWizard.ViewModel
 
             logger.Trace(
                 "PermissiveTractInputParams:\n" +
-                "\tPythonPath: '{0}'\n" +
-                "\tScriptPath: '{1}'\n" +
-                "\tEnvPath: '{2}'\n" +
-                "\tInRasterList: '{3}'\n" +
-                "\tOutRaster: '{4}'\n",
-                 inputParams.PythonPath,
+                "\tScriptPath: '{0}'\n" +
+                "\tEnvPath: '{1}'\n" +
+                "\tInRasterList: '{2}'\n" +
+                "\tOutRaster: '{3}'\n",
                  inputParams.ScriptPath,
                  inputParams.EnvPath,
                  inputParams.InRasterList,
@@ -973,15 +961,8 @@ namespace MapWizard.ViewModel
         private async void Classificate()
         {
             logger.Info("-->{0}", this.GetType().Name);
-            string pythonPath = settingsService.PythonPath;
             var path = System.AppDomain.CurrentDomain.BaseDirectory;
             var scriptPath = "scripts\\";
-
-            if (!File.Exists(@pythonPath))
-            {
-                dialogService.ShowNotification("Run failed. The python path is not valid.", "Error");
-                viewModelLocator.SettingsViewModel.WriteLogText("Run failed. The python path is not valid.", "Error");
-            }
 
             string outputFolder = projectFolder + "\\Classification\\Temp\\";
             string outputRaster = outputFolder + "ClassificationRaster_" + model.ClassificationId + ".img";
@@ -1006,7 +987,6 @@ namespace MapWizard.ViewModel
 
             PermissiveTractInputParams inputParams = new PermissiveTractInputParams
             {
-                PythonPath = pythonPath,
                 ScriptPath = scriptPath,
                 EnvPath = model.EnvPath,
                 InRasterList = model.InRasterList,
@@ -1080,19 +1060,12 @@ namespace MapWizard.ViewModel
                 return;
             }
 
-            string pythonPath = settingsService.PythonPath;
             var path = System.AppDomain.CurrentDomain.BaseDirectory;
             var scriptPath = "scripts\\";
-
-            if (!File.Exists(@pythonPath))
-            {
-                dialogService.ShowNotification("Run failed. The python path is not valid.", "Error");
-                viewModelLocator.SettingsViewModel.WriteLogText("Run failed. The python path is not valid.", "Error");
-            }
+            
             string method = "generatetracts";
             PermissiveTractInputParams inputParams = new PermissiveTractInputParams
             {
-                PythonPath = pythonPath,
                 ScriptPath = scriptPath,
                 EnvPath = model.EnvPath,
                 InRasterList = model.InRasterList,
@@ -1254,17 +1227,9 @@ namespace MapWizard.ViewModel
             if (model.EvidenceRasterlist.Count == wt.Length)
             {
 
-                string pythonPath = settingsService.PythonPath;// "C:\\Program Files\\ArcGIS\\Pro\\bin\\Python\\envs\\arcgispro-py3\\pythonw.exe";
-
+        
                 var path = System.AppDomain.CurrentDomain.BaseDirectory;
                 var scriptPath = "scripts\\";
-
-                if (!File.Exists(@pythonPath))
-                {
-                    dialogService.ShowNotification("Run failed. The python path is not valid.", "Error");
-                }
-
-                
 
                 string method = "wofe";
 
@@ -1275,7 +1240,6 @@ namespace MapWizard.ViewModel
 
                 PermissiveTractInputParams inputParams = new PermissiveTractInputParams
                 {
-                    PythonPath = pythonPath,
                     ScriptPath = scriptPath,
                     EnvPath = model.EnvPath,
                     InRasterList = model.InRasterList,
@@ -1302,12 +1266,10 @@ namespace MapWizard.ViewModel
 
                 logger.Trace(
                      "PermissiveTractInputParams:\n" +
-                     "\tPythonPath: '{0}'\n" +
-                     "\tScriptPath: '{1}'\n" +
-                     "\tEnvPath: '{2}'\n" +
-                     "\tInRasterList: '{3}'\n" +
-                     "\tOutRaster: '{4}'\n",
-                     inputParams.PythonPath,
+                     "\tScriptPath: '{0}'\n" +
+                     "\tEnvPath: '{1}'\n" +
+                     "\tInRasterList: '{2}'\n" +
+                     "\tOutRaster: '{3}'\n",
                      inputParams.ScriptPath,
                      inputParams.EnvPath,
                      inputParams.InRasterList,
@@ -1335,25 +1297,27 @@ namespace MapWizard.ViewModel
                         //List<string> f = new List<string>(new string[] { "element1", "element2", "element3" });
 
                     });
+                    
+                    //Copy final delineation rasters to correct folder 
+                    string filePath = Path.Combine(delineationFolder, "WofE", "EvidenceData");
+                    string destinationFolder = Path.Combine(finalRasterFolder, model.DelRasterFolderWofe);
+                    
+                    if (wofeFromClassification)
+                    {
+                        filePath = Path.Combine(projectFolder, "Classification", "WofE", "EvidenceData");
+                        destinationFolder = Path.Combine(projectFolder, "Classification", "ClassificationRasters", model.DelRasterFolderWofe);
+                    }
+
+                    if (!Directory.Exists(destinationFolder))
+                    {
+                        Directory.CreateDirectory(destinationFolder);
+                    }
+
                     if (permissiveTractResult.CalculateWeightsResult != "ERROR")
                     {
-                        //Copy final delineation rasters to correct folder 
-                        string filePath = Path.Combine(delineationFolder, "WofE", "EvidenceData");
-                        string destinationFolder = Path.Combine(finalRasterFolder, model.DelRasterFolderWofe);
-
-                        if (wofeFromClassification)
-                        {
-                            filePath = Path.Combine(projectFolder, "Classification", "WofE", "EvidenceData");
-                            destinationFolder = Path.Combine(projectFolder, "Classification", "ClassificationRasters", model.DelRasterFolderWofe);
-                        }
-
-                        if (!Directory.Exists(destinationFolder))
-                        {
-                            Directory.CreateDirectory(destinationFolder);
-                        }
-
+                       
                         //propability raster file
-                        string file = @"\W_pprb.img";
+                        string file = @"\PostProb.tif";
                         if (File.Exists(filePath + file) && File.Exists(destinationFolder + @"\" + file)) File.Delete(destinationFolder + @"\" + file);
                         File.Move(filePath + file, destinationFolder + @"\" + file);
 
@@ -1364,32 +1328,30 @@ namespace MapWizard.ViewModel
                             wofeFromClassification = false;
                         }
 
-                        file = @"\W_pprb.img.xml";
+                        file = @"\confidence.tif";
                         if (File.Exists(filePath + file) && File.Exists(destinationFolder + @"\" + file)) File.Delete(destinationFolder + @"\" + file);
                         File.Move(filePath + file, destinationFolder + @"\" + file);
-                        file = @"\W_pprb.img.aux.xml";
-                        if (File.Exists(filePath + file) && File.Exists(destinationFolder + @"\" + file)) File.Delete(destinationFolder + @"\" + file);
-                        File.Move(filePath + file, destinationFolder + @"\" + file);
-
-                        file = @"\W_conf.img";
-                        if (File.Exists(filePath + file) && File.Exists(destinationFolder + @"\" + file)) File.Delete(destinationFolder + @"\" + file);
-                        File.Move(filePath + file, destinationFolder + @"\" + file);
-                        file = @"\W_conf.img.xml";
-                        if (File.Exists(filePath + file) && File.Exists(destinationFolder + @"\" + file)) File.Delete(destinationFolder + @"\" + file);
-                        File.Move(filePath + file, destinationFolder + @"\" + file);
-                        file = @"\W_conf.img.aux.xml";
+                       
+                        file = @"\StdDev.tif";
                         if (File.Exists(filePath + file) && File.Exists(destinationFolder + @"\" + file)) File.Delete(destinationFolder + @"\" + file);
                         File.Move(filePath + file, destinationFolder + @"\" + file);
 
-                        file = @"\W_std.img";
+                        file = @"\ndv.tif";
                         if (File.Exists(filePath + file) && File.Exists(destinationFolder + @"\" + file)) File.Delete(destinationFolder + @"\" + file);
                         File.Move(filePath + file, destinationFolder + @"\" + file);
-                        file = @"\W_std.img.xml";
-                        if (File.Exists(filePath + file) && File.Exists(destinationFolder + @"\" + file)) File.Delete(destinationFolder + @"\" + file);
-                        File.Move(filePath + file, destinationFolder + @"\" + file);
-                        file = @"\W_std.img.aux.xml";
-                        if (File.Exists(filePath + file) && File.Exists(destinationFolder + @"\" + file)) File.Delete(destinationFolder + @"\" + file);
-                        File.Move(filePath + file, destinationFolder + @"\" + file);
+                                                
+                        DirectoryInfo d = new DirectoryInfo(Path.Combine(filePath,"tmp_output"));
+                        foreach (var f in d.GetFiles("*.json"))
+                        {
+                            if (File.Exists(destinationFolder + @"\" + f.Name.Replace(".json", "_weight_table.json"))) File.Delete(destinationFolder + @"\" + f.Name.Replace(".json", "_weight_table.json"));
+                            File.Move(d+"\\"+f.Name, destinationFolder + @"\" + f.Name.Replace(".json","_weight_table.json"));
+                        }
+
+                        foreach (var f in d.GetFiles("*.log"))
+                        {
+                            if (File.Exists(destinationFolder + @"\" + f.Name)) File.Delete(destinationFolder + @"\" + f.Name);
+                            File.Move(d + "\\" + f.Name, destinationFolder + @"\" + f.Name);
+                        }
 
                         updateWofeRasterExplanation(destinationFolder);
 
@@ -1401,8 +1363,16 @@ namespace MapWizard.ViewModel
                     }
                     else
                     {
-                        dialogService.ShowNotification("WofE Calculate weights failed. Improve dataset!", "Error");
-                        viewModelLocator.SettingsViewModel.WriteLogText("WofE Calculate weights failed in Permissive Tract tool. Improve dataset!.", "Error");
+                        DirectoryInfo d = new DirectoryInfo(Path.Combine(filePath, "tmp_output"));
+                        foreach (var f in d.GetFiles("*.log"))
+                        {
+                            if (File.Exists(destinationFolder + @"\" + f.Name)) File.Delete(destinationFolder + @"\" + f.Name);
+                            File.Move(d + "\\" + f.Name, destinationFolder + @"\" + f.Name);
+                        }
+
+                        dialogService.ShowNotification("WofE run failed. Improve dataset. Check log for more info!", "Error");
+                        viewModelLocator.SettingsViewModel.WriteLogText("WofE run failed in Permissive Tract tool. Improve dataset!.", "Error");
+                        viewModelLocator.SettingsViewModel.WriteLogText("WofE log: "+destinationFolder+"\\logfile.txt", "Error");
                         logger.Trace("Run failed");
                         RunStatus = 0;
                     }
@@ -1482,9 +1452,10 @@ namespace MapWizard.ViewModel
                 sw.WriteLine(model.ExplanationOfTrainingPoints);
                 sw.WriteLine("");
                 sw.WriteLine("Folder for saving delineation raster:");
-                sw.WriteLine(outputfolder + @"\W_pprb.img");
-                sw.WriteLine(outputfolder + @"\W_conf.img");
-                sw.WriteLine(outputfolder + @"\W_std.img");
+                sw.WriteLine(outputfolder + @"\confidence.tif");
+                sw.WriteLine(outputfolder + @"\PostProb.tif");
+                sw.WriteLine(outputfolder + @"\StdDev.tif");
+                sw.WriteLine(outputfolder + @"\ndv.tif");
 
             }
 
@@ -1496,16 +1467,9 @@ namespace MapWizard.ViewModel
             {
                 logger.Info("-- >{0}", this.GetType().Name);
                 updateFuzzyFolder();
-                string pythonPath = settingsService.PythonPath;// "C:\\Program Files\\ArcGIS\\Pro\\bin\\Python\\envs\\arcgispro-py3\\pythonw.exe";
-
+           
                 var path = System.AppDomain.CurrentDomain.BaseDirectory;
                 var scriptPath = "scripts\\";
-
-                if (!File.Exists(@pythonPath))
-                {
-                    dialogService.ShowNotification("Run failed. The python path is not valid.", "Error");
-                    viewModelLocator.SettingsViewModel.WriteLogText("Run failed. The python path is not valid.", "Error");
-                }
 
                 string method = "";
                 if (fuzzyFromClassification)
@@ -1520,7 +1484,6 @@ namespace MapWizard.ViewModel
 
                 PermissiveTractInputParams inputParams = new PermissiveTractInputParams
                 {
-                    PythonPath = pythonPath,
                     ScriptPath = scriptPath,
                     EnvPath = model.EnvPath,
                     InRasterList = model.InRasterList,
@@ -1539,17 +1502,16 @@ namespace MapWizard.ViewModel
                     MaskRaster = model.MaskRaster,
                     WorkSpace = model.WorkSpace,
                     WofEWeightsType = model.WofEWeightsType,
-                    TrainingPoints = model.TrainingPoints
+                    TrainingPoints = model.TrainingPoints,
+                    FuzzySplitValue = model.FuzzySplitValue
                 };
 
                 logger.Trace(
                      "PermissiveTractInputParams:\n" +
-                     "\tPythonPath: '{0}'\n" +
-                     "\tScriptPath: '{1}'\n" +
-                     "\tEnvPath: '{2}'\n" +
-                     "\tInRasterList: '{3}'\n" +
-                     "\tOutRaster: '{4}'\n",
-                     inputParams.PythonPath,
+                     "\tScriptPath: '{0}'\n" +
+                     "\tEnvPath: '{1}'\n" +
+                     "\tInRasterList: '{2}'\n" +
+                     "\tOutRaster: '{3}'\n",
                      inputParams.ScriptPath,
                      inputParams.EnvPath,
                      inputParams.InRasterList,
@@ -1587,11 +1549,34 @@ namespace MapWizard.ViewModel
                 });
 
                 updateFuzzyRasterExplanation();
-                dialogService.ShowNotification("Fuzzy completed successfully.", "Success");
-                viewModelLocator.SettingsViewModel.WriteLogText("Fuzzy completed successfully in Permissive Tract tool.", "Success");
-                model.ExplanationOfRasters = "";
-                LastRunDate = "Last Run: " + DateTime.Now.ToString("g");
-                RunStatus = 1;
+                if (permissiveTractResult.PermissiveTractResults == "0")
+                {
+                    dialogService.ShowNotification("Fuzzy completed successfully.", "Success");
+                    viewModelLocator.SettingsViewModel.WriteLogText("Fuzzy completed successfully in Permissive Tract tool.", "Success");
+                    model.ExplanationOfRasters = "";
+                   
+                    if (inputParams.LastFuzzyRound == "True")
+                    {
+                        string logfile = Path.Combine(evidenceDataFolder, "logfile.log");
+                        string destLogFile = Path.Combine(finalRasterFolder, model.DelRasterFolder, "logfile.txt");
+                        if (File.Exists(destLogFile))
+                        {
+                            File.Delete(destLogFile);
+                        }
+                        File.Move(logfile, destLogFile);
+                    }
+
+                    LastRunDate = "Last Run: " + DateTime.Now.ToString("g");
+                    RunStatus = 1;
+                }
+                else
+                {
+                    string fuzzyError = checkFuzzyLog();
+                    dialogService.ShowNotification("Run failed, check log!", "Error");
+                    viewModelLocator.SettingsViewModel.WriteLogText("Run failed in Permissive Tract Fuzzy tool: "+fuzzyError, "Error");
+                    viewModelLocator.SettingsViewModel.WriteLogText("Check logfile: "+ Path.Combine(evidenceDataFolder, "logfile.log"), "Error");
+                    RunStatus = 0;
+                }
             }
 
             catch (Exception ex)
@@ -1608,6 +1593,16 @@ namespace MapWizard.ViewModel
             logger.Info("<--{0} completed", this.GetType().Name);
         }
 
+        private string checkFuzzyLog()
+        {
+            string retValue = "";
+            string logfile = Path.Combine(evidenceDataFolder, "logfile.log");
+            if (File.Exists(logfile))
+            {
+                retValue = File.ReadAllText(logfile);
+            }
+            return retValue;
+        }
 
         /// <summary>
         /// Run the tool with user input.
@@ -1618,15 +1613,10 @@ namespace MapWizard.ViewModel
             {
                 logger.Info("-- >{0}", this.GetType().Name);
 
-                string pythonPath = settingsService.PythonPath;// "C:\\Program Files\\ArcGIS\\Pro\\bin\\Python\\envs\\arcgispro-py3\\pythonw.exe";
 
                 var path = System.AppDomain.CurrentDomain.BaseDirectory;
                 var scriptPath = "scripts\\";
 
-                if (!File.Exists(@pythonPath))
-                {
-                    dialogService.ShowNotification("Run failed. The python path is not valid.", "Error");
-                }
 
                 string method = "";
                 method = "delineation";
@@ -1634,7 +1624,6 @@ namespace MapWizard.ViewModel
 
                 PermissiveTractInputParams inputParams = new PermissiveTractInputParams
                 {
-                    PythonPath = pythonPath,
                     ScriptPath = scriptPath,
                     EnvPath = model.EnvPath,
                     InRasterList = model.InRasterList,
@@ -1658,12 +1647,10 @@ namespace MapWizard.ViewModel
 
                 logger.Trace(
                      "PermissiveTractInputParams:\n" +
-                     "\tPythonPath: '{0}'\n" +
-                     "\tScriptPath: '{1}'\n" +
-                     "\tEnvPath: '{2}'\n" +
-                     "\tInRasterList: '{3}'\n" +
-                     "\tOutRaster: '{4}'\n",
-                     inputParams.PythonPath,
+                     "\tScriptPath: '{0}'\n" +
+                     "\tEnvPath: '{1}'\n" +
+                     "\tInRasterList: '{2}'\n" +
+                     "\tOutRaster: '{3}'\n",
                      inputParams.ScriptPath,
                      inputParams.EnvPath,
                      inputParams.InRasterList,
@@ -1798,7 +1785,7 @@ namespace MapWizard.ViewModel
                 }
                 sw.WriteLine("");
                 sw.WriteLine("Output file:");
-                sw.WriteLine(evidenceDataFolder + @"\" + model.FuzzyOutputFile + ".img");
+                sw.WriteLine(evidenceDataFolder + @"\" + model.FuzzyOutputFile + model.FuzzyOverlayType + ".tif");
                 sw.WriteLine("");
             }
 
@@ -1823,8 +1810,8 @@ namespace MapWizard.ViewModel
                     File.Move(outputFile, destExplanation);
                 }
 
-                string sourceFile = evidenceDataFolder + @"\" + model.FuzzyOutputFile + ".img";
-                string destFile = finalRasterFolder + @"\" + model.DelRasterFolder + @"\" + model.FuzzyOutputFile + ".img";
+                string sourceFile = evidenceDataFolder + @"\" + model.FuzzyOutputFile + model.FuzzyOverlayType + ".tif";
+                string destFile = finalRasterFolder + @"\" + model.DelRasterFolder + @"\" + model.FuzzyOutputFile + ".tif";
 
                 if (File.Exists(sourceFile))
                 {
@@ -1944,7 +1931,7 @@ namespace MapWizard.ViewModel
                 logger.Error(ex, "Failed to show OpenFileDialog");
                 dialogService.ShowNotification("Failed to select input file.", "Error");
             }
-           
+
         }
 
         /// <summary>
@@ -1977,7 +1964,7 @@ namespace MapWizard.ViewModel
         {
             try
             {
-                string drfile = dialogService.OpenFileDialog(projectFolder + @"\Delineation", "Raster files (*.img)|*.img", true, true, settingsService.RootPath);
+                string drfile = dialogService.OpenFileDialog(projectFolder + @"\Delineation", "All files (*.*)|*.*", true, true, settingsService.RootPath);
 
                 if (!string.IsNullOrEmpty(drfile))
                 {
@@ -1988,7 +1975,9 @@ namespace MapWizard.ViewModel
                     }
 
                     string destFile = Path.Combine(destFolder, Path.GetFileName(drfile));
-                    File.Copy(drfile, destFile, true);
+                    if (drfile != destFile) {
+                        File.Copy(drfile, destFile, true); 
+                    }
 
                     model.DelineationRaster = destFile;
                 }
@@ -2030,7 +2019,7 @@ namespace MapWizard.ViewModel
         {
             try
             {
-                string maskfile = dialogService.OpenFileDialog(fileFolder, "Shape file (*.shp)|*.shp", true, true, settingsService.RootPath);
+                string maskfile = dialogService.OpenFileDialog(fileFolder, "All files (*.*)|*.*", true, true, settingsService.RootPath);
 
                 if (!string.IsNullOrEmpty(maskfile))
                 {
@@ -2095,8 +2084,25 @@ namespace MapWizard.ViewModel
         {
             try
             {
+                string filePath = "";
+                if (wofeFromClassification)
+                {
+                    filePath = Path.Combine(classificationFolder, "WofE", "EvidenceData");
+                }
+                else
+                {
+                    filePath = Path.Combine(delineationFolder, "WofE", "EvidenceData");
+                }
 
-                List<string> files = dialogService.OpenFilesDialog(evidenceDataFolder, "All files (*.*)|*.*", true, true, settingsService.RootPath);
+
+
+
+                    if (!Directory.Exists(filePath))
+                    {
+                        Directory.CreateDirectory(filePath);
+                    }
+
+                List<string> files = dialogService.OpenFilesDialog(filePath, "All files (*.*)|*.*", true, true, settingsService.RootPath);
 
                 /* if (!string.IsNullOrEmpty(files.ToString()))
                  {
@@ -2111,57 +2117,55 @@ namespace MapWizard.ViewModel
                 {
                     fileFolder = Path.GetDirectoryName(files[0]);
 
-                    string filePath = "";
-                    if (wofeFromClassification)
-                    {
-                        filePath = Path.Combine(classificationFolder, "WofE", "EvidenceData");
-                    }
-                    else
-                    {
-                        filePath = Path.Combine(delineationFolder, "WofE", "EvidenceData");
-                    }
-
-
-
-
-                    if (!Directory.Exists(filePath))
-                    {
-                        Directory.CreateDirectory(filePath);
-                    }
 
                     foreach (string file in files)
                     {
                         FileInfo mFile = new FileInfo(file);
                         string targetFile = Path.Combine(filePath, mFile.Name);
-                        File.Copy(file, targetFile, true);
+                        if (!File.Exists(targetFile))
+                        {
+                            File.Copy(file, targetFile, true);
+                        }
                         evidencefiles.Add(targetFile);
 
                         string tmpFile = file + ".aux.xml";
                         targetFile = Path.Combine(filePath, mFile.Name + ".aux.xml");
-                        if (File.Exists(tmpFile))
+                        if (!File.Exists(targetFile))
                         {
-                            File.Copy(tmpFile, targetFile, true);
+                            if (File.Exists(tmpFile))
+                            {
+                                File.Copy(tmpFile, targetFile, true);
+                            }
                         }
 
                         tmpFile = file + ".vat.cpg";
                         targetFile = Path.Combine(filePath, mFile.Name + ".vat.cpg");
-                        if (File.Exists(tmpFile))
+                        if (!File.Exists(targetFile))
                         {
-                            File.Copy(tmpFile, targetFile, true);
+                            if (File.Exists(tmpFile))
+                            {
+                                File.Copy(tmpFile, targetFile, true);
+                            }
                         }
 
                         tmpFile = file + ".vat.dbf";
                         targetFile = Path.Combine(filePath, mFile.Name + ".vat.dbf");
-                        if (File.Exists(tmpFile))
+                        if (!File.Exists(targetFile))
                         {
-                            File.Copy(tmpFile, targetFile, true);
+                            if (File.Exists(tmpFile))
+                            {
+                                File.Copy(tmpFile, targetFile, true);
+                            }
                         }
 
                         tmpFile = Path.Combine(mFile.DirectoryName, Path.GetFileNameWithoutExtension(file) + ".rrd");
                         targetFile = Path.Combine(filePath, Path.GetFileNameWithoutExtension(file) + ".rrd");
-                        if (File.Exists(tmpFile))
+                        if (!File.Exists(targetFile))
                         {
-                            File.Copy(tmpFile, targetFile, true);
+                            if (File.Exists(tmpFile))
+                            {
+                                File.Copy(tmpFile, targetFile, true);
+                            }
                         }
                     }
                     model.EvidenceRasterlist = evidencefiles;
@@ -2266,18 +2270,33 @@ namespace MapWizard.ViewModel
                 //Copy tract polygonfile to destination
                 string filename = Path.GetFileName(model.PathToTractPolygon);
                 File.Copy(model.PathToTractPolygon, tractFolder + @"\" + "TR" + model.IdOfTract + ".shp", true);
+                
                 //Copy tract polygonfile.xml to destination
                 string tmp_filename = model.PathToTractPolygon+".xml";
-                File.Copy(tmp_filename, tractFolder + @"\" + "TR" + model.IdOfTract + ".shp.xml", true);
+                if (File.Exists(tmp_filename))
+                {
+                    File.Copy(tmp_filename, tractFolder + @"\" + "TR" + model.IdOfTract + ".shp.xml", true);
+                }
                 //Copy tract polygonfile.shx to destination
                 tmp_filename = tmp_filename.Replace(".shp.xml", ".shx");
-                File.Copy(tmp_filename, tractFolder + @"\" + "TR" + model.IdOfTract + ".shx", true);
+                if (File.Exists(tmp_filename))
+                {
+                    File.Copy(tmp_filename, tractFolder + @"\" + "TR" + model.IdOfTract + ".shx", true);
+                }
                 //Copy tract polygonfile.dbf to destination
                 tmp_filename = tmp_filename.Replace(".shx", ".dbf");
-                File.Copy(tmp_filename, tractFolder + @"\" + "TR" + model.IdOfTract + ".dbf", true);
+                if (File.Exists(tmp_filename))
+                {
+                    File.Copy(tmp_filename, tractFolder + @"\" + "TR" + model.IdOfTract + ".dbf", true);
+                }
                 //Copy tract polygonfile.prj to destination
                 tmp_filename = tmp_filename.Replace(".dbf", ".prj");
-                File.Copy(tmp_filename, tractFolder + @"\" + "TR" + model.IdOfTract + ".prj", true);
+                if (File.Exists(tmp_filename))
+                {
+                    File.Copy(tmp_filename, tractFolder + @"\" + "TR" + model.IdOfTract + ".prj", true);
+                }
+
+
 
                 string path = tractFolder + "/TractExplanation.txt";
                 File.WriteAllText(path, model.ExplanationOfTract);
@@ -2592,6 +2611,25 @@ namespace MapWizard.ViewModel
                 }
             }
             updateTractIDsToModels();
+        }
+
+        private void deleteClassificationTemp()
+        {
+            string tempDir = Path.Combine(projectFolder, "Classification", "temp");
+
+            if (Directory.Exists(tempDir))
+            {
+
+                //string[] f = Directory.GetFiles(boundariesDir, "BoundariesOnEvidence*");
+                string[] files = Directory.GetFiles(tempDir, "*.*");
+
+                if (files.Length > 0)
+                {
+
+                    foreach (string filePath in files)
+                        File.Delete(filePath);
+                }
+            }
         }
 
 

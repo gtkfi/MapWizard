@@ -22,12 +22,20 @@ namespace MapWizard.Tools
             set { Add<string>("CSVPath", value); }
         }
         /// <summary>
-        /// Seed value to be used in random number generation (Default value 1). 
+        /// Seed value to be used in grade random number generation (Default value 1). 
         /// </summary>
         public string Seed
         {
             get { return GetValue<string>("Seed"); }
             set { Add<string>("Seed", value); }
+        }
+        /// <summary>
+        /// Seed value to be used in tonnage random number generation (Default value 2). 
+        /// </summary>
+        public string TonnageSeed
+        {
+            get { return GetValue<string>("TonnageSeed"); }
+            set { Add<string>("TonnageSeed", value); }
         }
         /// <summary>
         /// Type of the probability density function (pdf) to be estimated for the grade and/or tonnage data. The alternatives are normal(default) and kde. 
@@ -256,7 +264,7 @@ namespace MapWizard.Tools
                     var info = new ProcessStartInfo();
                     info.FileName = rScriptExecutablePath;
                     string rProjectPath = gradeProject.Replace("\\", "/");
-                    info.Arguments = "\"" + rGradePath + "\" \"" + input.CSVPath + "\" " + input.Seed + " " + input.PDFType + " " + input.IsTruncated + " " + input.MinDepositCount + " " + input.RandomSampleCount + " \"" + gradeProject + "\" \"" + workingDir + "\"";
+                    info.Arguments = "\"" + rGradePath + "\" \"" + input.CSVPath + "\" " + input.Seed + " \"" + input.PDFType + "\" " + input.IsTruncated + " " + input.MinDepositCount + " " + input.RandomSampleCount + " \"" + gradeProject + "\" \"" + workingDir + "\"";
 
                     info.RedirectStandardInput = false;
                     info.RedirectStandardOutput = true;
@@ -311,7 +319,7 @@ namespace MapWizard.Tools
                     string inputFileDest = Path.Combine(tonnageProject, "GT_InputFile.csv");
                     File.Copy(input.CSVPath, Path.Combine(tonnageProject, "GT_InputFile.csv"), true);
                     string rProjectPath = tonnageProject.Replace("\\", "/");
-                    info.Arguments = "\"" + rTonnagePath + "\" \"" + input.CSVPath + "\" " + input.Seed + " " + input.PDFType + " " + input.IsTruncated + " " + input.MinDepositCount + " " + input.RandomSampleCount + " \"" + tonnageProject + "\" \"" + workingDir + "\"";
+                    info.Arguments = "\"" + rTonnagePath + "\" \"" + input.CSVPath + "\" " + input.TonnageSeed + " " + input.PDFType + " " + input.IsTruncated + " " + input.MinDepositCount + " " + input.RandomSampleCount + " \"" + tonnageProject + "\" \"" + workingDir + "\"";
 
                     info.RedirectStandardInput = false;
                     info.RedirectStandardOutput = true;

@@ -233,13 +233,13 @@ namespace MapWizard.ViewModel
         /// </summary>
         private async void RunTool()
         {
-            if(!Model.GradePlot.Contains("Please select") && Model.TonnagePlot.Contains("Please select"))
+            if(!Model.GradePlot.Contains("Select grade pdf") && Model.TonnagePlot.Contains("Select tonnage pdf"))
             {
                 dialogService.ShowNotification("Cannot run when only Grade object is defined!", "Error");
                 return;
             }
 
-            if (Model.TonnagePlot.Contains("Please select") && Model.GradeTonnagePlot.Contains("Please select"))
+            if (Model.TonnagePlot.Contains("Select tonnage pdf") && Model.GradeTonnagePlot.Contains("Select joint grade-tonnage pdf"))
             {
                 dialogService.ShowNotification("Please select Grade and Tonnage objects OR Tonnage object OR GradeTonnage object!", "Error");
                 return;

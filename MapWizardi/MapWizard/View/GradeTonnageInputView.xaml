@@ -67,10 +67,18 @@
         </UniformGrid>
         <UniformGrid  Rows="1" Columns="2" IsEnabled="{Binding Model.SelectedIndex, Converter={StaticResource SelectedIndexToBooleanConverter}}">
             <WrapPanel Style="{StaticResource WrapPanel}">
-                <TextBlock HorizontalAlignment="left" VerticalAlignment="Center" Text="Seed" Margin="10" />
+                <TextBlock HorizontalAlignment="left" VerticalAlignment="Center" Text="Grade seed" Margin="10" />
             </WrapPanel>
             <WrapPanel Style="{StaticResource ValueColumn}">
                 <TextBox Text="{Binding Model.Seed}" FontSize="20" HorizontalAlignment="Left" VerticalAlignment="Center" Width="120" ToolTip="Seed for random number generator."/>
+            </WrapPanel>
+        </UniformGrid>
+        <UniformGrid  Rows="1" Columns="2" IsEnabled="{Binding Model.SelectedIndex, Converter={StaticResource SelectedIndexToBooleanConverter}}">
+            <WrapPanel Style="{StaticResource WrapPanel}">
+                <TextBlock HorizontalAlignment="left" VerticalAlignment="Center" Text="Tonnage seed" Margin="10" />
+            </WrapPanel>
+            <WrapPanel Style="{StaticResource ValueColumn}">
+                <TextBox Text="{Binding Model.TonnageSeed}" FontSize="20" HorizontalAlignment="Left" VerticalAlignment="Center" Width="120" ToolTip="Seed for random number generator."/>
             </WrapPanel>
         </UniformGrid>
         <UniformGrid  Rows="1" Columns="2" IsEnabled="{Binding Model.SelectedIndex, Converter={StaticResource SelectedIndexToBooleanConverter}}">

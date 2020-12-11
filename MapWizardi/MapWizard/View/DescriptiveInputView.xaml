@@ -120,7 +120,7 @@
                     </UniformGrid>
                     <UniformGrid Rows="1" Columns="2" HorizontalAlignment="Left">
                         <WrapPanel Style="{StaticResource WrapPanel}" Width="300">
-                            <TextBlock Text="Selected file will not be shown in Result -tab and is automatically selected as a result for the Reporting tool." TextWrapping="Wrap"  Margin="10,30,10,10" HorizontalAlignment="left" VerticalAlignment="Center"/>
+                            <TextBlock Text="Selected file will not be shown in Results tab, and it will automatically become the selected result for the Reporting tool." TextWrapping="Wrap"  Margin="10,30,10,10" HorizontalAlignment="left" VerticalAlignment="Center"/>
                         </WrapPanel>
                         <WrapPanel Margin=" 00,30,0,0" HorizontalAlignment="Left">
                             <Button Padding="-10,0,0,0"

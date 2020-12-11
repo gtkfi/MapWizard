@@ -73,7 +73,11 @@
                             <StackPanel>
                                 <TextBlock>Run name</TextBlock>
                                 <TextBox Text="{Binding Model.RaefRunName}"></TextBox>
-                                <TextBlock>Tract area (km2)</TextBlock>
+                                <TextBlock HorizontalAlignment="left"  VerticalAlignment="Center" Margin="10">
+                                    <Run>Tract area (km</Run>
+                                    <Run Typography.Variants="Superscript">2</Run>
+                                    <Run>):</Run>
+                                </TextBlock>
                                 <TextBox Text="{Binding Model.RaefArea}"></TextBox>
                                 <TextBlock>Number of depth intervals of undiscovered deposits</TextBlock>
                                 
@@ -253,7 +257,7 @@
                 </UniformGrid>
                 <UniformGrid Rows="1" Columns="2">
                     <WrapPanel Style="{StaticResource ValueColumn}">
-                        <TextBlock  Text="Percentage %:" Margin="10" HorizontalAlignment="left" VerticalAlignment="Center"/>
+                        <TextBlock  Text="Percentage (%):" Margin="10" HorizontalAlignment="left" VerticalAlignment="Center"/>
                     </WrapPanel>
                     <WrapPanel Style="{StaticResource ValueColumn}">
                         <TextBox Text="{Binding Model.PerCent}" HorizontalAlignment="left"  VerticalAlignment="Center" FontSize="18" Width="50" ToolTip="Percentage value. Give a number between 0 and 100."/>

@@ -20,14 +20,14 @@
                 </TabItem.Header>-->
                 <Border BorderBrush="White" BorderThickness="1" Margin="35,0,-5,-5">
                     <StackPanel  Background="#343533">
-                        <Label FontWeight="Bold" FontSize="18" Margin="15,10">Python Path</Label>
-                        <RadioButton GroupName="Py_Group" Margin="15,10"  IsChecked="{Binding Model.PythonLocationDefault, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" >
+                        <!-- Label FontWeight="Bold" FontSize="18" Margin="15,10">Python Path</ -->
+                        <!--RadioButton GroupName="Py_Group" Margin="15,10"  IsChecked="{Binding Model.PythonLocationDefault, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" >
                             <WrapPanel>
                                 <TextBlock Text="Default:" FontSize="14" Margin="5,5,5,5"/>
                                 <TextBlock FontSize="14" Text="{Binding Model.PythonPathDefault, Mode=TwoWay}" Margin="5,5,5,5" TextWrapping="Wrap" />
                             </WrapPanel>
-                        </RadioButton>
-                        <RadioButton GroupName="Py_Group" Margin="15,10"  IsChecked="{Binding Model.PythonLocationDefault, Converter={StaticResource ReverseBooleanConverter}, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}">
+                        </-->
+                        <!--RadioButton GroupName="Py_Group" Margin="15,10"  IsChecked="{Binding Model.PythonLocationDefault, Converter={StaticResource ReverseBooleanConverter}, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}">
                             <WrapPanel>
                                 <TextBlock Text="Custom" FontSize="14" Margin="5,10,5,10"/>
                                 <Button  
@@ -45,8 +45,8 @@
                                     </Button.ToolTip>
                                 </Button>
                             </WrapPanel>
-                        </RadioButton>
-                        <Separator Width="325" Margin="0,35,0,35"></Separator>
+                        </ -->
+                        <!--Separator Width="325" Margin="0,35,0,35"></-->
                         <Label Margin="15,10" FontWeight="Bold" FontSize="18">R Path:</Label>
                         <!-- RadioButton GroupName="R_Group" Margin="15,10"  IsChecked="{Binding Model.RLocationDefault, Mode=TwoWay}"-->
                             <WrapPanel>
@@ -70,7 +70,7 @@
                                 </Button>
                             </WrapPanel>
                         </RadioButton -->
-                        <Button
+                        <!--Button
                         DataContext="{Binding Path=SettingsViewModel, Source={StaticResource Locator}}"    
                         Command="{Binding SaveSettingsCommand}"    
                         Margin="15,55"  
@@ -78,9 +78,9 @@
                         Background="{DynamicResource AccentColorBrush}" 
                         Foreground="White"
                         BorderThickness="0" 
-                        Width="100" Height="50">
+                        Width="100" Height="50" Click="Button_Click">
                             <TextBlock Text="Save" FontSize="14" Margin="5,10,5,10"/>
-                        </Button>
+                        </Button -->
                     </StackPanel>
                 </Border>
             </TabItem>

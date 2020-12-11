@@ -27,7 +27,7 @@ namespace MapWizard.Model
         private string isRaefDone = "No";
         private string isScreenerDone = "No";
         private string depositType = "-";
-        private string tractImageFile = "Choose image file";
+        private string tractImageFile = "Choose image jpeg file";
         private ObservableCollection<ReportingAssesmentModel> tractIDCollection = new ObservableCollection<ReportingAssesmentModel>();
         private ObservableCollection<string> tractIDNames = new ObservableCollection<string>();
         private ObservableCollection<string> combinedTracts = new ObservableCollection<string>();

@@ -56,9 +56,9 @@
                                 </i:EventTrigger>
                             </i:Interaction.Triggers>
                         </ComboBox>
-                        <Label x:Name="label" Content="Name:" HorizontalAlignment="Left"/>
+                        <Label x:Name="label" Content="Estimator ID:" HorizontalAlignment="Left"/>
                         <TextBox x:Name="NameTb" HorizontalAlignment="Left" Height="28" Width="150" Text="{Binding Model.EstName}" Margin="0,5,0,0" ToolTip="ID of the expert giving the estimates below. "/>
-                        <Label x:Name="label2" Content="Weight:" HorizontalAlignment="Left"/>
+                        <Label x:Name="label2" Content="Weight for estimator's estimates:" HorizontalAlignment="Left"/>
                         <TextBox x:Name="WeightTb" HorizontalAlignment="Left" Height="28" Width="50"  Text="{Binding Model.EstWeight}" Margin="0,5,0,0" ToolTip="Weight for the expert's estimate. The experts level of expertise can be indicated with this parameter. The values must vary between zero and one."/>
                         <Label x:Name="label3" Content="N90:" HorizontalAlignment="Left"/>
                         <TextBox x:Name="N90Tb" HorizontalAlignment="Left" Height="28" Width="50" Text="{Binding Model.EstN90}" Margin="0,5,0,0" ToolTip="Estimated number of undiscovered deposits at 90% confidence level."/>

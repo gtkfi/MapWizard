@@ -207,7 +207,6 @@ namespace MapWizard.Tools
             var path = System.AppDomain.CurrentDomain.BaseDirectory.Replace(@"\", @"/");
             var rCodeFilePath = "\"" + path + "scripts/RAEF_Read_CV_And_MRR.r" + "\"";
             string rScriptExecutablePath = rPath;
-            string procResult = string.Empty;
             var info = new ProcessStartInfo();
             info.FileName = rScriptExecutablePath;
             info.WorkingDirectory = Path.Combine(path, "scripts");
@@ -230,7 +229,7 @@ namespace MapWizard.Tools
                     logger.Error(errors);
                     throw new Exception("R script failed, check log file for details.");
                 }
-                procResult = proc.StandardOutput.ReadToEnd();
+                string procResult = proc.StandardOutput.ReadToEnd();
                 CVandMRRList = procResult;
                 proc.Close();
             }

@@ -107,6 +107,7 @@
     <Compile Include="UndiscoveredDepositsTool.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="scripts\fuzzy_and_wofe.exe" />
     <Content Include="scripts\R-3.6.0\bin\i386\open.exe" />
     <Content Include="scripts\R-3.6.0\bin\i386\R.dll" />
     <Content Include="scripts\R-3.6.0\bin\i386\R.exe" />
@@ -16246,136 +16247,10 @@
     <Content Include="scripts\R-3.6.0\Tcl\lib\Tktable2.11\Tktable211.dll" />
     <Content Include="scripts\R-3.6.0\unins000.exe" />
     <Content Include="scripts\R-3.6.3.exe" />
-    <Content Include="scripts\WofeCreateMask.pyw">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
     <None Include="NLog.xsd">
       <SubType>Designer</SubType>
     </None>
     <None Include="packages.config" />
-    <Content Include="scripts\ArcSDMToolbox\arcsdm\acterbergchengci.py">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="scripts\ArcSDMToolbox\arcsdm\AdaboostBestParameters.py">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="scripts\ArcSDMToolbox\arcsdm\ApplyFilter.py">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="scripts\ArcSDMToolbox\arcsdm\ApplyModel.py">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="scripts\ArcSDMToolbox\arcsdm\arcsdm_version.txt">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="scripts\ArcSDMToolbox\arcsdm\areafrequency.py">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="scripts\ArcSDMToolbox\arcsdm\calculateresponse.py">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="scripts\ArcSDMToolbox\arcsdm\calculateweights.py">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="scripts\ArcSDMToolbox\arcsdm\categoricalmembership.py">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="scripts\ArcSDMToolbox\arcsdm\categoricalreclass.py">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="scripts\ArcSDMToolbox\arcsdm\combine_outputnnfiles.py">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="scripts\ArcSDMToolbox\arcsdm\common.py">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="scripts\ArcSDMToolbox\arcsdm\config.py">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="scripts\ArcSDMToolbox\arcsdm\CreateRandomPoints.py">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="scripts\ArcSDMToolbox\arcsdm\debug_ptvs.py">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="scripts\ArcSDMToolbox\arcsdm\EnrichPoints.py">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="scripts\ArcSDMToolbox\arcsdm\exceptions.py">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="scripts\ArcSDMToolbox\arcsdm\floatingrasterarray.py">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="scripts\ArcSDMToolbox\arcsdm\floatingrasterclass.py">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="scripts\ArcSDMToolbox\arcsdm\general_func.py">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="scripts\ArcSDMToolbox\arcsdm\grand_wofe_lr.py">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="scripts\ArcSDMToolbox\arcsdm\logisticregression.py">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="scripts\ArcSDMToolbox\arcsdm\logisticregression_test.py">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="scripts\ArcSDMToolbox\arcsdm\minisom.py">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="scripts\ArcSDMToolbox\arcsdm\missingdatavar_func.py">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="scripts\ArcSDMToolbox\arcsdm\ModelTrain.py">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="scripts\ArcSDMToolbox\arcsdm\ModelValidation.py">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="scripts\ArcSDMToolbox\arcsdm\MulticlassSplit.py">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="scripts\ArcSDMToolbox\arcsdm\nninputfiles.py">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="scripts\ArcSDMToolbox\arcsdm\nnoutputfiles.py">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="scripts\ArcSDMToolbox\arcsdm\partition_inputnnfiles.py">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="scripts\ArcSDMToolbox\arcsdm\rescale_raster.py">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="scripts\ArcSDMToolbox\arcsdm\roctool.py">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="scripts\ArcSDMToolbox\arcsdm\sdmvalues.py">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="scripts\ArcSDMToolbox\arcsdm\sitereduction.py">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="scripts\ArcSDMToolbox\arcsdm\somtool.py">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="scripts\ArcSDMToolbox\arcsdm\symbolize.py">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="scripts\ArcSDMToolbox\arcsdm\tocfuzzification.py">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="scripts\ArcSDMToolbox\arcsdm\weight_boosting.py">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="scripts\ArcSDMToolbox\arcsdm\workarounds_93.py">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="scripts\ArcSDMToolbox\arcsdm\__init__.py">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
     <Content Include="scripts\data.R">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -16412,75 +16287,6 @@
     <Content Include="scripts\econf.r">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <None Include="scripts\ArcSDMToolbox\ArcSDM.pyt">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="scripts\ArcSDMToolbox\arcsdm\acterbergchengci.pyc">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="scripts\ArcSDMToolbox\arcsdm\areafrequency.pyc">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="scripts\ArcSDMToolbox\arcsdm\calculateresponse.pyc">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="scripts\ArcSDMToolbox\arcsdm\calculateweights.pyc">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="scripts\ArcSDMToolbox\arcsdm\categoricalmembership.pyc">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="scripts\ArcSDMToolbox\arcsdm\categoricalreclass.pyc">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="scripts\ArcSDMToolbox\arcsdm\common.pyc">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="scripts\ArcSDMToolbox\arcsdm\config.pyc">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="scripts\ArcSDMToolbox\arcsdm\exceptions.pyc">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="scripts\ArcSDMToolbox\arcsdm\floatingrasterarray.pyc">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="scripts\ArcSDMToolbox\arcsdm\floatingrasterclass.pyc">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="scripts\ArcSDMToolbox\arcsdm\grand_wofe_lr.pyc">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="scripts\ArcSDMToolbox\arcsdm\logisticregression.pyc">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="scripts\ArcSDMToolbox\arcsdm\nninputfiles.pyc">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="scripts\ArcSDMToolbox\arcsdm\rescale_raster.pyc">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="scripts\ArcSDMToolbox\arcsdm\roctool.pyc">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="scripts\ArcSDMToolbox\arcsdm\sdmvalues.pyc">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="scripts\ArcSDMToolbox\arcsdm\sitereduction.pyc">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="scripts\ArcSDMToolbox\arcsdm\symbolize.pyc">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="scripts\ArcSDMToolbox\arcsdm\tocfuzzification.pyc">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="scripts\ArcSDMToolbox\arcsdm\workarounds_93.pyc">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="scripts\ArcSDMToolbox\arcsdm\__init__.pyc">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
     <Content Include="scripts\DepositDensity\General_data.csv">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -16496,6 +16302,9 @@
     <Content Include="scripts\mask_polygon_wrapper.R">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <None Include="scripts\fuzzy_and_wofe.7z.001" />
+    <None Include="scripts\fuzzy_and_wofe.7z.002" />
+    <None Include="scripts\fuzzy_and_wofe.7z.003" />
     <None Include="scripts\installR.bat" />
     <None Include="scripts\MonteCarloSimulation\oMeta.rds">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
@@ -24360,7 +24169,7 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <None Include="scripts\RAEF_Read_CV_And_MRR.R">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <Content Include="scripts\rasterproc_wrapper_polygon.r">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
@@ -24409,9 +24218,6 @@
     <Content Include="scripts\FuzzyOverlay.pyw">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="scripts\Reclassify.pyw">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
     <Content Include="scripts\UndiscoveredDeposits\plot_131864854606004680.jpeg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -24422,12 +24228,6 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="scripts\UndiscoveredDeposits\plot_131864938523642860.jpeg">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="scripts\WofeCalculateResponse.pyw">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="scripts\WofeCalculateWeights.pyw">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>

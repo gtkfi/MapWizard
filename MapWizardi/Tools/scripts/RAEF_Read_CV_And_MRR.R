@@ -15,9 +15,8 @@ for (xx in listGradesI)
 	CName <<-  sub("._pct","",ColNames1[xx])
 	ListCNames<<- c(ListCNames,CName )
 	}
-CountCN <<- length(ListCNames)
-#       MillNum1 (tää pitäs ehkä? olla dynaaminen, mutta most cases on 11, niin otetaan se...)
-MillNum1=11
+CountCN <<- length(ListCNames)    
+MillNum1=11		#Should this be dynamic?
 #######################################################################
 ## Create MRR list for all commodities (before sepearaiton
 #######################################################################

@@ -26,7 +26,7 @@ namespace MapWizard.Model
         private string isRaefDone = "No";
         private string isScreenerDone = "No";
         private string depositType = "-";
-        private string tractImageFile = "Choose image file";
+        private string tractImageFile = "Choose image jpeg file";
         private string knownDepositsFile = "Choose Word file";
         private string prospectsOccurencesFile = "Choose Word file";
         private string explorationFile = "Choose Word file";

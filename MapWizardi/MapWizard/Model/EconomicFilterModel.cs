@@ -502,7 +502,7 @@ namespace MapWizard.Model
         }
         public string RaefMineMethod { get; set; } = "Open Pit"; //Tää määritetään depthin mukaan koneelisesti. jos depth =>61m: "Room and Pillar", jos depth <61m: "Open Pit". sit se pitäs selivttää että mikä depth se on. huoh.
         public string RaefMillType1 { get; set; } = "1 - Product Flotation"; //onko molemmille mill typeille samat optiot?
-        public ObservableCollection<string> raefMillType1Options = new ObservableCollection<string>() {"1 - Product Flotation" , "2 - Product Flotation", "3 - Product Flotation", "3 - Product Flotation (Omit lowest value commodity", "Customize Mill Options", "None" };
+        public ObservableCollection<string> raefMillType1Options = new ObservableCollection<string>() {"1 - Product Flotation" , "2 - Product Flotation", "3 - Product Flotation", "3 - Product Flotation (Omit lowest value commodity)", "None" };// Customize Mill Options jätetty pois GUI optiosta.
         public ObservableCollection<string> RaefMillType1OptionsCollection
         {
             get

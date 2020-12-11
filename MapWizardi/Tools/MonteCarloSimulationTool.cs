@@ -165,14 +165,15 @@ namespace MapWizard.Tools
             string rScriptExecutablePath = result.Env.RPath;
             string procResult = string.Empty;
             string tractName = input.TractID;
-            string tonnagePDF = input.TonnagePlot.Contains("Please select") ? "NA" : input.TonnagePlot;
-            string gradePDF = input.GradePlot.Contains("Please select") ?   "NA" : input.GradePlot;
-            string gradeTonnagePDF = input.GradeTonnagePlot.Contains("Please select") ? "NA" : input.GradeTonnagePlot;
+            string tonnagePDF = input.TonnagePlot.Contains("Select tonnage pdf") ? "NA" : input.TonnagePlot;
+            string gradePDF = input.GradePlot.Contains("Select grade pdf") ?   "NA" : input.GradePlot;
+            string gradeTonnagePDF = input.GradeTonnagePlot.Contains("Select joint grade") ? "NA" : input.GradeTonnagePlot;
 
             var info = new ProcessStartInfo();
             info.FileName = rScriptExecutablePath;
             info.WorkingDirectory = path + "scripts/";
-            info.Arguments = "\"" + rCodeFilePath + "\" \"" + input.NDepositsPmf + "\" \"" + tonnagePDF + "\" \"" + gradePDF + "\" \"" + gradeTonnagePDF + "\" \"" + scriptPath + "oMeta.rds" + "\" \"" + summaryTxt + "\" \"" + projectFolder + "\"";
+            //info.Arguments = "\"" + rCodeFilePath + "\" \"" + input.NDepositsPmf + "\" \"" + tonnagePDF + "\" \"" + gradePDF + "\" \"" + gradeTonnagePDF + "\" \"" + scriptPath + "oMeta.rds" + "\" \"" + summaryTxt + "\" \"" + projectFolder + "\"";
+            info.Arguments = "\"" + rCodeFilePath + "\" \"" + input.NDepositsPmf + "\" \"" + tonnagePDF + "\" \"" + gradePDF + "\" \"" + gradeTonnagePDF + "\" \"" + summaryTxt + "\" \"" + projectFolder + "\"";
             info.Arguments += " "+tractName;
             info.RedirectStandardInput = false;
             info.RedirectStandardOutput = true;
