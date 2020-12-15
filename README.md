@@ -8,6 +8,7 @@ The installation package can be found in https://github.com/gtkfi/MapWizard/rele
 If you want to debug MapWizard in Visual Studio, copy the R-3.6.3 folder to MapWizard/bin/debug/scripts/ . This is because the contents of the R folder are not copied to the output directory by default. 
 
 # History
+14.12.2020 MapWizard Version 1.4 release  
 26.10.2020 MapWizard Beta Version 1.1.1 release  
 29.9.2020 MapWizard Beta version 1.1.0 release  
 25.9.2020 MapWizard Beta version 1.0.9 release  
